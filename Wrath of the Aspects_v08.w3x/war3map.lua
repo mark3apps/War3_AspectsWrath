@@ -1202,6 +1202,8 @@ function MapSetup()
 	init_Trig_Auto_Zoom()
 	InitTrig_AI_MAIN()
 	InitTrig_Computer_Picks()
+	InitTrig_Hero_Level_Ups()
+	InitTrig_AI_Spell_Start()
 	
 	--init_AI()
 
@@ -1215,15 +1217,11 @@ end
 function distance (x1, y1, x2, y2)
     return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
-function errorHandler( err )
-   BJDebugMsg( "ERROR:", err )
-end
 
 function AI_MAIN()
 
 
-
-	BJDebugMsg(" -- ")
+	print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
     
     mapAI.updateIntel(pickedHero)
@@ -1281,7 +1279,7 @@ function Computer_Picks()
                 y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 			
-            randInt = GetRandomInt(1, 1)
+            randInt = GetRandomInt(1, 5)
             if (randInt == 1) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0)
 				
@@ -1341,10 +1339,6 @@ function Computer_Picks()
 		end
 		
 
-
-
-		
-
         if (i >= 12 and mapAI.count > 0) then
             BJDebugMsg("Heroes:" .. I2S(mapAI.count))
 			TriggerRegisterTimerEvent(Trig_AI_MAIN, 1.50, true)
@@ -1368,6 +1362,7 @@ function init_AIClass()
 	ai.new = function()
 		local self = {}
 		self.heroes = {}
+		self.heroGroup = CreateGroup()
 		self.heroOptions = {"heroA", "heroB", "heroC", "heroD", "heroE", "heroF", "heroG", "heroH", "heroI", "heroJ", "heroK", "heroL"}
 		self.count = 0
 
@@ -1377,8 +1372,6 @@ function init_AIClass()
 		end
 
 		function self.initHero(heroUnit)
-			
-
 
 			self.count = self.count + 1
 
@@ -1393,6 +1386,8 @@ function init_AIClass()
 			local hero = self[pickedName]
 			
 			hero.unit = heroUnit
+			GroupAddUnit(self.heroGroup, hero.unit)
+
 			hero.unitType = GetUnitTypeId(heroUnit)
 			hero.player = GetOwningPlayer(heroUnit)
 			hero.playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
@@ -1407,12 +1402,14 @@ function init_AIClass()
 			hero.heroesFriend = CreateGroup()
 			hero.heroesEnemy = CreateGroup()
 			hero.lifeHistory = {}
+			SetUnitUserData(hero.unit, self.count)
 
 			
 			hero.alive = false
 			hero.fleeing = false
 			hero.casting = false
 			hero.castingCounter = -10.00
+			hero.order = nil
 			hero.castingUlt = false
 			hero.chasing = false
 			hero.defending = false
@@ -1424,9 +1421,9 @@ function init_AIClass()
 			hero.unitAttacking = nil
 			hero.unitChasing = nil
 
-			--Brawler
-			if hero.unitType == FourCC("E001") then
-				
+			
+			if hero.unitType == FourCC("E001") then      -- Brawler
+				hero.name = "Brawler"
 				hero.healthFactor = 1.00
 				hero.manaFactor = 0.02
 
@@ -1437,8 +1434,31 @@ function init_AIClass()
 				hero.highDamageSingle = 17.00
 				hero.highDamageAverage = 25.00
 
-				hero.powerBase = 900.00
-				hero.powerLevel = 250.00
+				hero.powerBase = 500.00
+				hero.powerLevel = 200.00
+
+				hero.clumpAlly = false
+				hero.clumbEnemy = false
+				hero.clumbBoth = false
+				hero.clumpRange = 100.00
+				hero.intelRange = 1100.00
+				hero.closeRange = 500.00
+			
+			elseif hero.unitType == FourCC("H00R") then  -- Mana Addict
+					
+				hero.name = "Mana Addict"
+				hero.healthFactor = 1.00
+				hero.manaFactor = 0.75
+
+				hero.lifeHighPercent = 85.00
+				hero.lifeLowPercent = 25.00
+				hero.lifeLowNumber = 400.00
+
+				hero.highDamageSingle = 4.00
+				hero.highDamageAverage = 12.00
+
+				hero.powerBase = 700.00
+				hero.powerLevel = 220.00
 
 				hero.clumpAlly = false
 				hero.clumbEnemy = false
@@ -1447,13 +1467,81 @@ function init_AIClass()
 				hero.intelRange = 1000.00
 				hero.closeRange = 500.00
 
-			end
+			elseif hero.unitType == FourCC("H009") then  -- Tactition
+						
+				hero.name = "Tactition"
+				hero.healthFactor = 1.00
+				hero.manaFactor = 0.20
 
-			BJDebugMsg("Finish Init AI")
-			
+				hero.lifeHighPercent = 75.00
+				hero.lifeLowPercent = 20.00
+				hero.lifeLowNumber = 400.00
+
+				hero.highDamageSingle = 17.00
+				hero.highDamageAverage = 25.00
+
+				hero.powerBase = 500.00
+				hero.powerLevel = 200.00
+
+				hero.clumpAlly = false
+				hero.clumbEnemy = false
+				hero.clumbBoth = false
+				hero.clumpRange = 250.00
+				hero.intelRange = 1000.00
+				hero.closeRange = 400.00
+
+			elseif hero.unitType == FourCC("H00J") then  -- Time Mage
+							
+				hero.name = "Time Mage"
+				hero.healthFactor = 1.00
+				hero.manaFactor = 0.10
+
+				hero.lifeHighPercent = 85.00
+				hero.lifeLowPercent = 25.00
+				hero.lifeLowNumber = 400.00
+
+				hero.highDamageSingle = 10.00
+				hero.highDamageAverage = 17.00
+
+				hero.powerBase = 750.00
+				hero.powerLevel = 250.00
+
+				hero.clumpAlly = false
+				hero.clumbEnemy = false
+				hero.clumbBoth = false
+				hero.clumpRange = 250.00
+				hero.intelRange = 1100.00
+				hero.closeRange = 700.00
+
+			elseif hero.unitType == FourCC("E002") then  -- Shifter
+							
+				hero.name = "Shifter"
+				hero.healthFactor = 1.00
+				hero.manaFactor = 0.15
+
+				hero.lifeHighPercent = 70.00
+				hero.lifeLowPercent = 25.00
+				hero.lifeLowNumber = 350.00
+
+				hero.highDamageSingle = 17.00
+				hero.highDamageAverage = 25.00
+
+				hero.powerBase = 500.00
+				hero.powerLevel = 200.00
+
+				hero.clumpAlly = false
+				hero.clumbEnemy = false
+				hero.clumbBoth = false
+				hero.clumpRange = 150.00
+				hero.intelRange = 1100.00
+				hero.closeRange = 400.00
+
+			end	
 		end
 
 
+
+		-- Update Intel
 		function self.updateIntel(i)
 			local hero = self[i]
 
@@ -1488,14 +1576,15 @@ function init_AIClass()
 				hero.clumpFriendPower = 0.00
 				hero.clumpEnemy = nil
 				hero.clumpEnemyPower = 0.00
-				hero.clumpTotal = nil
-				hero.clumpTotalPower = 0.00
+				hero.clumpBoth = nil
+				hero.clumpBothPower = 0.00
 
 				GroupClear(hero.heroesFriend)
 				GroupClear(hero.heroesEnemy)
 
 				-- Units around Hero
 				local g = CreateGroup()
+				local clump = CreateGroup()
 				local unitPower = 0.00
 				local unitPower = 0.00
 				local unitLife = 0.00
@@ -1505,15 +1594,18 @@ function init_AIClass()
 				local unitRange = 0.00
 				local unitPowerRangeMultiplier = 0.00
 				local u
+				local clumpUnit
+				local powerAllyTemp
+				local powerEnemyTemp
 
 
-				GroupEnumUnitsInRange(g, hero.x, hero.y, hero.intelRange, null)
+				GroupEnumUnitsInRange(g, hero.x, hero.y, hero.intelRange, nil)
 
 				-- Enumerate through group
 				
 				while true do
 					u = FirstOfGroup(g)	
-					if ((u == null)) then break end
+					if ((u == nil)) then break end
 					
 					-- Unit is alive and not the hero
 					if (IsUnitAliveBJ(u) == true and u ~= hero.unit) then
@@ -1583,6 +1675,44 @@ function init_AIClass()
 							hero.powerEnemy = hero.powerEnemy + (unitPower * (unitLife / 100.00) * unitPowerRangeMultiplier )
 						end
 
+						if hero.clumpAlly == true or hero.clumpEnemy == true or hero.clumpBoth == true then
+
+							powerAllyTemp = 0
+							powerEnemyTemp = 0
+
+							GroupEnumUnitsInRange(clump, unitX, unitY, hero.clumpRange, nil)
+							while true do
+								clumpUnit = FirstOfGroup(clump)
+								if clumpUnit == nil then break end
+
+								if IsUnitAlly(clumpUnit, hero.player) and (hero.clumpAlly == true or hero.clumpBoth == true) then
+									powerAllyTemp = powerAllyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+								end
+
+								if not IsUnitAlly(clumpUnit, hero.player) and (hero.clumpEnemy == true or hero.clumpBoth == true) then
+									powerEnemyTemp = powerEnemyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+								end
+
+								GroupRemoveUnit(clump, clumpUnit)
+							end
+							DestroyGroup(clump)
+
+							if hero.clumpAlly == true and powerAllyTemp > hero.clumpFriendPower then
+								hero.clumpFriendPower = powerAllyTemp
+								hero.clumpFriend = u
+							end
+
+							if hero.clumpEnemy == true and powerEnemyTemp > hero.clumpEnemyPower then
+								hero.clumpEnemyPower = powerEnemyTemp
+								hero.clumpEnemy = u
+							end
+
+							if hero.clumpBoth == true and (powerAllyTemp + powerEnemyTemp) > hero.clumpBothPower then
+								hero.clumpBothPower = powerAllyTemp + powerEnemyTemp
+								hero.clumpBoth = u
+							end
+
+						end
 						
 					end
 
@@ -1639,7 +1769,7 @@ function init_AIClass()
 				hero.casting = false
 				hero.castingCounter = -10.00
 
-				self.travelToHeal(i)
+				self.ACTIONtravelToHeal(i)
 			end
 		end		
 
@@ -1655,16 +1785,17 @@ function init_AIClass()
 				BJDebugMsg("High Health")
 				hero.lowLife = false
 				hero.fleeing = false
+				
 
 				-- Reward the AI For doing good
 				hero.lifeLowPercent = hero.lifeLowPercent - 1.00
 				hero.lifeHighPercent = hero.lifeHighPercent - 1.00
-
+				
 				local rand = GetRandomInt(1, 3)
 				if rand == 1 then
-					self.attackBase(i)
+					self.ACTIONattackBase(i)
 				else
-					self.travelToDest(i)
+					self.ACTIONtravelToDest(i)
 				end
 			end
 		
@@ -1707,7 +1838,7 @@ function init_AIClass()
 
 				BJDebugMsg("Revived")
 				hero.alive = true
-				self.attackBase(i)
+				self.ACTIONattackBase(i)
 			end
 		end
 
@@ -1721,7 +1852,7 @@ function init_AIClass()
 				BJDebugMsg("Flee")
 				hero.fleeing = true
 
-				self.travelToHeal(i)
+				self.ACTIONtravelToHeal(i)
 			end
 		end	
 
@@ -1729,30 +1860,57 @@ function init_AIClass()
 		function self.STATEStopFleeing(i)
 			local hero = self[i]
 
-			if hero.powerHero > hero.powerCount and
-					hero.lowLife == false and hero.fleeing == true then
+			if hero.powerHero > hero.powerCount and hero.lowLife == false and hero.fleeing == true then
 					
 				BJDebugMsg("Stop Fleeing")
 				hero.fleeing = false
 
-				self.travelToDest(i)
+				self.ACTIONtravelToDest(i)
 			end
 		end	
 
-		function self.travelToHeal(i)
+		-- AI Casting Spell
+		function self.STATEcastingSpell(i)
+			local hero = self[i]
+
+			if hero.casting == true then
+				BJDebugMsg("Casting Spell")
+
+				if hero.castingCounter == -10.00 then
+					if GetUnitCurrentOrder(hero.unit) ~= hero.order then
+						hero.casting = false
+						self.ACTIONtravelToDest()
+						hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+					end
+
+				elseif hero.castingCounter > 0.00 then
+					hero.castingCounter = hero.castingCounter - 1.50
+
+				else
+					hero.casting = false
+					hero.castingCounter = -10.00
+					self.ACTIONtravelToDest()
+					hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+				end
+			end	
+		end
+
+		--
+		-- ACTIONS
+		--
+
+		function self.ACTIONtravelToHeal(i)
 			local hero = self[i]
 
 			local healDistance = 100000000.00
 			local healDistanceNew = 0.00
 			local unitX
 			local unitY
+			local u
 			local g = CreateGroup()
 
 
 			GroupAddGroup(udg_UNIT_Healing[hero.teamNumber], g)
-			local u
-
-
 			while true do
 				u = FirstOfGroup(g)
 				if u == nil then break end
@@ -1777,21 +1935,21 @@ function init_AIClass()
 
 		end
 
-		function self.travelToDest(i)
+		function self.ACTIONtravelToDest(i)
 			local hero = self[i]
 
 			if hero.lowLife == true or hero.fleeing == true then
-				local unitX = GetUnitX(hero.unitAttacking)
-				local unitY = GetUnitY(hero.unitAttacking)
-				IssuePointOrder(hero.unit, "move", unitX, unitY)
-			else
 				local unitX = GetUnitX(hero.unitHealing)
 				local unitY = GetUnitY(hero.unitHealing)
+				IssuePointOrder(hero.unit, "move", unitX, unitY)
+			else
+				local unitX = GetUnitX(hero.unitAttacking)
+				local unitY = GetUnitY(hero.unitAttacking)
 				IssuePointOrder(hero.unit, "attack", unitX, unitY)
 			end
 		end
 
-		function self.attackBase(i)
+		function self.ACTIONattackBase(i)
 			local hero = self[i]
 
 			hero.unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[hero.teamNumber])
@@ -1806,6 +1964,70 @@ function init_AIClass()
 		return self
 	end
 
+end
+
+
+function InitTrig_AI_Spell_Start()
+	local t = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
+	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
+
+	TriggerAddAction(t, function()
+		local hero = self[GetUnitUserData(GetTriggerUnit())]
+		hero.casting = true
+		hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+		BJDebugMsg("Spell Cast")
+	end)
+end
+
+
+function InitTrig_Hero_Level_Ups()
+	local t = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
+
+	TriggerAddAction(t, function()
+	
+		local u = GetLevelingUnit()
+		local uType = GetUnitTypeId(u)
+
+		if GetPlayerController( GetOwningPlayer(u) ) == MAP_CONTROL_COMPUTER then
+
+			if uType == FourCC("H00R") then
+				SelectHeroSkill(u, FourCC("A015"))
+				SelectHeroSkill(u, FourCC("A001"))
+				SelectHeroSkill(u, FourCC("A03S"))
+				SelectHeroSkill(u, FourCC("A018"))
+				SelectHeroSkill(u, FourCC("A02B"))
+				
+			elseif uType == FourCC("E001") then
+				SelectHeroSkill(u, FourCC("A029"))
+				SelectHeroSkill(u, FourCC("A01Y"))
+				SelectHeroSkill(u, FourCC("A007"))
+				SelectHeroSkill(u, FourCC("A002"))
+				
+			elseif uType == FourCC("E002") then
+				SelectHeroSkill(u, FourCC("A03C"))
+				SelectHeroSkill(u, FourCC("A02Y"))
+				SelectHeroSkill(u, FourCC("A03U"))
+				SelectHeroSkill(u, FourCC("A030"))
+				SelectHeroSkill(u, FourCC("A03T"))
+				
+			elseif uType == FourCC("H009") then
+				SelectHeroSkill(u, FourCC("A042"))
+				SelectHeroSkill(u, FourCC("A01I"))
+				SelectHeroSkill(u, FourCC("A01B"))
+				SelectHeroSkill(u, FourCC("A01Z"))
+				SelectHeroSkill(u, FourCC("A019"))
+				
+			elseif uType == FourCC("H00J") then
+				SelectHeroSkill(u, FourCC("A04N"))
+				SelectHeroSkill(u, FourCC("A04I"))
+				SelectHeroSkill(u, FourCC("A04P"))
+				SelectHeroSkill(u, FourCC("A04K"))
+				SelectHeroSkill(u, FourCC("A032"))
+			end
+		end
+	end)
 end
 
 function init_SpawnClass()
@@ -1941,232 +2163,142 @@ function init_SpawnClass()
 		return self
 	end
 end
-function spawnSetup()
+function init_SpawnClass()
 
-    -- Set up variables
-    spawnTimer = CreateTimer()
-    baseSpawn = spawn.new()
-    spawnWave = 1
-    spawnBaseI = 0
+	-- Create the table for the class definition
+	spawn = {}
 
-    cycleInterval = 5.00
-    baseInterval = 0.4
-    waveInterval = 20.00
+	-- Define the new() function
+	spawn.new = function()
+		local self = {}
 
-    -- addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
- 
-    baseSpawn.addBase("arcane", gg_rct_Left_Arcane, gg_rct_Right_Start_Bottom, gg_unit_h003_0015, gg_rct_Right_Arcane, gg_rct_Left_Start_Top, gg_unit_h003_0007, 3)
-    baseSpawn.addBase("arcaneCreep", gg_rct_Left_Arcane, gg_rct_Left_Elemental_Start, gg_unit_h003_0015, gg_rct_Right_Arcane, gg_rct_Right_Elemental_Start, gg_unit_h003_0007, 7)
-    baseSpawn.addBase("arcaneHero", gg_rct_Arcane_Hero_Left, gg_rct_Right_Start_Bottom, gg_unit_hars_0017, gg_rct_Arcane_Hero_Right, gg_rct_Left_Start_Top, gg_unit_hars_0158, 3)
-    baseSpawn.addBase("arcaneTop", gg_rct_Arcane_Left_Top, gg_rct_Right_Start_Bottom, gg_unit_hars_0355, gg_rct_Arcane_Right_Top, gg_rct_Left_Start_Top, gg_unit_hars_0293, 3)
-    baseSpawn.addBase("arcaneBottom", gg_rct_Arcane_Left_Bottom, gg_rct_Right_Start_Bottom, gg_unit_hars_0292, gg_rct_Arcane_Right_Bottom, gg_rct_Left_Start_Top, gg_unit_hars_0303, 3)
-    baseSpawn.addBase("blacksmith", gg_rct_Blacksmith_Left, gg_rct_Right_Start, gg_unit_n00K_0802, gg_rct_Blacksmith_Right, gg_rct_Left_Start, gg_unit_n00K_0477, 2)
-    baseSpawn.addBase("blacksmithCreep", gg_rct_Blacksmith_Left, gg_rct_Zombie_End_Left, gg_unit_n00K_0802, gg_rct_Blacksmith_Right, gg_rct_Zombie_End_Right, gg_unit_n00K_0477, 10)
-    baseSpawn.addBase("castle", gg_rct_Left_Hero, gg_rct_Right_Start, gg_unit_h00E_0033, gg_rct_Right_Hero, gg_rct_Left_Start, gg_unit_h00E_0081, 2)
-    baseSpawn.addBase("cityElves", gg_rct_City_Elves_Left, gg_rct_Right_Start, gg_unit_hvlt_0207, gg_rct_City_Elves_Right, gg_rct_Left_Start, gg_unit_hvlt_0406, 2)
-    baseSpawn.addBase("cityFront", gg_rct_Front_Town_Left, gg_rct_Right_Start, gg_unit_n00B_0364, gg_rct_Front_City_Right, gg_rct_Left_Start, gg_unit_n00B_0399, 2)
-    baseSpawn.addBase("citySide", gg_rct_Left_City, gg_rct_Right_Start, gg_unit_n00B_0102, gg_rct_Right_City, gg_rct_Left_Start, gg_unit_n00B_0038, 2)
-    baseSpawn.addBase("furbolg", gg_rct_Furbolg_Left, gg_rct_Right_Start_Top, gg_unit_n00D_0003, gg_rct_Furbolg_Right, gg_rct_Left_Start_Bottom, gg_unit_n00D_0091, 1)
-    baseSpawn.addBase("highElves", gg_rct_Left_High_Elves, gg_rct_Right_Start_Top, gg_unit_nheb_0109, gg_rct_Right_High_Elves, gg_rct_Left_Start_Bottom, gg_unit_nheb_0036, 1)
-    baseSpawn.addBase("highElvesCreep", gg_rct_Left_High_Elves, gg_rct_Aspect_of_Forest_Left, gg_unit_nheb_0109, gg_rct_Right_High_Elves, gg_rct_Aspect_of_Forest_Right, gg_unit_nheb_0036, 9)
-    baseSpawn.addBase("merc", gg_rct_Camp_Bottom, gg_rct_Right_Start_Bottom, gg_unit_n001_0048, gg_rct_Camp_Top, gg_rct_Left_Start_Top, gg_unit_n001_0049, 3)
-    baseSpawn.addBase("mine", gg_rct_Left_Workshop, gg_rct_Right_Start_Bottom, gg_unit_h006_0074, gg_rct_Right_Workshop, gg_rct_Left_Start_Top, gg_unit_h006_0055, 3)
-    baseSpawn.addBase("naga", gg_rct_Naga_Left, gg_rct_Right_Start_Top, gg_unit_nntt_0135, gg_rct_Naga_Right, gg_rct_Left_Start_Bottom, gg_unit_nntt_0132, 1)
-    baseSpawn.addBase("nagaCreep", gg_rct_Naga_Left, gg_rct_Murloc_Left, gg_unit_nntt_0135, gg_rct_Naga_Right, gg_rct_Murloc_Right, gg_unit_nntt_0132, 8)
-    baseSpawn.addBase("nightElves", gg_rct_Left_Tree, gg_rct_Right_Start_Top, gg_unit_e003_0058, gg_rct_Right_Tree, gg_rct_Left_Start_Bottom, gg_unit_e003_0014, 1)
-    baseSpawn.addBase("orc", gg_rct_Left_Orc, gg_rct_Right_Start_Top, gg_unit_o001_0075, gg_rct_Right_Orc, gg_rct_Left_Start_Bottom, gg_unit_o001_0078, 1)
-    baseSpawn.addBase("shipyard", gg_rct_Left_Shipyard, gg_rct_Right_Start_Top, gg_unit_eshy_0120, gg_rct_Right_Shipyard, gg_rct_Left_Start_Bottom, gg_unit_eshy_0047, 1)
-    baseSpawn.addBase("town", gg_rct_Left_Forward_Camp, gg_rct_Right_Start_Bottom, gg_unit_h00F_0029, gg_rct_Right_Forward, gg_rct_Left_Start_Top, gg_unit_h00F_0066, 3)
-    baseSpawn.addBase("undead", gg_rct_Undead_Left, gg_rct_Right_Start, gg_unit_u001_0264, gg_rct_Undead_Right, gg_rct_Left_Start, gg_unit_u001_0262, 2)
-    
+		self.bases = {}
 
-    -- addUnit(baseName, unitType, numOfUnits, {waves}, levelStart, levelEnd)
+		function self.addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
 
-    -- Arcane Spawn
-    baseSpawn.addUnit("arcane", "h00C", 2, {5,6,7,8,9}, 3, 12)  -- Sorcress
-    baseSpawn.addUnit("arcane", "hgry", 1, {2,4,6,8,10}, 10, 12)  -- Gryphon Rider
- 
-    -- Arcane Creep Spawn
-    baseSpawn.addUnit("arcaneCreep", "narg", 2, {1,2,3,4}, 2, 12)  -- Battle Golem
-    baseSpawn.addUnit("arcaneCreep", "hwt2", 1, {1,2,3,4}, 3, 12)  -- Water Elemental (Level 2)
-    baseSpawn.addUnit("arcaneCreep", "hwt3", 1, {1,2,3,4}, 4, 12)  -- Water Elemental (Level 3)
-    baseSpawn.addUnit("arcaneCreep", "h00K", 1, {1,2,3,4,5,10}, 6, 12)  -- Magi Defender
+			-- Add all of the info the base and add the base name to the base list
+			self[baseName] = {allied = {startPoint = alliedStart, endPoint = alliedEnd, condition = alliedCondition}, fed = {startPoint = fedStart, endPoint = fedEnd, condition = fedCondition}, destination = destination, units = {}}
+			table.insert( self.bases, baseName )
+		end
 
-    -- Arcane Hero Sapwn
-    baseSpawn.addUnit("arcaneHero", "n00A", 1, {5,6}, 6, 12)  -- Supreme Wizard
-    baseSpawn.addUnit("arcaneHero", "nsgg", 1, {4,6}, 8, 12)  -- Seige Golem
+		function self.baseCount()
+			return #self.bases
+		end
 
-    -- Arcane Top Spawn
-    baseSpawn.addUnit("arcaneTop", "narg", 4, {4,5,6}, 2, 12)  -- Battle Golem
-    baseSpawn.addUnit("arcaneTop", "hwt2", 1, {4,5,6}, 4, 12)  -- Water Elemental (Level 2)
-    baseSpawn.addUnit("arcaneTop", "hwt3", 1, {5,6}, 8, 12)  -- Water Elemental (Level 3)
 
-    -- Arcane Bottom Spawn
-    baseSpawn.addUnit("arcaneBottom", "narg", 4, {1,2,3}, 2, 12)  -- Battle Golem
-    baseSpawn.addUnit("arcaneBottom", "hwt2", 1, {1,2,3}, 4, 12)  -- Water Elemental (Level 2)
-    baseSpawn.addUnit("arcaneBottom", "hwt3", 1, {2,3}, 8, 12)  -- Water Elemental (Level 3)
+		function self.unitCount( baseName )
+			return #self[baseName].units
+		end
 
-    -- Blacksmith Spawn
-    baseSpawn.addUnit("blacksmith", "h011", 1, {1,2,3,4,5}, 3, 12)  -- Castle Footman
-    baseSpawn.addUnit("blacksmith", "h00L", 1, {1,2,3,4}, 4, 12)  -- Knight
-    baseSpawn.addUnit("blacksmith", "h00L", 1, {1,2,3,4}, 5, 12)  -- Knight
-    baseSpawn.addUnit("blacksmith", "h012", 1, {1,2,3}, 6, 12)  -- Scarlet Commander
-    baseSpawn.addUnit("blacksmith", "hmtt", 1, {1,5}, 6, 12)  -- Seige Engine
-    baseSpawn.addUnit("blacksmith", "hmtm", 1, {3,8}, 7, 12)  -- Cannon
-    baseSpawn.addUnit("blacksmith", "h00D", 1, {2}, 10, 12)  -- Commander of the Guard
 
-    -- Blacksmith Creep Spawn
-    baseSpawn.addUnit("blacksmithCreep", "h007", 4, {1,2,3,4}, 1, 6)  -- Militia
-    baseSpawn.addUnit("blacksmithCreep", "nhea", 1, {1,2,3,4}, 3, 12)  -- Archer
-    baseSpawn.addUnit("blacksmithCreep", "hspt", 1, {1,2,3,4}, 4, 12)  -- Tower Guard
-    baseSpawn.addUnit("blacksmithCreep", "h012", 2, {1,2,3,4,5}, 6, 12)  -- Scarlet Commander
-    baseSpawn.addUnit("blacksmithCreep", "hcth", 2, {1,2,3,4,5}, 7, 12)  -- Captian
+		function self.unitInWave( baseName, unitIndex, waveNumber)
+			local waves = self[baseName].units[unitIndex].waves
 
-    -- Castle Spawn
-    baseSpawn.addUnit("castle", "h00s", 1, {1,2,3,4,5,6,7,8}, 8, 12)  -- Commander
+			for index, value in ipairs(waves) do
+				if value == waveNumber then
+					return true
+				end
+			end
 
-    -- City Elves
-    baseSpawn.addUnit("cityElves", "nhea", 1, {1,2,3,4,5,6}, 1, 3)  -- Archer
-    baseSpawn.addUnit("cityElves", "hspt", 1, {1,2,3,4,5,6,7,8}, 2, 3)  -- Tower Guard
-    baseSpawn.addUnit("cityElves", "hspt", 2, {1,2,3,4,5,6,7}, 4, 5)  -- Tower Guard
-    baseSpawn.addUnit("cityElves", "nchp", 1, {1,2,3,4}, 3, 12)  -- Mystic
-    baseSpawn.addUnit("cityElves", "hspt", 3, {1,2,3,4,5,6}, 6, 12)  -- Tower Guard
-    baseSpawn.addUnit("cityElves", "nhea", 1, {1,2,3,4,5,6,7,8}, 4, 12)  -- Archer
-    baseSpawn.addUnit("cityElves", "nchp", 1, {1,2,3,4,5,6,7}, 7, 12)  -- Mystic
+			return false
+		end
 
-    -- City Front Spawn
-    baseSpawn.addUnit("cityFront", "h007", 2, {2,3,4,5,6,7}, 1, 2)  -- Militia
-    baseSpawn.addUnit("cityFront", "h007", 3, {2,3,4,5,6,7}, 3, 5)  -- Militia
-    baseSpawn.addUnit("cityFront", "hfoo", 3, {2,3,4,5,6,7}, 4, 12)  -- Footman
-    baseSpawn.addUnit("cityFront", "hcth", 2, {2,3,4,5,6}, 6, 12)  -- Captian
 
-    -- City Side Spawn
-    baseSpawn.addUnit("citySide", "h007", 1, {6,7,8,9,10}, 1, 2)  -- Militia
-    baseSpawn.addUnit("citySide", "hfoo", 2, {6,7,8,9,10}, 2, 12)  -- Footman
-    baseSpawn.addUnit("citySide", "h007", 2, {6,7,8,9,10}, 3, 12)  -- Militia
+		function self.unitInLevel(baseName, unitIndex, levelNumber)
+			local levelStart, levelEnd = self[baseName].units[unitIndex].level[1], self[baseName].units[unitIndex].level[2]
 
-    -- Furbolg Spawn
-    baseSpawn.addUnit("furbolg", "n00E", 2, {1,3,4,5,6,7,8}, 1, 12)  -- Furbolg
-    baseSpawn.addUnit("furbolg", "n00G", 1, {1,3,5,7,9}, 3, 12)  -- Furbolg Shaman
-    baseSpawn.addUnit("furbolg", "n00E", 2, {2,7,8,9,10}, 4, 12)  -- Furbolg
-    
+			if (levelNumber >= levelStart and levelNumber <= levelEnd) then
+				return true
+			end
 
-    -- High Elves
-    baseSpawn.addUnit("highElves", "earc", 2, {1,2,3,4,5}, 1, 12)  -- Ranger
-    baseSpawn.addUnit("highElves", "e000", 1, {1,2,3,4,5,6,7,8}, 2, 12)  -- Elite Ranger
-    baseSpawn.addUnit("highElves", "hhes", 4, {1,2,3,4}, 4, 12)  -- Swordsman
-    baseSpawn.addUnit("highElves", "nemi", 1, {1,2,3,4,5,6}, 5, 12)  -- Emmisary
+			return false
+		end
 
-    -- High Elves Creep
-    baseSpawn.addUnit("highElvesCreep", "hhes", 2, {1,2,3,4}, 1, 12)  -- Swordsman
-    baseSpawn.addUnit("highElvesCreep", "nhea", 1, {1,2,3,4,5}, 2, 12)  -- Archer
-    baseSpawn.addUnit("highElvesCreep", "nemi", 1, {1,2,3,4}, 4, 12)  -- Emmisary
-    baseSpawn.addUnit("highElvesCreep", "h010", 2, {1,2,3,4,5}, 5, 12)  -- Elven Guardian
 
-    -- Merc Spawn
-    baseSpawn.addUnit("merc", "n002", 2, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Merc
-    baseSpawn.addUnit("merc", "n003", 2, {4,5,6,7,8,9,10}, 2, 12)  -- Merc Archer
-    baseSpawn.addUnit("merc", "n002", 2, {7,8,9,10}, 3, 12)  -- Merc
-    baseSpawn.addUnit("merc", "n008", 3, {7,8,9,10}, 4, 12)  -- Enforcer
-    baseSpawn.addUnit("merc", "nass", 1, {6,7,8,9,10}, 5, 12)  -- Assasin
-    baseSpawn.addUnit("merc", "n004", 1, {7,8,9,10}, 1, 12)  -- Wizard Warrior
-    baseSpawn.addUnit("merc", "n005", 1, {7,8,9,10}, 6, 12)  -- Bandit Lord
 
-    -- Mine Spawn
-    baseSpawn.addUnit("mine", "h001", 1, {2,3,4,5,6}, 2, 12)  -- Morter Team
-    baseSpawn.addUnit("mine", "h008", 2, {1,2,3,4,5,6,7,8}, 3, 12)  -- Rifleman
-    baseSpawn.addUnit("mine", "h013", 1, {1,2,3,4,5,6,7,8}, 4, 12)  -- Rifleman Long
-    baseSpawn.addUnit("mine", "ncg2", 2, {1,2,3,4,5}, 4, 12)  -- Clockwerk Goblin
-    baseSpawn.addUnit("mine", "n00F", 1, {2,3,4,5,6,7}, 5, 12)  -- Automaton
+		function self.baseAlive(baseName)
+			
+			local alliedBaseAlive = IsUnitAliveBJ(self[baseName].allied.condition)
+			local fedBaseAlive = IsUnitAliveBJ(self[baseName].fed.condition)
 
-    -- Naga Spawn
-    baseSpawn.addUnit("naga", "nmyr", 1, {3,4,5,6,7,8,9,10}, 1, 12)  -- Naga Myrmidon
-    baseSpawn.addUnit("naga", "nnsw", 1, {4,5,6,7,8,9,10}, 2, 12)  -- Naga Siren
-    baseSpawn.addUnit("naga", "nnrg", 1, {5,6,8,9,10}, 5, 12)  -- Naga Royal Guard
-    baseSpawn.addUnit("naga", "nhyc", 1, {1,3,5,7,8,9}, 9, 12)  -- Dragon Turtle
+			--local alliedBaseAlive = true
+			--local fedBaseAlive = true
 
-    -- Naga Creep Spawn
-    baseSpawn.addUnit("nagaCreep", "nmyr", 2, {1,2,3,4}, 2, 12)  -- Naga Myrmidon
-    baseSpawn.addUnit("nagaCreep", "nnsw", 1, {2,3,4,5}, 4, 12)  -- Naga Siren
-    baseSpawn.addUnit("nagaCreep", "nsnp", 1, {2,3,4,5}, 6, 12)  -- Snap Dragon
 
-    -- Night Elves Spawn
-    baseSpawn.addUnit("nightElves", "nwat", 1, {3,4,5,6,7,8,9}, 2, 12)  -- Sentry
-    baseSpawn.addUnit("nightElves", "edry", 1, {1,4,5,7,9}, 3, 12)  -- Dryad
-    baseSpawn.addUnit("nightElves", "edoc", 2, {1,3,5,7,9}, 4, 12)  -- Druid of the Claw
-    baseSpawn.addUnit("nightElves", "e005", 1, {2,4,6,8}, 5, 12)  -- Mountain Giant
-    baseSpawn.addUnit("nightElves", "echm", 1, {5,7}, 9, 12)  -- Chimera
-    
-    -- Orc Spawn
-    baseSpawn.addUnit("orc", "o002", 2, {3,5,6,7,8,9,10}, 1, 12)  -- Grunt
-    baseSpawn.addUnit("orc", "o002", 2, {6,7,8}, 3, 12)  -- Grunt
-    baseSpawn.addUnit("orc", "nftr", 1, {4,5,7,8,9,10}, 2, 12)  -- Spearman
-    baseSpawn.addUnit("orc", "nogr", 3, {2,4,6,8,10}, 4, 12)  -- Ogre
-    baseSpawn.addUnit("orc", "o004", 1, {6,7,8}, 3, 12)  -- Spirit Walker
-    baseSpawn.addUnit("orc", "nogm", 1, {1,6,8}, 4, 12)  -- Ogre Warchief
-    baseSpawn.addUnit("orc", "otau", 1, {5,6,7}, 5, 12)  -- Tauren
+			return alliedBaseAlive, fedBaseAlive
+		end
 
-    -- Shipyard Spawn
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2}, 1, 2)  -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,3,4}, 3, 4)  -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,3,5,6,7,9}, 5, 12)  -- Night Elf Frigate
 
-    -- Town Spawn
-    baseSpawn.addUnit("town", "h007", 3, {1,2,3,4,5}, 1, 5)  -- Militia
-    baseSpawn.addUnit("town", "hcth", 1, {1,2,3,4}, 2, 12)  -- Captian
-    baseSpawn.addUnit("town", "hfoo", 5, {1,2,3,4,5,6}, 3, 12)  -- Footman
-    baseSpawn.addUnit("town", "h00L", 2, {1,3,7,9}, 4, 12)  -- Knight
+		function self.checkSpawnUnit(baseName, unitIndex, levelNumber, waveNumber)
+			local alliedBaseAlive, fedBaseAlive = self.baseAlive(baseName)
+			local unitInWave = self.unitInWave(baseName, unitIndex, waveNumber)
+			local unitInLevel = self.unitInLevel(baseName, unitIndex, levelNumber)
+			local numOfUnits = self[baseName].units[unitIndex].numOfUnits
+			local unitType = self[baseName].units[unitIndex].unitType
 
-    -- Undead Spawn
-    baseSpawn.addUnit("undead", "ugho", 3, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Ghoul
-    baseSpawn.addUnit("undead", "unec", 1, {1,2,3,4,5,6,7}, 2, 12)  -- Necromancer
-    baseSpawn.addUnit("undead", "nerw", 1, {1,6}, 4, 12)  -- Warlock
-    baseSpawn.addUnit("undead", "nfgl", 1, {2,7}, 6, 12)  -- Flesh Golem
+			if unitInWave and unitInLevel then
+				return alliedBaseAlive, fedBaseAlive, numOfUnits, unitType
+			else
+				return false, false, numOfUnits, unitType
+			end
+		end
 
-    
-    --DisplayTextToForce(GetPlayersAll() , "Spawn Setup")
-    StartTimerBJ(spawnTimer, false, 10)
+		function self.addUnit(baseName, unitType, numOfUnits, waves, levelStart, levelEnd)
+			table.insert( self[baseName].units, {unitType=unitType, numOfUnits=numOfUnits, waves=waves, level={levelStart, levelEnd}} )
+		end
+
+
+		function self.spawnUnits(baseName, levelNumber, waveNumber)
+
+			local pStart
+			local pDest
+			local allied = false
+			local fed = false
+			local lcu
+			local unitType
+			local numOfUnits
+
+			for unitI=1,self.unitCount(baseName) do
+				allied, fed, numOfUnits, unitType = self.checkSpawnUnit(baseName, unitI, levelNumber, waveNumber)
+
+				if allied then
+
+					for i=1,numOfUnits do
+						pStart = GetRandomLocInRect(self[baseName].allied.startPoint)
+						pDest = GetRandomLocInRect(self[baseName].allied.endPoint)
+
+						lcu = CreateUnitAtLoc(Player(GetRandomInt(18, 20)), FourCC(unitType), pStart, bj_UNIT_FACING)
+						SetUnitUserData(lcu, self[baseName].destination)
+						IssuePointOrderLoc(lcu, "attack", pDest)
+
+						RemoveLocation(pStart)
+						RemoveLocation(pDest)
+					end
+				end
+
+				if fed then
+
+					for i=1,numOfUnits do
+						pStart = GetRandomLocInRect(self[baseName].fed.startPoint)
+						pDest = GetRandomLocInRect(self[baseName].fed.endPoint)
+
+						lcu = CreateUnitAtLoc(Player(GetRandomInt(21, 23)), FourCC(unitType), pStart, bj_UNIT_FACING)
+						SetUnitUserData(lcu, self[baseName].destination)
+						IssuePointOrderLoc(lcu, "attack", pDest)
+
+						RemoveLocation(pStart)
+						RemoveLocation(pDest)
+					end
+
+				end
+			end
+		end
+
+		return self
+	end
 end
 
 
-
-
-function spawnRun()
-
-    trg_spawnRun = CreateTrigger()
-    TriggerRegisterTimerExpireEventBJ(trg_spawnRun, spawnTimer)
-
-    TriggerAddAction(trg_spawnRun, function ()
-
-        -- Iterate everything up
-        spawnBaseI = spawnBaseI + 1
-
-        if (spawnBaseI > baseSpawn.baseCount() ) then
-            spawnBaseI = 0
-            spawnWave = spawnWave + 1
-
-            if spawnWave > 10 then
-                spawnWave = 1
-                StartTimerBJ(spawnTimer, false, cycleInterval)
-            else
-                StartTimerBJ(spawnTimer, false, waveInterval)
-            end
-
-            return true
-        else
-            StartTimerBJ(spawnTimer, false, baseInterval)
-        end
-        
-
-        -- Find the Base to Spawn Next
-        local baseName = baseSpawn.bases[spawnBaseI]
-
-        -- Spawn the Units at the selected Base
-        DisableTrigger(gg_trg_Creeps_keep_going_after_Order)
-        baseSpawn.spawnUnits(baseName, udg_INTcreepLevel, spawnWave)
-        EnableTrigger(gg_trg_Creeps_keep_going_after_Order)
-    end)  
-end
 function init_Trig_Auto_Zoom()
 	trg_Auto_Zoom = CreateTrigger()
 	DisableTrigger(trg_Auto_Zoom)
