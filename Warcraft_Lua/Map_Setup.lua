@@ -6,11 +6,11 @@ function MapSetup()
 	mapAI = ai.new()
 
 	-- Trigger Init
-	init_Trig_Auto_Zoom()
+	initTrig_Auto_Zoom()
 	InitTrig_AI_MAIN()
 	InitTrig_Computer_Picks()
-	InitTrig_Hero_Level_Ups()
-	InitTrig_AI_Spell_Start()
+	--InitTrig_Hero_Level_Ups()
+	--InitTrig_AI_Spell_Start()
 	
 	--init_AI()
 

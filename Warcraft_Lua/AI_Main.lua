@@ -50,7 +50,7 @@ function Computer_Picks()
         selPlayer = ConvertedPlayer(i)
 		if (GetPlayerController(selPlayer) == MAP_CONTROL_COMPUTER) then
 
-            if (IsPlayerAlly(selPlayer, ForcePickRandomPlayer(udg_PLAYERGRPallied)) == true) then
+            if (i < 7) then
                 udg_INT_TeamNumber[i] = 1
                 x = GetRectCenterX(gg_rct_Left_Hero)
                 y = GetRectCenterY(gg_rct_Left_Hero)
