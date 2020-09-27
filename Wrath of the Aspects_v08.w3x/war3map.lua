@@ -1199,11 +1199,11 @@ function MapSetup()
 	mapAI = ai.new()
 
 	-- Trigger Init
-	init_Trig_Auto_Zoom()
+	initTrig_Auto_Zoom()
 	InitTrig_AI_MAIN()
 	InitTrig_Computer_Picks()
-	InitTrig_Hero_Level_Ups()
-	InitTrig_AI_Spell_Start()
+	--InitTrig_Hero_Level_Ups()
+	--InitTrig_AI_Spell_Start()
 	
 	--init_AI()
 
@@ -1269,7 +1269,7 @@ function Computer_Picks()
         selPlayer = ConvertedPlayer(i)
 		if (GetPlayerController(selPlayer) == MAP_CONTROL_COMPUTER) then
 
-            if (IsPlayerAlly(selPlayer, ForcePickRandomPlayer(udg_PLAYERGRPallied)) == true) then
+            if (i < 7) then
                 udg_INT_TeamNumber[i] = 1
                 x = GetRectCenterX(gg_rct_Left_Hero)
                 y = GetRectCenterY(gg_rct_Left_Hero)
@@ -1437,9 +1437,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAlly = false
-				hero.clumbEnemy = false
-				hero.clumbBoth = false
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 100.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 500.00
@@ -1460,9 +1460,9 @@ function init_AIClass()
 				hero.powerBase = 700.00
 				hero.powerLevel = 220.00
 
-				hero.clumpAlly = false
-				hero.clumbEnemy = false
-				hero.clumbBoth = false
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 100.00
 				hero.intelRange = 1000.00
 				hero.closeRange = 500.00
@@ -1483,9 +1483,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAlly = false
-				hero.clumbEnemy = false
-				hero.clumbBoth = false
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 250.00
 				hero.intelRange = 1000.00
 				hero.closeRange = 400.00
@@ -1506,9 +1506,9 @@ function init_AIClass()
 				hero.powerBase = 750.00
 				hero.powerLevel = 250.00
 
-				hero.clumpAlly = false
-				hero.clumbEnemy = false
-				hero.clumbBoth = false
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 250.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 700.00
@@ -1529,9 +1529,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAlly = false
-				hero.clumbEnemy = false
-				hero.clumbBoth = false
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 150.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 400.00
@@ -1675,7 +1675,7 @@ function init_AIClass()
 							hero.powerEnemy = hero.powerEnemy + (unitPower * (unitLife / 100.00) * unitPowerRangeMultiplier )
 						end
 
-						if hero.clumpAlly == true or hero.clumpEnemy == true or hero.clumpBoth == true then
+						if hero.clumpAllyCheck == true or hero.clumpEnemyCheck == true or hero.clumpBothCheck == true then
 
 							powerAllyTemp = 0
 							powerEnemyTemp = 0
@@ -1697,17 +1697,17 @@ function init_AIClass()
 							end
 							DestroyGroup(clump)
 
-							if hero.clumpAlly == true and powerAllyTemp > hero.clumpFriendPower then
+							if hero.clumpAllyCheck == true and powerAllyTemp > hero.clumpFriendPower then
 								hero.clumpFriendPower = powerAllyTemp
 								hero.clumpFriend = u
 							end
 
-							if hero.clumpEnemy == true and powerEnemyTemp > hero.clumpEnemyPower then
+							if hero.clumpEnemyCheckCheck == true and powerEnemyTemp > hero.clumpEnemyPower then
 								hero.clumpEnemyPower = powerEnemyTemp
 								hero.clumpEnemy = u
 							end
 
-							if hero.clumpBoth == true and (powerAllyTemp + powerEnemyTemp) > hero.clumpBothPower then
+							if hero.clumpBothCheck == true and (powerAllyTemp + powerEnemyTemp) > hero.clumpBothPower then
 								hero.clumpBothPower = powerAllyTemp + powerEnemyTemp
 								hero.clumpBoth = u
 							end
@@ -1967,68 +1967,68 @@ function init_AIClass()
 end
 
 
-function InitTrig_AI_Spell_Start()
-	local t = CreateTrigger()
-	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
-	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
+-- function InitTrig_AI_Spell_Start()
+-- 	local t = CreateTrigger()
+-- 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
+-- 	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
 
-	TriggerAddAction(t, function()
-		local hero = self[GetUnitUserData(GetTriggerUnit())]
-		hero.casting = true
-		hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
-		BJDebugMsg("Spell Cast")
-	end)
-end
+-- 	TriggerAddAction(t, function()
+-- 		local hero = self[GetUnitUserData(GetTriggerUnit())]
+-- 		hero.casting = true
+-- 		hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+-- 		BJDebugMsg("Spell Cast")
+-- 	end)
+-- end
 
 
-function InitTrig_Hero_Level_Ups()
-	local t = CreateTrigger()
-	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
+-- function InitTrig_Hero_Level_Ups()
+-- 	local t = CreateTrigger()
+-- 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
 
-	TriggerAddAction(t, function()
+-- 	TriggerAddAction(t, function()
 	
-		local u = GetLevelingUnit()
-		local uType = GetUnitTypeId(u)
+-- 		local u = GetLevelingUnit()
+-- 		local uType = GetUnitTypeId(u)
 
-		if GetPlayerController( GetOwningPlayer(u) ) == MAP_CONTROL_COMPUTER then
+-- 		if GetPlayerController( GetOwningPlayer(u) ) == MAP_CONTROL_COMPUTER then
 
-			if uType == FourCC("H00R") then
-				SelectHeroSkill(u, FourCC("A015"))
-				SelectHeroSkill(u, FourCC("A001"))
-				SelectHeroSkill(u, FourCC("A03S"))
-				SelectHeroSkill(u, FourCC("A018"))
-				SelectHeroSkill(u, FourCC("A02B"))
+-- 			if uType == FourCC("H00R") then
+-- 				SelectHeroSkill(u, FourCC("A015"))
+-- 				SelectHeroSkill(u, FourCC("A001"))
+-- 				SelectHeroSkill(u, FourCC("A03S"))
+-- 				SelectHeroSkill(u, FourCC("A018"))
+-- 				SelectHeroSkill(u, FourCC("A02B"))
 				
-			elseif uType == FourCC("E001") then
-				SelectHeroSkill(u, FourCC("A029"))
-				SelectHeroSkill(u, FourCC("A01Y"))
-				SelectHeroSkill(u, FourCC("A007"))
-				SelectHeroSkill(u, FourCC("A002"))
+-- 			elseif uType == FourCC("E001") then
+-- 				SelectHeroSkill(u, FourCC("A029"))
+-- 				SelectHeroSkill(u, FourCC("A01Y"))
+-- 				SelectHeroSkill(u, FourCC("A007"))
+-- 				SelectHeroSkill(u, FourCC("A002"))
 				
-			elseif uType == FourCC("E002") then
-				SelectHeroSkill(u, FourCC("A03C"))
-				SelectHeroSkill(u, FourCC("A02Y"))
-				SelectHeroSkill(u, FourCC("A03U"))
-				SelectHeroSkill(u, FourCC("A030"))
-				SelectHeroSkill(u, FourCC("A03T"))
+-- 			elseif uType == FourCC("E002") then
+-- 				SelectHeroSkill(u, FourCC("A03C"))
+-- 				SelectHeroSkill(u, FourCC("A02Y"))
+-- 				SelectHeroSkill(u, FourCC("A03U"))
+-- 				SelectHeroSkill(u, FourCC("A030"))
+-- 				SelectHeroSkill(u, FourCC("A03T"))
 				
-			elseif uType == FourCC("H009") then
-				SelectHeroSkill(u, FourCC("A042"))
-				SelectHeroSkill(u, FourCC("A01I"))
-				SelectHeroSkill(u, FourCC("A01B"))
-				SelectHeroSkill(u, FourCC("A01Z"))
-				SelectHeroSkill(u, FourCC("A019"))
+-- 			elseif uType == FourCC("H009") then
+-- 				SelectHeroSkill(u, FourCC("A042"))
+-- 				SelectHeroSkill(u, FourCC("A01I"))
+-- 				SelectHeroSkill(u, FourCC("A01B"))
+-- 				SelectHeroSkill(u, FourCC("A01Z"))
+-- 				SelectHeroSkill(u, FourCC("A019"))
 				
-			elseif uType == FourCC("H00J") then
-				SelectHeroSkill(u, FourCC("A04N"))
-				SelectHeroSkill(u, FourCC("A04I"))
-				SelectHeroSkill(u, FourCC("A04P"))
-				SelectHeroSkill(u, FourCC("A04K"))
-				SelectHeroSkill(u, FourCC("A032"))
-			end
-		end
-	end)
-end
+-- 			elseif uType == FourCC("H00J") then
+-- 				SelectHeroSkill(u, FourCC("A04N"))
+-- 				SelectHeroSkill(u, FourCC("A04I"))
+-- 				SelectHeroSkill(u, FourCC("A04P"))
+-- 				SelectHeroSkill(u, FourCC("A04K"))
+-- 				SelectHeroSkill(u, FourCC("A032"))
+-- 			end
+-- 		end
+-- 	end)
+-- end
 
 function init_SpawnClass()
 
@@ -2299,7 +2299,7 @@ function init_SpawnClass()
 end
 
 
-function init_Trig_Auto_Zoom()
+function initTrig_Auto_Zoom()
 	trg_Auto_Zoom = CreateTrigger()
 	DisableTrigger(trg_Auto_Zoom)
 	TriggerRegisterTimerEventPeriodic(trg_Auto_Zoom, 3.00)
@@ -2312,7 +2312,7 @@ function init_Trig_Auto_Zoom()
 		while (i <= 12 ) do
 			
 			ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-			SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE, (1900.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+			SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE, (2000.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
 			DestroyGroup(ug)
 			i = i + 1
 		end
