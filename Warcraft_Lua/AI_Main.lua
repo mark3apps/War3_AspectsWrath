@@ -5,7 +5,11 @@ function AI_MAIN()
 	print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
     
-    mapAI.updateIntel(pickedHero)
+    debugfunc( function()
+        local pickedHero = mapAI.heroOptions[AI_Loop]
+        mapAI.updateIntel(pickedHero)
+    end, "mapAI.updateIntel")
+    
 
 	if mapAI.isAlive(pickedHero) then	
 		mapAI.STATELowHealth(pickedHero)
