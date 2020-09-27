@@ -1,12 +1,8 @@
-function errorHandler( err )
-   BJDebugMsg( "ERROR:", err )
-end
 
 function AI_MAIN()
 
 
-
-	BJDebugMsg(" -- ")
+	print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
     
     mapAI.updateIntel(pickedHero)
