@@ -1,4 +1,4 @@
-function init_Trig_Auto_Zoom()
+function initTrig_Auto_Zoom()
 	trg_Auto_Zoom = CreateTrigger()
 	DisableTrigger(trg_Auto_Zoom)
 	TriggerRegisterTimerEventPeriodic(trg_Auto_Zoom, 3.00)
