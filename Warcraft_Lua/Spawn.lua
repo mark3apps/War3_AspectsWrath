@@ -175,8 +175,8 @@ function spawnSetup()
     baseSpawn.addUnit("town", "h00L", 2, {1,3,7,9}, 4, 12)  -- Knight
 
     -- Undead Spawn
-    baseSpawn.addUnit("undead", "ugho", 4, {1,2,3,4,5,6,7}, 1, 12)  -- Ghoul
-    baseSpawn.addUnit("undead", "uskm", 1, {1,2,3,4,5,6,7,8,9,10}, 2, 12)  -- Skeleton Mage
+    baseSpawn.addUnit("undead", "ugho", 6, {1,2,3,4,5,6,7}, 1, 12)  -- Ghoul
+    baseSpawn.addUnit("undead", "uskm", 2, {1,2,3,4,5,6,7,8,9,10}, 2, 12)  -- Skeleton Mage
     baseSpawn.addUnit("undead", "unec", 1, {1,2,3,4,5,6,7}, 3, 12)  -- Necromancer
     baseSpawn.addUnit("undead", "nerw", 1, {1,6}, 4, 12)  -- Warlock
     baseSpawn.addUnit("undead", "nfgl", 1, {2,5,8}, 5, 12)  -- Flesh Golem
