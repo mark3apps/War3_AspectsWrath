@@ -11913,3 +11913,9 @@ STRING 3892
 Undead Skulls
 }
 
+STRING 3893
+// Units: n00V (Nerubian Ziggurat), EditorSuffix (Name - Editor Suffix)
+{
+(Big)
+}
+
