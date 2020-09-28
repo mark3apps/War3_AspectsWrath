@@ -615,8 +615,11 @@ end
 function InitTrig_AI_Spell_Start()
 	local t = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
-	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
 
+	print(CountUnitsInGroup(mapAI.heroGroup))
+
+	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
+	
 	TriggerAddAction(t, function()
 		local hero = self[GetUnitUserData(GetTriggerUnit())]
 		hero.casting = true
