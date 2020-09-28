@@ -618,7 +618,9 @@ function InitTrig_AI_Spell_Start()
 
 	print(CountUnitsInGroup(mapAI.heroGroup))
 
-	TriggerAddCondition(t, Condition(IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup)))
+	TriggerAddCondition(t, Condition( function()
+		IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup)
+	end))
 	
 	TriggerAddAction(t, function()
 		local hero = self[GetUnitUserData(GetTriggerUnit())]
