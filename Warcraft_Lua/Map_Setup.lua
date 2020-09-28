@@ -14,8 +14,8 @@ function MapSetup()
 	InitTrig_AI_MAIN()
 	print("Init Computer Picks")
 	InitTrig_Computer_Picks()
-	--InitTrig_Hero_Level_Ups()
-	--InitTrig_AI_Spell_Start()
+	InitTrig_Hero_Level_Ups()
+	InitTrig_AI_Spell_Start()
 	
 	--init_AI()
 

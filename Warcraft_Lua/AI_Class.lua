@@ -46,7 +46,7 @@ function init_AIClass()
 
 			hero.heroesFriend = CreateGroup()
 			hero.heroesEnemy = CreateGroup()
-			hero.lifeHistory = {}
+			hero.lifeHistory = {0.00,0.00,0.00}
 			SetUnitUserData(hero.unit, self.count)
 
 			
@@ -82,9 +82,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpAllyCheck = true
+				hero.clumbEnemyCheck = true
+				hero.clumbBothCheck = true
 				hero.clumpRange = 100.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 500.00
@@ -105,9 +105,9 @@ function init_AIClass()
 				hero.powerBase = 700.00
 				hero.powerLevel = 220.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpAllyCheck = true
+				hero.clumbEnemyCheck = true
+				hero.clumbBothCheck = true
 				hero.clumpRange = 100.00
 				hero.intelRange = 1000.00
 				hero.closeRange = 500.00
@@ -128,9 +128,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpAllyCheck = true
+				hero.clumbEnemyCheck = true
+				hero.clumbBothCheck = true
 				hero.clumpRange = 250.00
 				hero.intelRange = 1000.00
 				hero.closeRange = 400.00
@@ -151,9 +151,9 @@ function init_AIClass()
 				hero.powerBase = 750.00
 				hero.powerLevel = 250.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpAllyCheck = true
+				hero.clumbEnemyCheck = true
+				hero.clumbBothCheck = true
 				hero.clumpRange = 250.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 700.00
@@ -174,9 +174,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpAllyCheck = true
+				hero.clumbEnemyCheck = true
+				hero.clumbBothCheck = true
 				hero.clumpRange = 150.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 400.00
@@ -388,8 +388,8 @@ function init_AIClass()
 				hero.powerBase = hero.powerBase + (0.25 * I2R(hero.level))
 				hero.powerHero = hero.powerBase + (hero.powerLevel * I2R(hero.level) )
 
-				BJDebugMsg("Hero Power: " .. R2S(hero.powerHero))
-				BJDebugMsg("Power Level: " .. R2S(hero.powerCount))
+				--print("Hero Power: " .. R2S(hero.powerHero))
+				--print("Power Level: " .. R2S(hero.powerCount))
 			end
 
 			
@@ -612,65 +612,65 @@ function init_AIClass()
 end
 
 
--- function InitTrig_AI_Spell_Start()
--- 	local t = CreateTrigger()
--- 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
--- 	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
+function InitTrig_AI_Spell_Start()
+	local t = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
+	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
 
--- 	TriggerAddAction(t, function()
--- 		local hero = self[GetUnitUserData(GetTriggerUnit())]
--- 		hero.casting = true
--- 		hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
--- 		BJDebugMsg("Spell Cast")
--- 	end)
--- end
+	TriggerAddAction(t, function()
+		local hero = self[GetUnitUserData(GetTriggerUnit())]
+		hero.casting = true
+		hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+		BJDebugMsg("Spell Cast")
+	end)
+end
 
 
--- function InitTrig_Hero_Level_Ups()
--- 	local t = CreateTrigger()
--- 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
+function InitTrig_Hero_Level_Ups()
+	local t = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
 
--- 	TriggerAddAction(t, function()
+	TriggerAddAction(t, function()
 	
--- 		local u = GetLevelingUnit()
--- 		local uType = GetUnitTypeId(u)
+		local u = GetLevelingUnit()
+		local uType = GetUnitTypeId(u)
 
--- 		if GetPlayerController( GetOwningPlayer(u) ) == MAP_CONTROL_COMPUTER then
+		if GetPlayerController( GetOwningPlayer(u) ) == MAP_CONTROL_COMPUTER then
 
--- 			if uType == FourCC("H00R") then
--- 				SelectHeroSkill(u, FourCC("A015"))
--- 				SelectHeroSkill(u, FourCC("A001"))
--- 				SelectHeroSkill(u, FourCC("A03S"))
--- 				SelectHeroSkill(u, FourCC("A018"))
--- 				SelectHeroSkill(u, FourCC("A02B"))
+			if uType == FourCC("H00R") then
+				SelectHeroSkill(u, FourCC("A015"))
+				SelectHeroSkill(u, FourCC("A001"))
+				SelectHeroSkill(u, FourCC("A03S"))
+				SelectHeroSkill(u, FourCC("A018"))
+				SelectHeroSkill(u, FourCC("A02B"))
 				
--- 			elseif uType == FourCC("E001") then
--- 				SelectHeroSkill(u, FourCC("A029"))
--- 				SelectHeroSkill(u, FourCC("A01Y"))
--- 				SelectHeroSkill(u, FourCC("A007"))
--- 				SelectHeroSkill(u, FourCC("A002"))
+			elseif uType == FourCC("E001") then
+				SelectHeroSkill(u, FourCC("A029"))
+				SelectHeroSkill(u, FourCC("A01Y"))
+				SelectHeroSkill(u, FourCC("A007"))
+				SelectHeroSkill(u, FourCC("A002"))
 				
--- 			elseif uType == FourCC("E002") then
--- 				SelectHeroSkill(u, FourCC("A03C"))
--- 				SelectHeroSkill(u, FourCC("A02Y"))
--- 				SelectHeroSkill(u, FourCC("A03U"))
--- 				SelectHeroSkill(u, FourCC("A030"))
--- 				SelectHeroSkill(u, FourCC("A03T"))
+			elseif uType == FourCC("E002") then
+				SelectHeroSkill(u, FourCC("A03C"))
+				SelectHeroSkill(u, FourCC("A02Y"))
+				SelectHeroSkill(u, FourCC("A03U"))
+				SelectHeroSkill(u, FourCC("A030"))
+				SelectHeroSkill(u, FourCC("A03T"))
 				
--- 			elseif uType == FourCC("H009") then
--- 				SelectHeroSkill(u, FourCC("A042"))
--- 				SelectHeroSkill(u, FourCC("A01I"))
--- 				SelectHeroSkill(u, FourCC("A01B"))
--- 				SelectHeroSkill(u, FourCC("A01Z"))
--- 				SelectHeroSkill(u, FourCC("A019"))
+			elseif uType == FourCC("H009") then
+				SelectHeroSkill(u, FourCC("A042"))
+				SelectHeroSkill(u, FourCC("A01I"))
+				SelectHeroSkill(u, FourCC("A01B"))
+				SelectHeroSkill(u, FourCC("A01Z"))
+				SelectHeroSkill(u, FourCC("A019"))
 				
--- 			elseif uType == FourCC("H00J") then
--- 				SelectHeroSkill(u, FourCC("A04N"))
--- 				SelectHeroSkill(u, FourCC("A04I"))
--- 				SelectHeroSkill(u, FourCC("A04P"))
--- 				SelectHeroSkill(u, FourCC("A04K"))
--- 				SelectHeroSkill(u, FourCC("A032"))
--- 			end
--- 		end
--- 	end)
--- end
+			elseif uType == FourCC("H00J") then
+				SelectHeroSkill(u, FourCC("A04N"))
+				SelectHeroSkill(u, FourCC("A04I"))
+				SelectHeroSkill(u, FourCC("A04P"))
+				SelectHeroSkill(u, FourCC("A04K"))
+				SelectHeroSkill(u, FourCC("A032"))
+			end
+		end
+	end)
+end
