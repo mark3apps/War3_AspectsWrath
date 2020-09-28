@@ -5,19 +5,16 @@ function AI_MAIN()
 	print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
     
-    debugfunc( function()
-        local pickedHero = mapAI.heroOptions[AI_Loop]
-        mapAI.updateIntel(pickedHero)
-        if mapAI.isAlive(pickedHero) then	
-		    mapAI.STATELowHealth(pickedHero)
-            mapAI.STATEHighHealth(pickedHero)
-            mapAI.STATEFleeing(pickedHero)
-            mapAI.STATEStopFleeing(pickedHero)
-		    mapAI.STATEDead(pickedHero)
-	    else
-		    mapAI.STATERevived(pickedHero)
-	    end
-    end, "mapAI.updateIntel")
+    mapAI.updateIntel(pickedHero)
+    if mapAI.isAlive(pickedHero) then	
+        mapAI.STATELowHealth(pickedHero)
+        mapAI.STATEHighHealth(pickedHero)
+        mapAI.STATEFleeing(pickedHero)
+        mapAI.STATEStopFleeing(pickedHero)
+        mapAI.STATEDead(pickedHero)
+    else
+        mapAI.STATERevived(pickedHero)
+    end
 
 	
     if (AI_Loop >= mapAI.count) then
