@@ -1994,8 +1994,11 @@ end
 function InitTrig_AI_Spell_Start()
 	local t = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
-	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
 
+	print(CountUnitsInGroup(mapAI.heroGroup))
+
+	TriggerAddCondition(t, IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup))
+	
 	TriggerAddAction(t, function()
 		local hero = self[GetUnitUserData(GetTriggerUnit())]
 		hero.casting = true
@@ -6330,6 +6333,9 @@ function InitTrig_STATE_CAST_Chrono_Atrophy()
 end
 
 function Trig_EVENT_Casts_a_Spell_Conditions()
+    if (not (IsUnitInGroup(GetTriggerUnit(), GetUnitsInRectAll(GetPlayableMapRect())) == true)) then
+        return false
+    end
     if (not (IsUnitType(GetSpellAbilityUnit(), UNIT_TYPE_HERO) == true)) then
         return false
     end
