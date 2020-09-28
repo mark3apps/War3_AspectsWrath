@@ -1194,24 +1194,17 @@ end
 function MapSetup()
 
 	-- Classes
-	print("Init Spawn Class")
 	init_SpawnClass()
-	print("Init AI Class")
 	init_AIClass()
 	mapAI = ai.new()
 
-	-- Trigger Init
-	print("Init Camera")
+	-- Trigger Init=
 	initTrig_Auto_Zoom()
-
-	print("Init AI Main")
 	InitTrig_AI_MAIN()
-
-	print("Init Computer Picks")
 	InitTrig_Computer_Picks()
 	
-	debugfunc(InitTrig_Hero_Level_Ups, "InitTrig_Hero_Level_Ups")
-	debugfunc(InitTrig_AI_Spell_Start, "InitTrig_AI_Spell_Start")
+	InitTrig_Hero_Level_Ups()
+	InitTrig_AI_Spell_Start()
 	
 	
 	--init_AI()
@@ -1245,19 +1238,16 @@ function AI_MAIN()
 	print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
     
-    debugfunc( function()
-        local pickedHero = mapAI.heroOptions[AI_Loop]
-        mapAI.updateIntel(pickedHero)
-        if mapAI.isAlive(pickedHero) then	
-		    mapAI.STATELowHealth(pickedHero)
-            mapAI.STATEHighHealth(pickedHero)
-            mapAI.STATEFleeing(pickedHero)
-            mapAI.STATEStopFleeing(pickedHero)
-		    mapAI.STATEDead(pickedHero)
-	    else
-		    mapAI.STATERevived(pickedHero)
-	    end
-    end, "mapAI.updateIntel")
+    mapAI.updateIntel(pickedHero)
+    if mapAI.isAlive(pickedHero) then	
+        mapAI.STATELowHealth(pickedHero)
+        mapAI.STATEHighHealth(pickedHero)
+        mapAI.STATEFleeing(pickedHero)
+        mapAI.STATEStopFleeing(pickedHero)
+        mapAI.STATEDead(pickedHero)
+    else
+        mapAI.STATERevived(pickedHero)
+    end
 
 	
     if (AI_Loop >= mapAI.count) then
@@ -1997,7 +1987,9 @@ function InitTrig_AI_Spell_Start()
 
 	print(CountUnitsInGroup(mapAI.heroGroup))
 
-	TriggerAddCondition(t, Condition(IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup)))
+	TriggerAddCondition(t, Condition( function()
+		IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup)
+	end))
 	
 	TriggerAddAction(t, function()
 		local hero = self[GetUnitUserData(GetTriggerUnit())]
