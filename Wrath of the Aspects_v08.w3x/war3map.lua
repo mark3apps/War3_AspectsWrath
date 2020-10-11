@@ -1196,26 +1196,21 @@ function MapSetup()
 	-- Classes
 	init_SpawnClass()
 	init_AIClass()
+
+	-- Globals
 	mapAI = ai.new()
 
-	-- Trigger Init=
+	-- Trigger Init
 	initTrig_Auto_Zoom()
 	InitTrig_AI_MAIN()
 	InitTrig_Computer_Picks()
 	
-	InitTrig_Hero_Level_Ups()
+	InitTrig_Hero_Level_Up()
 	InitTrig_AI_Spell_Start()
-	
-	
-	--init_AI()
 
 	-- Spawn
-	print("Init Spawn")
 	spawnSetup()
-	print("Run Spawn")
 	spawnRun()
-
-	
 
 end
 function distance (x1, y1, x2, y2)
@@ -1235,7 +1230,7 @@ end
 function AI_MAIN()
 
 
-	print(" -- ")
+	--print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
     
     mapAI.updateIntel(pickedHero)
@@ -1451,9 +1446,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAllyCheck = true
-				hero.clumbEnemyCheck = true
-				hero.clumbBothCheck = true
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 100.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 500.00
@@ -1474,9 +1469,9 @@ function init_AIClass()
 				hero.powerBase = 700.00
 				hero.powerLevel = 220.00
 
-				hero.clumpAllyCheck = true
-				hero.clumbEnemyCheck = true
-				hero.clumbBothCheck = true
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 100.00
 				hero.intelRange = 1000.00
 				hero.closeRange = 500.00
@@ -1497,9 +1492,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAllyCheck = true
-				hero.clumbEnemyCheck = true
-				hero.clumbBothCheck = true
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 250.00
 				hero.intelRange = 1000.00
 				hero.closeRange = 400.00
@@ -1520,9 +1515,9 @@ function init_AIClass()
 				hero.powerBase = 750.00
 				hero.powerLevel = 250.00
 
-				hero.clumpAllyCheck = true
-				hero.clumbEnemyCheck = true
-				hero.clumbBothCheck = true
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 250.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 700.00
@@ -1543,9 +1538,9 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAllyCheck = true
-				hero.clumbEnemyCheck = true
-				hero.clumbBothCheck = true
+				hero.clumpAllyCheck = false
+				hero.clumbEnemyCheck = false
+				hero.clumbBothCheck = false
 				hero.clumpRange = 150.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 400.00
@@ -1773,7 +1768,7 @@ function init_AIClass()
 					hero.weightedLife < hero.lifeLowNumber) and 
 					hero.lowLife == false then
 					
-				BJDebugMsg("Low Health")
+				print("Low Health")
 				hero.lowLife = true
 				hero.fleeing = false
 				hero.chasing = false
@@ -1796,7 +1791,7 @@ function init_AIClass()
 					hero.lowLife == true and
 					hero.weightedLifePercent > hero.lifeHighPercent then
 				
-				BJDebugMsg("High Health")
+				print("High Health")
 				hero.lowLife = false
 				hero.fleeing = false
 				
@@ -1821,7 +1816,7 @@ function init_AIClass()
 
 			if hero.alive == true and IsUnitAliveBJ(hero.unit) == false then
 				
-				BJDebugMsg("Dead")
+				print("Dead")
 				hero.alive = false
 				hero.lowLife = false
 				hero.fleeing = false
@@ -1850,7 +1845,7 @@ function init_AIClass()
 
 			if hero.alive == false and IsUnitAliveBJ(hero.unit) == true then
 
-				BJDebugMsg("Revived")
+				print("Revived")
 				hero.alive = true
 				self.ACTIONattackBase(i)
 			end
@@ -1863,7 +1858,7 @@ function init_AIClass()
 			if hero.powerHero < hero.powerCount and
 					hero.lowLife == false and hero.fleeing == false then
 					
-				BJDebugMsg("Flee")
+				print("Flee")
 				hero.fleeing = true
 
 				self.ACTIONtravelToHeal(i)
@@ -1876,7 +1871,7 @@ function init_AIClass()
 
 			if hero.powerHero > hero.powerCount and hero.lowLife == false and hero.fleeing == true then
 					
-				BJDebugMsg("Stop Fleeing")
+				print("Stop Fleeing")
 				hero.fleeing = false
 
 				self.ACTIONtravelToDest(i)
@@ -1888,7 +1883,7 @@ function init_AIClass()
 			local hero = self[i]
 
 			if hero.casting == true then
-				BJDebugMsg("Casting Spell")
+				print("Casting Spell")
 
 				if hero.castingCounter == -10.00 then
 					if GetUnitCurrentOrder(hero.unit) ~= hero.order then
@@ -1995,60 +1990,72 @@ function InitTrig_AI_Spell_Start()
 		local hero = self[GetUnitUserData(GetTriggerUnit())]
 		hero.casting = true
 		hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
-		BJDebugMsg("Spell Cast")
+		print("Spell Cast")
 	end)
 end
 
 
-function InitTrig_Hero_Level_Ups()
+function InitTrig_Hero_Level_Up()
 	local t = CreateTrigger()
-	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
-
-	TriggerAddAction(t, function()
 	
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
+	TriggerAddAction(t, function()
+
+		-- Get Locals
+		local heroLevel = GetHeroLevel(GetLevelingUnit())
 		local u = GetLevelingUnit()
 		local uType = GetUnitTypeId(u)
 
+		-- Remove Ability Points
+		if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
+			ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
+		elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
+			ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
+		elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
+			ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
+		end
+
+
+		-- If Computer, Learn Abilities
 		if GetPlayerController( GetOwningPlayer(u) ) == MAP_CONTROL_COMPUTER then
 
-			if uType == FourCC("H00R") then
-				SelectHeroSkill(u, FourCC("A015"))
-				SelectHeroSkill(u, FourCC("A001"))
-				SelectHeroSkill(u, FourCC("A03S"))
-				SelectHeroSkill(u, FourCC("A018"))
-				SelectHeroSkill(u, FourCC("A02B"))
+			if uType == FourCC("H00R") then      -- Mana Addict
+				SelectHeroSkill(u, FourCC("A015"))  -- Starfall
+				SelectHeroSkill(u, FourCC("A001"))  -- Mana Shield
+				SelectHeroSkill(u, FourCC("A03S"))  -- Frost Nova
+				SelectHeroSkill(u, FourCC("A018"))  -- Mana Overload
+				SelectHeroSkill(u, FourCC("A02B"))  -- Mana Burst
 				
-			elseif uType == FourCC("E001") then
-				SelectHeroSkill(u, FourCC("A029"))
-				SelectHeroSkill(u, FourCC("A01Y"))
-				SelectHeroSkill(u, FourCC("A007"))
-				SelectHeroSkill(u, FourCC("A002"))
+			elseif uType == FourCC("E001") then  -- Brawler
+				SelectHeroSkill(u, FourCC("A029"))  -- Unleash Rage
+				SelectHeroSkill(u, FourCC("A01Y"))  -- Drain
+				SelectHeroSkill(u, FourCC("A007"))  -- Bloodlust
+				SelectHeroSkill(u, FourCC("A002"))  -- War Stomp
 				
-			elseif uType == FourCC("E002") then
-				SelectHeroSkill(u, FourCC("A03C"))
-				SelectHeroSkill(u, FourCC("A02Y"))
-				SelectHeroSkill(u, FourCC("A03U"))
-				SelectHeroSkill(u, FourCC("A030"))
-				SelectHeroSkill(u, FourCC("A03T"))
+			elseif uType == FourCC("E002") then  -- Shifter
+				SelectHeroSkill(u, FourCC("A03C"))  -- Shifting Bladestorm
+				SelectHeroSkill(u, FourCC("A02Y"))  -- Fel Form
+				SelectHeroSkill(u, FourCC("A03U"))  -- Shift Back
+				SelectHeroSkill(u, FourCC("A030"))  -- Shift Forwards
+				SelectHeroSkill(u, FourCC("A03T"))  -- Falling Strike
 				
-			elseif uType == FourCC("H009") then
-				SelectHeroSkill(u, FourCC("A042"))
-				SelectHeroSkill(u, FourCC("A01I"))
-				SelectHeroSkill(u, FourCC("A01B"))
-				SelectHeroSkill(u, FourCC("A01Z"))
-				SelectHeroSkill(u, FourCC("A019"))
+			elseif uType == FourCC("H009") then  -- Tactition
+				SelectHeroSkill(u, FourCC("A042"))  -- Inspire
+				SelectHeroSkill(u, FourCC("A01I"))  -- Raise Banner
+				SelectHeroSkill(u, FourCC("A01B"))  -- Attack
+				SelectHeroSkill(u, FourCC("A01Z"))  -- Bolster
+				SelectHeroSkill(u, FourCC("A019"))  -- Iron Defense
 				
-			elseif uType == FourCC("H00J") then
-				SelectHeroSkill(u, FourCC("A04N"))
-				SelectHeroSkill(u, FourCC("A04I"))
-				SelectHeroSkill(u, FourCC("A04P"))
-				SelectHeroSkill(u, FourCC("A04K"))
-				SelectHeroSkill(u, FourCC("A032"))
+			elseif uType == FourCC("H00J") then  -- Time Mage
+				SelectHeroSkill(u, FourCC("A04N"))  -- Paradox
+				SelectHeroSkill(u, FourCC("A04I"))  -- Dimensional Phase
+				SelectHeroSkill(u, FourCC("A04P"))  -- Time Travel
+				SelectHeroSkill(u, FourCC("A04K"))  -- Chrono Atrophy
+				SelectHeroSkill(u, FourCC("A032"))  -- Decay
 			end
 		end
-	end)
+	end )
 end
-
 function init_SpawnClass()
 
 	-- Create the table for the class definition
@@ -2359,7 +2366,7 @@ function spawnSetup()
     baseSpawn.addUnit("town", "h00L", 2, {1,3,7,9}, 4, 12)  -- Knight
 
     -- Undead Spawn
-    baseSpawn.addUnit("undead", "ugho", 6, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Ghoul
+    baseSpawn.addUnit("undead", "ugho", 5, {1,2,3,4,5,6,7,8,9}, 1, 12)  -- Ghoul
     baseSpawn.addUnit("undead", "uskm", 2, {1,2,3,4,5,6,7,8,9,10}, 2, 12)  -- Skeleton Mage
     baseSpawn.addUnit("undead", "unec", 1, {1,2,3,4,5,6,7}, 3, 12)  -- Necromancer
     baseSpawn.addUnit("undead", "nerw", 1, {1,6}, 4, 12)  -- Warlock
@@ -2422,7 +2429,7 @@ function initTrig_Auto_Zoom()
 		while (i <= 12 ) do
 			
 			ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-			SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE, (2000.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+			SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE, (1700.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
 			DestroyGroup(ug)
 			i = i + 1
 		end
@@ -6344,6 +6351,7 @@ end
 
 function InitTrig_EVENT_Casts_a_Spell()
     gg_trg_EVENT_Casts_a_Spell = CreateTrigger()
+    DisableTrigger(gg_trg_EVENT_Casts_a_Spell)
     TriggerRegisterAnyUnitEventBJ(gg_trg_EVENT_Casts_a_Spell, EVENT_PLAYER_UNIT_SPELL_FINISH)
     TriggerAddCondition(gg_trg_EVENT_Casts_a_Spell, Condition(Trig_EVENT_Casts_a_Spell_Conditions))
     TriggerAddAction(gg_trg_EVENT_Casts_a_Spell, Trig_EVENT_Casts_a_Spell_Actions)
@@ -6473,103 +6481,6 @@ end
 function InitTrig_AI_Attack_a_Base()
     gg_trg_AI_Attack_a_Base = CreateTrigger()
     TriggerAddAction(gg_trg_AI_Attack_a_Base, Trig_AI_Attack_a_Base_Actions)
-end
-
-function Trig_AI_Hero_Level_Ups_Func001C()
-    if (not (GetUnitTypeId(GetLevelingUnit()) == FourCC("H00R"))) then
-        return false
-    end
-    if (not (GetPlayerController(GetOwningPlayer(GetLevelingUnit())) == MAP_CONTROL_COMPUTER)) then
-        return false
-    end
-    return true
-end
-
-function Trig_AI_Hero_Level_Ups_Func002C()
-    if (not (GetUnitTypeId(GetLevelingUnit()) == FourCC("E001"))) then
-        return false
-    end
-    if (not (GetPlayerController(GetOwningPlayer(GetLevelingUnit())) == MAP_CONTROL_COMPUTER)) then
-        return false
-    end
-    return true
-end
-
-function Trig_AI_Hero_Level_Ups_Func003C()
-    if (not (GetUnitTypeId(GetLevelingUnit()) == FourCC("E002"))) then
-        return false
-    end
-    if (not (GetPlayerController(GetOwningPlayer(GetLevelingUnit())) == MAP_CONTROL_COMPUTER)) then
-        return false
-    end
-    return true
-end
-
-function Trig_AI_Hero_Level_Ups_Func004C()
-    if (not (GetUnitTypeId(GetLevelingUnit()) == FourCC("H009"))) then
-        return false
-    end
-    if (not (GetPlayerController(GetOwningPlayer(GetLevelingUnit())) == MAP_CONTROL_COMPUTER)) then
-        return false
-    end
-    return true
-end
-
-function Trig_AI_Hero_Level_Ups_Func005C()
-    if (not (GetUnitTypeId(GetLevelingUnit()) == FourCC("H00J"))) then
-        return false
-    end
-    if (not (GetPlayerController(GetOwningPlayer(GetLevelingUnit())) == MAP_CONTROL_COMPUTER)) then
-        return false
-    end
-    return true
-end
-
-function Trig_AI_Hero_Level_Ups_Actions()
-    if (Trig_AI_Hero_Level_Ups_Func001C()) then
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A015"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A001"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A03S"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A018"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A02B"))
-    else
-    end
-    if (Trig_AI_Hero_Level_Ups_Func002C()) then
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A029"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A01Y"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A007"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A002"))
-    else
-    end
-    if (Trig_AI_Hero_Level_Ups_Func003C()) then
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A03C"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A02Y"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A03U"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A030"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A03T"))
-    else
-    end
-    if (Trig_AI_Hero_Level_Ups_Func004C()) then
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A042"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A01I"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A01B"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A01Z"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A019"))
-    else
-    end
-    if (Trig_AI_Hero_Level_Ups_Func005C()) then
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A04N"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A04I"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A04P"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A04K"))
-        SelectHeroSkill(GetLevelingUnit(), FourCC("A032"))
-    else
-    end
-end
-
-function InitTrig_AI_Hero_Level_Ups()
-    gg_trg_AI_Hero_Level_Ups = CreateTrigger()
-    TriggerAddAction(gg_trg_AI_Hero_Level_Ups, Trig_AI_Hero_Level_Ups_Actions)
 end
 
 function Trig_AI_Go_To_Closest_Heal_Func002Func002002003001()
@@ -9992,61 +9903,6 @@ function InitTrig_Bolster()
     TriggerAddAction(gg_trg_Bolster, Trig_Bolster_Actions)
 end
 
-function Trig_Remove_Ability_Points_Func001C()
-    if (not (GetHeroLevel(GetLevelingUnit()) < 15)) then
-        return false
-    end
-    if (not (ModuloInteger(GetHeroLevel(GetLevelingUnit()), 2) ~= 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Remove_Ability_Points_Func002C()
-    if (not (GetHeroLevel(GetLevelingUnit()) < 25)) then
-        return false
-    end
-    if (not (GetHeroLevel(GetLevelingUnit()) >= 15)) then
-        return false
-    end
-    if (not (ModuloInteger(GetHeroLevel(GetLevelingUnit()), 3) ~= 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Remove_Ability_Points_Func003C()
-    if (not (GetHeroLevel(GetLevelingUnit()) >= 25)) then
-        return false
-    end
-    if (not (ModuloInteger(GetHeroLevel(GetLevelingUnit()), 4) ~= 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Remove_Ability_Points_Actions()
-    if (Trig_Remove_Ability_Points_Func001C()) then
-        ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-    else
-    end
-    if (Trig_Remove_Ability_Points_Func002C()) then
-        ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-    else
-    end
-    if (Trig_Remove_Ability_Points_Func003C()) then
-        ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-    else
-    end
-    ConditionalTriggerExecute(gg_trg_AI_Hero_Level_Ups)
-end
-
-function InitTrig_Remove_Ability_Points()
-    gg_trg_Remove_Ability_Points = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Remove_Ability_Points, EVENT_PLAYER_HERO_LEVEL)
-    TriggerAddAction(gg_trg_Remove_Ability_Points, Trig_Remove_Ability_Points_Actions)
-end
-
 function Trig_Level_Up_Team_Func002C()
     if (not (IsUnitAlly(GetLevelingUnit(), ForcePickRandomPlayer(udg_PLAYERGRPallied)) == true)) then
         return false
@@ -10843,7 +10699,6 @@ function InitCustomTriggers()
     InitTrig_EVENT_Casts_a_Spell()
     InitTrig_EVENT_Base_Dies()
     InitTrig_AI_Attack_a_Base()
-    InitTrig_AI_Hero_Level_Ups()
     InitTrig_AI_Go_To_Closest_Heal()
     InitTrig_AI_Continue_to_Destination()
     InitTrig_Camera_Reset()
@@ -10913,7 +10768,6 @@ function InitCustomTriggers()
     InitTrig_Inspire_LOOP()
     InitTrig_Inspire_DIE()
     InitTrig_Bolster()
-    InitTrig_Remove_Ability_Points()
     InitTrig_Level_Up_Team()
     InitTrig_Revive_Hero()
     InitTrig_Revive_Hero_Timer()
