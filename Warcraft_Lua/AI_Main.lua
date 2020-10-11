@@ -2,7 +2,7 @@
 function AI_MAIN()
 
 
-	print(" -- ")
+	--print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
     
     mapAI.updateIntel(pickedHero)

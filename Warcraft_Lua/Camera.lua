@@ -11,7 +11,7 @@ function initTrig_Auto_Zoom()
 		while (i <= 12 ) do
 			
 			ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-			SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE, (2000.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+			SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE, (1700.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
 			DestroyGroup(ug)
 			i = i + 1
 		end
