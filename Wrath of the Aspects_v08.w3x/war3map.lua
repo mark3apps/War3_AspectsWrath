@@ -1236,18 +1236,16 @@ function AI_MAIN()
 
 	--print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
-    
-    print(mapAI.countOfHeroes())
-    
-    mapAI.updateIntel(pickedHero)
-    if mapAI.isAlive(pickedHero) then	
-        mapAI.STATELowHealth(pickedHero)
-        mapAI.STATEHighHealth(pickedHero)
-        mapAI.STATEFleeing(pickedHero)
-        mapAI.STATEStopFleeing(pickedHero)
-        mapAI.STATEDead(pickedHero)
+
+    mapAI:updateIntel(pickedHero)
+    if mapAI:isAlive(pickedHero) then	
+        mapAI:STATELowHealth(pickedHero)
+        mapAI:STATEHighHealth(pickedHero)
+        mapAI:STATEFleeing(pickedHero)
+        mapAI:STATEStopFleeing(pickedHero)
+        mapAI:STATEDead(pickedHero)
     else
-        mapAI.STATERevived(pickedHero)
+        mapAI:STATERevived(pickedHero)
     end
 
 	
@@ -1316,7 +1314,7 @@ function Computer_Picks()
 			ConditionalTriggerExecute(gg_trg_Hero_Add_Starting_Abilities)
 			
 			BJDebugMsg("Creating New Hero")
-			mapAI.initHero(udg_TEMP_Unit)
+			mapAI:initHero(udg_TEMP_Unit)
 			BJDebugMsg("Finished Creating New hero")
 			
             g = GetUnitsOfPlayerAndTypeId(selPlayer, FourCC("halt"))
@@ -1381,15 +1379,15 @@ function init_AIClass()
 		self.count = 0
 
 
-		function self.isAlive(i)
+		function self:isAlive(i)
 			return self[i].alive
 		end
 
-		function self.countOfHeroes()
+		function self:countOfHeroes()
 			return self.count
 		end
 
-		function self.initHero(heroUnit)
+		function self:initHero(heroUnit)
 
 			self.count = self.count + 1
 
@@ -1421,7 +1419,6 @@ function init_AIClass()
 			hero.heroesEnemy = CreateGroup()
 			hero.lifeHistory = {0.00,0.00,0.00}
 			SetUnitUserData(hero.unit, self.count)
-
 			
 			hero.alive = false
 			hero.fleeing = false
@@ -1560,7 +1557,7 @@ function init_AIClass()
 
 
 		-- Update Intel
-		function self.updateIntel(i)
+		function self:updateIntel(i)
 			local hero = self[i]
 
 			-- Only run if the hero is alive
@@ -1748,9 +1745,6 @@ function init_AIClass()
 				hero.percentLifeSingle = hero.lifeHistory[#hero.lifeHistory -1] - hero.lifeHistory[#hero.lifeHistory]
 				hero.percentLifeAverage = hero.lifeHistory[1] - hero.lifeHistory[#hero.lifeHistory]
 
-				print(hero.percentLifeSingle)
-				print(hero.percentLifeAverage)
-
 				-- Figure out the Heroes Weighted Life
 				hero.weightedLife = (hero.life * hero.healthFactor) + (hero.mana * hero.manaFactor)
 				hero.weightedLifeMax = (hero.lifeMax * hero.healthFactor) + (hero.manaMax * hero.manaFactor)
@@ -1772,7 +1766,7 @@ function init_AIClass()
 		end
 		
 		-- AI has Low Health
-		function self.STATELowHealth(i)
+		function self:STATELowHealth(i)
 			local hero = self[i]
 
 			
@@ -1790,12 +1784,12 @@ function init_AIClass()
 				hero.casting = false
 				hero.castingCounter = -10.00
 
-				self.ACTIONtravelToHeal(i)
+				self:ACTIONtravelToHeal(i)
 			end
 		end		
 
 		-- AI Has High Health
-		function self.STATEHighHealth(i)
+		function self:STATEHighHealth(i)
 			local hero = self[i]
 
 			
@@ -1814,16 +1808,16 @@ function init_AIClass()
 				
 				local rand = GetRandomInt(1, 3)
 				if rand == 1 then
-					self.ACTIONattackBase(i)
+					self:ACTIONattackBase(i)
 				else
-					self.ACTIONtravelToDest(i)
+					self:ACTIONtravelToDest(i)
 				end
 			end
 		
 		end
 
 		-- AI is Dead
-		function self.STATEDead(i)
+		function self:STATEDead(i)
 			local hero = self[i]
 
 			if hero.alive == true and IsUnitAliveBJ(hero.unit) == false then
@@ -1852,19 +1846,19 @@ function init_AIClass()
 		end
 
 		-- AI has Revived
-		function self.STATERevived(i)
+		function self:STATERevived(i)
 			local hero = self[i]
 
 			if hero.alive == false and IsUnitAliveBJ(hero.unit) == true then
 
 				print("Revived")
 				hero.alive = true
-				self.ACTIONattackBase(i)
+				self:ACTIONattackBase(i)
 			end
 		end
 
 		-- AI Fleeing
-		function self.STATEFleeing(i)
+		function self:STATEFleeing(i)
 			local hero = self[i]
 
 			if (hero.powerHero < hero.powerCount or hero.percentLifeSingle > hero.highDamageSingle or hero.percentLifeAverage > hero.highDamageAverage ) and
@@ -1873,12 +1867,12 @@ function init_AIClass()
 				print("Flee")
 				hero.fleeing = true
 
-				self.ACTIONtravelToHeal(i)
+				self:ACTIONtravelToHeal(i)
 			end
 		end	
 
 		-- AI Stop Fleeing
-		function self.STATEStopFleeing(i)
+		function self:STATEStopFleeing(i)
 			local hero = self[i]
 
 			if  hero.powerHero > hero.powerCount and hero.percentLifeSingle <= 0.0 and hero.percentLifeAverage <= hero.highDamageAverage and hero.lowLife == false and hero.fleeing == true then
@@ -1886,12 +1880,12 @@ function init_AIClass()
 				print("Stop Fleeing")
 				hero.fleeing = false
 
-				self.ACTIONtravelToDest(i)
+				self:ACTIONtravelToDest(i)
 			end
 		end	
 
 		-- AI Casting Spell
-		function self.STATEcastingSpell(i)
+		function self:STATEcastingSpell(i)
 			local hero = self[i]
 
 			if hero.casting == true then
@@ -1900,7 +1894,7 @@ function init_AIClass()
 				if hero.castingCounter == -10.00 then
 					if GetUnitCurrentOrder(hero.unit) ~= hero.order then
 						hero.casting = false
-						self.ACTIONtravelToDest()
+						self:ACTIONtravelToDest()
 						hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
 					end
 
@@ -1910,7 +1904,7 @@ function init_AIClass()
 				else
 					hero.casting = false
 					hero.castingCounter = -10.00
-					self.ACTIONtravelToDest()
+					self:ACTIONtravelToDest()
 					hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
 				end
 			end	
@@ -1920,17 +1914,21 @@ function init_AIClass()
 		-- ACTIONS
 		--
 
-		function self.castSpell(i)
+		function self:castSpell(i)
 
 			print("spell Start")
-			local hero = self[i]
+			print(i)
+			
+			local hero = self[R2I(i)]
+
+			print(hero)
 
 			hero.casting = true
 			hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
 			print("Spell Cast")
 		end
 
-		function self.ACTIONtravelToHeal(i)
+		function self:ACTIONtravelToHeal(i)
 			local hero = self[i]
 
 			local healDistance = 100000000.00
@@ -1966,7 +1964,7 @@ function init_AIClass()
 
 		end
 
-		function self.ACTIONtravelToDest(i)
+		function self:ACTIONtravelToDest(i)
 			local hero = self[i]
 
 			if hero.lowLife == true or hero.fleeing == true then
@@ -1980,7 +1978,7 @@ function init_AIClass()
 			end
 		end
 
-		function self.ACTIONattackBase(i)
+		function self:ACTIONattackBase(i)
 			local hero = self[i]
 
 			hero.unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[hero.teamNumber])
@@ -2008,10 +2006,11 @@ function InitTrig_AI_Spell_Start()
 	
 	TriggerAddAction(t, function()
 		print(GetUnitUserData(GetTriggerUnit()))
-
+		
 
 		debugfunc( function()
 			local i = GetUnitUserData(GetTriggerUnit())
+
 			mapAI:castSpell(i)
 		end, "mapAI:castSpell")
 	
