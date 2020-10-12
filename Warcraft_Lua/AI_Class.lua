@@ -7,13 +7,16 @@ function init_AIClass()
 	ai.new = function()
 		local self = {}
 		self.heroes = {}
-		self.heroGroup = CreateGroup()
 		self.heroOptions = {"heroA", "heroB", "heroC", "heroD", "heroE", "heroF", "heroG", "heroH", "heroI", "heroJ", "heroK", "heroL"}
 		self.count = 0
 
 
 		function self.isAlive(i)
 			return self[i].alive
+		end
+
+		function self.countOfHeroes()
+			return self.count
 		end
 
 		function self.initHero(heroUnit)
@@ -31,7 +34,7 @@ function init_AIClass()
 			local hero = self[pickedName]
 			
 			hero.unit = heroUnit
-			GroupAddUnit(self.heroGroup, hero.unit)
+			GroupAddUnit(udg_AI_Heroes, hero.unit)
 
 			hero.unitType = GetUnitTypeId(heroUnit)
 			hero.player = GetOwningPlayer(heroUnit)
@@ -145,7 +148,7 @@ function init_AIClass()
 				hero.lifeLowPercent = 25.00
 				hero.lifeLowNumber = 400.00
 
-				hero.highDamageSingle = 10.00
+				hero.highDamageSingle = 8.00
 				hero.highDamageAverage = 17.00
 
 				hero.powerBase = 750.00
@@ -366,14 +369,17 @@ function init_AIClass()
 				DestroyGroup(g)
 
 				-- Find how much damage the Hero is taking
-				hero.lifeHistory[#hero.lifeHistory + 1] = hero.life
+				hero.lifeHistory[#hero.lifeHistory + 1] = hero.lifePercent
 				
 				if #hero.lifeHistory > 5 then
 					table.remove(hero.lifeHistory, 1)
 				end
-
+				
 				hero.percentLifeSingle = hero.lifeHistory[#hero.lifeHistory -1] - hero.lifeHistory[#hero.lifeHistory]
 				hero.percentLifeAverage = hero.lifeHistory[1] - hero.lifeHistory[#hero.lifeHistory]
+
+				print(hero.percentLifeSingle)
+				print(hero.percentLifeAverage)
 
 				-- Figure out the Heroes Weighted Life
 				hero.weightedLife = (hero.life * hero.healthFactor) + (hero.mana * hero.manaFactor)
@@ -491,7 +497,7 @@ function init_AIClass()
 		function self.STATEFleeing(i)
 			local hero = self[i]
 
-			if hero.powerHero < hero.powerCount and
+			if (hero.powerHero < hero.powerCount or hero.percentLifeSingle > hero.highDamageSingle or hero.percentLifeAverage > hero.highDamageAverage ) and
 					hero.lowLife == false and hero.fleeing == false then
 					
 				print("Flee")
@@ -505,7 +511,7 @@ function init_AIClass()
 		function self.STATEStopFleeing(i)
 			local hero = self[i]
 
-			if hero.powerHero > hero.powerCount and hero.lowLife == false and hero.fleeing == true then
+			if  hero.powerHero > hero.powerCount and hero.percentLifeSingle <= 0.0 and hero.percentLifeAverage <= hero.highDamageAverage and hero.lowLife == false and hero.fleeing == true then
 					
 				print("Stop Fleeing")
 				hero.fleeing = false
@@ -543,6 +549,16 @@ function init_AIClass()
 		--
 		-- ACTIONS
 		--
+
+		function self.castSpell(i)
+
+			print("spell Start")
+			local hero = self[i]
+
+			hero.casting = true
+			hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+			print("Spell Cast")
+		end
 
 		function self.ACTIONtravelToHeal(i)
 			local hero = self[i]
@@ -616,17 +632,13 @@ function InitTrig_AI_Spell_Start()
 	local t = CreateTrigger()
 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
 
-	print(CountUnitsInGroup(mapAI.heroGroup))
-
 	TriggerAddCondition(t, Condition( function()
-		IsUnitInGroup(GetTriggerUnit(), mapAI.heroGroup)
+		IsUnitInGroup(GetTriggerUnit(), udg_AI_Heroes)
 	end))
 	
 	TriggerAddAction(t, function()
-		local hero = self[GetUnitUserData(GetTriggerUnit())]
-		hero.casting = true
-		hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
-		print("Spell Cast")
+		print("Working!")
+		mapAI.castSpell(GetUnitUserData(GetTriggerUnit()))
 	end)
 end
 

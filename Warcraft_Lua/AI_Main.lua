@@ -4,7 +4,7 @@ function AI_MAIN()
 
 	--print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
-    
+
     mapAI.updateIntel(pickedHero)
     if mapAI.isAlive(pickedHero) then	
         mapAI.STATELowHealth(pickedHero)
