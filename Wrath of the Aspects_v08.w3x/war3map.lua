@@ -1377,7 +1377,6 @@ function init_AIClass()
 	ai.new = function()
 		local self = {}
 		self.heroes = {}
-		AI_Heroes = CreateGroup()
 		self.heroOptions = {"heroA", "heroB", "heroC", "heroD", "heroE", "heroF", "heroG", "heroH", "heroI", "heroJ", "heroK", "heroL"}
 		self.count = 0
 
@@ -1405,7 +1404,7 @@ function init_AIClass()
 			local hero = self[pickedName]
 			
 			hero.unit = heroUnit
-			GroupAddUnit(AI_Heroes, hero.unit)
+			GroupAddUnit(udg_AI_Heroes, hero.unit)
 
 			hero.unitType = GetUnitTypeId(heroUnit)
 			hero.player = GetOwningPlayer(heroUnit)
@@ -1896,7 +1895,7 @@ function init_AIClass()
 			local hero = self[i]
 
 			if hero.casting == true then
-				print("Casting Spell")
+				print("Still Casting Spell")
 
 				if hero.castingCounter == -10.00 then
 					if GetUnitCurrentOrder(hero.unit) ~= hero.order then
@@ -2004,11 +2003,19 @@ function InitTrig_AI_Spell_Start()
 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
 
 	TriggerAddCondition(t, Condition( function()
-		IsUnitInGroup(GetTriggerUnit(), AI_Heroes)
+		return IsUnitInGroup(GetTriggerUnit(), udg_AI_Heroes)
 	end))
 	
 	TriggerAddAction(t, function()
-		mapAI.castSpell(GetUnitUserData(GetTriggerUnit()))
+		print(GetUnitUserData(GetTriggerUnit()))
+
+
+		debugfunc( function()
+			local i = GetUnitUserData(GetTriggerUnit())
+			mapAI:castSpell(i)
+		end, "mapAI:castSpell")
+	
+		--mapAI.castSpell(GetUnitUserData(GetTriggerUnit()))
 	end)
 end
 
