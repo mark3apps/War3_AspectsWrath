@@ -33,8 +33,9 @@ function spawnSetup()
     baseSpawn.addBase("nightElves", gg_rct_Left_Tree, gg_rct_Right_Start_Top, gg_unit_e003_0058, gg_rct_Right_Tree, gg_rct_Left_Start_Bottom, gg_unit_e003_0014, 1)
     baseSpawn.addBase("orc", gg_rct_Left_Orc, gg_rct_Right_Start_Top, gg_unit_o001_0075, gg_rct_Right_Orc, gg_rct_Left_Start_Bottom, gg_unit_o001_0078, 1)
     baseSpawn.addBase("shipyard", gg_rct_Left_Shipyard, gg_rct_Right_Start_Top, gg_unit_eshy_0120, gg_rct_Right_Shipyard, gg_rct_Left_Start_Bottom, gg_unit_eshy_0047, 1)
+    baseSpawn.addBase("hshipyard", gg_rct_Human_Shipyard_Left, gg_rct_Right_Start_Bottom, gg_unit_hshy_0011, gg_rct_Human_Shipyard_Right, gg_rct_Left_Start_Top, gg_unit_hshy_0212, 3)
     baseSpawn.addBase("town", gg_rct_Left_Forward_Camp, gg_rct_Right_Start_Bottom, gg_unit_h00F_0029, gg_rct_Right_Forward, gg_rct_Left_Start_Top, gg_unit_h00F_0066, 3)
-    baseSpawn.addBase("undead", gg_rct_Undead_Left, gg_rct_Right_Start, gg_unit_u001_0262, gg_rct_Undead_Right, gg_rct_Left_Start, gg_unit_u001_0264, 2)
+    baseSpawn.addBase("undead", gg_rct_Undead_Left, gg_rct_Right_Start, gg_unit_u001_0264, gg_rct_Undead_Right, gg_rct_Left_Start, gg_unit_u001_0262, 2)
     
 
     -- addUnit(baseName, unitType, numOfUnits, {waves}, levelStart, levelEnd)
@@ -103,9 +104,9 @@ function spawnSetup()
     baseSpawn.addUnit("citySide", "h007", 2, {6,7,8,9,10}, 3, 12)  -- Militia
 
     -- Furbolg Spawn
-    baseSpawn.addUnit("furbolg", "n00E", 2, {1,3,4,5,6,7,8}, 1, 12)  -- Furbolg
+    baseSpawn.addUnit("furbolg", "n00E", 2, {1,3,4,5,6,7,8}, 1, 4)  -- Furbolg
     baseSpawn.addUnit("furbolg", "n00G", 1, {1,3,5,7,9}, 3, 12)  -- Furbolg Shaman
-    baseSpawn.addUnit("furbolg", "n00E", 2, {2,7,8,9,10}, 4, 12)  -- Furbolg
+    baseSpawn.addUnit("furbolg", "n00E", 2, {1,2,3,4,5,6,7,8,9,10}, 4, 12)  -- Furbolg
     
 
     -- High Elves
@@ -160,13 +161,20 @@ function spawnSetup()
     baseSpawn.addUnit("orc", "nftr", 1, {4,5,7,8,9,10}, 2, 12)  -- Spearman
     baseSpawn.addUnit("orc", "nogr", 3, {2,4,6,8,10}, 4, 12)  -- Ogre
     baseSpawn.addUnit("orc", "o004", 1, {6,7,8}, 3, 12)  -- Spirit Walker
-    baseSpawn.addUnit("orc", "nogm", 1, {1,6,8}, 4, 12)  -- Ogre Warchief
-    baseSpawn.addUnit("orc", "otau", 1, {5,6,7}, 5, 12)  -- Tauren
+    baseSpawn.addUnit("orc", "nogm", 1, {1,6,8}, 5, 12)  -- Ogre Warchief
+    baseSpawn.addUnit("orc", "otau", 1, {5,6,7}, 6, 12)  -- Tauren
 
-    -- Shipyard Spawn
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2}, 1, 2)  -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,3,4}, 3, 4)  -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,3,5,6,7,9}, 5, 12)  -- Night Elf Frigate
+    -- Night Elf Shipyard Spawn
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6}, 1, 2)         -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6,8,10}, 3, 4)       -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6,7,8,9,10}, 5, 12)    -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hbsh", 1, {2,6,9}, 5, 12)        -- Human Battleship
+
+    -- Human Shipyard Spawn
+    baseSpawn.addUnit("shipyard", "edes", 1, {1,2}, 1, 2)         -- Night Elf Frigate
+    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,3,4}, 3, 4)     -- Night Elf Frigate
+    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,3,4,5}, 5, 12)  -- Night Elf Frigate
+    baseSpawn.addUnit("shipyard", "ebsh", 1, {3,5}, 5, 12)        -- Night Elf Battleship
 
     -- Town Spawn
     baseSpawn.addUnit("town", "h007", 3, {1,2,3,4,5}, 1, 5)  -- Militia
@@ -179,7 +187,7 @@ function spawnSetup()
     baseSpawn.addUnit("undead", "uskm", 2, {1,2,3,4,5,6,7,8,9,10}, 2, 12)  -- Skeleton Mage
     baseSpawn.addUnit("undead", "unec", 1, {1,2,3,4,5,6,7}, 3, 12)  -- Necromancer
     baseSpawn.addUnit("undead", "nerw", 1, {1,6}, 4, 12)  -- Warlock
-    baseSpawn.addUnit("undead", "nfgl", 1, {2,5,8}, 5, 12)  -- Flesh Golem
+    baseSpawn.addUnit("undead", "nfgl", 1, {2,5,8}, 5, 12)  -- Giant Skeleton
 
     
     --DisplayTextToForce(GetPlayersAll() , "Spawn Setup")
