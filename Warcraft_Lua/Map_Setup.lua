@@ -14,6 +14,7 @@ function MapSetup()
 	
 	InitTrig_Hero_Level_Up()
 	InitTrig_AI_Spell_Start()
+	
 
 	-- Spawn
 	spawnSetup()

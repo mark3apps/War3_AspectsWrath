@@ -5,15 +5,15 @@ function AI_MAIN()
 	--print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
 
-    mapAI.updateIntel(pickedHero)
-    if mapAI.isAlive(pickedHero) then	
-        mapAI.STATELowHealth(pickedHero)
-        mapAI.STATEHighHealth(pickedHero)
-        mapAI.STATEFleeing(pickedHero)
-        mapAI.STATEStopFleeing(pickedHero)
-        mapAI.STATEDead(pickedHero)
+    mapAI:updateIntel(pickedHero)
+    if mapAI:isAlive(pickedHero) then	
+        mapAI:STATELowHealth(pickedHero)
+        mapAI:STATEHighHealth(pickedHero)
+        mapAI:STATEFleeing(pickedHero)
+        mapAI:STATEStopFleeing(pickedHero)
+        mapAI:STATEDead(pickedHero)
     else
-        mapAI.STATERevived(pickedHero)
+        mapAI:STATERevived(pickedHero)
     end
 
 	
@@ -82,7 +82,7 @@ function Computer_Picks()
 			ConditionalTriggerExecute(gg_trg_Hero_Add_Starting_Abilities)
 			
 			BJDebugMsg("Creating New Hero")
-			mapAI.initHero(udg_TEMP_Unit)
+			mapAI:initHero(udg_TEMP_Unit)
 			BJDebugMsg("Finished Creating New hero")
 			
             g = GetUnitsOfPlayerAndTypeId(selPlayer, FourCC("halt"))

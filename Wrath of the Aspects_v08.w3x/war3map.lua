@@ -1922,7 +1922,8 @@ function init_AIClass()
 
 		function self.castSpell(i)
 
-			print("spell Start")
+            print("spell Start")
+            print(i)
 			local hero = self[i]
 
 			hero.casting = true
