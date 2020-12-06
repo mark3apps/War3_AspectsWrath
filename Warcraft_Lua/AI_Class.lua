@@ -99,7 +99,7 @@ function init_AIClass()
 
 				hero.lifeHighPercent = 85.00
 				hero.lifeLowPercent = 25.00
-				hero.lifeLowNumber = 400.00
+				hero.lifeLowNumber = 300.00
 
 				hero.highDamageSingle = 4.00
 				hero.highDamageAverage = 12.00
@@ -206,6 +206,7 @@ function init_AIClass()
 				hero.manaPercent = GetUnitManaPercent(hero.unit)
 				hero.manaMax = GetUnitState(hero.unit, UNIT_STATE_MAX_MANA)
 				hero.level = GetHeroLevel(hero.unit)
+				hero.currentOrder = OrderId2String(GetUnitCurrentOrder(hero.unit))
 				
 				-- Reset Intel
 				hero.countUnit = 0
@@ -390,6 +391,7 @@ function init_AIClass()
 				hero.powerBase = hero.powerBase + (0.25 * I2R(hero.level))
 				hero.powerHero = hero.powerBase + (hero.powerLevel * I2R(hero.level) )
 
+				print(OrderId2String(GetUnitCurrentOrder(hero.unit)))
 				--print("Hero Power: " .. R2S(hero.powerHero))
 				--print("Power Level: " .. R2S(hero.powerCount))
 			end
@@ -397,6 +399,14 @@ function init_AIClass()
 			
 		end
 		
+		function self:CleanUp(i)
+			local hero = self[i]
+
+			if (hero.currentOrder ~= "attack" and hero.currentOrder ~= "move" and hero.lowLife == false and hero.casting == false ) then
+				self:ACTIONattackBase(i)
+			end
+		end
+
 		-- AI has Low Health
 		function self:STATELowHealth(i)
 			local hero = self[i]
@@ -498,6 +508,7 @@ function init_AIClass()
 					
 				print("Flee")
 				hero.fleeing = true
+				hero.casting = false
 
 				self:ACTIONtravelToHeal(i)
 			end
@@ -511,6 +522,7 @@ function init_AIClass()
 					
 				print("Stop Fleeing")
 				hero.fleeing = false
+				hero.casting = false
 
 				self:ACTIONtravelToDest(i)
 			end
@@ -524,10 +536,11 @@ function init_AIClass()
 				print("Still Casting Spell")
 
 				if hero.castingCounter == -10.00 then
-					if GetUnitCurrentOrder(hero.unit) ~= hero.order then
+					if hero.currentOrder ~= hero.order then
 						hero.casting = false
-						self:ACTIONtravelToDest()
-						hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+						print("Stopped Casting")
+						self:ACTIONtravelToDest(i)
+						hero.order = hero.currentOrder
 					end
 
 				elseif hero.castingCounter > 0.00 then
@@ -535,9 +548,10 @@ function init_AIClass()
 
 				else
 					hero.casting = false
+					print("Stopped Casting")
 					hero.castingCounter = -10.00
-					self:ACTIONtravelToDest()
-					hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+					self:ACTIONtravelToDest(i)
+					hero.order = hero.currentOrder
 				end
 			end	
 		end
@@ -547,13 +561,8 @@ function init_AIClass()
 		--
 
 		function self:castSpell(i)
-
-			print("spell Start")
-			print(i)
 			
 			local hero = self[i]
-
-			print(hero)
 
 			hero.casting = true
 			hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))

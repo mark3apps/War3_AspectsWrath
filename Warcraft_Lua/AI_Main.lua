@@ -11,7 +11,9 @@ function AI_MAIN()
         mapAI:STATEHighHealth(pickedHero)
         mapAI:STATEFleeing(pickedHero)
         mapAI:STATEStopFleeing(pickedHero)
-        mapAI:STATEDead(pickedHero)
+		mapAI:STATEDead(pickedHero)
+		mapAI:STATEcastingSpell(pickedHero)
+		mapAI:CleanUp(pickedHero)
     else
         mapAI:STATERevived(pickedHero)
     end
@@ -60,7 +62,7 @@ function Computer_Picks()
                 y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 			
-            randInt = GetRandomInt(1, 5)
+            randInt = GetRandomInt(2, 2)
             if (randInt == 1) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0)
 				
@@ -144,16 +146,12 @@ function InitTrig_AI_Spell_Start()
 	end))
 	
 	TriggerAddAction(t, function()
-		print(GetUnitUserData(GetTriggerUnit()))
-		
 
 		debugfunc( function()
-			local i =  S2I(GetUnitUserData(GetTriggerUnit()))
+			local pickedHero = mapAI.heroOptions[S2I(GetUnitUserData(GetTriggerUnit()))]
 
-			mapAI:castSpell(i)
+			mapAI:castSpell(pickedHero)
 		end, "mapAI:castSpell")
-	
-		--mapAI.castSpell(GetUnitUserData(GetTriggerUnit()))
 	end)
 end
 
