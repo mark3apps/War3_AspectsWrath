@@ -11925,3 +11925,27 @@ STRING 3894
 Giant Skeleton
 }
 
+STRING 3895
+// Doodads: D00K (Iron Gate), Name (Name)
+{
+Iron Gate
+}
+
+STRING 3896
+// Abilities: A04X (TC - Attack! Damage), Name (Name)
+{
+TC - Attack! Damage
+}
+
+STRING 3897
+// Doodads: D00L (Dwarf Gate), Name (Name)
+{
+Dwarf Gate
+}
+
+STRING 3898
+// Units: h014 (Dwarf Footman), Name (Name)
+{
+Dwarf Footman
+}
+

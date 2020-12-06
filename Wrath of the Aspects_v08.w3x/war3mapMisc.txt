@@ -1,5 +1,5 @@
 [Misc]
-AgiAttackSpeedBonus=0.003
+AgiAttackSpeedBonus=0.01
 BoneDecayTime=35.0
 BuildingKillsGiveExp=1
 CanDeactivateManaShield=0
@@ -29,16 +29,15 @@ IllusionsGetAttackSpeedBonus=1
 IllusionsGetDefenseBonus=1
 IllusionsGetMoveSpeedBonus=1
 IntManaBonus=9.0
-IntRegenBonus=0.2
+IntRegenBonus=0.05
 MaxGuardDistance=600.0
 MaxHeroLevel=100
 MaxUnitLevel=50
 MaxUnitSpeed=600.0
 MinUnitSpeed=15.0
 NeedHeroXPFormulaB=300.0
-StrAttackBonus=1.5
+StrAttackBonus=2.0
 StrHitPointBonus=20.0
-StrRegenBonus=0.07
 StructureDecayTime=25.0
 SummonedKillFactor=0.3
 

@@ -35,7 +35,7 @@ function spawnSetup()
     baseSpawn.addBase("shipyard", gg_rct_Left_Shipyard, gg_rct_Right_Start_Top, gg_unit_eshy_0120, gg_rct_Right_Shipyard, gg_rct_Left_Start_Bottom, gg_unit_eshy_0047, 1)
     baseSpawn.addBase("hshipyard", gg_rct_Human_Shipyard_Left, gg_rct_Right_Start_Bottom, gg_unit_hshy_0011, gg_rct_Human_Shipyard_Right, gg_rct_Left_Start_Top, gg_unit_hshy_0212, 3)
     baseSpawn.addBase("town", gg_rct_Left_Forward_Camp, gg_rct_Right_Start_Bottom, gg_unit_h00F_0029, gg_rct_Right_Forward, gg_rct_Left_Start_Top, gg_unit_h00F_0066, 3)
-    baseSpawn.addBase("undead", gg_rct_Undead_Left, gg_rct_Right_Start, gg_unit_u001_0264, gg_rct_Undead_Right, gg_rct_Left_Start, gg_unit_u001_0262, 2)
+    baseSpawn.addBase("undead", gg_rct_Undead_Left, gg_rct_Right_Start, gg_unit_u001_0262, gg_rct_Undead_Right, gg_rct_Left_Start, gg_unit_u001_0264, 2)
     
 
     -- addUnit(baseName, unitType, numOfUnits, {waves}, levelStart, levelEnd)
@@ -201,7 +201,7 @@ function spawnRun()
 
     trg_spawnRun = CreateTrigger()
     TriggerRegisterTimerExpireEventBJ(trg_spawnRun, spawnTimer)
-
+    
     TriggerAddAction(trg_spawnRun, function ()
 
         -- Iterate everything up

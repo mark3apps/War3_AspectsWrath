@@ -134,3 +134,88 @@ function InitTrig_Computer_Picks()
     TriggerRegisterTimerEventSingle(t, 0.50)
     TriggerAddAction(t, Computer_Picks)
 end
+
+function InitTrig_AI_Spell_Start()
+	local t = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
+
+	TriggerAddCondition(t, Condition( function()
+		return IsUnitInGroup(GetTriggerUnit(), udg_AI_Heroes)
+	end))
+	
+	TriggerAddAction(t, function()
+		print(GetUnitUserData(GetTriggerUnit()))
+		
+
+		debugfunc( function()
+			local i =  S2I(GetUnitUserData(GetTriggerUnit()))
+
+			mapAI:castSpell(i)
+		end, "mapAI:castSpell")
+	
+		--mapAI.castSpell(GetUnitUserData(GetTriggerUnit()))
+	end)
+end
+
+
+function InitTrig_Hero_Level_Up()
+	local t = CreateTrigger()
+	
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
+	TriggerAddAction(t, function()
+
+		-- Get Locals
+		local heroLevel = GetHeroLevel(GetLevelingUnit())
+		local u = GetLevelingUnit()
+		local uType = GetUnitTypeId(u)
+
+		-- Remove Ability Points
+		if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
+			ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
+		elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
+			ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
+		elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
+			ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
+		end
+
+
+		-- If Computer, Learn Abilities
+		if GetPlayerController( GetOwningPlayer(u) ) == MAP_CONTROL_COMPUTER then
+
+			if uType == FourCC("H00R") then      -- Mana Addict
+				SelectHeroSkill(u, FourCC("A015"))  -- Starfall
+				SelectHeroSkill(u, FourCC("A001"))  -- Mana Shield
+				SelectHeroSkill(u, FourCC("A03S"))  -- Frost Nova
+				SelectHeroSkill(u, FourCC("A018"))  -- Mana Overload
+				SelectHeroSkill(u, FourCC("A02B"))  -- Mana Burst
+				
+			elseif uType == FourCC("E001") then  -- Brawler
+				SelectHeroSkill(u, FourCC("A029"))  -- Unleash Rage
+				SelectHeroSkill(u, FourCC("A01Y"))  -- Drain
+				SelectHeroSkill(u, FourCC("A007"))  -- Bloodlust
+				SelectHeroSkill(u, FourCC("A002"))  -- War Stomp
+				
+			elseif uType == FourCC("E002") then  -- Shifter
+				SelectHeroSkill(u, FourCC("A03C"))  -- Shifting Bladestorm
+				SelectHeroSkill(u, FourCC("A02Y"))  -- Fel Form
+				SelectHeroSkill(u, FourCC("A03U"))  -- Shift Back
+				SelectHeroSkill(u, FourCC("A030"))  -- Shift Forwards
+				SelectHeroSkill(u, FourCC("A03T"))  -- Falling Strike
+				
+			elseif uType == FourCC("H009") then  -- Tactition
+				SelectHeroSkill(u, FourCC("A042"))  -- Inspire
+				SelectHeroSkill(u, FourCC("A01I"))  -- Raise Banner
+				SelectHeroSkill(u, FourCC("A01B"))  -- Attack
+				SelectHeroSkill(u, FourCC("A01Z"))  -- Bolster
+				SelectHeroSkill(u, FourCC("A019"))  -- Iron Defense
+				
+			elseif uType == FourCC("H00J") then  -- Time Mage
+				SelectHeroSkill(u, FourCC("A04N"))  -- Paradox
+				SelectHeroSkill(u, FourCC("A04I"))  -- Dimensional Phase
+				SelectHeroSkill(u, FourCC("A04P"))  -- Time Travel
+				SelectHeroSkill(u, FourCC("A04K"))  -- Chrono Atrophy
+				SelectHeroSkill(u, FourCC("A032"))  -- Decay
+			end
+		end
+	end )
+end
