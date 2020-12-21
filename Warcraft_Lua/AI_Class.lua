@@ -84,9 +84,7 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpCheck = true
 				hero.clumpRange = 100.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 500.00
@@ -101,18 +99,16 @@ function init_AIClass()
 				hero.lifeLowPercent = 25.00
 				hero.lifeLowNumber = 300.00
 
-				hero.highDamageSingle = 4.00
-				hero.highDamageAverage = 12.00
+				hero.highDamageSingle = 3.00
+				hero.highDamageAverage = 18.00
 
 				hero.powerBase = 700.00
 				hero.powerLevel = 220.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpCheck = true
 				hero.clumpRange = 100.00
 				hero.intelRange = 1000.00
-				hero.closeRange = 500.00
+				hero.closeRange = 400.00
 
 			elseif hero.unitType == FourCC("H009") then  -- Tactition
 						
@@ -129,10 +125,7 @@ function init_AIClass()
 
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
-
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpCheck = true
 				hero.clumpRange = 250.00
 				hero.intelRange = 1000.00
 				hero.closeRange = 400.00
@@ -153,9 +146,7 @@ function init_AIClass()
 				hero.powerBase = 750.00
 				hero.powerLevel = 250.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
+				hero.clumpCheck = true
 				hero.clumpRange = 250.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 700.00
@@ -176,10 +167,8 @@ function init_AIClass()
 				hero.powerBase = 500.00
 				hero.powerLevel = 200.00
 
-				hero.clumpAllyCheck = false
-				hero.clumbEnemyCheck = false
-				hero.clumbBothCheck = false
-				hero.clumpRange = 150.00
+				hero.clumpCheck = true
+				hero.clumpRange = 100.00
 				hero.intelRange = 1100.00
 				hero.closeRange = 400.00
 
@@ -290,7 +279,7 @@ function init_AIClass()
 							unitPowerRangeMultiplier = 300.00 / (unitDistance - unitRange + 300.00)
 						end
 
-						IsUnitAlly(whichUnit, whichPlayer)
+						
 						if IsUnitAlly(u, hero.player) == true then
 
 							-- Update count
@@ -314,7 +303,7 @@ function init_AIClass()
 								hero.countUnitEnemyClose = hero.countUnitEnemyClose + 1
 							end
 
-							-- Check to see if unit is the most powerful friend
+							-- Check to see if unit is the most powerful Enemy
 							if unitPower > hero.powerEnemy then
 								hero.unitPowerEnemy = u
 							end
@@ -323,39 +312,42 @@ function init_AIClass()
 							hero.powerEnemy = hero.powerEnemy + (unitPower * (unitLife / 100.00) * unitPowerRangeMultiplier )
 						end
 
-						if hero.clumpAllyCheck == true or hero.clumpEnemyCheck == true or hero.clumpBothCheck == true then
+						if hero.clumpCheck == true then
 
 							powerAllyTemp = 0
 							powerEnemyTemp = 0
+							clump = CreateGroup()
 
 							GroupEnumUnitsInRange(clump, unitX, unitY, hero.clumpRange, nil)
+
 							while true do
 								clumpUnit = FirstOfGroup(clump)
 								if clumpUnit == nil then break end
 
-								if IsUnitAlly(clumpUnit, hero.player) and (hero.clumpAlly == true or hero.clumpBoth == true) then
-									powerAllyTemp = powerAllyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+								if  IsUnitAliveBJ(clumpUnit) and IsUnitType(clumpUnit, UNIT_TYPE_STRUCTURE) == false then
+									if IsUnitAlly(clumpUnit, hero.player) then 
+										powerAllyTemp = powerAllyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+									else
+										powerEnemyTemp = powerEnemyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+									end
 								end
 
-								if not IsUnitAlly(clumpUnit, hero.player) and (hero.clumpEnemy == true or hero.clumpBoth == true) then
-									powerEnemyTemp = powerEnemyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
-								end
 
 								GroupRemoveUnit(clump, clumpUnit)
 							end
 							DestroyGroup(clump)
 
-							if hero.clumpAllyCheck == true and powerAllyTemp > hero.clumpFriendPower then
+							if powerAllyTemp > hero.clumpFriendPower then
 								hero.clumpFriendPower = powerAllyTemp
 								hero.clumpFriend = u
 							end
 
-							if hero.clumpEnemyCheckCheck == true and powerEnemyTemp > hero.clumpEnemyPower then
+							if powerEnemyTemp > hero.clumpEnemyPower then
 								hero.clumpEnemyPower = powerEnemyTemp
 								hero.clumpEnemy = u
 							end
 
-							if hero.clumpBothCheck == true and (powerAllyTemp + powerEnemyTemp) > hero.clumpBothPower then
+							if (powerAllyTemp + powerEnemyTemp) > hero.clumpBothPower then
 								hero.clumpBothPower = powerAllyTemp + powerEnemyTemp
 								hero.clumpBoth = u
 							end
@@ -391,7 +383,8 @@ function init_AIClass()
 				hero.powerBase = hero.powerBase + (0.25 * I2R(hero.level))
 				hero.powerHero = hero.powerBase + (hero.powerLevel * I2R(hero.level) )
 
-				print(OrderId2String(GetUnitCurrentOrder(hero.unit)))
+				--print("Clump Enemy: " .. R2S(hero.clumpEnemyPower))
+				--print("Clump Both: " .. R2S(hero.clumpBothPower))
 				--print("Hero Power: " .. R2S(hero.powerHero))
 				--print("Power Level: " .. R2S(hero.powerCount))
 			end
@@ -402,9 +395,31 @@ function init_AIClass()
 		function self:CleanUp(i)
 			local hero = self[i]
 
+			if (hero.currentOrder ~= "move" and (hero.lowLife or hero.fleeing)) then
+				self:ACTIONtravelToHeal(i)
+			end
+
 			if (hero.currentOrder ~= "attack" and hero.currentOrder ~= "move" and hero.lowLife == false and hero.casting == false ) then
 				self:ACTIONattackBase(i)
 			end
+		end
+
+		-- AI Run Specifics
+		function self:STATEAbilities(i)
+			local hero = self[i]
+
+			if hero.name == "Mana Addict" then
+				self:manaAddictAI(i)
+			elseif hero.name == "Brawler" then
+				self:brawlerAI(i)
+			elseif hero.name == "Shifter" then
+				self:shifterAI(i)
+			elseif hero.name == "Tactition" then
+				self:tactitionAI(i)
+			elseif hero.name == "Time Mage" then
+				self:timeMageAI(i)
+			end
+			
 		end
 
 		-- AI has Low Health
@@ -522,7 +537,6 @@ function init_AIClass()
 					
 				print("Stop Fleeing")
 				hero.fleeing = false
-				hero.casting = false
 
 				self:ACTIONtravelToDest(i)
 			end
@@ -533,18 +547,19 @@ function init_AIClass()
 			local hero = self[i]
 
 			if hero.casting == true then
-				print("Still Casting Spell")
-
 				if hero.castingCounter == -10.00 then
 					if hero.currentOrder ~= hero.order then
 						hero.casting = false
 						print("Stopped Casting")
 						self:ACTIONtravelToDest(i)
 						hero.order = hero.currentOrder
+					else
+						print("Still Casting Spell")
 					end
 
 				elseif hero.castingCounter > 0.00 then
 					hero.castingCounter = hero.castingCounter - 1.50
+					print("Still Casting Spell")
 
 				else
 					hero.casting = false
@@ -564,10 +579,15 @@ function init_AIClass()
 			
 			local hero = self[i]
 
+			if hero.fleeing == true or hero.lowhealth == true then
+				self:ACTIONtravelToDest(i)
+			end
+
 			hero.casting = true
 			hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
 			print("Spell Cast")
 		end
+
 
 		function self:ACTIONtravelToHeal(i)
 			local hero = self[i]
@@ -630,8 +650,144 @@ function init_AIClass()
 			IssuePointOrder(hero.unit, "attack", unitX, unitY)
 
 		end
-		
+
+
+		function self:manaAddictAI(i)
+			local hero = self[i]
+
+			if hero.casting == false then
+				local manaShieldSpell = FourCC("A001")
+				local manaShieldBuff = FourCC("BNms")
+				local frostNovaSpell = FourCC("A03S")
+				local manaOverloadSpell = FourCC("A018")
+
+				-- Mana Shield
+				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, manaShieldSpell) == 0.00 and
+					UnitHasBuffBJ(hero.unit, manaShieldBuff) == false  then
+
+					print("Casting Mana Shield")
+					IssueImmediateOrder(hero.unit, "manashieldon")
+					self:castSpell(i)
+				end
+
+				-- Frost Nova
+				if	hero.clumpEnemyPower >= 40 and
+					BlzGetUnitAbilityCooldownRemaining(hero.unit, frostNovaSpell) == 0.00 and
+					(hero.mana + 50.00) >= I2R(BlzGetAbilityManaCost(frostNovaSpell, GetUnitAbilityLevel(hero.unit,frostNovaSpell))) then
+					
+					print("Frost Nova")
+					IssuePointOrder(hero.unit, "flamestrike", GetUnitX(hero.clumpEnemy), GetUnitY(hero.clumpEnemy))
+					self:castSpell(i)
+				end
+				
+				-- Mana Drain
+				if	hero.countUnitEnemyClose > 3 and
+					hero.manaPercent < 90.00 and
+					GetUnitAbilityLevel(hero.unit, manaOverloadSpell) > 0 and
+					BlzGetUnitAbilityCooldownRemaining(hero.unit, manaOverloadSpell) == 0.00 then
+					
+					print("Casting Mana Overload")
+					IssueImmediateOrder(hero.unit, "thunderclap")
+					self:castSpell(i)
+				end
+			end
+		end
+
+		function self:brawlerAI(i)
+			local hero = self[i]
+
+			if hero.casting == false then
+				
+			end
+		end
+
+		function self:shifterAI(i)
+			local hero = self[i]
+
+			if hero.casting == false then
+				local shiftBackSpell = FourCC("A03U")
+				local shiftForwardSpell = FourCC("A030")
+				local fallingStrikeSpell = FourCC("A03T")
+				local shiftStormSpell = FourCC("A03C")
+				local felFormSpell = FourCC("A02Y")
+
+				-- Custom Intel
+				local g = CreateGroup()
+				local u = nil
+				local illusionsNearby = 0
+
+				-- Find all Nearby Illusions
+				GroupEnumUnitsInRange(g, hero.x, hero.y, 600.00, nil)
+				while true do
+					u = FirstOfGroup(g)
+					if (u == nil) then break end
+						
+					if IsUnitIllusion(u) then
+						illusionsNearby = illusionsNearby + 1
+					end
+					GroupRemoveUnit(g, u)
+				end
+				DestroyGroup(g)
+
+
+				-- Shift Back
+
+
+				-- Shift Forward
+				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftForwardSpell) == 0.00 and
+					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, GetUnitAbilityLevel(hero.unit, shiftForwardSpell))) and
+					hero.countUnitEnemyClose > 4 then
+					-- body
+
+					IssueImmediateOrder(hero.unit, "thunderclap")
+					self:castSpell(i)
+				end
+
+				-- Falling Stike
+				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, fallingStrikeSpell) == 0.00 and
+					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(fallingStrikeSpell, GetUnitAbilityLevel(hero.unit, fallingStrikeSpell))) and 
+					(hero.powerEnemy > 250.00 or hero.clumpEnemyPower > 80.00) then
+					
+					if hero.powerEnemy > 250.00 then
+						IssuePointOrder(hero.unit, "clusterrockets", GetUnitX(hero.unitPowerEnemy), GetUnitY(hero.unitPowerEnemy))
+					else
+						IssuePointOrder(hero.unit, "clusterrockets", GetUnitX(hero.clumpEnemy), GetUnitY(hero.clumpEnemy))
+					end
+
+					self:castSpell(i)
+				end
+
+				-- ShiftStorm
+				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftStormSpell) == 0.00 and
+					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, GetUnitAbilityLevel(hero.unit, shiftStormSpell))) and
+					hero.countUnitEnemyClose > 6 and
+					illusionsNearby >= 2 then
+					-- body
+
+					IssueImmediateOrder(hero.unit, "channel")
+					self:castSpell(i)
+				end
+
+				-- Fell Form
+			end
+		end
+
+		function self:tactitionAI(i)
+			local hero = self[i]
+
+			if hero.casting == false then
+
+			end
+		end
+
+		function self:timeMageAI(i)
+			local hero = self[i]
+
+			if hero.casting == false then
+				
+			end
+		end
+
 		return self
 	end
-
 end

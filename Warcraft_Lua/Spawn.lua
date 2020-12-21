@@ -42,7 +42,7 @@ function spawnSetup()
 
     -- Arcane Spawn
     baseSpawn.addUnit("arcane", "h00C", 2, {5,6,7,8,9}, 3, 12)  -- Sorcress
-    baseSpawn.addUnit("arcane", "hgry", 1, {2,4,6,8,10}, 10, 12)  -- Gryphon Rider
+    baseSpawn.addUnit("arcane", "hgry", 1, {2,3,4,5,6,8,10}, 10, 12)  -- Gryphon Rider
  
     -- Arcane Creep Spawn
     baseSpawn.addUnit("arcaneCreep", "narg", 2, {1,2,3,4}, 2, 12)  -- Battle Golem
@@ -51,8 +51,8 @@ function spawnSetup()
     baseSpawn.addUnit("arcaneCreep", "h00K", 1, {1,2,3,4,5,10}, 6, 12)  -- Magi Defender
 
     -- Arcane Hero Sapwn
-    baseSpawn.addUnit("arcaneHero", "n00A", 1, {5,6}, 6, 12)  -- Supreme Wizard
-    baseSpawn.addUnit("arcaneHero", "nsgg", 1, {4,6}, 8, 12)  -- Seige Golem
+    baseSpawn.addUnit("arcaneHero", "n00A", 1, {5,6}, 7, 12)  -- Supreme Wizard
+    baseSpawn.addUnit("arcaneHero", "nsgg", 1, {4,6}, 9, 12)  -- Seige Golem
 
     -- Arcane Top Spawn
     baseSpawn.addUnit("arcaneTop", "narg", 4, {4,5,6}, 2, 12)  -- Battle Golem
@@ -77,8 +77,8 @@ function spawnSetup()
     baseSpawn.addUnit("blacksmithCreep", "h007", 4, {1,2,3,4}, 1, 6)  -- Militia
     baseSpawn.addUnit("blacksmithCreep", "nhea", 1, {1,2,3,4}, 3, 12)  -- Archer
     baseSpawn.addUnit("blacksmithCreep", "hspt", 1, {1,2,3,4}, 4, 12)  -- Tower Guard
-    baseSpawn.addUnit("blacksmithCreep", "h012", 2, {1,2,3,4,5}, 6, 12)  -- Scarlet Commander
-    baseSpawn.addUnit("blacksmithCreep", "hcth", 2, {1,2,3,4,5}, 7, 12)  -- Captian
+    baseSpawn.addUnit("blacksmithCreep", "h012", 2, {1,2,3,4,5}, 7, 12)  -- Scarlet Commander
+    baseSpawn.addUnit("blacksmithCreep", "hcth", 2, {1,2,3,4,5}, 9, 12)  -- Captian
 
     -- Castle Spawn
     baseSpawn.addUnit("castle", "h00s", 1, {1,2,3,4,5,6,7,8}, 8, 12)  -- Commander
@@ -153,37 +153,38 @@ function spawnSetup()
     baseSpawn.addUnit("nightElves", "edry", 1, {1,4,5,7,9}, 3, 12)  -- Dryad
     baseSpawn.addUnit("nightElves", "edoc", 2, {1,3,5,7,9}, 4, 12)  -- Druid of the Claw
     baseSpawn.addUnit("nightElves", "e005", 1, {2,4,6,8}, 5, 12)  -- Mountain Giant
-    baseSpawn.addUnit("nightElves", "echm", 1, {5,7}, 9, 12)  -- Chimera
+    baseSpawn.addUnit("nightElves", "nwnr", 1, {5}, 11, 12)  -- Ent
     
     -- Orc Spawn
     baseSpawn.addUnit("orc", "o002", 2, {3,5,6,7,8,9,10}, 1, 12)  -- Grunt
     baseSpawn.addUnit("orc", "o002", 2, {6,7,8}, 3, 12)  -- Grunt
     baseSpawn.addUnit("orc", "nftr", 1, {4,5,7,8,9,10}, 2, 12)  -- Spearman
     baseSpawn.addUnit("orc", "nogr", 3, {2,4,6,8,10}, 4, 12)  -- Ogre
-    baseSpawn.addUnit("orc", "o004", 1, {6,7,8}, 3, 12)  -- Spirit Walker
-    baseSpawn.addUnit("orc", "nogm", 1, {1,6,8}, 5, 12)  -- Ogre Warchief
-    baseSpawn.addUnit("orc", "otau", 1, {5,6,7}, 6, 12)  -- Tauren
-
-    -- Night Elf Shipyard Spawn
-    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6}, 1, 2)         -- Human Frigate
-    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6,8,10}, 3, 4)       -- Human Frigate
-    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6,7,8,9,10}, 5, 12)    -- Human Frigate
-    baseSpawn.addUnit("hshipyard", "hbsh", 1, {2,6,9}, 5, 12)        -- Human Battleship
+    baseSpawn.addUnit("orc", "nw2w", 1, {3,7,9}, 3, 12)  -- Warlock
+    baseSpawn.addUnit("orc", "owad", 1, {1,6,9}, 5, 12)  -- Orc Warchief
+    baseSpawn.addUnit("orc", "ocat", 1, {1,5}, 6, 12)  -- Demolisher
 
     -- Human Shipyard Spawn
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6}, 1, 2)         -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,8,10}, 3, 4)       -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6,8,10}, 5, 12)    -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hbsh", 1, {3,8}, 5, 12)        -- Human Battleship
+
+    -- Night Elf Shipyard Spawn
     baseSpawn.addUnit("shipyard", "edes", 1, {1,2}, 1, 2)         -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,3,4}, 3, 4)     -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,3,4,5}, 5, 12)  -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "ebsh", 1, {3,5}, 5, 12)        -- Night Elf Battleship
+    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,4,6}, 3, 4)     -- Night Elf Frigate
+    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,4,6,8,10}, 5, 12)  -- Night Elf Frigate
+    baseSpawn.addUnit("shipyard", "ebsh", 1, {3,7}, 5, 12)        -- Night Elf Battleship
 
     -- Town Spawn
     baseSpawn.addUnit("town", "h007", 3, {1,2,3,4,5}, 1, 5)  -- Militia
     baseSpawn.addUnit("town", "hcth", 1, {1,2,3,4}, 2, 12)  -- Captian
-    baseSpawn.addUnit("town", "hfoo", 5, {1,2,3,4,5,6}, 3, 12)  -- Footman
+    baseSpawn.addUnit("town", "n00x", 2, {1,2,3,4,6,8}, 3, 12)  -- Arbalist
+    baseSpawn.addUnit("town", "hfoo", 5, {1,2,5,6}, 5, 12)  -- Footman
     baseSpawn.addUnit("town", "h00L", 2, {1,3,7,9}, 4, 12)  -- Knight
 
     -- Undead Spawn
-    baseSpawn.addUnit("undead", "ugho", 5, {1,2,3,4,5,6,7,8,9}, 1, 12)  -- Ghoul
+    baseSpawn.addUnit("undead", "ugho", 4, {1,2,3,4,5,6,7,8,9}, 1, 12)  -- Ghoul
     baseSpawn.addUnit("undead", "uskm", 2, {1,2,3,4,5,6,7,8,9,10}, 2, 12)  -- Skeleton Mage
     baseSpawn.addUnit("undead", "unec", 1, {1,2,3,4,5,6,7}, 3, 12)  -- Necromancer
     baseSpawn.addUnit("undead", "nerw", 1, {1,6}, 4, 12)  -- Warlock

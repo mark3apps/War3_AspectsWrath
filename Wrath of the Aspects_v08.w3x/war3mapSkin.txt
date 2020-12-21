@@ -1,0 +1,9 @@
+[Categories]
+GiantClass=TRIGSTR_3860
+
+[CustomSkin]
+IdlePeon=ReplaceableTextures\CommandButtons\BTNAltarOfKings.blp
+
+[FrameDef]
+IDLE_PEON=TRIGSTR_2453
+

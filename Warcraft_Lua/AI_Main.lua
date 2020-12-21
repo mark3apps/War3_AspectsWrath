@@ -5,13 +5,19 @@ function AI_MAIN()
 	--print(" -- ")
 	local pickedHero = mapAI.heroOptions[AI_Loop]
 
-    mapAI:updateIntel(pickedHero)
-    if mapAI:isAlive(pickedHero) then	
-        mapAI:STATELowHealth(pickedHero)
-        mapAI:STATEHighHealth(pickedHero)
-        mapAI:STATEFleeing(pickedHero)
-        mapAI:STATEStopFleeing(pickedHero)
-		mapAI:STATEDead(pickedHero)
+	-- debugfunc( function()
+	-- 	mapAI:STATEAbilities(pickedHero)
+	-- end, "mapAI:castSpell")
+
+	mapAI:updateIntel(pickedHero)
+   
+	if mapAI:isAlive(pickedHero) then
+		mapAI:STATEDead(pickedHero)	
+		mapAI:STATELowHealth(pickedHero)
+		mapAI:STATEStopFleeing(pickedHero)
+		mapAI:STATEFleeing(pickedHero)
+		mapAI:STATEHighHealth(pickedHero)
+		mapAI:STATEAbilities(pickedHero)
 		mapAI:STATEcastingSpell(pickedHero)
 		mapAI:CleanUp(pickedHero)
     else
@@ -62,7 +68,7 @@ function Computer_Picks()
                 y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 			
-            randInt = GetRandomInt(2, 2)
+            randInt = GetRandomInt(2, 5)
             if (randInt == 1) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0)
 				
@@ -124,7 +130,7 @@ function Computer_Picks()
 
         if (i >= 12 and mapAI.count > 0) then
             BJDebugMsg("Heroes:" .. I2S(mapAI.count))
-			TriggerRegisterTimerEvent(Trig_AI_MAIN, 1.50, true)
+			TriggerRegisterTimerEvent(Trig_AI_MAIN, 1.00/I2R(mapAI.count), true)
 		end
 		
         i = i + 1
