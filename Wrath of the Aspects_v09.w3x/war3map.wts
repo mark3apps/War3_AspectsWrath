@@ -967,12 +967,6 @@ STRING 339
 DW - Avatar
 }
 
-STRING 340
-// Abilities: A00P (Ansetral Spirit), Name (Name)
-{
-Ansetral Spirit
-}
-
 STRING 342
 // Units: hspt (Tower Guard), Name (Name)
 {
@@ -2501,11 +2495,6 @@ STRING 871
 // Abilities: A01B (TC - Attack), Researchubertip (Tooltip - Learn - Extended)
 {
 The hero commands nearby units to attack the target.  Units get increased movement speed, life regeneration rate, attack speed and armor.
-}
-
-STRING 875
-{
-Hero won, going back
 }
 
 STRING 877
@@ -9031,7 +9020,7 @@ Merc Tent
 }
 
 STRING 3283
-// Abilities: A03F (Summon Rogue), Name (Name)
+// Abilities: A04V (Summon Rogue), Name (Name)
 {
 Summon Rogue
 }
@@ -9085,19 +9074,19 @@ Resurrection - [|cffffcc00Level 3|r]
 }
 
 STRING 3292
-// Abilities: A03J (Upgrade to Footman), Name (Name)
+// Abilities: A045 (Upgrade to Footman), Name (Name)
 {
 Upgrade to Footman
 }
 
 STRING 3293
-// Abilities: A03K (Upgrade to Captian), Name (Name)
+// Abilities: A03J (Upgrade to Captian), Name (Name)
 {
 Upgrade to Captian
 }
 
 STRING 3295
-// Abilities: A03L (Upgrade to Commander), Name (Name)
+// Abilities: A03K (Upgrade to Commander), Name (Name)
 {
 Upgrade to Commander
 }
@@ -9918,16 +9907,6 @@ STRING 3504
 This base has been captured.  You can now teleport to it.
 }
 
-STRING 3505
-{
-An Allied Forces base has been destroyed!  Federation Heroes now gain 15% more experience from each kill.
-}
-
-STRING 3506
-{
-A Federation Forces base has been destroyed!  Allied Heroes now gain 15% more experience from each kill.
-}
-
 STRING 3507
 // Abilities: A03U (Shift Back), Tip (Tooltip - Normal)
 {
@@ -10370,66 +10349,6 @@ STRING 3590
 // Units: n00Q (Peasant), Name (Name)
 {
 Peasant
-}
-
-STRING 3591
-// Abilities: A044 (Call To Arms), Name (Name)
-{
-Call To Arms
-}
-
-STRING 3592
-// Abilities: A044 (Call To Arms), EditorSuffix (Editor Suffix)
-{
-(Child 1)
-}
-
-STRING 3593
-// Abilities: A045 (Call To Arms), Name (Name)
-{
-Call To Arms
-}
-
-STRING 3594
-// Abilities: A045 (Call To Arms), EditorSuffix (Editor Suffix)
-{
-(Female)
-}
-
-STRING 3595
-// Abilities: A046 (Call To Arms), Name (Name)
-{
-Call To Arms
-}
-
-STRING 3596
-// Abilities: A046 (Call To Arms), EditorSuffix (Editor Suffix)
-{
-(Child 2)
-}
-
-STRING 3597
-// Abilities: A047 (Call To Arms), Name (Name)
-{
-Call To Arms
-}
-
-STRING 3598
-// Abilities: A047 (Call To Arms), EditorSuffix (Editor Suffix)
-{
-(Male 1)
-}
-
-STRING 3599
-// Abilities: A048 (Call To Arms), Name (Name)
-{
-Call To Arms
-}
-
-STRING 3600
-// Abilities: A048 (Call To Arms), EditorSuffix (Editor Suffix)
-{
-(Male 2)
 }
 
 STRING 3601
@@ -11801,12 +11720,6 @@ STRING 3872
 Scarlet Commander
 }
 
-STRING 3873
-// Abilities: A04V (Upgrade to Scarlet Captian), Name (Name)
-{
-Upgrade to Scarlet Captian
-}
-
 STRING 3874
 // Units: h010 (Elven Guardian), Name (Name)
 {
@@ -11835,16 +11748,6 @@ STRING 3879
 // Units: h013 (Rifleman), EditorSuffix (Name - Editor Suffix)
 {
 (Long)
-}
-
-STRING 3880
-{
-Sending
-}
-
-STRING 3881
-{
-Returning
 }
 
 STRING 3883
@@ -11980,14 +11883,254 @@ Fel Orc Warchief
 }
 
 STRING 3905
-// Units: nogm (Fel Ogre), Name (Name)
+// Units: n00W (Fel Ogre), Name (Name)
 {
 Fel Ogre
 }
 
 STRING 3906
-// Units: nogr (Ogre), Name (Name)
+// Units: nogo (Ogre), Name (Name)
 {
 Ogre
+}
+
+STRING 3907
+// Abilities: A00P (Spawn Clockwork Golem), Name (Name)
+{
+Spawn Clockwork Golem
+}
+
+STRING 3908
+// Abilities: A044 (Spawn Fallen Knight), Name (Name)
+{
+Spawn Fallen Knight
+}
+
+STRING 3909
+// Abilities: A03L (Grunt Fel Form), Name (Name)
+{
+Grunt Fel Form
+}
+
+STRING 3910
+// Abilities: A03L (Grunt Fel Form), Tip (Tooltip - Normal)
+{
+Greater Fel Form
+}
+
+STRING 3911
+// Abilities: A03L (Grunt Fel Form), Tip (Tooltip - Normal)
+{
+Ultimate Fel Form
+}
+
+STRING 3912
+// Abilities: A03L (Grunt Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 300 bonus health.  Mana Drains while in Fel Form.  |nLasts 13 seconds.
+}
+
+STRING 3913
+// Abilities: A03L (Grunt Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 500 bonus health.  Mana Drains while in Fel Form.  |nLasts 15 seconds.
+}
+
+STRING 3914
+// Abilities: A03L (Grunt Fel Form), Researchtip (Tooltip - Learn)
+{
+Learn Fel Form
+}
+
+STRING 3915
+// Abilities: A03L (Grunt Fel Form), Researchhotkey (Hotkey - Learn)
+{
+R
+}
+
+STRING 3916
+// Abilities: A03L (Grunt Fel Form), Hotkey (Hotkey - Normal)
+{
+V
+}
+
+STRING 3917
+// Abilities: A03L (Grunt Fel Form), Tip (Tooltip - Normal)
+{
+Grunt Fel Form
+}
+
+STRING 3918
+// Abilities: A03L (Grunt Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed and Movement Speed.  Mana Drains while in Fel Form. |nLasts 8 seconds.
+}
+
+STRING 3920
+// Units: o00A (Fel Orc Grunt), Name (Name)
+{
+Fel Orc Grunt
+}
+
+STRING 3921
+// Abilities: A046 (Ogre Pulverize), Name (Name)
+{
+Ogre Pulverize
+}
+
+STRING 3923
+// Abilities: A047 (Fel Ogre Form), Tip (Tooltip - Normal)
+{
+Greater Fel Form
+}
+
+STRING 3924
+// Abilities: A047 (Fel Ogre Form), Tip (Tooltip - Normal)
+{
+Ultimate Fel Form
+}
+
+STRING 3925
+// Abilities: A047 (Fel Ogre Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 300 bonus health.  Mana Drains while in Fel Form.  |nLasts 13 seconds.
+}
+
+STRING 3926
+// Abilities: A047 (Fel Ogre Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 500 bonus health.  Mana Drains while in Fel Form.  |nLasts 15 seconds.
+}
+
+STRING 3927
+// Abilities: A047 (Fel Ogre Form), Researchtip (Tooltip - Learn)
+{
+Learn Fel Form
+}
+
+STRING 3928
+// Abilities: A047 (Fel Ogre Form), Researchhotkey (Hotkey - Learn)
+{
+R
+}
+
+STRING 3929
+// Abilities: A047 (Fel Ogre Form), Hotkey (Hotkey - Normal)
+{
+V
+}
+
+STRING 3930
+// Abilities: A047 (Fel Ogre Form), Tip (Tooltip - Normal)
+{
+Grunt Fel Form
+}
+
+STRING 3931
+// Abilities: A047 (Fel Ogre Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed and Movement Speed.  Mana Drains while in Fel Form. |nLasts 8 seconds.
+}
+
+STRING 3932
+// Abilities: A047 (Fel Ogre Form), Name (Name)
+{
+Fel Ogre Form
+}
+
+STRING 3933
+// Units: o00B (Fel Orc Warchief), Name (Name)
+{
+Fel Orc Warchief
+}
+
+STRING 3934
+// Abilities: A048 (Fel Orc Warchief Form), Name (Name)
+{
+Fel Orc Warchief Form
+}
+
+STRING 3935
+// Abilities: A048 (Fel Orc Warchief Form), Tip (Tooltip - Normal)
+{
+Greater Fel Form
+}
+
+STRING 3936
+// Abilities: A048 (Fel Orc Warchief Form), Tip (Tooltip - Normal)
+{
+Ultimate Fel Form
+}
+
+STRING 3937
+// Abilities: A048 (Fel Orc Warchief Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 300 bonus health.  Mana Drains while in Fel Form.  |nLasts 13 seconds.
+}
+
+STRING 3938
+// Abilities: A048 (Fel Orc Warchief Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 500 bonus health.  Mana Drains while in Fel Form.  |nLasts 15 seconds.
+}
+
+STRING 3939
+// Abilities: A048 (Fel Orc Warchief Form), Researchtip (Tooltip - Learn)
+{
+Learn Fel Form
+}
+
+STRING 3940
+// Abilities: A048 (Fel Orc Warchief Form), Researchhotkey (Hotkey - Learn)
+{
+R
+}
+
+STRING 3941
+// Abilities: A048 (Fel Orc Warchief Form), Hotkey (Hotkey - Normal)
+{
+V
+}
+
+STRING 3942
+// Abilities: A048 (Fel Orc Warchief Form), Tip (Tooltip - Normal)
+{
+Grunt Fel Form
+}
+
+STRING 3943
+// Abilities: A048 (Fel Orc Warchief Form), Ubertip (Tooltip - Normal - Extended)
+{
+Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed and Movement Speed.  Mana Drains while in Fel Form. |nLasts 8 seconds.
+}
+
+STRING 3944
+// Doodads: D00M (Orc Wall), Name (Name)
+{
+Orc Wall
+}
+
+STRING 3945
+// Doodads: D00N (Orc Gate), Name (Name)
+{
+Orc Gate
+}
+
+STRING 3946
+// Doodads: D00O (Orc Wall Construction), Name (Name)
+{
+Orc Wall Construction
+}
+
+STRING 3947
+// Doodads: D00P (Orc Tower), Name (Name)
+{
+Orc Tower
+}
+
+STRING 3948
+// Doodads: D00Q (Orc Tower Construction), Name (Name)
+{
+Orc Tower Construction
 }
 
