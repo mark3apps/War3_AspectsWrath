@@ -76,9 +76,9 @@ function spawnSetup()
     -- Blacksmith Creep Spawn
     baseSpawn.addUnit("blacksmithCreep", "h007", 4, {1,2,3,4}, 1, 6)  -- Militia
     baseSpawn.addUnit("blacksmithCreep", "nhea", 1, {1,2,3,4}, 3, 12)  -- Archer
-    baseSpawn.addUnit("blacksmithCreep", "hspt", 1, {1,2,3,4}, 4, 12)  -- Tower Guard
-    baseSpawn.addUnit("blacksmithCreep", "h012", 2, {1,2,3,4,5}, 7, 12)  -- Scarlet Commander
-    baseSpawn.addUnit("blacksmithCreep", "hcth", 2, {1,2,3,4,5}, 9, 12)  -- Captian
+    baseSpawn.addUnit("blacksmithCreep", "hspt", 1, {1,2,3,4}, 5, 12)  -- Tower Guard
+    baseSpawn.addUnit("blacksmithCreep", "h012", 2, {1,2,3,4,5}, 8, 12)  -- Scarlet Commander
+    baseSpawn.addUnit("blacksmithCreep", "hcth", 2, {1,2,3,4,5}, 11, 12)  -- Captian
 
     -- Castle Spawn
     baseSpawn.addUnit("castle", "h00S", 1, {1,2,3,4,5,6,7,8}, 8, 12)  -- Commander
@@ -103,7 +103,7 @@ function spawnSetup()
     baseSpawn.addUnit("citySide", "hfoo", 2, {6,7,8,9,10}, 2, 12)  -- Footman
     baseSpawn.addUnit("citySide", "h007", 2, {6,7,8,9,10}, 3, 12)  -- Militia
 
-    -- -- Furbolg Spawn
+    -- Furbolg Spawn
     baseSpawn.addUnit("furbolg", "n00E", 2, {1,3,4,5,6,7,8}, 1, 4)  -- Furbolg
     baseSpawn.addUnit("furbolg", "n00G", 1, {1,3,5,7,9}, 3, 12)  -- Furbolg Shaman
     baseSpawn.addUnit("furbolg", "n00E", 2, {1,2,3,4,5,6,7,8,9,10}, 4, 12)  -- Furbolg

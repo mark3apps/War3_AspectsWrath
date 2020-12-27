@@ -12134,3 +12134,27 @@ STRING 3948
 Orc Tower Construction
 }
 
+STRING 3949
+// Abilities: Apxf (Aspect Fury), Tip (Tooltip - Normal)
+{
+Aspect Fury
+}
+
+STRING 3950
+// Abilities: Apxf (Aspect Fury), Name (Name)
+{
+Aspect Fury
+}
+
+STRING 3951
+// Abilities: A03F (Aspect Fury 2), Tip (Tooltip - Normal)
+{
+Aspect Fury
+}
+
+STRING 3952
+// Abilities: A03F (Aspect Fury 2), Name (Name)
+{
+Aspect Fury 2
+}
+
