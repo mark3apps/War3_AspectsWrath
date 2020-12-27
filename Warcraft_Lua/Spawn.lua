@@ -29,6 +29,7 @@ function spawnSetup()
     baseSpawn.addBase("merc", gg_rct_Camp_Bottom, gg_rct_Right_Start_Bottom, gg_unit_n001_0048, gg_rct_Camp_Top, gg_rct_Left_Start_Top, gg_unit_n001_0049, 3)
     baseSpawn.addBase("mine", gg_rct_Left_Workshop, gg_rct_Right_Start_Bottom, gg_unit_h006_0074, gg_rct_Right_Workshop, gg_rct_Left_Start_Top, gg_unit_h006_0055, 3)
     baseSpawn.addBase("naga", gg_rct_Naga_Left, gg_rct_Right_Start_Top, gg_unit_nntt_0135, gg_rct_Naga_Right, gg_rct_Left_Start_Bottom, gg_unit_nntt_0132, 1)
+    baseSpawn.addBase("murloc", gg_rct_Murloc_Spawn_Left, gg_rct_Right_Start_Top, gg_unit_nmh1_0735, gg_rct_Murloc_Spawn_Right, gg_rct_Left_Start_Bottom, gg_unit_nmh1_0783, 1)
     baseSpawn.addBase("nagaCreep", gg_rct_Naga_Left, gg_rct_Murloc_Left, gg_unit_nntt_0135, gg_rct_Naga_Right, gg_rct_Murloc_Right, gg_unit_nntt_0132, 8)
     baseSpawn.addBase("nightElves", gg_rct_Left_Tree, gg_rct_Right_Start_Top, gg_unit_e003_0058, gg_rct_Right_Tree, gg_rct_Left_Start_Bottom, gg_unit_e003_0014, 1)
     baseSpawn.addBase("orc", gg_rct_Left_Orc, gg_rct_Right_Start_Top, gg_unit_o001_0075, gg_rct_Right_Orc, gg_rct_Left_Start_Bottom, gg_unit_o001_0078, 1)
@@ -106,7 +107,7 @@ function spawnSetup()
     -- Furbolg Spawn
     baseSpawn.addUnit("furbolg", "n00E", 2, {1,3,4,5,6,7,8}, 1, 4)  -- Furbolg
     baseSpawn.addUnit("furbolg", "n00G", 1, {1,3,5,7,9}, 3, 12)  -- Furbolg Shaman
-    baseSpawn.addUnit("furbolg", "n00E", 2, {1,2,3,4,5,6,7,8,9,10}, 4, 12)  -- Furbolg
+    baseSpawn.addUnit("furbolg", "nfra", 1, {1,2,3,4,5,6,8,9}, 6 , 12)  -- Furbolg Ursa Warrior
     
 
     -- High Elves
@@ -122,10 +123,10 @@ function spawnSetup()
     baseSpawn.addUnit("highElvesCreep", "h010", 2, {1,2,3,4,5}, 5, 12)  -- Elven Guardian
 
     -- Merc Spawn
-    baseSpawn.addUnit("merc", "n002", 3, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Merc
+    baseSpawn.addUnit("merc", "nooL", 4, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- rogue
     baseSpawn.addUnit("merc", "n003", 2, {4,5,6,7,8,9,10}, 2, 12)  -- Merc Archer
-    baseSpawn.addUnit("merc", "n002", 3, {7,8,9,10}, 3, 12)  -- Merc
-    baseSpawn.addUnit("merc", "n008", 3, {7,8,9,10}, 4, 12)  -- Enforcer
+    baseSpawn.addUnit("merc", "n002", 3, {4,7,8,9,10}, 3, 12)  -- Merc
+    baseSpawn.addUnit("merc", "n008", 3, {3,5,8,9,10}, 4, 12)  -- Enforcer
     baseSpawn.addUnit("merc", "nass", 1, {6,7,8,9,10}, 5, 12)  -- Assasin
     baseSpawn.addUnit("merc", "n004", 1, {7,8,9,10}, 1, 12)  -- Wizard Warrior
     baseSpawn.addUnit("merc", "n005", 1, {7,8,9,10}, 6, 12)  -- Bandit Lord
@@ -137,16 +138,22 @@ function spawnSetup()
     baseSpawn.addUnit("mine", "ncg2", 2, {1,2,3,4,5,6,7}, 4, 12)  -- Clockwerk Goblin
     baseSpawn.addUnit("mine", "n00F", 1, {2,3,4,5,6,7}, 5, 12)  -- Automaton
 
+    -- Murloc Spawn
+    baseSpawn.addUnit("murloc", "nmcf", 3, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Mur'gul Cliffrunner
+    baseSpawn.addUnit("murloc", "nnmg", 1, {1,2,3,4,5,6,7,8,9,10}, 2, 12)  -- Mur'gul Reaver
+    baseSpawn.addUnit("murloc", "nmsn", 1, {1,3,4,6,7,9,10}, 3, 12)  -- Mur'gul Snarecaster
+    baseSpawn.addUnit("murloc", "nmsn", 1, {1,3,6,7,10}, 5, 12)  -- Mur'gul Tidewarrior
+
     -- Naga Spawn
     baseSpawn.addUnit("naga", "nmyr", 2, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Naga Myrmidon
-    baseSpawn.addUnit("naga", "nnsw", 1, {4,5,6,7,8,9,10}, 2, 12)  -- Naga Siren
-    baseSpawn.addUnit("naga", "nnrg", 1, {5,6,8,9,10}, 5, 12)  -- Naga Royal Guard
+    baseSpawn.addUnit("naga", "nnsw", 1, {4,5,6,7,8,9,10}, 3, 12)  -- Naga Siren
+    baseSpawn.addUnit("naga", "nnrg", 1, {5,6,8,9,10}, 6, 12)  -- Naga Royal Guard
     baseSpawn.addUnit("naga", "nhyc", 1, {1,3,5,7,8,9}, 9, 12)  -- Dragon Turtle
 
     -- Naga Creep Spawn
     baseSpawn.addUnit("nagaCreep", "nmyr", 2, {1,2,3,4}, 2, 12)  -- Naga Myrmidon
     baseSpawn.addUnit("nagaCreep", "nnsw", 1, {2,3,4,5}, 4, 12)  -- Naga Siren
-    baseSpawn.addUnit("nagaCreep", "nsnp", 1, {2,3,4,5}, 6, 12)  -- Snap Dragon
+    baseSpawn.addUnit("nagaCreep", "nsnp", 1, {2,3,4,5,6}, 6, 12)  -- Snap Dragon
 
     -- Night Elves Spawn
     baseSpawn.addUnit("nightElves", "nwat", 1, {3,4,5,6,7,8,9}, 2, 12)  -- Sentry

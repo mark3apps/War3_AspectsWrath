@@ -443,6 +443,8 @@ gg_unit_u001_0262 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
+gg_rct_Murloc_Spawn_Left = nil
+gg_rct_Murloc_Spawn_Right = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 7
@@ -2090,6 +2092,7 @@ function spawnSetup()
     baseSpawn.addBase("merc", gg_rct_Camp_Bottom, gg_rct_Right_Start_Bottom, gg_unit_n001_0048, gg_rct_Camp_Top, gg_rct_Left_Start_Top, gg_unit_n001_0049, 3)
     baseSpawn.addBase("mine", gg_rct_Left_Workshop, gg_rct_Right_Start_Bottom, gg_unit_h006_0074, gg_rct_Right_Workshop, gg_rct_Left_Start_Top, gg_unit_h006_0055, 3)
     baseSpawn.addBase("naga", gg_rct_Naga_Left, gg_rct_Right_Start_Top, gg_unit_nntt_0135, gg_rct_Naga_Right, gg_rct_Left_Start_Bottom, gg_unit_nntt_0132, 1)
+    baseSpawn.addBase("murloc", gg_rct_Murloc_Spawn_Left, gg_rct_Right_Start_Top, gg_unit_nmh1_0735, gg_rct_Murloc_Spawn_Right, gg_rct_Left_Start_Bottom, gg_unit_nmh1_0783, 1)
     baseSpawn.addBase("nagaCreep", gg_rct_Naga_Left, gg_rct_Murloc_Left, gg_unit_nntt_0135, gg_rct_Naga_Right, gg_rct_Murloc_Right, gg_unit_nntt_0132, 8)
     baseSpawn.addBase("nightElves", gg_rct_Left_Tree, gg_rct_Right_Start_Top, gg_unit_e003_0058, gg_rct_Right_Tree, gg_rct_Left_Start_Bottom, gg_unit_e003_0014, 1)
     baseSpawn.addBase("orc", gg_rct_Left_Orc, gg_rct_Right_Start_Top, gg_unit_o001_0075, gg_rct_Right_Orc, gg_rct_Left_Start_Bottom, gg_unit_o001_0078, 1)
@@ -2137,9 +2140,9 @@ function spawnSetup()
     -- Blacksmith Creep Spawn
     baseSpawn.addUnit("blacksmithCreep", "h007", 4, {1,2,3,4}, 1, 6)  -- Militia
     baseSpawn.addUnit("blacksmithCreep", "nhea", 1, {1,2,3,4}, 3, 12)  -- Archer
-    baseSpawn.addUnit("blacksmithCreep", "hspt", 1, {1,2,3,4}, 4, 12)  -- Tower Guard
-    baseSpawn.addUnit("blacksmithCreep", "h012", 2, {1,2,3,4,5}, 7, 12)  -- Scarlet Commander
-    baseSpawn.addUnit("blacksmithCreep", "hcth", 2, {1,2,3,4,5}, 9, 12)  -- Captian
+    baseSpawn.addUnit("blacksmithCreep", "hspt", 1, {1,2,3,4}, 5, 12)  -- Tower Guard
+    baseSpawn.addUnit("blacksmithCreep", "h012", 2, {1,2,3,4,5}, 8, 12)  -- Scarlet Commander
+    baseSpawn.addUnit("blacksmithCreep", "hcth", 2, {1,2,3,4,5}, 11, 12)  -- Captian
 
     -- Castle Spawn
     baseSpawn.addUnit("castle", "h00S", 1, {1,2,3,4,5,6,7,8}, 8, 12)  -- Commander
@@ -2164,10 +2167,10 @@ function spawnSetup()
     baseSpawn.addUnit("citySide", "hfoo", 2, {6,7,8,9,10}, 2, 12)  -- Footman
     baseSpawn.addUnit("citySide", "h007", 2, {6,7,8,9,10}, 3, 12)  -- Militia
 
-    -- -- Furbolg Spawn
+    -- Furbolg Spawn
     baseSpawn.addUnit("furbolg", "n00E", 2, {1,3,4,5,6,7,8}, 1, 4)  -- Furbolg
     baseSpawn.addUnit("furbolg", "n00G", 1, {1,3,5,7,9}, 3, 12)  -- Furbolg Shaman
-    baseSpawn.addUnit("furbolg", "n00E", 2, {1,2,3,4,5,6,7,8,9,10}, 4, 12)  -- Furbolg
+    baseSpawn.addUnit("furbolg", "nfra", 1, {1,2,3,4,5,6,8,9}, 6 , 12)  -- Furbolg Ursa Warrior
     
 
     -- High Elves
@@ -2183,10 +2186,10 @@ function spawnSetup()
     baseSpawn.addUnit("highElvesCreep", "h010", 2, {1,2,3,4,5}, 5, 12)  -- Elven Guardian
 
     -- Merc Spawn
-    baseSpawn.addUnit("merc", "n002", 3, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Merc
+    baseSpawn.addUnit("merc", "nooL", 4, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- rogue
     baseSpawn.addUnit("merc", "n003", 2, {4,5,6,7,8,9,10}, 2, 12)  -- Merc Archer
-    baseSpawn.addUnit("merc", "n002", 3, {7,8,9,10}, 3, 12)  -- Merc
-    baseSpawn.addUnit("merc", "n008", 3, {7,8,9,10}, 4, 12)  -- Enforcer
+    baseSpawn.addUnit("merc", "n002", 3, {4,7,8,9,10}, 3, 12)  -- Merc
+    baseSpawn.addUnit("merc", "n008", 3, {3,5,8,9,10}, 4, 12)  -- Enforcer
     baseSpawn.addUnit("merc", "nass", 1, {6,7,8,9,10}, 5, 12)  -- Assasin
     baseSpawn.addUnit("merc", "n004", 1, {7,8,9,10}, 1, 12)  -- Wizard Warrior
     baseSpawn.addUnit("merc", "n005", 1, {7,8,9,10}, 6, 12)  -- Bandit Lord
@@ -2198,16 +2201,22 @@ function spawnSetup()
     baseSpawn.addUnit("mine", "ncg2", 2, {1,2,3,4,5,6,7}, 4, 12)  -- Clockwerk Goblin
     baseSpawn.addUnit("mine", "n00F", 1, {2,3,4,5,6,7}, 5, 12)  -- Automaton
 
+    -- Murloc Spawn
+    baseSpawn.addUnit("murloc", "nmcf", 3, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Mur'gul Cliffrunner
+    baseSpawn.addUnit("murloc", "nnmg", 1, {1,2,3,4,5,6,7,8,9,10}, 2, 12)  -- Mur'gul Reaver
+    baseSpawn.addUnit("murloc", "nmsn", 1, {1,3,4,6,7,9,10}, 3, 12)  -- Mur'gul Snarecaster
+    baseSpawn.addUnit("murloc", "nmsn", 1, {1,3,6,7,10}, 5, 12)  -- Mur'gul Tidewarrior
+
     -- Naga Spawn
     baseSpawn.addUnit("naga", "nmyr", 2, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Naga Myrmidon
-    baseSpawn.addUnit("naga", "nnsw", 1, {4,5,6,7,8,9,10}, 2, 12)  -- Naga Siren
-    baseSpawn.addUnit("naga", "nnrg", 1, {5,6,8,9,10}, 5, 12)  -- Naga Royal Guard
+    baseSpawn.addUnit("naga", "nnsw", 1, {4,5,6,7,8,9,10}, 3, 12)  -- Naga Siren
+    baseSpawn.addUnit("naga", "nnrg", 1, {5,6,8,9,10}, 6, 12)  -- Naga Royal Guard
     baseSpawn.addUnit("naga", "nhyc", 1, {1,3,5,7,8,9}, 9, 12)  -- Dragon Turtle
 
     -- Naga Creep Spawn
     baseSpawn.addUnit("nagaCreep", "nmyr", 2, {1,2,3,4}, 2, 12)  -- Naga Myrmidon
     baseSpawn.addUnit("nagaCreep", "nnsw", 1, {2,3,4,5}, 4, 12)  -- Naga Siren
-    baseSpawn.addUnit("nagaCreep", "nsnp", 1, {2,3,4,5}, 6, 12)  -- Snap Dragon
+    baseSpawn.addUnit("nagaCreep", "nsnp", 1, {2,3,4,5,6}, 6, 12)  -- Snap Dragon
 
     -- Night Elves Spawn
     baseSpawn.addUnit("nightElves", "nwat", 1, {3,4,5,6,7,8,9}, 2, 12)  -- Sentry
@@ -2430,23 +2439,12 @@ function CreateBuildingsForPlayer11()
     u = BlzCreateUnitWithSkin(p, FourCC("halt"), 1824.0, -4512.0, 270.000, FourCC("halt"))
 end
 
-function CreateUnitsForPlayer18()
-    local p = Player(18)
-    local u
-    local unitID
-    local t
-    local life
-    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -20391.5, 2137.6, 230.138, FourCC("nmyr"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -20522.2, 1385.0, 171.117, FourCC("nmyr"))
-end
-
 function CreateUnitsForPlayer19()
     local p = Player(19)
     local u
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -20143.3, 2750.2, 230.140, FourCC("nmyr"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -22165.6, 2122.1, 230.140, FourCC("nmyr"))
 end
 
@@ -2524,6 +2522,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -16320.0, -64.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("utod"), -14080.0, -4864.0, 270.000, FourCC("utod"))
     gg_unit_nntt_0135 = BlzCreateUnitWithSkin(p, FourCC("nntt"), -20800.0, 2048.0, 270.000, FourCC("nntt"))
+    SetUnitState(gg_unit_nntt_0135, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -20736.0, -2304.0, 270.000, FourCC("ngob"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -20992.0, 1344.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -18464.0, -2592.0, 270.000, FourCC("e007"))
@@ -2715,6 +2714,15 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -19360.0, -7840.0, 90.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14048.0, -8608.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14240.0, -8608.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -20256.0, 1632.0, 270.000, FourCC("nnad"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -21696.0, 1984.0, 270.000, FourCC("nnsg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -20384.0, 3552.0, 270.000, FourCC("nmh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh1"), -20000.0, 3872.0, 270.000, FourCC("nmh1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg0"), -19104.0, 4448.0, 270.000, FourCC("nmg0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -18528.0, 4256.0, 270.000, FourCC("nmg1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -18720.0, 3872.0, 270.000, FourCC("nmg1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -19232.0, 3424.0, 270.000, FourCC("nmh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -19936.0, 4512.0, 270.000, FourCC("nmh0"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14688.0, -7392.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13536.0, -7008.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13344.0, -7008.0, 270.000, FourCC("ncb9"))
@@ -2769,7 +2777,10 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -14311.5, -1365.8, 347.190, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -14802.3, -1798.3, 180.632, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -14756.9, -1082.7, 207.406, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -20143.3, 2750.2, 230.140, FourCC("nmyr"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00E"), -16651.4, 339.8, 173.840, FourCC("n00E"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -20391.5, 2137.6, 230.138, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -20522.2, 1385.0, 171.117, FourCC("nmyr"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -23799.0, -295.6, 91.508, FourCC("nhea"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12870.8, -11295.8, 324.658, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -13140.8, -12066.8, 28.045, FourCC("n002"))
@@ -2781,6 +2792,7 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11111.9, -11841.4, 168.659, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11408.3, -10740.1, 221.593, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10695.9, -11972.9, 167.084, FourCC("n002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -18970.9, 4081.4, 76.500, FourCC("n00L"))
 end
 
 function CreateUnitsForPlayer21()
@@ -2789,10 +2801,6 @@ function CreateUnitsForPlayer21()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -3134.0, -11939.0, 50.138, FourCC("nmyr"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -1111.7, -11310.9, 50.138, FourCC("nmyr"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -2776.5, -11225.6, 50.138, FourCC("nmyr"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -2645.8, -10473.0, 351.117, FourCC("nmyr"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00E"), -6210.3, -9621.9, 222.167, FourCC("n00E"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00E"), -6680.2, -9060.6, 17.606, FourCC("n00E"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00E"), -6580.6, -9427.8, 353.840, FourCC("n00E"))
@@ -2812,6 +2820,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -2912.0, -1248.0, 270.000, FourCC("ncbb"))
     gg_unit_e003_0014 = BlzCreateUnitWithSkin(p, FourCC("e003"), -2112.0, -7616.0, 270.000, FourCC("e003"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -8640.0, -7424.0, 270.000, FourCC("otrb"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -3328.0, -10560.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -3520.0, -3072.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -4192.0, -5024.0, 270.000, FourCC("ncba"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -4768.0, -3360.0, 270.000, FourCC("ncb5"))
@@ -2850,11 +2859,11 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -8640.0, -8000.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -9792.0, -6848.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -2816.0, -2624.0, 270.000, FourCC("hgtw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -3328.0, -10560.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -1856.0, -11008.0, 270.000, FourCC("nntg"))
     gg_unit_nntt_0132 = BlzCreateUnitWithSkin(p, FourCC("nntt"), -2368.0, -11200.0, 270.000, FourCC("nntt"))
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -4640.0, -6560.0, 270.000, FourCC("e007"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -1856.0, -11008.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -2624.0, -11648.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -1472.0, -11072.0, 270.000, FourCC("nnsg"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -6912.0, 2944.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -1344.0, 576.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -9792.0, -6976.0, 270.000, FourCC("otrb"))
@@ -2876,6 +2885,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10848.0, 1952.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -6912.0, -9024.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -1536.0, 320.0, 270.000, FourCC("h00T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -4640.0, -13344.0, 270.000, FourCC("nmg1"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11168.0, 3360.0, 270.000, FourCC("n00M"))
     gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -8544.0, 32.0, 270.000, FourCC("hshy"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), 1408.0, -9920.0, 270.000, FourCC("negt"))
@@ -2897,7 +2907,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ugrv"), -8704.0, -4672.0, 270.000, FourCC("ugrv"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -9696.0, -4512.0, 270.000, FourCC("n00V"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), 1024.0, -3840.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -2176.0, -10432.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg0"), -4064.0, -13536.0, 270.000, FourCC("nmg0"))
     gg_unit_hars_0293 = BlzCreateUnitWithSkin(p, FourCC("hars"), -3584.0, 0.0, 270.000, FourCC("hars"))
     u = BlzCreateUnitWithSkin(p, FourCC("usep"), -10240.0, -4928.0, 270.000, FourCC("usep"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), 576.0, -5056.0, 270.000, FourCC("n000"))
@@ -2924,11 +2934,10 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), 1024.0, 960.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12320.0, 1696.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef3"), -480.0, -9376.0, 270.000, FourCC("nef3"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -3200.0, -11392.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -3744.0, -5024.0, 270.000, FourCC("ncba"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -3744.0, -3168.0, 270.000, FourCC("ncba"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -2688.0, -4224.0, 270.000, FourCC("h004"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -2944.0, -10240.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -2176.0, -10432.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -3264.0, -2176.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), 1024.0, 3264.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -384.0, 3264.0, 270.000, FourCC("n007"))
@@ -2993,8 +3002,10 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -2400.0, -2464.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -6496.0, -2080.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -8416.0, -5536.0, 270.000, FourCC("nnzg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -3200.0, -11392.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), 2048.0, -9984.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -320.0, -8704.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -2944.0, -10240.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -7104.0, -896.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -8448.0, -2240.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -6560.0, -544.0, 270.000, FourCC("ncb3"))
@@ -3074,7 +3085,9 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncbc"), -4064.0, -3264.0, 90.000, FourCC("ncbc"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -3296.0, -3808.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -3360.0, -1184.0, 90.000, FourCC("ncb5"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -3232.0, -13600.0, 270.000, FourCC("nmh0"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -7328.0, -544.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -2912.0, -10720.0, 270.000, FourCC("nnad"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -6560.0, -736.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -6560.0, -928.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -7520.0, -1696.0, 270.000, FourCC("ncb3"))
@@ -3084,9 +3097,13 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -7776.0, -992.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -6944.0, -544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -8672.0, -1696.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh1"), -3168.0, -12960.0, 270.000, FourCC("nmh1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -2784.0, -12640.0, 270.000, FourCC("nmh0"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -10048.0, -1536.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -4096.0, 384.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -4096.0, 3840.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -3936.0, -12512.0, 270.000, FourCC("nmh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -4448.0, -12960.0, 270.000, FourCC("nmg1"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncnt"), -9824.0, -7840.0, 270.000, FourCC("ncnt"))
 end
 
@@ -3098,6 +3115,7 @@ function CreateUnitsForPlayer23()
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11759.7, 1652.1, 41.593, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12472.1, 2884.9, 347.084, FourCC("n002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -4197.1, -13169.4, 256.500, FourCC("n00L"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11076.9, 3006.7, 298.557, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), 1368.0, -1690.7, 93.909, FourCC("hpea"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), 572.5, -1486.4, 50.291, FourCC("hhdl"))
@@ -3131,6 +3149,10 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -4488.8, -2492.8, 298.821, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -3981.1, -4807.9, 230.407, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -6932.2, -864.0, 261.631, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -3024.7, -11838.2, 50.140, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -1002.4, -11210.1, 50.140, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -2776.5, -11225.6, 50.138, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -2645.8, -10473.0, 351.117, FourCC("nmyr"))
 end
 
 function CreateNeutralHostile()
@@ -3259,7 +3281,6 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), -27636.5, -6906.0, 332.786, FourCC("nzom"))
     u = BlzCreateUnitWithSkin(p, FourCC("uabo"), 3797.4, -1968.4, 351.540, FourCC("uabo"))
     SetUnitState(u, UNIT_STATE_MANA, 200)
-    u = BlzCreateUnitWithSkin(p, FourCC("ncrb"), -20229.3, 3633.1, 304.671, FourCC("ncrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00N"), 4617.9, -11340.5, 262.232, FourCC("n00N"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), 4851.0, -11526.8, 204.560, FourCC("ncks"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncen"), 4805.8, -11688.4, 163.164, FourCC("ncen"))
@@ -3300,9 +3321,6 @@ function CreateNeutralPassive()
     local t
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("nrac"), -14125.5, -5730.9, 318.800, FourCC("nrac"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncrb"), -19840.0, 4310.1, 166.646, FourCC("ncrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncrb"), -19412.5, 3737.9, 132.345, FourCC("ncrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nhmc"), -19774.7, 3722.7, 268.547, FourCC("nhmc"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhmc"), -16214.9, 3292.9, 44.672, FourCC("nhmc"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhmc"), -16322.2, 2508.8, 103.044, FourCC("nhmc"))
     u = BlzCreateUnitWithSkin(p, FourCC("nder"), -18610.1, -2856.3, 237.081, FourCC("nder"))
@@ -3311,10 +3329,6 @@ function CreateNeutralPassive()
     u = BlzCreateUnitWithSkin(p, FourCC("necr"), -20936.3, -2238.3, 109.955, FourCC("necr"))
     u = BlzCreateUnitWithSkin(p, FourCC("necr"), -17698.5, -1546.3, 64.294, FourCC("necr"))
     u = BlzCreateUnitWithSkin(p, FourCC("nrac"), -19377.0, -2374.4, 105.604, FourCC("nrac"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncrb"), -2899.2, -12722.7, 124.671, FourCC("ncrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncrb"), -3288.5, -13399.8, 346.646, FourCC("ncrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncrb"), -3716.0, -12827.5, 312.345, FourCC("ncrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nhmc"), -3353.7, -12812.3, 88.547, FourCC("nhmc"))
 end
 
 function CreatePlayerBuildings()
@@ -3335,7 +3349,6 @@ function CreatePlayerBuildings()
 end
 
 function CreatePlayerUnits()
-    CreateUnitsForPlayer18()
     CreateUnitsForPlayer19()
     CreateUnitsForPlayer20()
     CreateUnitsForPlayer21()
@@ -3444,6 +3457,8 @@ function CreateRegions()
     gg_rct_Left_Everything = Rect(-23968.0, -13760.0, -23648.0, 2176.0)
     gg_rct_Left_Mage_Base = Rect(-23904.0, -13504.0, -23040.0, -9024.0)
     gg_rct_Right_Mage_Base = Rect(512.0, -384.0, 768.0, 4640.0)
+    gg_rct_Murloc_Spawn_Left = Rect(-20480.0, 3328.0, -19168.0, 4576.0)
+    gg_rct_Murloc_Spawn_Right = Rect(-4064.0, -13696.0, -2656.0, -12160.0)
 end
 
 function CreateCameras()
