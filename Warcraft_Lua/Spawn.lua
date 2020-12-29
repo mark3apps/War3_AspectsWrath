@@ -23,7 +23,7 @@ function spawnSetup()
     baseSpawn.addBase("cityElves", gg_rct_City_Elves_Left, gg_rct_Right_Everything, gg_unit_hvlt_0207, gg_rct_City_Elves_Right, gg_rct_Left_Everything, gg_unit_hvlt_0406, 2)
     baseSpawn.addBase("cityFront", gg_rct_Front_Town_Left, gg_rct_Right_Everything, gg_unit_n00B_0364, gg_rct_Front_City_Right, gg_rct_Left_Everything, gg_unit_n00B_0399, 2)
     baseSpawn.addBase("citySide", gg_rct_Left_City, gg_rct_Right_Everything, gg_unit_n00B_0102, gg_rct_Right_City, gg_rct_Left_Everything, gg_unit_n00B_0038, 2)
-    baseSpawn.addBase("furbolg", gg_rct_Furbolg_Left, gg_rct_Right_Start_Top, gg_unit_n00D_0003, gg_rct_Furbolg_Right, gg_rct_Left_Start_Bottom, gg_unit_n00D_0091, 1)
+    baseSpawn.addBase("kobold", gg_rct_Furbolg_Left, gg_rct_Right_Start_Top, gg_unit_ngt2_0525, gg_rct_Furbolg_Right, gg_rct_Left_Start_Bottom, gg_unit_ngt2_0455, 1)
     baseSpawn.addBase("highElves", gg_rct_Left_High_Elves, gg_rct_Right_Start_Top, gg_unit_nheb_0109, gg_rct_Right_High_Elves, gg_rct_Left_Start_Bottom, gg_unit_nheb_0036, 1)
     baseSpawn.addBase("highElvesCreep", gg_rct_Left_High_Elves, gg_rct_Aspect_of_Forest_Left, gg_unit_nheb_0109, gg_rct_Right_High_Elves, gg_rct_Aspect_of_Forest_Right, gg_unit_nheb_0036, 9)
     baseSpawn.addBase("merc", gg_rct_Camp_Bottom, gg_rct_Right_Start_Bottom, gg_unit_n001_0048, gg_rct_Camp_Top, gg_rct_Left_Start_Top, gg_unit_n001_0049, 3)
@@ -70,7 +70,6 @@ function spawnSetup()
     baseSpawn.addUnit("blacksmith", "h00L", 1, {1,2,3,4}, 4, 12)  -- Knight
     baseSpawn.addUnit("blacksmith", "h00L", 1, {1,2,3,4}, 5, 12)  -- Knight
     baseSpawn.addUnit("blacksmith", "h012", 1, {1,2,3}, 6, 12)  -- Scarlet Commander
-    baseSpawn.addUnit("blacksmith", "hmtt", 1, {1,5}, 6, 12)  -- Seige Engine
     baseSpawn.addUnit("blacksmith", "hmtm", 1, {3,8}, 7, 12)  -- Cannon
     baseSpawn.addUnit("blacksmith", "h00D", 1, {2}, 10, 12)  -- Commander of the Guard
 
@@ -104,10 +103,11 @@ function spawnSetup()
     baseSpawn.addUnit("citySide", "hfoo", 2, {6,7,8,9,10}, 2, 12)  -- Footman
     baseSpawn.addUnit("citySide", "h007", 2, {6,7,8,9,10}, 3, 12)  -- Militia
 
-    -- Furbolg Spawn
-    baseSpawn.addUnit("furbolg", "n00E", 2, {1,3,4,5,6,7,8}, 1, 4)  -- Furbolg
-    baseSpawn.addUnit("furbolg", "n00G", 1, {1,3,5,7,9}, 3, 12)  -- Furbolg Shaman
-    baseSpawn.addUnit("furbolg", "nfra", 1, {1,2,3,4,5,6,8,9}, 6 , 12)  -- Furbolg Ursa Warrior
+    -- Kobold Spawn
+    baseSpawn.addUnit("kobold", "nkob", 2, {1,2,3,4,5,6,7,8,9}, 1, 12)  -- Kobold
+    baseSpawn.addUnit("kobold", "nkot", 1, {1,2,3,5,7,9}, 3, 12)  -- Kobold Tunneler
+    baseSpawn.addUnit("kobold", "nkog", 1, {1,3,5,7,9}, 4 , 12)  -- Kobold Geomancer
+    baseSpawn.addUnit("kobold", "nkol", 1, {4,6,8}, 5 , 12)  -- Kobold Taskmaster
     
 
     -- High Elves
@@ -125,8 +125,8 @@ function spawnSetup()
     -- Merc Spawn
     baseSpawn.addUnit("merc", "nooL", 4, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- rogue
     baseSpawn.addUnit("merc", "n003", 2, {4,5,6,7,8,9,10}, 2, 12)  -- Merc Archer
-    baseSpawn.addUnit("merc", "n002", 3, {4,7,8,9,10}, 3, 12)  -- Merc
-    baseSpawn.addUnit("merc", "n008", 3, {3,5,8,9,10}, 4, 12)  -- Enforcer
+    baseSpawn.addUnit("merc", "n002", 3, {2,3,4,7,8,9,10}, 3, 12)  -- Merc
+    baseSpawn.addUnit("merc", "n008", 1, {1,2,3,4,5,6,8,9,10}, 4, 12)  -- Enforcer
     baseSpawn.addUnit("merc", "nass", 1, {6,7,8,9,10}, 5, 12)  -- Assasin
     baseSpawn.addUnit("merc", "n004", 1, {7,8,9,10}, 1, 12)  -- Wizard Warrior
     baseSpawn.addUnit("merc", "n005", 1, {7,8,9,10}, 6, 12)  -- Bandit Lord
@@ -136,19 +136,20 @@ function spawnSetup()
     baseSpawn.addUnit("mine", "h008", 2, {1,2,3,4,5,6,7,8}, 3, 12)  -- Rifleman
     baseSpawn.addUnit("mine", "h013", 1, {1,2,3,4,5,6,7,8}, 4, 12)  -- Rifleman Long
     baseSpawn.addUnit("mine", "ncg2", 2, {1,2,3,4,5,6,7}, 4, 12)  -- Clockwerk Goblin
-    baseSpawn.addUnit("mine", "n00F", 1, {2,3,4,5,6,7}, 5, 12)  -- Automaton
+    baseSpawn.addUnit("mine", "hmtt", 1, {1,3,5,7}, 5, 12)  -- Seige Engine
+    baseSpawn.addUnit("mine", "n00F", 1, {2,3,4,5,6,7}, 6, 12)  -- Automaton
 
     -- Murloc Spawn
-    baseSpawn.addUnit("murloc", "nmcf", 3, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Mur'gul Cliffrunner
-    baseSpawn.addUnit("murloc", "nnmg", 1, {1,2,3,4,5,6,7,8,9,10}, 2, 12)  -- Mur'gul Reaver
-    baseSpawn.addUnit("murloc", "nmsn", 1, {1,3,4,6,7,9,10}, 3, 12)  -- Mur'gul Snarecaster
-    baseSpawn.addUnit("murloc", "nmsn", 1, {1,3,6,7,10}, 5, 12)  -- Mur'gul Tidewarrior
+    baseSpawn.addUnit("murloc", "nmcf", 4, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Mur'gul Cliffrunner
+    baseSpawn.addUnit("murloc", "nnmg", 1, {2,4,6,7,8}, 2, 12)  -- Mur'gul Reaver
+    baseSpawn.addUnit("murloc", "nmsn", 1, {1,3,4,6,9}, 4, 12)  -- Mur'gul Snarecaster
+    baseSpawn.addUnit("murloc", "nmtw", 1, {1,3,6}, 7, 12)  -- Mur'gul Tidewarrior
 
     -- Naga Spawn
-    baseSpawn.addUnit("naga", "nmyr", 2, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Naga Myrmidon
-    baseSpawn.addUnit("naga", "nnsw", 1, {4,5,6,7,8,9,10}, 3, 12)  -- Naga Siren
-    baseSpawn.addUnit("naga", "nnrg", 1, {5,6,8,9,10}, 6, 12)  -- Naga Royal Guard
-    baseSpawn.addUnit("naga", "nhyc", 1, {1,3,5,7,8,9}, 9, 12)  -- Dragon Turtle
+    baseSpawn.addUnit("naga", "nmyr", 2, {1,3,4,6,7,9,10}, 1, 12)  -- Naga Myrmidon
+    baseSpawn.addUnit("naga", "nnsw", 1, {4,5,7,9,10}, 3, 12)  -- Naga Siren
+    baseSpawn.addUnit("naga", "nnrg", 1, {5,8,9,10}, 6, 12)  -- Naga Royal Guard
+    baseSpawn.addUnit("naga", "nhyc", 1, {1,3,5,8,9}, 9, 12)  -- Dragon Turtle
 
     -- Naga Creep Spawn
     baseSpawn.addUnit("nagaCreep", "nmyr", 2, {1,2,3,4}, 2, 12)  -- Naga Myrmidon
@@ -160,7 +161,7 @@ function spawnSetup()
     baseSpawn.addUnit("nightElves", "edry", 1, {1,4,5,7,9}, 3, 12)  -- Dryad
     baseSpawn.addUnit("nightElves", "edoc", 2, {1,3,5,7,9}, 4, 12)  -- Druid of the Claw
     baseSpawn.addUnit("nightElves", "e005", 1, {2,4,6,8}, 5, 12)  -- Mountain Giant
-    baseSpawn.addUnit("nightElves", "nwnr", 1, {5}, 11, 12)  -- Ent
+    baseSpawn.addUnit("nightElves", "nwnr", 1, {5,10}, 11, 12)  -- Ent
     
     -- Orc Spawn
     baseSpawn.addUnit("orc", "o002", 2, {3,5,6,7,8,9,10}, 1, 12)  -- Grunt
@@ -172,16 +173,16 @@ function spawnSetup()
     -- baseSpawn.addUnit("orc", "ocat", 1, {1,5}, 6, 12)  -- Demolisher
 
     -- Human Shipyard Spawn
-    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6}, 1, 2)         -- Human Frigate
-    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,8,10}, 3, 4)       -- Human Frigate
-    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6,8,10}, 5, 12)    -- Human Frigate
-    baseSpawn.addUnit("hshipyard", "hbsh", 1, {3,8}, 5, 12)        -- Human Battleship
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4}, 1, 2)         -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,8}, 3, 4)       -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hdes", 1, {2,4,6,8}, 5, 12)    -- Human Frigate
+    baseSpawn.addUnit("hshipyard", "hbsh", 1, {3,8}, 6, 12)        -- Human Battleship
 
     -- Night Elf Shipyard Spawn
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2}, 1, 2)         -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,4,6}, 3, 4)     -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "edes", 1, {1,2,4,6,8,10}, 5, 12)  -- Night Elf Frigate
-    baseSpawn.addUnit("shipyard", "ebsh", 1, {3,7}, 5, 12)        -- Night Elf Battleship
+    baseSpawn.addUnit("shipyard", "edes", 1, {1,6}, 2, 3)         -- Night Elf Frigate
+    baseSpawn.addUnit("shipyard", "edes", 1, {1,3,6}, 4, 5)     -- Night Elf Frigate
+    baseSpawn.addUnit("shipyard", "edes", 1, {1,3,6,10}, 6, 12)  -- Night Elf Frigate
+    baseSpawn.addUnit("shipyard", "ebsh", 1, {3,7}, 7, 12)        -- Night Elf Battleship
 
     -- Town Spawn
     baseSpawn.addUnit("town", "h007", 3, {1,2,3,4,5}, 1, 5)  -- Militia

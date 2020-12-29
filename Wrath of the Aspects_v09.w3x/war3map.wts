@@ -11906,66 +11906,6 @@ STRING 3908
 Spawn Fallen Knight
 }
 
-STRING 3909
-// Abilities: A03L (Grunt Fel Form), Name (Name)
-{
-Grunt Fel Form
-}
-
-STRING 3910
-// Abilities: A03L (Grunt Fel Form), Tip (Tooltip - Normal)
-{
-Greater Fel Form
-}
-
-STRING 3911
-// Abilities: A03L (Grunt Fel Form), Tip (Tooltip - Normal)
-{
-Ultimate Fel Form
-}
-
-STRING 3912
-// Abilities: A03L (Grunt Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 300 bonus health.  Mana Drains while in Fel Form.  |nLasts 13 seconds.
-}
-
-STRING 3913
-// Abilities: A03L (Grunt Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 500 bonus health.  Mana Drains while in Fel Form.  |nLasts 15 seconds.
-}
-
-STRING 3914
-// Abilities: A03L (Grunt Fel Form), Researchtip (Tooltip - Learn)
-{
-Learn Fel Form
-}
-
-STRING 3915
-// Abilities: A03L (Grunt Fel Form), Researchhotkey (Hotkey - Learn)
-{
-R
-}
-
-STRING 3916
-// Abilities: A03L (Grunt Fel Form), Hotkey (Hotkey - Normal)
-{
-V
-}
-
-STRING 3917
-// Abilities: A03L (Grunt Fel Form), Tip (Tooltip - Normal)
-{
-Grunt Fel Form
-}
-
-STRING 3918
-// Abilities: A03L (Grunt Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed and Movement Speed.  Mana Drains while in Fel Form. |nLasts 8 seconds.
-}
-
 STRING 3920
 // Units: o00A (Fel Orc Grunt), Name (Name)
 {
@@ -11978,130 +11918,10 @@ STRING 3921
 Ogre Pulverize
 }
 
-STRING 3923
-// Abilities: A047 (Fel Ogre Form), Tip (Tooltip - Normal)
-{
-Greater Fel Form
-}
-
-STRING 3924
-// Abilities: A047 (Fel Ogre Form), Tip (Tooltip - Normal)
-{
-Ultimate Fel Form
-}
-
-STRING 3925
-// Abilities: A047 (Fel Ogre Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 300 bonus health.  Mana Drains while in Fel Form.  |nLasts 13 seconds.
-}
-
-STRING 3926
-// Abilities: A047 (Fel Ogre Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 500 bonus health.  Mana Drains while in Fel Form.  |nLasts 15 seconds.
-}
-
-STRING 3927
-// Abilities: A047 (Fel Ogre Form), Researchtip (Tooltip - Learn)
-{
-Learn Fel Form
-}
-
-STRING 3928
-// Abilities: A047 (Fel Ogre Form), Researchhotkey (Hotkey - Learn)
-{
-R
-}
-
-STRING 3929
-// Abilities: A047 (Fel Ogre Form), Hotkey (Hotkey - Normal)
-{
-V
-}
-
-STRING 3930
-// Abilities: A047 (Fel Ogre Form), Tip (Tooltip - Normal)
-{
-Grunt Fel Form
-}
-
-STRING 3931
-// Abilities: A047 (Fel Ogre Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed and Movement Speed.  Mana Drains while in Fel Form. |nLasts 8 seconds.
-}
-
-STRING 3932
-// Abilities: A047 (Fel Ogre Form), Name (Name)
-{
-Fel Ogre Form
-}
-
 STRING 3933
 // Units: o00B (Fel Orc Warchief), Name (Name)
 {
 Fel Orc Warchief
-}
-
-STRING 3934
-// Abilities: A048 (Fel Orc Warchief Form), Name (Name)
-{
-Fel Orc Warchief Form
-}
-
-STRING 3935
-// Abilities: A048 (Fel Orc Warchief Form), Tip (Tooltip - Normal)
-{
-Greater Fel Form
-}
-
-STRING 3936
-// Abilities: A048 (Fel Orc Warchief Form), Tip (Tooltip - Normal)
-{
-Ultimate Fel Form
-}
-
-STRING 3937
-// Abilities: A048 (Fel Orc Warchief Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 300 bonus health.  Mana Drains while in Fel Form.  |nLasts 13 seconds.
-}
-
-STRING 3938
-// Abilities: A048 (Fel Orc Warchief Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed, Movement Speed, and grants 500 bonus health.  Mana Drains while in Fel Form.  |nLasts 15 seconds.
-}
-
-STRING 3939
-// Abilities: A048 (Fel Orc Warchief Form), Researchtip (Tooltip - Learn)
-{
-Learn Fel Form
-}
-
-STRING 3940
-// Abilities: A048 (Fel Orc Warchief Form), Researchhotkey (Hotkey - Learn)
-{
-R
-}
-
-STRING 3941
-// Abilities: A048 (Fel Orc Warchief Form), Hotkey (Hotkey - Normal)
-{
-V
-}
-
-STRING 3942
-// Abilities: A048 (Fel Orc Warchief Form), Tip (Tooltip - Normal)
-{
-Grunt Fel Form
-}
-
-STRING 3943
-// Abilities: A048 (Fel Orc Warchief Form), Ubertip (Tooltip - Normal - Extended)
-{
-Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack Speed and Movement Speed.  Mana Drains while in Fel Form. |nLasts 8 seconds.
 }
 
 STRING 3944
@@ -12162,5 +11982,53 @@ STRING 3953
 // Units: nmh1 (Murloc Den), Name (Name)
 {
 Murloc Den
+}
+
+STRING 3954
+// Units: n00Y (Campsite), Name (Name)
+{
+Campsite
+}
+
+STRING 3955
+// Abilities: A050 (Set up Camp), Name (Name)
+{
+Set up Camp
+}
+
+STRING 3956
+// Units: n00Z (Murloc Hut), EditorSuffix (Name - Editor Suffix)
+{
+2
+}
+
+STRING 3957
+// Doodads: D00R (Gold Mine), Name (Name)
+{
+Gold Mine
+}
+
+STRING 3959
+// Abilities: S003 (Fel Orc Grunt), Name (Name)
+{
+Fel Orc Grunt
+}
+
+STRING 3960
+// Abilities: S004 (Fel Orc Ogre), Name (Name)
+{
+Fel Orc Ogre
+}
+
+STRING 3961
+// Abilities: S005 (Fel Orc Warlock), Name (Name)
+{
+Fel Orc Warlock
+}
+
+STRING 3962
+// Abilities: S006 (Fel Orc Warchief), Name (Name)
+{
+Fel Orc Warchief
 }
 
