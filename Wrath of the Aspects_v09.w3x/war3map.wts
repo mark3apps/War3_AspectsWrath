@@ -5119,11 +5119,6 @@ STRING 2442
 Elemental Focus
 }
 
-STRING 2445
-{
-|cffff0000A DOOM WARDEN HAS APPEARRED!|r
-}
-
 STRING 2446
 {
 |cffff0000AN ANCIENT DESTROYER HAS APPEARED!|r
@@ -12090,5 +12085,71 @@ STRING 3988
 // Units: ngt2 (Kobold Hall), Name (Name)
 {
 Kobold Hall
+}
+
+STRING 3989
+{
+|cffff0000A DOOM WARDEN HAS APPEARRED!|r
+It has no Alegence.
+}
+
+STRING 3990
+{
+|cffff0000A DOOM WARDEN HAS APPEARRED!|r
+It fights for the Alliance!
+}
+
+STRING 3991
+{
+|cffff0000A DOOM WARDEN HAS APPEARRED!|r
+It fights for the Federation!
+}
+
+STRING 3992
+// Abilities: Afzy (Footman Auto Upgrade), Name (Name)
+{
+Footman Auto Upgrade
+}
+
+STRING 3993
+// Doodads: D00C (Book Blue), Name (Name)
+{
+Book Blue
+}
+
+STRING 3994
+// Doodads: D00D (Book Green), Name (Name)
+{
+Book Green
+}
+
+STRING 3995
+// Doodads: D00E (Book Red), Name (Name)
+{
+Book Red
+}
+
+STRING 3996
+// Doodads: D00F (Books 1), Name (Name)
+{
+Books 1
+}
+
+STRING 3997
+// Doodads: D00G (Books 2), Name (Name)
+{
+Books 2
+}
+
+STRING 3998
+// Doodads: D00H (Books 3), Name (Name)
+{
+Books 3
+}
+
+STRING 3999
+// Doodads: D00I (Books Scrolls), Name (Name)
+{
+Books Scrolls
 }
 
