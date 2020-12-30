@@ -11678,12 +11678,6 @@ STRING 3867
 Magic Defense
 }
 
-STRING 3868
-// Units: hmtm (Cannon), Name (Name)
-{
-Cannon
-}
-
 STRING 3872
 // Units: h012 (Scarlet Commander), Name (Name)
 {
@@ -12066,5 +12060,35 @@ STRING 3983
 // Abilities: A048 (Upgrade Captian 3), Name (Name)
 {
 Upgrade Captian 3
+}
+
+STRING 3984
+// Abilities: A051 (Upgrade Footman 1), Name (Name)
+{
+Upgrade Footman 1
+}
+
+STRING 3985
+// Abilities: A052 (Upgrade Captian 1), Name (Name)
+{
+Upgrade Captian 1
+}
+
+STRING 3986
+// Units: hmtm (Catapult), Name (Name)
+{
+Catapult
+}
+
+STRING 3987
+// Units: ngnh (Kobold Hut), Name (Name)
+{
+Kobold Hut
+}
+
+STRING 3988
+// Units: ngt2 (Kobold Hall), Name (Name)
+{
+Kobold Hall
 }
 
