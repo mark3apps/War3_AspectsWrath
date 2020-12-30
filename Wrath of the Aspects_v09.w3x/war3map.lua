@@ -2350,7 +2350,9 @@ function CreateUnitsForPlayer0()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -11894.9, -4035.6, 71.424, FourCC("nhea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h007"), -12893.4, -5923.2, 300.065, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h015"), -12798.0, -5905.4, 290.833, FourCC("h015"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h016"), -12714.2, -5880.6, 286.565, FourCC("h016"))
 end
 
 function CreateBuildingsForPlayer1()
@@ -4718,14 +4720,14 @@ function Trig_Unit_Upgrades_Func004C()
     return true
 end
 
-function Trig_Unit_Upgrades_Func005Func002C()
+function Trig_Unit_Upgrades_Func005Func003C()
     if (not (GetUnitManaPercent(GetKillingUnitBJ()) >= 100.00)) then
         return false
     end
     return true
 end
 
-function Trig_Unit_Upgrades_Func005Func003C()
+function Trig_Unit_Upgrades_Func005Func004C()
     if (GetUnitTypeId(GetKillingUnitBJ()) == FourCC("hfoo")) then
         return true
     end
@@ -4739,7 +4741,7 @@ function Trig_Unit_Upgrades_Func005Func003C()
 end
 
 function Trig_Unit_Upgrades_Func005C()
-    if (not Trig_Unit_Upgrades_Func005Func003C()) then
+    if (not Trig_Unit_Upgrades_Func005Func004C()) then
         return false
     end
     return true
@@ -4761,7 +4763,8 @@ function Trig_Unit_Upgrades_Actions()
     end
     if (Trig_Unit_Upgrades_Func005C()) then
         SetUnitLifeBJ(GetKillingUnitBJ(), (GetUnitStateSwap(UNIT_STATE_LIFE, GetKillingUnitBJ()) + 150.00))
-        if (Trig_Unit_Upgrades_Func005Func002C()) then
+        SetUnitManaBJ(GetKillingUnitBJ(), (GetUnitStateSwap(UNIT_STATE_MANA, GetKillingUnitBJ()) + 10.00))
+        if (Trig_Unit_Upgrades_Func005Func003C()) then
             IssueImmediateOrderBJ(GetKillingUnitBJ(), "bearform")
             SetUnitLifeBJ(GetKillingUnitBJ(), (GetUnitStateSwap(UNIT_STATE_LIFE, GetKillingUnitBJ()) + 150.00))
         else

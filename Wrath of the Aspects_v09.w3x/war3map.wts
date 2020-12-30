@@ -12032,3 +12032,21 @@ STRING 3962
 Fel Orc Warchief
 }
 
+STRING 3963
+// Units: h007 (Militia), EditorSuffix (Name - Editor Suffix)
+{
+ (1)
+}
+
+STRING 3964
+// Units: h015 (Militia), EditorSuffix (Name - Editor Suffix)
+{
+ (2)
+}
+
+STRING 3965
+// Units: h016 (Militia), EditorSuffix (Name - Editor Suffix)
+{
+ (3)
+}
+
