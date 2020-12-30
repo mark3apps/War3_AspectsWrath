@@ -66,22 +66,22 @@ function spawnSetup()
     baseSpawn.addUnit("arcaneBottom", "hwt3", 1, {2,3}, 8, 12)  -- Water Elemental (Level 3)
 
     -- Blacksmith Spawn
-    baseSpawn.addUnit("blacksmith", "h011", 1, {1,2,3,4,5}, 3, 12)  -- Castle Footman
+    baseSpawn.addUnit("blacksmith", "hfoo", 1, {1,2,3,4,5}, 3, 12)  -- Footman 1
     baseSpawn.addUnit("blacksmith", "h00L", 1, {1,2,3,4}, 4, 12)  -- Knight
     baseSpawn.addUnit("blacksmith", "h00L", 1, {1,2,3,4}, 5, 12)  -- Knight
-    baseSpawn.addUnit("blacksmith", "h012", 1, {1,2,3}, 6, 12)  -- Scarlet Commander
-    baseSpawn.addUnit("blacksmith", "hmtm", 1, {3,8}, 7, 12)  -- Cannon
+    baseSpawn.addUnit("blacksmith", "h017", 1, {1,2,3}, 6, 12)  -- Scarlet Commander
+    baseSpawn.addUnit("blacksmith", "hmtm", 1, {3,8}, 7, 12)  -- Catapult
     baseSpawn.addUnit("blacksmith", "h00D", 1, {2}, 10, 12)  -- Commander of the Guard
 
     -- Blacksmith Creep Spawn
     baseSpawn.addUnit("blacksmithCreep", "h007", 4, {1,2,3,4}, 1, 6)  -- Militia
     baseSpawn.addUnit("blacksmithCreep", "nhea", 1, {1,2,3,4}, 3, 12)  -- Archer
     baseSpawn.addUnit("blacksmithCreep", "hspt", 1, {1,2,3,4}, 5, 12)  -- Tower Guard
-    baseSpawn.addUnit("blacksmithCreep", "h012", 2, {1,2,3,4,5}, 8, 12)  -- Scarlet Commander
+    baseSpawn.addUnit("blacksmithCreep", "h011", 2, {1,2,3,4,5}, 8, 12)  -- Scarlet Commander
     baseSpawn.addUnit("blacksmithCreep", "hcth", 2, {1,2,3,4,5}, 11, 12)  -- Captian
 
     -- Castle Spawn
-    baseSpawn.addUnit("castle", "h00S", 1, {1,2,3,4,5,6,7,8}, 8, 12)  -- Commander
+    baseSpawn.addUnit("castle", "h018", 1, {1,2,3,4,5,6,7,8}, 8, 12)  -- Commander
 
     -- City Elves
     baseSpawn.addUnit("cityElves", "nhea", 1, {1,2,3,4,5,6}, 1, 3)  -- Archer
@@ -94,14 +94,14 @@ function spawnSetup()
 
     -- City Front Spawn
     baseSpawn.addUnit("cityFront", "h007", 2, {2,3,4,5,6,7}, 1, 2)  -- Militia
-    baseSpawn.addUnit("cityFront", "h007", 3, {2,3,4,5,6,7}, 3, 5)  -- Militia
+    baseSpawn.addUnit("cityFront", "h015", 3, {2,3,4,5,6,7}, 3, 5)  -- Militia
     baseSpawn.addUnit("cityFront", "hfoo", 3, {2,3,4,5,6,7}, 4, 12)  -- Footman
     baseSpawn.addUnit("cityFront", "hcth", 2, {2,3,4,5,6}, 6, 12)  -- Captian
 
     -- City Side Spawn
-    baseSpawn.addUnit("citySide", "h007", 1, {6,7,8,9,10}, 1, 2)  -- Militia
-    baseSpawn.addUnit("citySide", "hfoo", 2, {6,7,8,9,10}, 2, 12)  -- Footman
-    baseSpawn.addUnit("citySide", "h007", 2, {6,7,8,9,10}, 3, 12)  -- Militia
+    baseSpawn.addUnit("citySide", "h015", 1, {6,7,8,9,10}, 1, 2)  -- Militia
+    baseSpawn.addUnit("citySide", "h017", 2, {6,7,8,9,10}, 2, 12)  -- Footman
+    baseSpawn.addUnit("citySide", "h0015", 2, {1,2,3,4,6}, 3, 12)  -- Militia
 
     -- Kobold Spawn
     baseSpawn.addUnit("kobold", "nkob", 2, {1,2,3,4,5,6,7,8,9}, 1, 12)  -- Kobold
@@ -123,7 +123,7 @@ function spawnSetup()
     baseSpawn.addUnit("highElvesCreep", "h010", 2, {1,2,3,4,5}, 5, 12)  -- Elven Guardian
 
     -- Merc Spawn
-    baseSpawn.addUnit("merc", "nooL", 4, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- rogue
+    baseSpawn.addUnit("merc", "nooL", 4, {1,2,3,4,5,6,7,8,9,10}, 1, 12)  -- Rogue
     baseSpawn.addUnit("merc", "n003", 2, {4,5,6,7,8,9,10}, 2, 12)  -- Merc Archer
     baseSpawn.addUnit("merc", "n002", 3, {2,3,4,7,8,9,10}, 3, 12)  -- Merc
     baseSpawn.addUnit("merc", "n008", 1, {1,2,3,4,5,6,8,9,10}, 4, 12)  -- Enforcer
@@ -186,7 +186,7 @@ function spawnSetup()
 
     -- Town Spawn
     baseSpawn.addUnit("town", "h007", 3, {1,2,3,4,5}, 1, 5)  -- Militia
-    baseSpawn.addUnit("town", "h007", 2, {1,2,3,4,5,6,7,8,9,10}, 3, 12)  -- Militia
+    baseSpawn.addUnit("town", "h015", 2, {1,2,3,4,5,6,7,8,9,10}, 3, 12)  -- Militia
     baseSpawn.addUnit("town", "hcth", 1, {1,2,3,4}, 2, 12)  -- Captian
     baseSpawn.addUnit("town", "n00X", 2, {1,2,3,4,6,8}, 3, 12)  -- Arbalist
     baseSpawn.addUnit("town", "hfoo", 5, {1,2,5,6,8}, 5, 12)  -- Footman

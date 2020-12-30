@@ -1320,12 +1320,6 @@ STRING 487
 (spellbook)
 }
 
-STRING 491
-// Units: h00S (Commander), Name (Name)
-{
-Commander
-}
-
 STRING 492
 // Buffs/Effects: B005 (Iron Defense), EditorName (Name (Editor Only))
 {
@@ -9073,24 +9067,6 @@ STRING 3291
 Resurrection - [|cffffcc00Level 3|r]
 }
 
-STRING 3292
-// Abilities: A045 (Upgrade to Footman), Name (Name)
-{
-Upgrade to Footman
-}
-
-STRING 3293
-// Abilities: A03J (Upgrade to Captian), Name (Name)
-{
-Upgrade to Captian
-}
-
-STRING 3295
-// Abilities: A03K (Upgrade to Commander), Name (Name)
-{
-Upgrade to Commander
-}
-
 STRING 3296
 // Units: n000 (King's Tower), Name (Name)
 {
@@ -11708,12 +11684,6 @@ STRING 3868
 Cannon
 }
 
-STRING 3871
-// Units: h011 (Castle Footman), Name (Name)
-{
-Castle Footman
-}
-
 STRING 3872
 // Units: h012 (Scarlet Commander), Name (Name)
 {
@@ -11750,64 +11720,10 @@ STRING 3879
 (Long)
 }
 
-STRING 3883
-// Doodads: D00B (Undead Wall Armored Short), Name (Name)
-{
-Undead Wall Armored Short
-}
-
-STRING 3884
-// Doodads: D00C (Undead Wall Armored Spire Short), Name (Name)
-{
-Undead Wall Armored Spire Short
-}
-
-STRING 3885
-// Doodads: D00D (Undead Wall Armored), Name (Name)
-{
-Undead Wall Armored
-}
-
-STRING 3886
-// Doodads: D00E (Undead Wall Armored Spike), Name (Name)
-{
-Undead Wall Armored Spike
-}
-
-STRING 3887
-// Doodads: D00F (Undead Gate), Name (Name)
-{
-Undead Gate
-}
-
-STRING 3888
-// Doodads: D00G (Undead Gate Spiked), Name (Name)
-{
-Undead Gate Spiked
-}
-
-STRING 3889
-// Doodads: D00H (Undead Tower), Name (Name)
-{
-Undead Tower
-}
-
 STRING 3890
 // Units: u001 (Black Citidel), Name (Name)
 {
 Black Citidel
-}
-
-STRING 3891
-// Doodads: D00I (Undead Statue), Name (Name)
-{
-Undead Statue
-}
-
-STRING 3892
-// Doodads: D00J (Undead Skulls), Name (Name)
-{
-Undead Skulls
 }
 
 STRING 3893
@@ -11838,12 +11754,6 @@ STRING 3897
 // Doodads: D00L (Dwarf Gate), Name (Name)
 {
 Dwarf Gate
-}
-
-STRING 3898
-// Units: h014 (Dwarf Footman), Name (Name)
-{
-Dwarf Footman
 }
 
 STRING 3899
@@ -12048,5 +11958,113 @@ STRING 3965
 // Units: h016 (Militia), EditorSuffix (Name - Editor Suffix)
 {
  (3)
+}
+
+STRING 3966
+// Doodads: D00B (Nerubeon Citidel), Name (Name)
+{
+Nerubeon Citidel
+}
+
+STRING 3967
+// Doodads: D00S (Nerub Wall Short), Name (Name)
+{
+Nerub Wall Short
+}
+
+STRING 3968
+// Doodads: D00T (Nerub Tower), Name (Name)
+{
+Nerub Tower
+}
+
+STRING 3969
+// Doodads: D00U (Gold Mine Enterence), Name (Name)
+{
+Gold Mine Enterence
+}
+
+STRING 3970
+// Doodads: D00V (Sub Wall Arch), Name (Name)
+{
+Sub Wall Arch
+}
+
+STRING 3971
+// Doodads: D00W (Sub Wall Garrison), Name (Name)
+{
+Sub Wall Garrison
+}
+
+STRING 3972
+// Doodads: D00X (Sub Wall Flat Short), Name (Name)
+{
+Sub Wall Flat Short
+}
+
+STRING 3973
+// Doodads: D00Y (Sub Wall Buttress), Name (Name)
+{
+Sub Wall Buttress
+}
+
+STRING 3974
+// Units: h017 (Footman), EditorSuffix (Name - Editor Suffix)
+{
+ (2)
+}
+
+STRING 3975
+// Units: h011 (Footman), EditorSuffix (Name - Editor Suffix)
+{
+ (3)
+}
+
+STRING 3976
+// Units: h00S (Captain), EditorSuffix (Name - Editor Suffix)
+{
+ (2)
+}
+
+STRING 3977
+// Units: h018 (Captain), EditorSuffix (Name - Editor Suffix)
+{
+ (3)
+}
+
+STRING 3978
+// Abilities: A045 (Upgrade Militia 2), Name (Name)
+{
+Upgrade Militia 2
+}
+
+STRING 3979
+// Abilities: A03J (Upgrade Footman 2), Name (Name)
+{
+Upgrade Footman 2
+}
+
+STRING 3980
+// Abilities: A03K (Upgrade Captian 2), Name (Name)
+{
+Upgrade Captian 2
+}
+
+STRING 3981
+// Abilities: A03L (Upgrade Militia 3), Name (Name)
+{
+Upgrade Militia 3
+}
+
+STRING 3982
+// Abilities: A047 (Upgrade Footman 3), Name (Name)
+{
+Upgrade Footman 3
+}
+
+STRING 3983
+// Abilities: A048 (Upgrade Captian 3), Name (Name)
+{
+Upgrade Captian 3
 }
 
