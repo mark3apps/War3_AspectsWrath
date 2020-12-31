@@ -983,23 +983,6 @@ function Computer_Picks()
                 y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 			
-<<<<<<< HEAD
-            randInt = GetRandomInt(2, 5)
-            if (randInt == 1) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0)
-				
-            elseif (randInt == 2) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00R"), x, y, 0)
-				
-            elseif (randInt == 3) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E002"), x, y, 0)
-				
-            elseif (randInt == 4) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H009"), x, y, 0)
-				
-            elseif (randInt == 5) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00J"), x, y, 0)
-=======
             randInt = GetRandomInt(3, 3)
             if (randInt == 1) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0) -- Brawler
@@ -1015,7 +998,6 @@ function Computer_Picks()
 				
             elseif (randInt == 5) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00J"), x, y, 0) -- Time Mage
->>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
             end
 			
 			UnitAddItemByIdSwapped(FourCC("I000"), udg_TEMP_Unit)
@@ -1062,8 +1044,10 @@ function Computer_Picks()
 		
 
         if (i >= 12 and mapAI.count > 0) then
-            BJDebugMsg("Heroes:" .. I2S(mapAI.count))
-			TriggerRegisterTimerEvent(Trig_AI_MAIN, 1.00/I2R(mapAI.count), true)
+			BJDebugMsg("Heroes:" .. I2S(mapAI.count))
+			aiTick = 1.00/I2R(mapAI.count)
+			TriggerRegisterTimerEvent(Trig_AI_MAIN, aiTick, true)
+			
 		end
 		
         i = i + 1
@@ -1213,7 +1197,8 @@ function init_AIClass()
 			hero.alive = false
 			hero.fleeing = false
 			hero.casting = false
-			hero.castingCounter = -10.00
+			hero.castingDuration = -10.00
+			hero.castingDanger = false
 			hero.order = nil
 			hero.castingUlt = false
 			hero.chasing = false
@@ -1596,10 +1581,12 @@ function init_AIClass()
 				hero.defending = false
 				hero.highdamage = false
 				hero.updateDest = false
-				hero.casting = false
-				hero.castingCounter = -10.00
 
-				self:ACTIONtravelToHeal(i)
+				if hero.castingDanger == false then
+					hero.casting = false
+					hero.castingCounter = -10.00
+					self:ACTIONtravelToHeal(i)
+				end
 			end
 		end		
 
@@ -1681,9 +1668,12 @@ function init_AIClass()
 					
 				print("Flee")
 				hero.fleeing = true
-				hero.casting = false
 
-				self:ACTIONtravelToHeal(i)
+				if hero.castingDanger == false then
+					hero.casting = false
+					hero.castingCounter = -10.00
+					self:ACTIONtravelToHeal(i)
+				end
 			end
 		end	
 
@@ -1705,9 +1695,10 @@ function init_AIClass()
 			local hero = self[i]
 
 			if hero.casting == true then
-				if hero.castingCounter == -10.00 then
+				if hero.castingDuration == -10.00 then
 					if hero.currentOrder ~= hero.order then
 						hero.casting = false
+						hero.castingDanger = false
 						print("Stopped Casting")
 						self:ACTIONtravelToDest(i)
 						hero.order = hero.currentOrder
@@ -1715,14 +1706,15 @@ function init_AIClass()
 						print("Still Casting Spell")
 					end
 
-				elseif hero.castingCounter > 0.00 then
-					hero.castingCounter = hero.castingCounter - 1.50
+				elseif hero.castingDuration > 0.00 then
+					hero.castingDuration = hero.castingDuration - aiTick
 					print("Still Casting Spell")
 
 				else
+					print("Stopped Casting (Count)")
 					hero.casting = false
-					print("Stopped Casting")
-					hero.castingCounter = -10.00
+					hero.castingDuration = -10.00
+					hero.castingDanger = false
 					self:ACTIONtravelToDest(i)
 					hero.order = hero.currentOrder
 				end
@@ -1733,17 +1725,26 @@ function init_AIClass()
 		-- ACTIONS
 		--
 
-		function self:castSpell(i)
-			
+		function self:castSpell(i, castDuration, danger)
+			danger = danger or false
+			castDuration = castDuration or -10.00
+
 			local hero = self[i]
 
-			if hero.fleeing == true or hero.lowhealth == true then
+			if (hero.fleeing == true or hero.lowhealth == true) and danger == false then
 				self:ACTIONtravelToDest(i)
-			end
+			else
+				hero.casting = true
 
-			hero.casting = true
-			hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
-			print("Spell Cast")
+				if danger then
+					hero.castingDanger = true
+				end
+
+				hero.castingDuration = castDuration
+				hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+				print(hero.order)
+				print("Spell Cast")
+			end
 		end
 
 
@@ -1813,22 +1814,6 @@ function init_AIClass()
 		function self:manaAddictAI(i)
 			local hero = self[i]
 
-<<<<<<< HEAD
-			if hero.casting == false then
-				local manaShieldSpell = FourCC("A001")
-				local manaShieldBuff = FourCC("BNms")
-				local frostNovaSpell = FourCC("A03S")
-				local manaOverloadSpell = FourCC("A018")
-
-				-- Mana Shield
-				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, manaShieldSpell) == 0.00 and
-					UnitHasBuffBJ(hero.unit, manaShieldBuff) == false  then
-
-					print("Casting Mana Shield")
-					IssueImmediateOrder(hero.unit, "manashieldon")
-					self:castSpell(i)
-				end
-=======
 			local manaShieldSpell = FourCC("A001")
 			local manaShieldBuff = FourCC("BNms")
 			local frostNovaSpell = FourCC("A03S")
@@ -1867,7 +1852,6 @@ function init_AIClass()
 		--------			
 
 			if hero.casting == false and hero.lowLife == false and hero.fleeing == false then
->>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 
 				-- Frost Nova
 				if	hero.clumpEnemyPower >= 40 and
@@ -1879,19 +1863,6 @@ function init_AIClass()
 					self:castSpell(i)
 				end
 				
-<<<<<<< HEAD
-				-- Mana Drain
-				if	hero.countUnitEnemyClose > 3 and
-					hero.manaPercent < 90.00 and
-					GetUnitAbilityLevel(hero.unit, manaOverloadSpell) > 0 and
-					BlzGetUnitAbilityCooldownRemaining(hero.unit, manaOverloadSpell) == 0.00 then
-					
-					print("Casting Mana Overload")
-					IssueImmediateOrder(hero.unit, "thunderclap")
-					self:castSpell(i)
-				end
-=======
->>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 			end
 		end
 
@@ -1906,39 +1877,40 @@ function init_AIClass()
 		function self:shifterAI(i)
 			local hero = self[i]
 
-<<<<<<< HEAD
-			if hero.casting == false then
-				local shiftBackSpell = FourCC("A03U")
-				local shiftForwardSpell = FourCC("A030")
-				local fallingStrikeSpell = FourCC("A03T")
-				local shiftStormSpell = FourCC("A03C")
-				local felFormSpell = FourCC("A02Y")
-=======
 			local shiftBackSpell = FourCC("A03U")
+			local shiftBackLevel = GetUnitAbilityLevel(hero.unit, shiftBackSpell)
 			local shiftForwardSpell = FourCC("A030")
+			local shiftForwardLevel = GetUnitAbilityLevel(hero.unit, shiftForwardSpell)
 			local fallingStrikeSpell = FourCC("A03T")
+			local fallingStrikeLevel = GetUnitAbilityLevel(hero.unit, fallingStrikeSpell)
 			local shiftStormSpell = FourCC("A03C")
+			local shiftStormLevel = GetUnitAbilityLevel(hero.unit, shiftStormSpell)
 			local felFormSpell = FourCC("A02Y")
+			local felFormLevel = GetUnitAbilityLevel(hero.unit, felFormSpell)
 
 		--  Cast when Health is low
 		-------
-			if (hero.lowLife == true or hero.fleeing == true ) then
+			if (hero.lowLife == true or hero.fleeing == true ) and hero.casting == false then
 
 				-- Fel Form
 				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, felFormSpell) == 0.00 and
-						(hero.mana) > I2R(BlzGetAbilityManaCost(felFormSpell, GetUnitAbilityLevel(hero.unit, felFormSpell))) and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(felFormSpell, felFormLevel)) and
+						felFormLevel > 0 and
 						hero.casting == false then
 
+					print("Fel Form Danger")
 					IssueImmediateOrder(hero.unit, "metamorphosis")
-					self:castSpell(i)
+					self:castSpell(i, true)
 
 				-- Shift Back
 				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftBackSpell) == 0.00 and
-						(hero.mana) > I2R(BlzGetAbilityManaCost(shiftBackSpell, GetUnitAbilityLevel(hero.unit, shiftBackSpell))) and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(shiftBackSpell, shiftBackLevel)) and
+						shiftBackLevel > 0 and
 						hero.casting == false then
 
+					print("Shift Back Danger")
 					IssueImmediateOrder(hero.unit, "stomp")
-					self:castSpell(i)
+					self:castSpell(i, 1, true)
 				end
 
 			end
@@ -1948,7 +1920,6 @@ function init_AIClass()
 		-------
 			if hero.casting == false then
 
->>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 
 				-- Custom Intel
 				local g = CreateGroup()
@@ -1970,43 +1941,31 @@ function init_AIClass()
 
 
 				-- Shift Back
-<<<<<<< HEAD
-
-
-				-- Shift Forward
-				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftForwardSpell) == 0.00 and
-					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, GetUnitAbilityLevel(hero.unit, shiftForwardSpell))) and
-					hero.countUnitEnemyClose > 4 then
-					-- body
-
-					IssueImmediateOrder(hero.unit, "thunderclap")
-					self:castSpell(i)
-				end
-
-				-- Falling Stike
-				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, fallingStrikeSpell) == 0.00 and
-=======
 				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftBackSpell) == 0.00 and
-						(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftBackSpell, GetUnitAbilityLevel(hero.unit, shiftBackSpell))) and
+						(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftBackSpell, shiftBackLevel)) and
+						shiftBackLevel > 0 and
 						hero.countUnitEnemyClose > 4 then
-
+					
+					print("Shift Back")
 					IssueImmediateOrder(hero.unit, "stomp")
-					self:castSpell(i)
+					self:castSpell(i, 1)
 				
 				
 				-- Shift Forward
 				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftForwardSpell) == 0.00 and
-						(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, GetUnitAbilityLevel(hero.unit, shiftForwardSpell))) and
-						hero.countUnitEnemyClose > 4 then
+						shiftForwardLevel > 0 and
+						(((hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, shiftForwardLevel)) and hero.countUnitEnemyClose > 4) or
+						(hero.manaPercent > 70 and hero.countUnitEnemyClose > 2 )) then
 
+					print("Shift Forward")
 					IssueImmediateOrder(hero.unit, "thunderclap")
-					self:castSpell(i)
+					self:castSpell(i, 1)
 
 
 				-- Falling Stike
 				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, fallingStrikeSpell) == 0.00 and
->>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
-					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(fallingStrikeSpell, GetUnitAbilityLevel(hero.unit, fallingStrikeSpell))) and 
+					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(fallingStrikeSpell, fallingStrikeLevel)) and 
+					fallingStrikeLevel > 0 and
 					(hero.powerEnemy > 250.00 or hero.clumpEnemyPower > 80.00) then
 					
 					if hero.powerEnemy > 250.00 then
@@ -2015,43 +1974,31 @@ function init_AIClass()
 						IssuePointOrder(hero.unit, "clusterrockets", GetUnitX(hero.clumpEnemy), GetUnitY(hero.clumpEnemy))
 					end
 
-					self:castSpell(i)
-<<<<<<< HEAD
-				end
-
-				-- ShiftStorm
-				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftStormSpell) == 0.00 and
-					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, GetUnitAbilityLevel(hero.unit, shiftStormSpell))) and
-					hero.countUnitEnemyClose > 6 and
-					illusionsNearby >= 2 then
-					-- body
-
-					IssueImmediateOrder(hero.unit, "channel")
-					self:castSpell(i)
-				end
-
-				-- Fell Form
-=======
+					print("Falling Strike")
+					self:castSpell(i, 1)
 
 				-- ShiftStorm
 				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftStormSpell) == 0.00 and
-					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, GetUnitAbilityLevel(hero.unit, shiftStormSpell))) and
+					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, shiftStormLevel)) and
+					shiftStormLevel > 0 and
 					hero.countUnitEnemyClose > 6 and
 					illusionsNearby >= 2 then
 
+						print("Shift Storm")
 					IssueImmediateOrder(hero.unit, "channel")
 					self:castSpell(i)
 
 				
 				-- Fel Form
 				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, felFormSpell) == 0.00 and
-						(hero.mana + 50) > I2R(BlzGetAbilityManaCost(felFormSpell, GetUnitAbilityLevel(hero.unit, felFormSpell))) and
+						(hero.mana + 50) > I2R(BlzGetAbilityManaCost(felFormSpell, felFormLevel)) and
+						felFormLevel > 0 and
 						hero.countUnitEnemy > 5 then
 
+					print("Fel Form")
 					IssueImmediateOrder(hero.unit, "metamorphosis")
 					self:castSpell(i)
 				end
->>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 			end
 		end
 
@@ -2363,7 +2310,7 @@ function spawnSetup()
     -- Naga Creep Spawn
     baseSpawn.addUnit("nagaCreep", "nmyr", 2, {1,2,3,4}, 2, 12)  -- Naga Myrmidon
     baseSpawn.addUnit("nagaCreep", "nnsw", 1, {2,3,4,5}, 3, 12)  -- Naga Siren
-    baseSpawn.addUnit("nagaCreep", "nsnp", 1, {2,3,4,5,6}, 5, 12)  -- Snap Dragon
+    baseSpawn.addUnit("nagaCreep", "nsnp", 2, {2,3,4,5,6}, 5, 12)  -- Snap Dragon
 
     -- Night Elves Spawn
     baseSpawn.addUnit("nightElves", "nwat", 1, {3,4,5,6,7,8,9}, 2, 12)  -- Sentry
@@ -2638,13 +2585,11 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20352.0, -6464.0, 270.000, FourCC("hgtw"))
     gg_unit_h006_0074 = BlzCreateUnitWithSkin(p, FourCC("h006"), -16640.0, -11200.0, 270.000, FourCC("h006"))
     gg_unit_o001_0075 = BlzCreateUnitWithSkin(p, FourCC("o001"), -15232.0, -1216.0, 270.000, FourCC("o001"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -10560.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -13376.0, -1664.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("hbla"), -24704.0, -6656.0, 270.000, FourCC("hbla"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19648.0, -6016.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -16608.0, 928.0, 270.000, FourCC("ngnh"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -24256.0, -12160.0, 270.000, FourCC("n007"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -11840.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("o005"), -15168.0, -1664.0, 270.000, FourCC("o005"))
     gg_unit_n00B_0102 = BlzCreateUnitWithSkin(p, FourCC("n00B"), -20352.0, -6912.0, 270.000, FourCC("n00B"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20672.0, -5632.0, 270.000, FourCC("hgtw"))
@@ -2757,7 +2702,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20160.0, -4928.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20160.0, -4544.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12320.0, -11040.0, 270.000, FourCC("n00M"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -16192.0, -10560.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -21056.0, -11200.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18272.0, -4960.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -24192.0, -5248.0, 270.000, FourCC("n000"))
@@ -2807,8 +2751,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -19104.0, -4512.0, 90.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18592.0, -4512.0, 90.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18400.0, -4512.0, 90.000, FourCC("ncb9"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15808.0, -11200.0, 270.000, FourCC("n006"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -16192.0, -11840.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbc"), -18080.0, -4416.0, 270.000, FourCC("ncbc"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18784.0, -4512.0, 90.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -19424.0, -5920.0, 270.000, FourCC("ncba"))
@@ -2907,6 +2849,8 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -15736.2, -1126.7, 245.453, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -24729.3, -7565.4, 58.328, FourCC("hpea"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -15785.7, -7885.1, 103.395, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -10560.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -11840.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -24568.9, -7426.3, 273.909, FourCC("hpea"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -15217.8, -1994.0, 245.596, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -23692.9, -538.0, 125.753, FourCC("nhea"))
@@ -2922,6 +2866,7 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -19643.0, -5799.6, 95.463, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -19186.9, -4280.1, 50.407, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -23440.9, -345.3, 98.034, FourCC("nhea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -16192.0, -10560.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -23741.0, -7469.5, 178.259, FourCC("hhdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -23866.0, -7581.6, 195.002, FourCC("hhdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -23970.3, -7507.7, 246.892, FourCC("hhdl"))
@@ -2941,6 +2886,8 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11111.9, -11841.4, 168.659, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11408.3, -10740.1, 221.593, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10695.9, -11972.9, 167.084, FourCC("n002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15808.0, -11200.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -16192.0, -11840.0, 270.000, FourCC("n006"))
 end
 
 function CreateBuildingsForPlayer23()
@@ -3002,7 +2949,6 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -4640.0, -6560.0, 270.000, FourCC("e007"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -2624.0, -11648.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -1472.0, -11072.0, 270.000, FourCC("nnsg"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -6912.0, 2816.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -7136.0, -9760.0, 270.000, FourCC("ngnh"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -1344.0, 576.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -6688.0, -8800.0, 270.000, FourCC("ngnh"))
@@ -3011,7 +2957,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -2432.0, -6784.0, 270.000, FourCC("ngob"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11168.0, 2080.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -2240.0, -8128.0, 270.000, FourCC("ngob"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -4096.0, 2432.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -4096.0, 2432.0, 270.000, FourCC("n007"))
     gg_unit_hars_0158 = BlzCreateUnitWithSkin(p, FourCC("hars"), -3456.0, 2112.0, 270.000, FourCC("hars"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), 768.0, -10112.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), 1536.0, -9344.0, 270.000, FourCC("negt"))
@@ -3056,7 +3002,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -4096.0, 0.0, 270.000, FourCC("nft2"))
     gg_unit_hars_0303 = BlzCreateUnitWithSkin(p, FourCC("hars"), -3584.0, 4224.0, 270.000, FourCC("hars"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -3840.0, 4032.0, 270.000, FourCC("h00G"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -4096.0, 1856.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -4096.0, 1792.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -4096.0, 4224.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -2304.0, 1792.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -9888.0, 1184.0, 270.000, FourCC("n00M"))
@@ -3115,8 +3061,6 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), 1216.0, -10560.0, 270.000, FourCC("negt"))
     gg_unit_ngt2_0455 = BlzCreateUnitWithSkin(p, FourCC("ngt2"), -6432.0, -9312.0, 270.000, FourCC("ngt2"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -8928.0, -480.0, 270.000, FourCC("ncb9"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7360.0, 2112.0, 270.000, FourCC("n006"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -6912.0, 1344.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -3968.0, -4288.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -4896.0, -4128.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -1952.0, -3104.0, 90.000, FourCC("ncbb"))
@@ -3128,8 +3072,6 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("nfv3"), -1184.0, -4960.0, 90.000, FourCC("nfv3"))
     u = BlzCreateUnitWithSkin(p, FourCC("nfv3"), -1632.0, -3360.0, 180.000, FourCC("nfv3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -3808.0, -1248.0, 270.000, FourCC("ncbb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7552.0, 1536.0, 270.000, FourCC("n006"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7552.0, 2688.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -7488.0, -1280.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -7936.0, 448.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -2720.0, -1248.0, 270.000, FourCC("ncbb"))
@@ -3258,6 +3200,7 @@ function CreateUnitsForPlayer23()
     local unitID
     local t
     local life
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -6912.0, 2816.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11759.7, 1652.1, 41.593, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12472.1, 2884.9, 347.084, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11076.9, 3006.7, 298.557, FourCC("n002"))
@@ -3274,6 +3217,10 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10297.2, 2207.8, 144.658, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10575.5, 2436.1, 150.197, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10786.8, 3718.8, 271.671, FourCC("n002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7360.0, 2112.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -6912.0, 1344.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7552.0, 1536.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7552.0, 2688.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), 631.0, -8792.4, 271.508, FourCC("nhea"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), 524.9, -8550.0, 305.753, FourCC("nhea"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -51.6, -8961.0, 325.090, FourCC("nhea"))

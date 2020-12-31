@@ -154,7 +154,7 @@ function spawnSetup()
     -- Naga Creep Spawn
     baseSpawn.addUnit("nagaCreep", "nmyr", 2, {1,2,3,4}, 2, 12)  -- Naga Myrmidon
     baseSpawn.addUnit("nagaCreep", "nnsw", 1, {2,3,4,5}, 3, 12)  -- Naga Siren
-    baseSpawn.addUnit("nagaCreep", "nsnp", 1, {2,3,4,5,6}, 5, 12)  -- Snap Dragon
+    baseSpawn.addUnit("nagaCreep", "nsnp", 2, {2,3,4,5,6}, 5, 12)  -- Snap Dragon
 
     -- Night Elves Spawn
     baseSpawn.addUnit("nightElves", "nwat", 1, {3,4,5,6,7,8,9}, 2, 12)  -- Sentry
