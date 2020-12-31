@@ -55,7 +55,8 @@ function init_AIClass()
 			hero.alive = false
 			hero.fleeing = false
 			hero.casting = false
-			hero.castingCounter = -10.00
+			hero.castingDuration = -10.00
+			hero.castingDanger = false
 			hero.order = nil
 			hero.castingUlt = false
 			hero.chasing = false
@@ -438,10 +439,12 @@ function init_AIClass()
 				hero.defending = false
 				hero.highdamage = false
 				hero.updateDest = false
-				hero.casting = false
-				hero.castingCounter = -10.00
 
-				self:ACTIONtravelToHeal(i)
+				if hero.castingDanger == false then
+					hero.casting = false
+					hero.castingCounter = -10.00
+					self:ACTIONtravelToHeal(i)
+				end
 			end
 		end		
 
@@ -523,9 +526,12 @@ function init_AIClass()
 					
 				print("Flee")
 				hero.fleeing = true
-				hero.casting = false
 
-				self:ACTIONtravelToHeal(i)
+				if hero.castingDanger == false then
+					hero.casting = false
+					hero.castingCounter = -10.00
+					self:ACTIONtravelToHeal(i)
+				end
 			end
 		end	
 
@@ -547,9 +553,10 @@ function init_AIClass()
 			local hero = self[i]
 
 			if hero.casting == true then
-				if hero.castingCounter == -10.00 then
+				if hero.castingDuration == -10.00 then
 					if hero.currentOrder ~= hero.order then
 						hero.casting = false
+						hero.castingDanger = false
 						print("Stopped Casting")
 						self:ACTIONtravelToDest(i)
 						hero.order = hero.currentOrder
@@ -557,14 +564,15 @@ function init_AIClass()
 						print("Still Casting Spell")
 					end
 
-				elseif hero.castingCounter > 0.00 then
-					hero.castingCounter = hero.castingCounter - 1.50
+				elseif hero.castingDuration > 0.00 then
+					hero.castingDuration = hero.castingDuration - aiTick
 					print("Still Casting Spell")
 
 				else
+					print("Stopped Casting (Count)")
 					hero.casting = false
-					print("Stopped Casting")
-					hero.castingCounter = -10.00
+					hero.castingDuration = -10.00
+					hero.castingDanger = false
 					self:ACTIONtravelToDest(i)
 					hero.order = hero.currentOrder
 				end
@@ -575,17 +583,26 @@ function init_AIClass()
 		-- ACTIONS
 		--
 
-		function self:castSpell(i)
-			
+		function self:castSpell(i, castDuration, danger)
+			danger = danger or false
+			castDuration = castDuration or -10.00
+
 			local hero = self[i]
 
-			if hero.fleeing == true or hero.lowhealth == true then
+			if (hero.fleeing == true or hero.lowhealth == true) and danger == false then
 				self:ACTIONtravelToDest(i)
-			end
+			else
+				hero.casting = true
 
-			hero.casting = true
-			hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
-			print("Spell Cast")
+				if danger then
+					hero.castingDanger = true
+				end
+
+				hero.castingDuration = castDuration
+				hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
+				print(hero.order)
+				print("Spell Cast")
+			end
 		end
 
 
@@ -719,30 +736,39 @@ function init_AIClass()
 			local hero = self[i]
 
 			local shiftBackSpell = FourCC("A03U")
+			local shiftBackLevel = GetUnitAbilityLevel(hero.unit, shiftBackSpell)
 			local shiftForwardSpell = FourCC("A030")
+			local shiftForwardLevel = GetUnitAbilityLevel(hero.unit, shiftForwardSpell)
 			local fallingStrikeSpell = FourCC("A03T")
+			local fallingStrikeLevel = GetUnitAbilityLevel(hero.unit, fallingStrikeSpell)
 			local shiftStormSpell = FourCC("A03C")
+			local shiftStormLevel = GetUnitAbilityLevel(hero.unit, shiftStormSpell)
 			local felFormSpell = FourCC("A02Y")
+			local felFormLevel = GetUnitAbilityLevel(hero.unit, felFormSpell)
 
 		--  Cast when Health is low
 		-------
-			if (hero.lowLife == true or hero.fleeing == true ) then
+			if (hero.lowLife == true or hero.fleeing == true ) and hero.casting == false then
 
 				-- Fel Form
 				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, felFormSpell) == 0.00 and
-						(hero.mana) > I2R(BlzGetAbilityManaCost(felFormSpell, GetUnitAbilityLevel(hero.unit, felFormSpell))) and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(felFormSpell, felFormLevel)) and
+						felFormLevel > 0 and
 						hero.casting == false then
 
+					print("Fel Form Danger")
 					IssueImmediateOrder(hero.unit, "metamorphosis")
-					self:castSpell(i)
+					self:castSpell(i, true)
 
 				-- Shift Back
 				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftBackSpell) == 0.00 and
-						(hero.mana) > I2R(BlzGetAbilityManaCost(shiftBackSpell, GetUnitAbilityLevel(hero.unit, shiftBackSpell))) and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(shiftBackSpell, shiftBackLevel)) and
+						shiftBackLevel > 0 and
 						hero.casting == false then
 
+					print("Shift Back Danger")
 					IssueImmediateOrder(hero.unit, "stomp")
-					self:castSpell(i)
+					self:castSpell(i, 1, true)
 				end
 
 			end
@@ -774,25 +800,30 @@ function init_AIClass()
 
 				-- Shift Back
 				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftBackSpell) == 0.00 and
-						(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftBackSpell, GetUnitAbilityLevel(hero.unit, shiftBackSpell))) and
+						(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftBackSpell, shiftBackLevel)) and
+						shiftBackLevel > 0 and
 						hero.countUnitEnemyClose > 4 then
-
+					
+					print("Shift Back")
 					IssueImmediateOrder(hero.unit, "stomp")
-					self:castSpell(i)
+					self:castSpell(i, 1)
 				
 				
 				-- Shift Forward
 				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftForwardSpell) == 0.00 and
-						(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, GetUnitAbilityLevel(hero.unit, shiftForwardSpell))) and
-						hero.countUnitEnemyClose > 4 then
+						shiftForwardLevel > 0 and
+						(((hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, shiftForwardLevel)) and hero.countUnitEnemyClose > 4) or
+						(hero.manaPercent > 70 and hero.countUnitEnemyClose > 2 )) then
 
+					print("Shift Forward")
 					IssueImmediateOrder(hero.unit, "thunderclap")
-					self:castSpell(i)
+					self:castSpell(i, 1)
 
 
 				-- Falling Stike
 				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, fallingStrikeSpell) == 0.00 and
-					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(fallingStrikeSpell, GetUnitAbilityLevel(hero.unit, fallingStrikeSpell))) and 
+					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(fallingStrikeSpell, fallingStrikeLevel)) and 
+					fallingStrikeLevel > 0 and
 					(hero.powerEnemy > 250.00 or hero.clumpEnemyPower > 80.00) then
 					
 					if hero.powerEnemy > 250.00 then
@@ -801,23 +832,28 @@ function init_AIClass()
 						IssuePointOrder(hero.unit, "clusterrockets", GetUnitX(hero.clumpEnemy), GetUnitY(hero.clumpEnemy))
 					end
 
-					self:castSpell(i)
+					print("Falling Strike")
+					self:castSpell(i, 1)
 
 				-- ShiftStorm
 				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftStormSpell) == 0.00 and
-					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, GetUnitAbilityLevel(hero.unit, shiftStormSpell))) and
+					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, shiftStormLevel)) and
+					shiftStormLevel > 0 and
 					hero.countUnitEnemyClose > 6 and
 					illusionsNearby >= 2 then
 
+						print("Shift Storm")
 					IssueImmediateOrder(hero.unit, "channel")
 					self:castSpell(i)
 
 				
 				-- Fel Form
 				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, felFormSpell) == 0.00 and
-						(hero.mana + 50) > I2R(BlzGetAbilityManaCost(felFormSpell, GetUnitAbilityLevel(hero.unit, felFormSpell))) and
+						(hero.mana + 50) > I2R(BlzGetAbilityManaCost(felFormSpell, felFormLevel)) and
+						felFormLevel > 0 and
 						hero.countUnitEnemy > 5 then
 
+					print("Fel Form")
 					IssueImmediateOrder(hero.unit, "metamorphosis")
 					self:castSpell(i)
 				end
