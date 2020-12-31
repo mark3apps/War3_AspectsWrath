@@ -983,6 +983,7 @@ function Computer_Picks()
                 y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 			
+<<<<<<< HEAD
             randInt = GetRandomInt(2, 5)
             if (randInt == 1) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0)
@@ -998,6 +999,23 @@ function Computer_Picks()
 				
             elseif (randInt == 5) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00J"), x, y, 0)
+=======
+            randInt = GetRandomInt(3, 3)
+            if (randInt == 1) then
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0) -- Brawler
+				
+            elseif (randInt == 2) then
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00R"), x, y, 0) -- Mana Addict
+				
+            elseif (randInt == 3) then
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E002"), x, y, 0) -- Shifter
+				
+            elseif (randInt == 4) then
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H009"), x, y, 0) -- Tactition
+				
+            elseif (randInt == 5) then
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00J"), x, y, 0) -- Time Mage
+>>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
             end
 			
 			UnitAddItemByIdSwapped(FourCC("I000"), udg_TEMP_Unit)
@@ -1795,6 +1813,7 @@ function init_AIClass()
 		function self:manaAddictAI(i)
 			local hero = self[i]
 
+<<<<<<< HEAD
 			if hero.casting == false then
 				local manaShieldSpell = FourCC("A001")
 				local manaShieldBuff = FourCC("BNms")
@@ -1809,6 +1828,46 @@ function init_AIClass()
 					IssueImmediateOrder(hero.unit, "manashieldon")
 					self:castSpell(i)
 				end
+=======
+			local manaShieldSpell = FourCC("A001")
+			local manaShieldBuff = FourCC("BNms")
+			local frostNovaSpell = FourCC("A03S")
+			local manaOverloadSpell = FourCC("A018")
+
+		--  Always Cast
+		-------
+
+			-- Mana Shield
+			if	BlzGetUnitAbilityCooldownRemaining(hero.unit, manaShieldSpell) == 0.00 and
+					UnitHasBuffBJ(hero.unit, manaShieldBuff) == false  then
+
+				print("Casting Mana Shield")
+				IssueImmediateOrder(hero.unit, "manashieldon")
+				self:castSpell(i)
+			end
+
+
+		--  Cast when Health is low
+		-------
+
+			if hero.casting == false then
+				-- Mana Drain
+				if	hero.countUnitEnemyClose > 3 and
+					hero.manaPercent < 90.00 and
+					GetUnitAbilityLevel(hero.unit, manaOverloadSpell) > 0 and
+					BlzGetUnitAbilityCooldownRemaining(hero.unit, manaOverloadSpell) == 0.00 then
+					
+					print("Casting Mana Overload")
+					IssueImmediateOrder(hero.unit, "thunderclap")
+					self:castSpell(i)
+				end
+			end
+
+		-- Normal Cast
+		--------			
+
+			if hero.casting == false and hero.lowLife == false and hero.fleeing == false then
+>>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 
 				-- Frost Nova
 				if	hero.clumpEnemyPower >= 40 and
@@ -1820,6 +1879,7 @@ function init_AIClass()
 					self:castSpell(i)
 				end
 				
+<<<<<<< HEAD
 				-- Mana Drain
 				if	hero.countUnitEnemyClose > 3 and
 					hero.manaPercent < 90.00 and
@@ -1830,6 +1890,8 @@ function init_AIClass()
 					IssueImmediateOrder(hero.unit, "thunderclap")
 					self:castSpell(i)
 				end
+=======
+>>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 			end
 		end
 
@@ -1844,12 +1906,49 @@ function init_AIClass()
 		function self:shifterAI(i)
 			local hero = self[i]
 
+<<<<<<< HEAD
 			if hero.casting == false then
 				local shiftBackSpell = FourCC("A03U")
 				local shiftForwardSpell = FourCC("A030")
 				local fallingStrikeSpell = FourCC("A03T")
 				local shiftStormSpell = FourCC("A03C")
 				local felFormSpell = FourCC("A02Y")
+=======
+			local shiftBackSpell = FourCC("A03U")
+			local shiftForwardSpell = FourCC("A030")
+			local fallingStrikeSpell = FourCC("A03T")
+			local shiftStormSpell = FourCC("A03C")
+			local felFormSpell = FourCC("A02Y")
+
+		--  Cast when Health is low
+		-------
+			if (hero.lowLife == true or hero.fleeing == true ) then
+
+				-- Fel Form
+				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, felFormSpell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(felFormSpell, GetUnitAbilityLevel(hero.unit, felFormSpell))) and
+						hero.casting == false then
+
+					IssueImmediateOrder(hero.unit, "metamorphosis")
+					self:castSpell(i)
+
+				-- Shift Back
+				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftBackSpell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(shiftBackSpell, GetUnitAbilityLevel(hero.unit, shiftBackSpell))) and
+						hero.casting == false then
+
+					IssueImmediateOrder(hero.unit, "stomp")
+					self:castSpell(i)
+				end
+
+			end
+
+
+		--  Normal Cast Spells
+		-------
+			if hero.casting == false then
+
+>>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 
 				-- Custom Intel
 				local g = CreateGroup()
@@ -1871,6 +1970,7 @@ function init_AIClass()
 
 
 				-- Shift Back
+<<<<<<< HEAD
 
 
 				-- Shift Forward
@@ -1885,6 +1985,27 @@ function init_AIClass()
 
 				-- Falling Stike
 				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, fallingStrikeSpell) == 0.00 and
+=======
+				if	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftBackSpell) == 0.00 and
+						(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftBackSpell, GetUnitAbilityLevel(hero.unit, shiftBackSpell))) and
+						hero.countUnitEnemyClose > 4 then
+
+					IssueImmediateOrder(hero.unit, "stomp")
+					self:castSpell(i)
+				
+				
+				-- Shift Forward
+				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftForwardSpell) == 0.00 and
+						(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, GetUnitAbilityLevel(hero.unit, shiftForwardSpell))) and
+						hero.countUnitEnemyClose > 4 then
+
+					IssueImmediateOrder(hero.unit, "thunderclap")
+					self:castSpell(i)
+
+
+				-- Falling Stike
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, fallingStrikeSpell) == 0.00 and
+>>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(fallingStrikeSpell, GetUnitAbilityLevel(hero.unit, fallingStrikeSpell))) and 
 					(hero.powerEnemy > 250.00 or hero.clumpEnemyPower > 80.00) then
 					
@@ -1895,6 +2016,7 @@ function init_AIClass()
 					end
 
 					self:castSpell(i)
+<<<<<<< HEAD
 				end
 
 				-- ShiftStorm
@@ -1909,6 +2031,27 @@ function init_AIClass()
 				end
 
 				-- Fell Form
+=======
+
+				-- ShiftStorm
+				elseif	BlzGetUnitAbilityCooldownRemaining(hero.unit, shiftStormSpell) == 0.00 and
+					(hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, GetUnitAbilityLevel(hero.unit, shiftStormSpell))) and
+					hero.countUnitEnemyClose > 6 and
+					illusionsNearby >= 2 then
+
+					IssueImmediateOrder(hero.unit, "channel")
+					self:castSpell(i)
+
+				
+				-- Fel Form
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, felFormSpell) == 0.00 and
+						(hero.mana + 50) > I2R(BlzGetAbilityManaCost(felFormSpell, GetUnitAbilityLevel(hero.unit, felFormSpell))) and
+						hero.countUnitEnemy > 5 then
+
+					IssueImmediateOrder(hero.unit, "metamorphosis")
+					self:castSpell(i)
+				end
+>>>>>>> parent of 66b201b... Updated AI abilities.  Working on Spells
 			end
 		end
 

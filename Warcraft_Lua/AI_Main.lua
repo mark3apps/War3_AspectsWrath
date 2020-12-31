@@ -129,10 +129,8 @@ function Computer_Picks()
 		
 
         if (i >= 12 and mapAI.count > 0) then
-			BJDebugMsg("Heroes:" .. I2S(mapAI.count))
-			aiTick = 1.00/I2R(mapAI.count)
-			TriggerRegisterTimerEvent(Trig_AI_MAIN, aiTick, true)
-			
+            BJDebugMsg("Heroes:" .. I2S(mapAI.count))
+			TriggerRegisterTimerEvent(Trig_AI_MAIN, 1.00/I2R(mapAI.count), true)
 		end
 		
         i = i + 1
