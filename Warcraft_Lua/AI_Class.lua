@@ -735,16 +735,8 @@ function init_AIClass()
 		function self:shifterAI(i)
 			local hero = self[i]
 
-			local shiftBackSpell = FourCC("A03U")
-			local shiftBackLevel = GetUnitAbilityLevel(hero.unit, shiftBackSpell)
-			local shiftForwardSpell = FourCC("A030")
-			local shiftForwardLevel = GetUnitAbilityLevel(hero.unit, shiftForwardSpell)
-			local fallingStrikeSpell = FourCC("A03T")
-			local fallingStrikeLevel = GetUnitAbilityLevel(hero.unit, fallingStrikeSpell)
-			local shiftStormSpell = FourCC("A03C")
-			local shiftStormLevel = GetUnitAbilityLevel(hero.unit, shiftStormSpell)
-			local felFormSpell = FourCC("A02Y")
-			local felFormLevel = GetUnitAbilityLevel(hero.unit, felFormSpell)
+			local shiftBackLevel = GetUnitAbilityLevel(hero.unit, shiftBack.spell)
+			local shiftForwardLevel = GetUnitAbilityLevel(hero.unit, shiftForward.spell)
 
 		--  Cast when Health is low
 		-------
@@ -863,59 +855,47 @@ function init_AIClass()
 		function self:tactitionAI(i)
 			local hero = self[i]
 
-			local ironDefenseSpell = FourCC("A019")
-			local ironDefenseLevel = GetUnitAbilityLevel(hero.unit, ironDefenseSpell)
-			local raiseBannerSpell = FourCC("A01I")
-			local raiseBannerLevel = GetUnitAbilityLevel(hero.unit, raiseBannerSpell)
-			local attackSpell = FourCC("A01B")
-			local attackLevel = GetUnitAbilityLevel(hero.unit, attackSpell)
-			local bolsterSpell = FourCC("A01Z")
-			local bolsterLevel = GetUnitAbilityLevel(hero.unit, bolsterSpell)
-			local inspireSpell = FourCC("A042")
-			local inspireLevel = GetUnitAbilityLevel(hero.unit, inspireSpell)
-
-
 
 			if hero.casting == false then
 
 				-- Iron Defense
-				if BlzGetUnitAbilityCooldownRemaining(hero.unit, ironDefenseSpell) == 0.00 and
-						(hero.mana) > I2R(BlzGetAbilityManaCost(ironDefenseSpell, ironDefenseLevel)) and
-						ironDefenseLevel > 0 and
+				if BlzGetUnitAbilityCooldownRemaining(hero.unit, ironDefense.spell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(ironDefense.spell, ironDefense.level)) and
+						ironDefense.level > 0 and
 						hero.lifePercent < 85 then
 
-					IssueImmediateOrder(hero.unit, "battleroar")
+					IssueImmediateOrder(hero.unit, ironDefense.string)
 					self:castSpell(i)
 
 				-- Bolster
-				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, bolsterSpell) == 0.00 and
-						(hero.mana + 20) > I2R(BlzGetAbilityManaCost(bolsterSpell, bolsterLevel)) and
-						bolsterLevel > 0 and
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, bolster.spell) == 0.00 and
+						(hero.mana + 20) > I2R(BlzGetAbilityManaCost(bolster.spell, bolster.level)) and
+						bolster.level > 0 and
 						hero.countUnitFriend > 2 and
 						hero.countUnitEnemy > 2 then
 
-					IssueImmediateOrder(hero.unit, "tranquility")
+					IssueImmediateOrder(hero.unit, bolster.string)
 					self:castSpell(i, 2)
 				
 
 				-- Attack
-				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, attackSpell) == 0.00 and
-						(hero.mana) > I2R(BlzGetAbilityManaCost(attackSpell, attackLevel)) and
-						attackLevel > 0 and
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, attack.spell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(attack.spell, attack.level)) and
+						attack.level > 0 and
 						hero.clumpEnemyPower > 250 then
 
-					IssueTargetOrder(hero.unit, "fingerofdeath", hero.unitPowerEnemy)
+					IssueTargetOrder(hero.unit, attack.string, hero.unitPowerEnemy)
 					self:castSpell(i)
 				
 
 				-- Inspire
-				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, inspireSpell) == 0.00 and
-						(hero.mana) > I2R(BlzGetAbilityManaCost(inspireSpell, inspireLevel)) and
-						inspireLevel > 0 and
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, inspire.spell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(inspire.spell, inspire.level)) and
+						inspire.level > 0 and
 						hero.countUnitFriend > 5 and
 						hero.countUnitEnemy > 5 then
 
-					IssueImmediateOrder(hero.unit, "roar")
+					IssueImmediateOrder(hero.unit, inspire.string)
 					self:castSpell(i)
 				end
 			end
