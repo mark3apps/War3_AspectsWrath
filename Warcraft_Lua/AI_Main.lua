@@ -68,21 +68,21 @@ function Computer_Picks()
                 y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 			
-            randInt = GetRandomInt(2, 5)
+            randInt = GetRandomInt(3, 3)
             if (randInt == 1) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0)
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0) -- Brawler
 				
             elseif (randInt == 2) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00R"), x, y, 0)
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00R"), x, y, 0) -- Mana Addict
 				
             elseif (randInt == 3) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E002"), x, y, 0)
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E002"), x, y, 0) -- Shifter
 				
             elseif (randInt == 4) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H009"), x, y, 0)
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H009"), x, y, 0) -- Tactition
 				
             elseif (randInt == 5) then
-                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00J"), x, y, 0)
+                udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00J"), x, y, 0) -- Time Mage
             end
 			
 			UnitAddItemByIdSwapped(FourCC("I000"), udg_TEMP_Unit)
