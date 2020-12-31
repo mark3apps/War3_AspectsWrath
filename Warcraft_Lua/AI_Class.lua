@@ -557,19 +557,19 @@ function init_AIClass()
 					if hero.currentOrder ~= hero.order then
 						hero.casting = false
 						hero.castingDanger = false
-						print("Stopped Casting")
+						--print("Stopped Casting")
 						self:ACTIONtravelToDest(i)
 						hero.order = hero.currentOrder
 					else
-						print("Still Casting Spell")
+						--print("Still Casting Spell")
 					end
 
 				elseif hero.castingDuration > 0.00 then
 					hero.castingDuration = hero.castingDuration - aiTick
-					print("Still Casting Spell")
+					--print("Still Casting Spell")
 
 				else
-					print("Stopped Casting (Count)")
+					--print("Stopped Casting (Count)")
 					hero.casting = false
 					hero.castingDuration = -10.00
 					hero.castingDanger = false
@@ -601,7 +601,7 @@ function init_AIClass()
 				hero.castingDuration = castDuration
 				hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
 				print(hero.order)
-				print("Spell Cast")
+				--print("Spell Cast")
 			end
 		end
 
@@ -684,7 +684,7 @@ function init_AIClass()
 			if	BlzGetUnitAbilityCooldownRemaining(hero.unit, manaShieldSpell) == 0.00 and
 					UnitHasBuffBJ(hero.unit, manaShieldBuff) == false  then
 
-				print("Casting Mana Shield")
+				--print("Casting Mana Shield")
 				IssueImmediateOrder(hero.unit, "manashieldon")
 				self:castSpell(i)
 			end
@@ -700,7 +700,7 @@ function init_AIClass()
 					GetUnitAbilityLevel(hero.unit, manaOverloadSpell) > 0 and
 					BlzGetUnitAbilityCooldownRemaining(hero.unit, manaOverloadSpell) == 0.00 then
 					
-					print("Casting Mana Overload")
+					--print("Casting Mana Overload")
 					IssueImmediateOrder(hero.unit, "thunderclap")
 					self:castSpell(i)
 				end
@@ -716,7 +716,7 @@ function init_AIClass()
 					BlzGetUnitAbilityCooldownRemaining(hero.unit, frostNovaSpell) == 0.00 and
 					(hero.mana + 50.00) >= I2R(BlzGetAbilityManaCost(frostNovaSpell, GetUnitAbilityLevel(hero.unit,frostNovaSpell))) then
 					
-					print("Frost Nova")
+					--print("Frost Nova")
 					IssuePointOrder(hero.unit, "flamestrike", GetUnitX(hero.clumpEnemy), GetUnitY(hero.clumpEnemy))
 					self:castSpell(i)
 				end
@@ -756,7 +756,7 @@ function init_AIClass()
 						felFormLevel > 0 and
 						hero.casting == false then
 
-					print("Fel Form Danger")
+					--print("Fel Form Danger")
 					IssueImmediateOrder(hero.unit, "metamorphosis")
 					self:castSpell(i, true)
 
@@ -766,7 +766,7 @@ function init_AIClass()
 						shiftBackLevel > 0 and
 						hero.casting == false then
 
-					print("Shift Back Danger")
+					--print("Shift Back Danger")
 					IssueImmediateOrder(hero.unit, "stomp")
 					self:castSpell(i, 1, true)
 				end
@@ -804,7 +804,7 @@ function init_AIClass()
 						shiftBackLevel > 0 and
 						hero.countUnitEnemyClose > 4 then
 					
-					print("Shift Back")
+					--print("Shift Back")
 					IssueImmediateOrder(hero.unit, "stomp")
 					self:castSpell(i, 1)
 				
@@ -815,7 +815,7 @@ function init_AIClass()
 						(((hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, shiftForwardLevel)) and hero.countUnitEnemyClose > 4) or
 						(hero.manaPercent > 70 and hero.countUnitEnemyClose > 2 )) then
 
-					print("Shift Forward")
+					--print("Shift Forward")
 					IssueImmediateOrder(hero.unit, "thunderclap")
 					self:castSpell(i, 1)
 
@@ -832,7 +832,7 @@ function init_AIClass()
 						IssuePointOrder(hero.unit, "clusterrockets", GetUnitX(hero.clumpEnemy), GetUnitY(hero.clumpEnemy))
 					end
 
-					print("Falling Strike")
+					--print("Falling Strike")
 					self:castSpell(i, 1)
 
 				-- ShiftStorm
@@ -842,7 +842,7 @@ function init_AIClass()
 					hero.countUnitEnemyClose > 6 and
 					illusionsNearby >= 2 then
 
-						print("Shift Storm")
+					--print("Shift Storm")
 					IssueImmediateOrder(hero.unit, "channel")
 					self:castSpell(i)
 
@@ -853,7 +853,7 @@ function init_AIClass()
 						felFormLevel > 0 and
 						hero.countUnitEnemy > 5 then
 
-					print("Fel Form")
+					--print("Fel Form")
 					IssueImmediateOrder(hero.unit, "metamorphosis")
 					self:castSpell(i)
 				end
@@ -863,8 +863,61 @@ function init_AIClass()
 		function self:tactitionAI(i)
 			local hero = self[i]
 
+			local ironDefenseSpell = FourCC("A019")
+			local ironDefenseLevel = GetUnitAbilityLevel(hero.unit, ironDefenseSpell)
+			local raiseBannerSpell = FourCC("A01I")
+			local raiseBannerLevel = GetUnitAbilityLevel(hero.unit, raiseBannerSpell)
+			local attackSpell = FourCC("A01B")
+			local attackLevel = GetUnitAbilityLevel(hero.unit, attackSpell)
+			local bolsterSpell = FourCC("A01Z")
+			local bolsterLevel = GetUnitAbilityLevel(hero.unit, bolsterSpell)
+			local inspireSpell = FourCC("A042")
+			local inspireLevel = GetUnitAbilityLevel(hero.unit, inspireSpell)
+
+
+
 			if hero.casting == false then
 
+				-- Iron Defense
+				if BlzGetUnitAbilityCooldownRemaining(hero.unit, ironDefenseSpell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(ironDefenseSpell, ironDefenseLevel)) and
+						ironDefenseLevel > 0 and
+						hero.lifePercent < 85 then
+
+					IssueImmediateOrder(hero.unit, "battleroar")
+					self:castSpell(i)
+
+				-- Bolster
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, bolsterSpell) == 0.00 and
+						(hero.mana + 20) > I2R(BlzGetAbilityManaCost(bolsterSpell, bolsterLevel)) and
+						bolsterLevel > 0 and
+						hero.countUnitFriend > 2 and
+						hero.countUnitEnemy > 2 then
+
+					IssueImmediateOrder(hero.unit, "tranquility")
+					self:castSpell(i, 2)
+				
+
+				-- Attack
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, attackSpell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(attackSpell, attackLevel)) and
+						attackLevel > 0 and
+						hero.clumpEnemyPower > 250 then
+
+					IssueTargetOrder(hero.unit, "fingerofdeath", hero.unitPowerEnemy)
+					self:castSpell(i)
+				
+
+				-- Inspire
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, inspireSpell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(inspireSpell, inspireLevel)) and
+						inspireLevel > 0 and
+						hero.countUnitFriend > 5 and
+						hero.countUnitEnemy > 5 then
+
+					IssueImmediateOrder(hero.unit, "roar")
+					self:castSpell(i)
+				end
 			end
 		end
 

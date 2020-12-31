@@ -68,7 +68,7 @@ function Computer_Picks()
                 y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 			
-            randInt = GetRandomInt(3, 3)
+            randInt = GetRandomInt(2, 4)
             if (randInt == 1) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0) -- Brawler
 				

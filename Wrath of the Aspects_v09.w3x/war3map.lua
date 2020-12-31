@@ -983,7 +983,7 @@ function Computer_Picks()
                 y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 			
-            randInt = GetRandomInt(3, 3)
+            randInt = GetRandomInt(2, 4)
             if (randInt == 1) then
                 udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0) -- Brawler
 				
@@ -1699,19 +1699,19 @@ function init_AIClass()
 					if hero.currentOrder ~= hero.order then
 						hero.casting = false
 						hero.castingDanger = false
-						print("Stopped Casting")
+						--print("Stopped Casting")
 						self:ACTIONtravelToDest(i)
 						hero.order = hero.currentOrder
 					else
-						print("Still Casting Spell")
+						--print("Still Casting Spell")
 					end
 
 				elseif hero.castingDuration > 0.00 then
 					hero.castingDuration = hero.castingDuration - aiTick
-					print("Still Casting Spell")
+					--print("Still Casting Spell")
 
 				else
-					print("Stopped Casting (Count)")
+					--print("Stopped Casting (Count)")
 					hero.casting = false
 					hero.castingDuration = -10.00
 					hero.castingDanger = false
@@ -1743,7 +1743,7 @@ function init_AIClass()
 				hero.castingDuration = castDuration
 				hero.order = OrderId2String(GetUnitCurrentOrder(hero.unit))
 				print(hero.order)
-				print("Spell Cast")
+				--print("Spell Cast")
 			end
 		end
 
@@ -1826,7 +1826,7 @@ function init_AIClass()
 			if	BlzGetUnitAbilityCooldownRemaining(hero.unit, manaShieldSpell) == 0.00 and
 					UnitHasBuffBJ(hero.unit, manaShieldBuff) == false  then
 
-				print("Casting Mana Shield")
+				--print("Casting Mana Shield")
 				IssueImmediateOrder(hero.unit, "manashieldon")
 				self:castSpell(i)
 			end
@@ -1842,7 +1842,7 @@ function init_AIClass()
 					GetUnitAbilityLevel(hero.unit, manaOverloadSpell) > 0 and
 					BlzGetUnitAbilityCooldownRemaining(hero.unit, manaOverloadSpell) == 0.00 then
 					
-					print("Casting Mana Overload")
+					--print("Casting Mana Overload")
 					IssueImmediateOrder(hero.unit, "thunderclap")
 					self:castSpell(i)
 				end
@@ -1858,7 +1858,7 @@ function init_AIClass()
 					BlzGetUnitAbilityCooldownRemaining(hero.unit, frostNovaSpell) == 0.00 and
 					(hero.mana + 50.00) >= I2R(BlzGetAbilityManaCost(frostNovaSpell, GetUnitAbilityLevel(hero.unit,frostNovaSpell))) then
 					
-					print("Frost Nova")
+					--print("Frost Nova")
 					IssuePointOrder(hero.unit, "flamestrike", GetUnitX(hero.clumpEnemy), GetUnitY(hero.clumpEnemy))
 					self:castSpell(i)
 				end
@@ -1898,7 +1898,7 @@ function init_AIClass()
 						felFormLevel > 0 and
 						hero.casting == false then
 
-					print("Fel Form Danger")
+					--print("Fel Form Danger")
 					IssueImmediateOrder(hero.unit, "metamorphosis")
 					self:castSpell(i, true)
 
@@ -1908,7 +1908,7 @@ function init_AIClass()
 						shiftBackLevel > 0 and
 						hero.casting == false then
 
-					print("Shift Back Danger")
+					--print("Shift Back Danger")
 					IssueImmediateOrder(hero.unit, "stomp")
 					self:castSpell(i, 1, true)
 				end
@@ -1946,7 +1946,7 @@ function init_AIClass()
 						shiftBackLevel > 0 and
 						hero.countUnitEnemyClose > 4 then
 					
-					print("Shift Back")
+					--print("Shift Back")
 					IssueImmediateOrder(hero.unit, "stomp")
 					self:castSpell(i, 1)
 				
@@ -1957,7 +1957,7 @@ function init_AIClass()
 						(((hero.mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, shiftForwardLevel)) and hero.countUnitEnemyClose > 4) or
 						(hero.manaPercent > 70 and hero.countUnitEnemyClose > 2 )) then
 
-					print("Shift Forward")
+					--print("Shift Forward")
 					IssueImmediateOrder(hero.unit, "thunderclap")
 					self:castSpell(i, 1)
 
@@ -1974,7 +1974,7 @@ function init_AIClass()
 						IssuePointOrder(hero.unit, "clusterrockets", GetUnitX(hero.clumpEnemy), GetUnitY(hero.clumpEnemy))
 					end
 
-					print("Falling Strike")
+					--print("Falling Strike")
 					self:castSpell(i, 1)
 
 				-- ShiftStorm
@@ -1984,7 +1984,7 @@ function init_AIClass()
 					hero.countUnitEnemyClose > 6 and
 					illusionsNearby >= 2 then
 
-						print("Shift Storm")
+					--print("Shift Storm")
 					IssueImmediateOrder(hero.unit, "channel")
 					self:castSpell(i)
 
@@ -1995,7 +1995,7 @@ function init_AIClass()
 						felFormLevel > 0 and
 						hero.countUnitEnemy > 5 then
 
-					print("Fel Form")
+					--print("Fel Form")
 					IssueImmediateOrder(hero.unit, "metamorphosis")
 					self:castSpell(i)
 				end
@@ -2005,8 +2005,61 @@ function init_AIClass()
 		function self:tactitionAI(i)
 			local hero = self[i]
 
+			local ironDefenseSpell = FourCC("A019")
+			local ironDefenseLevel = GetUnitAbilityLevel(hero.unit, ironDefenseSpell)
+			local raiseBannerSpell = FourCC("A01I")
+			local raiseBannerLevel = GetUnitAbilityLevel(hero.unit, raiseBannerSpell)
+			local attackSpell = FourCC("A01B")
+			local attackLevel = GetUnitAbilityLevel(hero.unit, attackSpell)
+			local bolsterSpell = FourCC("A01Z")
+			local bolsterLevel = GetUnitAbilityLevel(hero.unit, bolsterSpell)
+			local inspireSpell = FourCC("A042")
+			local inspireLevel = GetUnitAbilityLevel(hero.unit, inspireSpell)
+
+
+
 			if hero.casting == false then
 
+				-- Iron Defense
+				if BlzGetUnitAbilityCooldownRemaining(hero.unit, ironDefenseSpell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(ironDefenseSpell, ironDefenseLevel)) and
+						ironDefenseLevel > 0 and
+						hero.lifePercent < 85 then
+
+					IssueImmediateOrder(hero.unit, "battleroar")
+					self:castSpell(i)
+
+				-- Bolster
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, bolsterSpell) == 0.00 and
+						(hero.mana + 20) > I2R(BlzGetAbilityManaCost(bolsterSpell, bolsterLevel)) and
+						bolsterLevel > 0 and
+						hero.countUnitFriend > 2 and
+						hero.countUnitEnemy > 2 then
+
+					IssueImmediateOrder(hero.unit, "tranquility")
+					self:castSpell(i, 2)
+				
+
+				-- Attack
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, attackSpell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(attackSpell, attackLevel)) and
+						attackLevel > 0 and
+						hero.clumpEnemyPower > 250 then
+
+					IssueTargetOrder(hero.unit, "fingerofdeath", hero.unitPowerEnemy)
+					self:castSpell(i)
+				
+
+				-- Inspire
+				elseif BlzGetUnitAbilityCooldownRemaining(hero.unit, inspireSpell) == 0.00 and
+						(hero.mana) > I2R(BlzGetAbilityManaCost(inspireSpell, inspireLevel)) and
+						inspireLevel > 0 and
+						hero.countUnitFriend > 5 and
+						hero.countUnitEnemy > 5 then
+
+					IssueImmediateOrder(hero.unit, "roar")
+					self:castSpell(i)
+				end
 			end
 		end
 
@@ -3136,7 +3189,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncbe"), -3264.0, -2528.0, 90.000, FourCC("ncbe"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -8480.0, -1696.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("uzg1"), -9824.0, -5408.0, 270.000, FourCC("uzg1"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncnt"), -7456.0, -5408.0, 270.000, FourCC("ncnt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncnt"), -7456.0, -5472.0, 270.000, FourCC("ncnt"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -8576.0, -2240.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -10400.0, -5280.0, 270.000, FourCC("nnzg"))
     u = BlzCreateUnitWithSkin(p, FourCC("utod"), -9408.0, -4416.0, 270.000, FourCC("utod"))
@@ -4622,10 +4675,10 @@ function Trig_Event_Count_Func005Func008Func006C()
 end
 
 function Trig_Event_Count_Func005Func008C()
-    if (not (udg_TEMP_Real <= 0.15)) then
+    if (not (udg_TEMP_Real <= 0.25)) then
         return false
     end
-    if (not (udg_TEMP_Real >= -0.15)) then
+    if (not (udg_TEMP_Real >= -0.25)) then
         return false
     end
     return true
@@ -4766,39 +4819,11 @@ function InitTrig_Camera_Reset()
     TriggerAddAction(gg_trg_Camera_Reset, Trig_Camera_Reset_Actions)
 end
 
-function Trig_Footman_at_Max_Mana_Func004C()
-    if (GetUnitTypeId(GetTriggerUnit()) == FourCC("hfoo")) then
-        return true
-    end
-    if (GetUnitTypeId(GetTriggerUnit()) == FourCC("h017")) then
-        return true
-    end
-    if (GetUnitTypeId(GetTriggerUnit()) == FourCC("h011")) then
-        return true
-    end
-    if (GetUnitTypeId(GetTriggerUnit()) == FourCC("h007")) then
-        return true
-    end
-    if (GetUnitTypeId(GetTriggerUnit()) == FourCC("h015")) then
-        return true
-    end
-    if (GetUnitTypeId(GetTriggerUnit()) == FourCC("h016")) then
-        return true
-    end
-    if (GetUnitTypeId(GetTriggerUnit()) == FourCC("hcth")) then
-        return true
-    end
-    if (GetUnitTypeId(GetTriggerUnit()) == FourCC("h00S")) then
-        return true
-    end
-    return false
-end
-
 function Trig_Footman_at_Max_Mana_Conditions()
     if (not (GetSpellAbilityId() == FourCC("Afzy"))) then
         return false
     end
-    if (not Trig_Footman_at_Max_Mana_Func004C()) then
+    if (not (GetUnitManaPercent(GetTriggerUnit()) >= 100.00)) then
         return false
     end
     return true
@@ -6421,16 +6446,26 @@ function Trig_Falling_Strike_CAST_Conditions()
     return true
 end
 
+function Trig_Falling_Strike_CAST_Func015C()
+    if (not (IsTerrainPathableBJ(udg_JDA_TargetPoint, PATHING_TYPE_WALKABILITY) == true)) then
+        return false
+    end
+    return true
+end
+
 function Trig_Falling_Strike_CAST_Actions()
     udg_JDA_JumpHigh_Distance = 0.50
     udg_JDA_DestroyTrees_Dash = false
     udg_JDA_TargetPoint = GetSpellTargetLoc()
-    udg_JDA_Unit = GetTriggerUnit()
-    udg_JDA_Speed = 28.00
-    udg_JDA_SpecialEffect = "Abilities\\Weapons\\FaerieDragonMissile\\FaerieDragonMissile.mdl"
-    udg_JDA_Animation = "attack, slam"
-    udg_JDA_AnimationSpeed = 0.40
-    ConditionalTriggerExecute(gg_trg_Jump_System_1)
+    if (Trig_Falling_Strike_CAST_Func015C()) then
+    else
+        udg_JDA_Unit = GetTriggerUnit()
+        udg_JDA_Speed = 28.00
+        udg_JDA_SpecialEffect = "Abilities\\Weapons\\FaerieDragonMissile\\FaerieDragonMissile.mdl"
+        udg_JDA_Animation = "attack, slam"
+        udg_JDA_AnimationSpeed = 0.40
+        ConditionalTriggerExecute(gg_trg_Jump_System_1)
+    end
 end
 
 function InitTrig_Falling_Strike_CAST()
@@ -8612,7 +8647,7 @@ end
 function Trig_Enable_Fog_of_War_Actions()
     FogMaskEnableOn()
     FogEnableOn()
-    StartTimerBJ(udg_EventTimer, false, 15.00)
+    StartTimerBJ(udg_EventTimer, false, 350.00)
 end
 
 function InitTrig_Enable_Fog_of_War()
@@ -9055,59 +9090,59 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(1), ConvertPlayerColor(1))
     SetPlayerRacePreference(Player(1), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(1), false)
-    SetPlayerController(Player(1), MAP_CONTROL_USER)
+    SetPlayerController(Player(1), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(2), 2)
     ForcePlayerStartLocation(Player(2), 2)
     SetPlayerColor(Player(2), ConvertPlayerColor(2))
     SetPlayerRacePreference(Player(2), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(2), false)
-    SetPlayerController(Player(2), MAP_CONTROL_USER)
+    SetPlayerController(Player(2), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(3), 3)
     ForcePlayerStartLocation(Player(3), 3)
     SetPlayerColor(Player(3), ConvertPlayerColor(3))
     SetPlayerRacePreference(Player(3), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(3), false)
-    SetPlayerController(Player(3), MAP_CONTROL_USER)
+    SetPlayerController(Player(3), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(4), 4)
     SetPlayerColor(Player(4), ConvertPlayerColor(4))
     SetPlayerRacePreference(Player(4), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(4), false)
-    SetPlayerController(Player(4), MAP_CONTROL_USER)
+    SetPlayerController(Player(4), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(5), 5)
     SetPlayerColor(Player(5), ConvertPlayerColor(5))
     SetPlayerRacePreference(Player(5), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(5), false)
-    SetPlayerController(Player(5), MAP_CONTROL_USER)
+    SetPlayerController(Player(5), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(6), 6)
     SetPlayerColor(Player(6), ConvertPlayerColor(6))
     SetPlayerRacePreference(Player(6), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(6), false)
-    SetPlayerController(Player(6), MAP_CONTROL_USER)
+    SetPlayerController(Player(6), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(7), 7)
     SetPlayerColor(Player(7), ConvertPlayerColor(7))
     SetPlayerRacePreference(Player(7), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(7), false)
-    SetPlayerController(Player(7), MAP_CONTROL_USER)
+    SetPlayerController(Player(7), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(8), 8)
     SetPlayerColor(Player(8), ConvertPlayerColor(8))
     SetPlayerRacePreference(Player(8), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(8), false)
-    SetPlayerController(Player(8), MAP_CONTROL_USER)
+    SetPlayerController(Player(8), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(9), 9)
     SetPlayerColor(Player(9), ConvertPlayerColor(9))
     SetPlayerRacePreference(Player(9), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(9), false)
-    SetPlayerController(Player(9), MAP_CONTROL_USER)
+    SetPlayerController(Player(9), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(10), 10)
     SetPlayerColor(Player(10), ConvertPlayerColor(10))
     SetPlayerRacePreference(Player(10), RACE_PREF_UNDEAD)
     SetPlayerRaceSelectable(Player(10), false)
-    SetPlayerController(Player(10), MAP_CONTROL_USER)
+    SetPlayerController(Player(10), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(11), 11)
     SetPlayerColor(Player(11), ConvertPlayerColor(11))
     SetPlayerRacePreference(Player(11), RACE_PREF_NIGHTELF)
     SetPlayerRaceSelectable(Player(11), false)
-    SetPlayerController(Player(11), MAP_CONTROL_USER)
+    SetPlayerController(Player(11), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(18), 12)
     SetPlayerColor(Player(18), ConvertPlayerColor(18))
     SetPlayerRacePreference(Player(18), RACE_PREF_HUMAN)
@@ -9468,18 +9503,6 @@ function InitCustomTeams()
 end
 
 function InitAllyPriorities()
-    SetStartLocPrioCount(0, 11)
-    SetStartLocPrio(0, 0, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 10, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(1, 11)
     SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -9492,126 +9515,92 @@ function InitAllyPriorities()
     SetStartLocPrio(1, 8, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 9, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(2, 11)
+    SetStartLocPrioCount(2, 10)
     SetStartLocPrio(2, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(3, 11)
+    SetStartLocPrio(2, 1, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 2, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 3, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 4, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(3, 10)
     SetStartLocPrio(3, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(4, 11)
+    SetStartLocPrio(3, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 2, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 3, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 4, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(4, 4)
     SetStartLocPrio(4, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 3, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(5, 11)
+    SetStartLocPrio(4, 1, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 2, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 3, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(5, 4)
     SetStartLocPrio(5, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 3, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 4, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(6, 11)
+    SetStartLocPrio(5, 1, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 2, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 3, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(6, 10)
     SetStartLocPrio(6, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 3, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 4, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(7, 11)
+    SetStartLocPrio(6, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(7, 10)
     SetStartLocPrio(7, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 3, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 4, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 6, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(8, 11)
+    SetStartLocPrio(7, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(8, 10)
     SetStartLocPrio(8, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 3, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 4, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 6, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 7, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(9, 11)
+    SetStartLocPrio(8, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(9, 10)
     SetStartLocPrio(9, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 3, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 4, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 6, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 7, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 8, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 9, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(10, 11)
+    SetStartLocPrio(9, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(10, 4)
     SetStartLocPrio(10, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 3, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 4, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 6, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 7, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 8, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 9, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(11, 11)
+    SetStartLocPrio(10, 1, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 2, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 3, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(11, 4)
     SetStartLocPrio(11, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 1, 1, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 2, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 3, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 4, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 6, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 7, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 8, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 9, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 10, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 1, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 2, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 3, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(12, 2)
     SetStartLocPrio(12, 0, 5, MAP_LOC_PRIO_LOW)
     SetStartLocPrio(12, 1, 17, MAP_LOC_PRIO_LOW)
@@ -9706,7 +9695,7 @@ function config()
     SetMapDescription("TRIGSTR_005")
     SetPlayers(18)
     SetTeams(18)
-    SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)
+    SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
     DefineStartLocation(0, -11584.0, -4544.0)
     DefineStartLocation(1, -11584.0, -4544.0)
     DefineStartLocation(2, -11584.0, -4544.0)
