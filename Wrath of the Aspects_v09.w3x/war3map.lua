@@ -865,7 +865,11 @@ function MapSetup()
 	-- Classes
 	init_SpawnClass()
 	init_AIClass()
-	init_HeroClass()
+	
+	debugfunc( function()
+	 	init_heroClass()
+	end, "init_heroClass")
+	
 
 	-- Globals
 	mapAI = ai.new()
@@ -919,21 +923,23 @@ function AI_MAIN()
 	-- 	mapAI:STATEAbilities(pickedHero)
 	-- end, "mapAI:castSpell")
 
-	mapAI:updateIntel()
+	debugfunc( function()
+		mapAI:updateIntel(i)
 
-	if mapAI:isAlive(i) then
-		mapAI:STATEDead(i)
-		mapAI:STATELowHealth(i)
-		mapAI:STATEStopFleeing(i)
-		mapAI:STATEFleeing(i)
-		mapAI:STATEHighHealth(i)
-		mapAI:STATEAbilities(i)
-		mapAI:STATEcastingSpell(i)
-		mapAI:CleanUp(i)
-	else
-		mapAI:STATERevived(i)
-	end
-	print("Finished")
+		if mapAI:isAlive(i) then
+			mapAI:STATEDead(i)
+			mapAI:STATELowHealth(i)
+			mapAI:STATEStopFleeing(i)
+			mapAI:STATEFleeing(i)
+			mapAI:STATEHighHealth(i)
+			mapAI:STATEAbilities(i)
+			mapAI:STATEcastingSpell(i)
+			mapAI:CleanUp(i)
+		else
+			mapAI:STATERevived(i)
+		end
+		print("Finished")
+	end, "AI STATES")
 end
 
 function InitTrig_AI_MAIN()
@@ -964,7 +970,7 @@ function Computer_Picks()
 				y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 
-			randInt = GetRandomInt(2, 4)
+			randInt = GetRandomInt(2, 2)
 			if (randInt == 1) then
 				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0) -- Brawler
 			elseif (randInt == 2) then
@@ -1127,40 +1133,64 @@ function init_heroClass()
     -- Define new() function
     heroClass.new = function()
         local self = {}
-        self.H009 = {}
-        self.H009.name = "Tactition"
-        self.H009.ironDefense = {id = FourCC("A019"), buff = nil, string = "roar", ult = false}
-        self.H009.raiseBanner = {id = FourCC("A01I"), buff = nil, string = "healingward", ult = false}
-        self.H009.attack = {id = FourCC("A01B"), buff = nil, string = "fingerofdeath", ult = false}
-        self.H009.bolster = {id = FourCC("A01Z"), buff = nil, string = "tranquility", ult = false}
-        self.H009.inspire = {id = FourCC("A042"), buff = nil, string = "channel", ult = true}
 
-        self.E002 = {}
-        self.E002.name = "Shift Master"
-        self.E002.shiftBack = {id = FourCC("A03U"), buff = nil, string = "stomp", ult = false}
-        self.E002.shiftForward = {id = FourCC("A030"), buff = nil, string = "thunderclap", ult = false}
-        self.E002.fallingStrike = {id = FourCC("A03T"), buff = nil, string = "clusterrockets", ult = false}
-        self.E002.shiftStorm = {id = FourCC("A03C"), buff = nil, string = "channel", ult = true}
-        self.E002.felForm = {id = FourCC("A02Y"), buff = nil, string = "metamorphosis", ult = true}
+        self.E001 = "brawler"
+        self.brawler = {}
+        self.brawler.string = "E001"
+        self.brawler.alter = "h00I"
+        self.brawler.idAlter = FourCC(self.brawler.alter)
+        self.brawler.id = FourCC(self.brawler.string)
 
-        self.H00R = {}
-        self.H00R.name = "Mana Addict"
-        self.H00R.manaShield = {id = FourCC("A001"), buff = FourCC("BNms"), string = "manashieldon", ult = false}
-        self.H00R.frostNova = {id = FourCC("A03S"), buff = nil, string = "flamestrike", ult = false}
-        self.H00R.manaOverload = {id = FourCC("A018"), buff = nil, string = "manashield", ult = false}
-        self.H00R.manaBurst = {id = FourCC("A02B"), buff = nil, string = "custerrockets", ult = false}
-        self.H00R.starfall = {id = FourCC("A015"), buff = nil, string = "starfall", ult = true}
+        self.H009 = "tactition"
+        self.tactition = {}
+        self.tactition.string = "H009"
+        self.tactition.alter = "h00Y"
+        self.tactition.idAlter = FourCC(self.tactition.alter)
+        self.tactition.id = FourCC(self.tactition.string)
+        self.tactition.ironDefense = {string = "A019", id = FourCC("A019"), buff = nil, order = "roar", ult = false}
+        self.tactition.raiseBanner = {string = "A01I", id = FourCC("A01I"), buff = nil, order = "healingward", ult = false}
+        self.tactition.attack = {string = "A01B", id = FourCC("A01B"), buff = nil, order = "fingerofdeath", ult = false}
+        self.tactition.bolster = {string = "A01Z", id = FourCC("A01Z"), buff = nil, order = "tranquility", ult = false}
+        self.tactition.inspire = {string = "A042", id = FourCC("A042"), buff = nil, order = "channel", ult = true}
 
-        self.H00J = {}
-        self.H00J.name = "Time Mage"
-        self.H00J.chronoAtrophy = {id = FourCC("A04K"), buff = nil, string = "flamestrike", ult = false}
-        self.H00J.decay = {id = FourCC("A032"), buff = nil, string = "shadowstrike", ult = false}
-        self.H00J.timeTravel = {id = FourCC("A04P"), buff = nil, string = "clusterrockets", ult = false}
-        self.H00J.paradox = {id = FourCC("A04N"), buff = nil, string = "tranquility", ult = true}
+        self.E002 = "shiftMaster"
+        self.shiftMaster = {}
+        self.shiftMaster.string = "E002"
+        self.shiftMaster.alter = "h00Q"
+        self.shiftMaster.idAlter = FourCC(self.shiftMaster.alter)
+        self.shiftMaster.id = FourCC(self.shiftMaster.string)
+        self.shiftMaster.shiftBack = {string = "A03U", id = FourCC("A03U"), buff = nil, order = "stomp", ult = false}
+        self.shiftMaster.shiftForward = {string = "A030", id = FourCC("A030"), buff = nil, order = "thunderclap", ult = false}
+        self.shiftMaster.fallingStrike = {string = "A03T", id = FourCC("A03T"), buff = nil, order = "clusterrockets", ult = false}
+        self.shiftMaster.shiftStorm = {string = "A03C", id = FourCC("A03C"), buff = nil, order = "channel", ult = true}
+        self.shiftMaster.felForm = {string = "A02Y", id = FourCC("A02Y"), buff = nil, order = "metamorphosis", ult = true}
+
+        self.H00R = "manaAddict"
+        self.manaAddict = {}
+        self.manaAddict.string = "H00R"
+        self.manaAddict.alter = "h00B"
+        self.manaAddict.idAlter = FourCC(self.manaAddict.alter)
+        self.manaAddict.id = FourCC(self.manaAddict.string)
+        self.manaAddict.manaShield = {string = "A001", id = FourCC("A001"), buff = FourCC("BNms"), order = "manashieldon", ult = false}
+        self.manaAddict.frostNova = {string = "A03S", id = FourCC("A03S"), buff = nil, order = "flamestrike", ult = false}
+        self.manaAddict.manaOverload = {string = "A018", id = FourCC("A018"), buff = nil, order = "manashield", ult = false}
+        self.manaAddict.manaBurst = {string = "A02B", id = FourCC("A02B"), buff = nil, order = "custerrockets", ult = false}
+        self.manaAddict.starfall = {string = "A015", id = FourCC("A015"), buff = nil, order = "starfall", ult = true}
+
+        self.H00J = "timeMage"
+        self.timeMage = {}
+        self.timeMage.string = "H00J"
+        self.timeMage.alter = "h00Z"
+        self.timeMage.idAlter = FourCC(self.timeMage.alter)
+        self.timeMage.id = FourCC(self.timeMage.string)
+        self.timeMage.chronoAtrophy = {string = "A04K", id = FourCC("A04K"), buff = nil, order = "flamestrike", ult = false}
+        self.timeMage.decay = {string = "A032", id = FourCC("A032"), buff = nil, order = "shadowstrike", ult = false}
+        self.timeMage.timeTravel = {string = "A04P", id = FourCC("A04P"), buff = nil, order = "clusterrockets", ult = false}
+        self.timeMage.paradox = {string = "A04N", id = FourCC("A04N"), buff = nil, order = "tranquility", ult = true}
 
 
         function self:spell( heroUnit, spellName )
-            local spellDetails = self[heroUnit.id][spellName]
+            local spellDetails = self[heroUnit.name][spellName]
             spellDetails.level = self:level(heroUnit, spellName)
             spellDetails.cooldown = self:cooldown(heroUnit, spellName)
             spellDetails.hasBuff = self:hasBuff(heroUnit, spellName)
@@ -1177,15 +1207,15 @@ function init_heroClass()
         end
 
         function self:level(heroUnit, spellName)
-            return GetUnitAbilityLevel(heroUnit.unit, self[heroUnit.id][spellName].id)
+            return GetUnitAbilityLevel(heroUnit.unit, self[heroUnit.name][spellName].id)
         end
 
         function self:cooldown(heroUnit, spellName)
-            return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, self[heroUnit.id][spellName].id)
+            return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, self[heroUnit.name][spellName].id)
         end
 
         function self:mana(heroUnit, spellName, level)
-            return BlzGetUnitAbilityManaCost(heroUnit.unit, self[heroUnit.id][spellName].id, level)
+            return BlzGetUnitAbilityManaCost(heroUnit.unit, self[heroUnit.name][spellName].id, level)
         end
 
         function self:hasBuff(heroUnit, spellName)
@@ -1250,7 +1280,12 @@ function init_AIClass()
 			self[i].unit = heroUnit
 			GroupAddUnit(udg_AI_Heroes, self[i].unit)
 
-			self[i].unitType = GetUnitTypeId(heroUnit)
+			self[i].id = UnitId2String(GetUnitTypeId(heroUnit))
+			print(self[i].id)
+
+			self[i].name = hero[self[i].id]
+			print(self[i].name)
+
 			self[i].player = GetOwningPlayer(heroUnit)
 			self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
 
@@ -1282,8 +1317,7 @@ function init_AIClass()
 			self[i].unitAttacking = nil
 			self[i].unitChasing = nil
 
-			if self[i].unitType == FourCC("E001") then -- Brawler
-				self[i].name = "Brawler"
+			if self[i].id == hero.brawler then -- Brawler
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.02
 
@@ -1301,8 +1335,8 @@ function init_AIClass()
 				self[i].clumpRange = 100.00
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 500.00
-			elseif self[i].unitType == FourCC("H00R") then -- Mana Addict
-				self[i].name = "Mana Addict"
+
+			elseif self[i].id == hero.manaAddict then -- Mana Addict
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.75
 
@@ -1320,8 +1354,8 @@ function init_AIClass()
 				self[i].clumpRange = 100.00
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
-			elseif self[i].unitType == FourCC("H009") then -- Tactition
-				self[i].name = "Tactition"
+
+			elseif self[i].id == hero.tactition then -- Tactition
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.20
 
@@ -1338,8 +1372,8 @@ function init_AIClass()
 				self[i].clumpRange = 250.00
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
-			elseif self[i].unitType == FourCC("H00J") then -- Time Mage
-				self[i].name = "Time Mage"
+
+			elseif self[i].id == hero.timeMage then -- Time Mage
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.10
 
@@ -1357,8 +1391,8 @@ function init_AIClass()
 				self[i].clumpRange = 250.00
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 700.00
-			elseif self[i].unitType == FourCC("E002") then -- Shifter
-				self[i].name = "Shifter"
+
+			elseif self[i].id == hero.shiftMaster then -- Shifter
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.15
 
@@ -1834,6 +1868,7 @@ function init_AIClass()
 
 			-- Mana Shield
 			local curSpell
+			
 			curSpell = hero:spell(self[i], "manaShield")
 
 			if curSpell.castable == true and curSpell.hasBuff == false then
@@ -9288,23 +9323,23 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(2), ConvertPlayerColor(2))
     SetPlayerRacePreference(Player(2), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(2), false)
-    SetPlayerController(Player(2), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(2), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(3), 3)
     ForcePlayerStartLocation(Player(3), 3)
     SetPlayerColor(Player(3), ConvertPlayerColor(3))
     SetPlayerRacePreference(Player(3), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(3), false)
-    SetPlayerController(Player(3), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(3), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(4), 4)
     SetPlayerColor(Player(4), ConvertPlayerColor(4))
     SetPlayerRacePreference(Player(4), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(4), false)
-    SetPlayerController(Player(4), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(4), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(5), 5)
     SetPlayerColor(Player(5), ConvertPlayerColor(5))
     SetPlayerRacePreference(Player(5), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(5), false)
-    SetPlayerController(Player(5), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(5), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(6), 6)
     SetPlayerColor(Player(6), ConvertPlayerColor(6))
     SetPlayerRacePreference(Player(6), RACE_PREF_HUMAN)
@@ -9314,27 +9349,27 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(7), ConvertPlayerColor(7))
     SetPlayerRacePreference(Player(7), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(7), false)
-    SetPlayerController(Player(7), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(7), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(8), 8)
     SetPlayerColor(Player(8), ConvertPlayerColor(8))
     SetPlayerRacePreference(Player(8), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(8), false)
-    SetPlayerController(Player(8), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(8), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(9), 9)
     SetPlayerColor(Player(9), ConvertPlayerColor(9))
     SetPlayerRacePreference(Player(9), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(9), false)
-    SetPlayerController(Player(9), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(9), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(10), 10)
     SetPlayerColor(Player(10), ConvertPlayerColor(10))
     SetPlayerRacePreference(Player(10), RACE_PREF_UNDEAD)
     SetPlayerRaceSelectable(Player(10), false)
-    SetPlayerController(Player(10), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(10), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(11), 11)
     SetPlayerColor(Player(11), ConvertPlayerColor(11))
     SetPlayerRacePreference(Player(11), RACE_PREF_NIGHTELF)
     SetPlayerRaceSelectable(Player(11), false)
-    SetPlayerController(Player(11), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(11), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(18), 12)
     SetPlayerColor(Player(18), ConvertPlayerColor(18))
     SetPlayerRacePreference(Player(18), RACE_PREF_HUMAN)
@@ -9695,6 +9730,16 @@ function InitCustomTeams()
 end
 
 function InitAllyPriorities()
+    SetStartLocPrioCount(0, 9)
+    SetStartLocPrio(0, 0, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 1, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 2, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 3, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 8, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(1, 11)
     SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -9707,38 +9752,46 @@ function InitAllyPriorities()
     SetStartLocPrio(1, 8, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 9, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(2, 10)
+    SetStartLocPrioCount(2, 9)
     SetStartLocPrio(2, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 1, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 2, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(3, 10)
+    SetStartLocPrio(2, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(3, 9)
     SetStartLocPrio(3, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 2, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(4, 4)
+    SetStartLocPrio(3, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(4, 9)
     SetStartLocPrio(4, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 1, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 2, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 3, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(5, 4)
+    SetStartLocPrio(4, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 3, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(5, 9)
     SetStartLocPrio(5, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 1, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 2, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 3, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 8, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(6, 10)
     SetStartLocPrio(6, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -9750,49 +9803,56 @@ function InitAllyPriorities()
     SetStartLocPrio(6, 7, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 8, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(7, 10)
+    SetStartLocPrioCount(7, 9)
     SetStartLocPrio(7, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(8, 10)
+    SetStartLocPrio(7, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(8, 9)
     SetStartLocPrio(8, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(9, 10)
+    SetStartLocPrio(8, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(9, 9)
     SetStartLocPrio(9, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(10, 4)
+    SetStartLocPrio(9, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(10, 9)
     SetStartLocPrio(10, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 1, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 2, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 3, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(11, 4)
+    SetStartLocPrio(10, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(11, 9)
     SetStartLocPrio(11, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 1, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 2, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 3, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 8, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(12, 2)
     SetStartLocPrio(12, 0, 5, MAP_LOC_PRIO_LOW)
     SetStartLocPrio(12, 1, 17, MAP_LOC_PRIO_LOW)
@@ -9887,7 +9947,7 @@ function config()
     SetMapDescription("TRIGSTR_005")
     SetPlayers(18)
     SetTeams(18)
-    SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
+    SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)
     DefineStartLocation(0, -11584.0, -4544.0)
     DefineStartLocation(1, -11584.0, -4544.0)
     DefineStartLocation(2, -11584.0, -4544.0)

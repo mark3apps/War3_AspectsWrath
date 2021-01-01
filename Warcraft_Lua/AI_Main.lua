@@ -14,21 +14,23 @@ function AI_MAIN()
 	-- 	mapAI:STATEAbilities(pickedHero)
 	-- end, "mapAI:castSpell")
 
-	mapAI:updateIntel()
+	debugfunc( function()
+		mapAI:updateIntel(i)
 
-	if mapAI:isAlive(i) then
-		mapAI:STATEDead(i)
-		mapAI:STATELowHealth(i)
-		mapAI:STATEStopFleeing(i)
-		mapAI:STATEFleeing(i)
-		mapAI:STATEHighHealth(i)
-		mapAI:STATEAbilities(i)
-		mapAI:STATEcastingSpell(i)
-		mapAI:CleanUp(i)
-	else
-		mapAI:STATERevived(i)
-	end
-	print("Finished")
+		if mapAI:isAlive(i) then
+			mapAI:STATEDead(i)
+			mapAI:STATELowHealth(i)
+			mapAI:STATEStopFleeing(i)
+			mapAI:STATEFleeing(i)
+			mapAI:STATEHighHealth(i)
+			mapAI:STATEAbilities(i)
+			mapAI:STATEcastingSpell(i)
+			mapAI:CleanUp(i)
+		else
+			mapAI:STATERevived(i)
+		end
+		print("Finished")
+	end, "AI STATES")
 end
 
 function InitTrig_AI_MAIN()
@@ -59,17 +61,17 @@ function Computer_Picks()
 				y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 
-			randInt = GetRandomInt(2, 4)
+			randInt = GetRandomInt(2, 2)
 			if (randInt == 1) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0) -- Brawler
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.brawler.id, x, y, 0)
 			elseif (randInt == 2) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00R"), x, y, 0) -- Mana Addict
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.manaAddict.id, x, y, 0)
 			elseif (randInt == 3) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E002"), x, y, 0) -- Shifter
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.shiftMaster.id, x, y, 0)
 			elseif (randInt == 4) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H009"), x, y, 0) -- Tactition
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.tactition.id, x, y, 0)
 			elseif (randInt == 5) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00J"), x, y, 0) -- Time Mage
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.timeMage.id, x, y, 0)
 			end
 
 			UnitAddItemByIdSwapped(FourCC("I000"), udg_TEMP_Unit)
@@ -88,16 +90,16 @@ function Computer_Picks()
 					break
 				end
 
-				if (GetUnitTypeId(udg_TEMP_Unit) == FourCC("E001")) then
-					ReplaceUnitBJ(u, FourCC("h00I"), bj_UNIT_STATE_METHOD_RELATIVE)
-				elseif (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H00R")) then
-					ReplaceUnitBJ(u, FourCC("h00B"), bj_UNIT_STATE_METHOD_RELATIVE)
-				elseif (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H009")) then
-					ReplaceUnitBJ(u, FourCC("h00Y"), bj_UNIT_STATE_METHOD_RELATIVE)
-				elseif (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H00J")) then
-					ReplaceUnitBJ(u, FourCC("h00Z"), bj_UNIT_STATE_METHOD_RELATIVE)
-				elseif (GetUnitTypeId(udg_TEMP_Unit) == FourCC("E002")) then
-					ReplaceUnitBJ(u, FourCC("h00Q"), bj_UNIT_STATE_METHOD_RELATIVE)
+				if (GetUnitTypeId(udg_TEMP_Unit) == hero.brawler.id) then
+					ReplaceUnitBJ(u, hero.brawler.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
+				elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.manaAddict.id) then
+					ReplaceUnitBJ(u, hero.manaAddict.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
+				elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.tactition.id) then
+					ReplaceUnitBJ(u, hero.tactition.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
+				elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.timeMage.id) then
+					ReplaceUnitBJ(u, hero.timeMage.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
+				elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.shiftMaster.id) then
+					ReplaceUnitBJ(u, hero.shiftMaster.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
 
 					UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A031"))
 					UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A005"))

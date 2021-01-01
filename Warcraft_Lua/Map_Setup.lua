@@ -2,7 +2,11 @@ function MapSetup()
 	-- Classes
 	init_SpawnClass()
 	init_AIClass()
-	init_HeroClass()
+	
+	debugfunc( function()
+	 	init_heroClass()
+	end, "init_heroClass")
+	
 
 	-- Globals
 	mapAI = ai.new()

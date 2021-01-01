@@ -46,7 +46,12 @@ function init_AIClass()
 			self[i].unit = heroUnit
 			GroupAddUnit(udg_AI_Heroes, self[i].unit)
 
-			self[i].unitType = GetUnitTypeId(heroUnit)
+			self[i].id = UnitId2String(GetUnitTypeId(heroUnit))
+			print(self[i].id)
+
+			self[i].name = hero[self[i].id]
+			print(self[i].name)
+
 			self[i].player = GetOwningPlayer(heroUnit)
 			self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
 
@@ -78,8 +83,7 @@ function init_AIClass()
 			self[i].unitAttacking = nil
 			self[i].unitChasing = nil
 
-			if self[i].unitType == FourCC("E001") then -- Brawler
-				self[i].name = "Brawler"
+			if self[i].id == hero.brawler then -- Brawler
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.02
 
@@ -97,8 +101,8 @@ function init_AIClass()
 				self[i].clumpRange = 100.00
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 500.00
-			elseif self[i].unitType == FourCC("H00R") then -- Mana Addict
-				self[i].name = "Mana Addict"
+
+			elseif self[i].id == hero.manaAddict then -- Mana Addict
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.75
 
@@ -116,8 +120,8 @@ function init_AIClass()
 				self[i].clumpRange = 100.00
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
-			elseif self[i].unitType == FourCC("H009") then -- Tactition
-				self[i].name = "Tactition"
+
+			elseif self[i].id == hero.tactition then -- Tactition
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.20
 
@@ -134,8 +138,8 @@ function init_AIClass()
 				self[i].clumpRange = 250.00
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
-			elseif self[i].unitType == FourCC("H00J") then -- Time Mage
-				self[i].name = "Time Mage"
+
+			elseif self[i].id == hero.timeMage then -- Time Mage
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.10
 
@@ -153,8 +157,8 @@ function init_AIClass()
 				self[i].clumpRange = 250.00
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 700.00
-			elseif self[i].unitType == FourCC("E002") then -- Shifter
-				self[i].name = "Shifter"
+
+			elseif self[i].id == hero.shiftMaster then -- Shifter
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.15
 
@@ -630,6 +634,7 @@ function init_AIClass()
 
 			-- Mana Shield
 			local curSpell
+			
 			curSpell = hero:spell(self[i], "manaShield")
 
 			if curSpell.castable == true and curSpell.hasBuff == false then
