@@ -16,3 +16,7 @@ function debugfunc(func, name)
   passed = nil
   data = nil
 end
+
+function CC2Four(num)
+  return string.pack(">I4", num)
+end

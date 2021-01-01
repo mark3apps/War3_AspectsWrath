@@ -1,9 +1,9 @@
 function init_AIClass()
 	-- Create the table for the class definition
-	ai = {}
+	ai_Class = {}
 
 	-- Define the new() function
-	ai.new = function()
+	ai_Class.new = function()
 		local self = {}
 		self.heroes = {}
 		self.heroOptions = {
@@ -37,7 +37,7 @@ function init_AIClass()
 			self.tick = 5.00 / I2R(self.count)
 
 			local i = self.heroOptions[self.count]
-			BJDebugMsg("Name: " .. i)
+			print("Name: " .. i)
 
 			table.insert(self.heroes, i)
 
@@ -46,11 +46,16 @@ function init_AIClass()
 			self[i].unit = heroUnit
 			GroupAddUnit(udg_AI_Heroes, self[i].unit)
 
-			self[i].id = UnitId2String(GetUnitTypeId(heroUnit))
-			print(self[i].id)
+			
+			self[i].id = GetUnitTypeId(heroUnit)
+			self[i].four = CC2Four(self[i].id)
+			print("Four: " .. self[i].four)
 
-			self[i].name = hero[self[i].id]
-			print(self[i].name)
+			self[i].name = hero[self[i].four]
+			print("Name" .. self[i].name)
+
+			
+			
 
 			self[i].player = GetOwningPlayer(heroUnit)
 			self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
@@ -83,7 +88,7 @@ function init_AIClass()
 			self[i].unitAttacking = nil
 			self[i].unitChasing = nil
 
-			if self[i].id == hero.brawler then -- Brawler
+			if self[i].four == hero.brawler.four then -- Brawler
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.02
 
@@ -102,7 +107,7 @@ function init_AIClass()
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 500.00
 
-			elseif self[i].id == hero.manaAddict then -- Mana Addict
+			elseif self[i].four == hero.manaAddict.four then -- Mana Addict
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.75
 
@@ -121,7 +126,7 @@ function init_AIClass()
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
 
-			elseif self[i].id == hero.tactition then -- Tactition
+			elseif self[i].four == hero.tactition.four then -- Tactition
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.20
 
@@ -139,7 +144,7 @@ function init_AIClass()
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
 
-			elseif self[i].id == hero.timeMage then -- Time Mage
+			elseif self[i].four == hero.timeMage.four then -- Time Mage
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.10
 
@@ -158,7 +163,7 @@ function init_AIClass()
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 700.00
 
-			elseif self[i].id == hero.shiftMaster then -- Shifter
+			elseif self[i].four == hero.shiftMaster.four then -- Shifter
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.15
 
@@ -397,20 +402,22 @@ function init_AIClass()
 			end
 		end
 
+
 		-- AI Run Specifics
 		function self:STATEAbilities(i)
-			if self[i].name == "Mana Addict" then
+			if self[i].name == "manaAddict" then
 				self:manaAddictAI(i)
-			elseif self[i].name == "Brawler" then
+			elseif self[i].name == "brawler" then
 				self:brawlerAI(i)
-			elseif self[i].name == "Shifter" then
-				self:shifterAI(i)
-			elseif self[i].name == "Tactition" then
+			elseif self[i].name == "shiftMaster" then
+				self:shiftMasterAI(i)
+			elseif self[i].name == "tactition" then
 				self:tactitionAI(i)
-			elseif self[i].name == "Time Mage" then
+			elseif self[i].name == "timeMage" then
 				self:timeMageAI(i)
 			end
 		end
+
 
 		-- AI has Low Health
 		function self:STATELowHealth(i)
@@ -639,7 +646,7 @@ function init_AIClass()
 
 			if curSpell.castable == true and curSpell.hasBuff == false then
 				print("Casting Mana Shield")
-				IssueImmediateOrder(self[i].unit, curSpell.string)
+				IssueImmediateOrder(self[i].unit, curSpell.order)
 				self:castSpell(i)
 			end
 
@@ -648,10 +655,10 @@ function init_AIClass()
 
 			if self[i].casting == false then
 				-- Mana Drain
-				local curSpell = hero:spell(self[i], "manaDrain")
+				local curSpell = hero:spell(self[i], "manaOverload")
 				if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
 					print("Casting Mana Overload")
-					IssueImmediateOrder(self[i].unit, curSpell.string)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
 					self:castSpell(i)
 				end
 			end
@@ -664,18 +671,25 @@ function init_AIClass()
 				local curSpell = hero:spell(self[i], "frostNova")
 				if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
 					print("Frost Nova")
-					IssuePointOrder(self[i].unit, curSpell.string, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
+					IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
 					self:castSpell(i)
 				end
 			end
 		end
+
+
+
 
 		function self:brawlerAI(i)
 			if self[i].casting == false then
 			end
 		end
 
-		function self:shifterAI(i)
+
+
+
+		-- Shift Master Spell AI
+		function self:shiftMasterAI(i)
 			local shiftBackLevel = GetUnitAbilityLevel(self[i].unit, shiftBack.spell)
 			local shiftForwardLevel = GetUnitAbilityLevel(self[i].unit, shiftForward.spell)
 
@@ -803,7 +817,7 @@ function init_AIClass()
 						self[i].lifePercent < 85
 				 then
 					-- Bolster
-					IssueImmediateOrder(self[i].unit, ironDefense.string)
+					IssueImmediateOrder(self[i].unit, ironDefense.id)
 					self:castSpell(i)
 				elseif
 					BlzGetUnitAbilityCooldownRemaining(self[i].unit, bolster.spell) == 0.00 and
@@ -813,7 +827,7 @@ function init_AIClass()
 						self[i].countUnitEnemy > 2
 				 then
 					-- Attack
-					IssueImmediateOrder(self[i].unit, bolster.string)
+					IssueImmediateOrder(self[i].unit, bolster.id)
 					self:castSpell(i, 2)
 				elseif
 					BlzGetUnitAbilityCooldownRemaining(self[i].unit, attack.spell) == 0.00 and

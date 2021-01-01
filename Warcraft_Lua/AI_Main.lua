@@ -1,33 +1,33 @@
 function AI_MAIN()
 
-	if mapAI.loop >= mapAI.count then
-		mapAI.loop = 1
+	if ai.loop >= ai.count then
+		ai.loop = 1
 	else
-		mapAI.loop = mapAI.loop + 1
+		ai.loop = ai.loop + 1
 	end
 
 	--print(" -- ")
-	local i = mapAI.heroOptions[mapAI.loop]
-	print(mapAI[i].name)
+	local i = ai.heroOptions[ai.loop]
+	print(ai[i].name)
 	
 	-- debugfunc( function()
-	-- 	mapAI:STATEAbilities(pickedHero)
-	-- end, "mapAI:castSpell")
+	-- 	ai:STATEAbilities(pickedHero)
+	-- end, "ai:castSpell")
 
 	debugfunc( function()
-		mapAI:updateIntel(i)
+		ai:updateIntel(i)
 
-		if mapAI:isAlive(i) then
-			mapAI:STATEDead(i)
-			mapAI:STATELowHealth(i)
-			mapAI:STATEStopFleeing(i)
-			mapAI:STATEFleeing(i)
-			mapAI:STATEHighHealth(i)
-			mapAI:STATEAbilities(i)
-			mapAI:STATEcastingSpell(i)
-			mapAI:CleanUp(i)
+		if ai:isAlive(i) then
+			ai:STATEDead(i)
+			ai:STATELowHealth(i)
+			ai:STATEStopFleeing(i)
+			ai:STATEFleeing(i)
+			ai:STATEHighHealth(i)
+			ai:STATEAbilities(i)
+			ai:STATEcastingSpell(i)
+			ai:CleanUp(i)
 		else
-			mapAI:STATERevived(i)
+			ai:STATERevived(i)
 		end
 		print("Finished")
 	end, "AI STATES")
@@ -37,6 +37,7 @@ function InitTrig_AI_MAIN()
 	Trig_AI_MAIN = CreateTrigger()
 	TriggerAddAction(Trig_AI_MAIN, AI_MAIN)
 end
+
 
 function Computer_Picks()
 	local i = 1
@@ -79,7 +80,11 @@ function Computer_Picks()
 			ConditionalTriggerExecute(gg_trg_Hero_Add_Starting_Abilities)
 
 			BJDebugMsg("Creating New Hero")
-			mapAI:initHero(udg_TEMP_Unit)
+
+			debugfunc( function()
+				ai:initHero(udg_TEMP_Unit)
+			end, "Init Hero")
+
 			BJDebugMsg("Finished Creating New hero")
 
 			g = GetUnitsOfPlayerAndTypeId(selPlayer, FourCC("halt"))
@@ -113,10 +118,10 @@ function Computer_Picks()
 			DestroyGroup(g)
 		end
 
-		if (i >= 12 and mapAI.count > 0) then
-			BJDebugMsg("Heroes:" .. I2S(mapAI.count))
-			print("Loop:" .. R2S(mapAI.tick))
-			TriggerRegisterTimerEvent(Trig_AI_MAIN, mapAI.tick, true)
+		if (i >= 12 and ai.count > 0) then
+			BJDebugMsg("Heroes:" .. I2S(ai.count))
+			print("Loop:" .. R2S(ai.tick))
+			TriggerRegisterTimerEvent(Trig_AI_MAIN, ai.tick, true)
 			
 		end
 
@@ -148,11 +153,11 @@ function InitTrig_AI_Spell_Start()
 		function()
 			debugfunc(
 				function()
-					local pickedHero = mapAI.heroOptions[S2I(GetUnitUserData(GetTriggerUnit()))]
+					local pickedHero = ai.heroOptions[S2I(GetUnitUserData(GetTriggerUnit()))]
 
-					mapAI:castSpell(pickedHero)
+					ai:castSpell(pickedHero)
 				end,
-				"mapAI:castSpell"
+				"ai:castSpell"
 			)
 		end
 	)

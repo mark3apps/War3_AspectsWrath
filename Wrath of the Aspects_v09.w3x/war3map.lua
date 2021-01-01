@@ -862,26 +862,44 @@ function InitGlobals()
 end
 
 function MapSetup()
-	-- Classes
-	init_SpawnClass()
-	init_AIClass()
-	
-	debugfunc( function()
-	 	init_heroClass()
-	end, "init_heroClass")
-	
 
-	-- Globals
-	mapAI = ai.new()
-	hero = heroClass.new()
+	-- Define Classes
+	debugfunc(
+		function()
+			init_heroClass()
+			init_SpawnClass()
+			init_AIClass()
+		end,
+		"Define Classes"
+	)
 
-	-- Trigger Init
-	initTrig_Auto_Zoom()
-	InitTrig_AI_MAIN()
-	InitTrig_Computer_Picks()
+	-- Init Classes
+	debugfunc(
+		function()
+			hero = hero_Class.new()
+		end,
+		"Init Heroes"
+	)
+	debugfunc(
+		function()
+			ai = ai_Class.new()
+		end,
+		"Init AI"
+	)
 
-	InitTrig_Hero_Level_Up()
-	InitTrig_AI_Spell_Start()
+
+	-- Init Trigger
+	debugfunc(
+		function()
+			initTrig_Auto_Zoom()
+			InitTrig_AI_MAIN()
+			InitTrig_Computer_Picks()
+
+			InitTrig_Hero_Level_Up()
+			InitTrig_AI_Spell_Start()
+		end,
+		"Init Triggers"
+	)
 
 	-- Spawn
 	spawnSetup()
@@ -907,36 +925,40 @@ function debugfunc(func, name)
   data = nil
 end
 
+function CC2Four(num)
+  return string.pack(">I4", num)
+end
+
 function AI_MAIN()
 
-	if mapAI.loop >= mapAI.count then
-		mapAI.loop = 1
+	if ai.loop >= ai.count then
+		ai.loop = 1
 	else
-		mapAI.loop = mapAI.loop + 1
+		ai.loop = ai.loop + 1
 	end
 
 	--print(" -- ")
-	local i = mapAI.heroOptions[mapAI.loop]
-	print(mapAI[i].name)
+	local i = ai.heroOptions[ai.loop]
+	print(ai[i].name)
 	
 	-- debugfunc( function()
-	-- 	mapAI:STATEAbilities(pickedHero)
-	-- end, "mapAI:castSpell")
+	-- 	ai:STATEAbilities(pickedHero)
+	-- end, "ai:castSpell")
 
 	debugfunc( function()
-		mapAI:updateIntel(i)
+		ai:updateIntel(i)
 
-		if mapAI:isAlive(i) then
-			mapAI:STATEDead(i)
-			mapAI:STATELowHealth(i)
-			mapAI:STATEStopFleeing(i)
-			mapAI:STATEFleeing(i)
-			mapAI:STATEHighHealth(i)
-			mapAI:STATEAbilities(i)
-			mapAI:STATEcastingSpell(i)
-			mapAI:CleanUp(i)
+		if ai:isAlive(i) then
+			ai:STATEDead(i)
+			ai:STATELowHealth(i)
+			ai:STATEStopFleeing(i)
+			ai:STATEFleeing(i)
+			ai:STATEHighHealth(i)
+			ai:STATEAbilities(i)
+			ai:STATEcastingSpell(i)
+			ai:CleanUp(i)
 		else
-			mapAI:STATERevived(i)
+			ai:STATERevived(i)
 		end
 		print("Finished")
 	end, "AI STATES")
@@ -946,6 +968,7 @@ function InitTrig_AI_MAIN()
 	Trig_AI_MAIN = CreateTrigger()
 	TriggerAddAction(Trig_AI_MAIN, AI_MAIN)
 end
+
 
 function Computer_Picks()
 	local i = 1
@@ -972,15 +995,15 @@ function Computer_Picks()
 
 			randInt = GetRandomInt(2, 2)
 			if (randInt == 1) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E001"), x, y, 0) -- Brawler
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.brawler.id, x, y, 0)
 			elseif (randInt == 2) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00R"), x, y, 0) -- Mana Addict
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.manaAddict.id, x, y, 0)
 			elseif (randInt == 3) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("E002"), x, y, 0) -- Shifter
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.shiftMaster.id, x, y, 0)
 			elseif (randInt == 4) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H009"), x, y, 0) -- Tactition
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.tactition.id, x, y, 0)
 			elseif (randInt == 5) then
-				udg_TEMP_Unit = CreateUnit(selPlayer, FourCC("H00J"), x, y, 0) -- Time Mage
+				udg_TEMP_Unit = CreateUnit(selPlayer, hero.timeMage.id, x, y, 0)
 			end
 
 			UnitAddItemByIdSwapped(FourCC("I000"), udg_TEMP_Unit)
@@ -988,7 +1011,11 @@ function Computer_Picks()
 			ConditionalTriggerExecute(gg_trg_Hero_Add_Starting_Abilities)
 
 			BJDebugMsg("Creating New Hero")
-			mapAI:initHero(udg_TEMP_Unit)
+
+			debugfunc( function()
+				ai:initHero(udg_TEMP_Unit)
+			end, "Init Hero")
+
 			BJDebugMsg("Finished Creating New hero")
 
 			g = GetUnitsOfPlayerAndTypeId(selPlayer, FourCC("halt"))
@@ -999,16 +1026,16 @@ function Computer_Picks()
 					break
 				end
 
-				if (GetUnitTypeId(udg_TEMP_Unit) == FourCC("E001")) then
-					ReplaceUnitBJ(u, FourCC("h00I"), bj_UNIT_STATE_METHOD_RELATIVE)
-				elseif (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H00R")) then
-					ReplaceUnitBJ(u, FourCC("h00B"), bj_UNIT_STATE_METHOD_RELATIVE)
-				elseif (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H009")) then
-					ReplaceUnitBJ(u, FourCC("h00Y"), bj_UNIT_STATE_METHOD_RELATIVE)
-				elseif (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H00J")) then
-					ReplaceUnitBJ(u, FourCC("h00Z"), bj_UNIT_STATE_METHOD_RELATIVE)
-				elseif (GetUnitTypeId(udg_TEMP_Unit) == FourCC("E002")) then
-					ReplaceUnitBJ(u, FourCC("h00Q"), bj_UNIT_STATE_METHOD_RELATIVE)
+				if (GetUnitTypeId(udg_TEMP_Unit) == hero.brawler.id) then
+					ReplaceUnitBJ(u, hero.brawler.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
+				elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.manaAddict.id) then
+					ReplaceUnitBJ(u, hero.manaAddict.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
+				elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.tactition.id) then
+					ReplaceUnitBJ(u, hero.tactition.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
+				elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.timeMage.id) then
+					ReplaceUnitBJ(u, hero.timeMage.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
+				elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.shiftMaster.id) then
+					ReplaceUnitBJ(u, hero.shiftMaster.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
 
 					UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A031"))
 					UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A005"))
@@ -1022,10 +1049,10 @@ function Computer_Picks()
 			DestroyGroup(g)
 		end
 
-		if (i >= 12 and mapAI.count > 0) then
-			BJDebugMsg("Heroes:" .. I2S(mapAI.count))
-			print("Loop:" .. R2S(mapAI.tick))
-			TriggerRegisterTimerEvent(Trig_AI_MAIN, mapAI.tick, true)
+		if (i >= 12 and ai.count > 0) then
+			BJDebugMsg("Heroes:" .. I2S(ai.count))
+			print("Loop:" .. R2S(ai.tick))
+			TriggerRegisterTimerEvent(Trig_AI_MAIN, ai.tick, true)
 			
 		end
 
@@ -1057,11 +1084,11 @@ function InitTrig_AI_Spell_Start()
 		function()
 			debugfunc(
 				function()
-					local pickedHero = mapAI.heroOptions[S2I(GetUnitUserData(GetTriggerUnit()))]
+					local pickedHero = ai.heroOptions[S2I(GetUnitUserData(GetTriggerUnit()))]
 
-					mapAI:castSpell(pickedHero)
+					ai:castSpell(pickedHero)
 				end,
-				"mapAI:castSpell"
+				"ai:castSpell"
 			)
 		end
 	)
@@ -1128,65 +1155,66 @@ end
 
 function init_heroClass()
     -- Create Class Definition
-    heroClass = {}
+    hero_Class = {}
 
     -- Define new() function
-    heroClass.new = function()
+    hero_Class.new = function()
         local self = {}
 
         self.E001 = "brawler"
         self.brawler = {}
-        self.brawler.string = "E001"
-        self.brawler.alter = "h00I"
-        self.brawler.idAlter = FourCC(self.brawler.alter)
-        self.brawler.id = FourCC(self.brawler.string)
+        self.brawler.four = "E001"
+        self.brawler.fourAlter = "h00I"
+        self.brawler.id = FourCC(self.brawler.four)
+        self.brawler.idAlter = FourCC(self.brawler.fourAlter)
+
 
         self.H009 = "tactition"
         self.tactition = {}
-        self.tactition.string = "H009"
-        self.tactition.alter = "h00Y"
-        self.tactition.idAlter = FourCC(self.tactition.alter)
-        self.tactition.id = FourCC(self.tactition.string)
-        self.tactition.ironDefense = {string = "A019", id = FourCC("A019"), buff = nil, order = "roar", ult = false}
-        self.tactition.raiseBanner = {string = "A01I", id = FourCC("A01I"), buff = nil, order = "healingward", ult = false}
-        self.tactition.attack = {string = "A01B", id = FourCC("A01B"), buff = nil, order = "fingerofdeath", ult = false}
-        self.tactition.bolster = {string = "A01Z", id = FourCC("A01Z"), buff = nil, order = "tranquility", ult = false}
-        self.tactition.inspire = {string = "A042", id = FourCC("A042"), buff = nil, order = "channel", ult = true}
+        self.tactition.four = "H009"
+        self.tactition.fourAlter = "h00Y"
+        self.tactition.id = FourCC(self.tactition.four)
+        self.tactition.idAlter = FourCC(self.tactition.fourAlter)
+        self.tactition.ironDefense = {four = "A019", id = FourCC("A019"), buff = 0, order = "roar", ult = false}
+        self.tactition.raiseBanner = {four = "A01I", id = FourCC("A01I"), buff = 0, order = "healingward", ult = false}
+        self.tactition.attack = {four = "A01B", id = FourCC("A01B"), buff = 0, order = "fingerofdeath", ult = false}
+        self.tactition.bolster = {four = "A01Z", id = FourCC("A01Z"), buff = 0, order = "tranquility", ult = false}
+        self.tactition.inspire = {four = "A042", id = FourCC("A042"), buff = 0, order = "channel", ult = true}
 
         self.E002 = "shiftMaster"
         self.shiftMaster = {}
-        self.shiftMaster.string = "E002"
-        self.shiftMaster.alter = "h00Q"
-        self.shiftMaster.idAlter = FourCC(self.shiftMaster.alter)
-        self.shiftMaster.id = FourCC(self.shiftMaster.string)
-        self.shiftMaster.shiftBack = {string = "A03U", id = FourCC("A03U"), buff = nil, order = "stomp", ult = false}
-        self.shiftMaster.shiftForward = {string = "A030", id = FourCC("A030"), buff = nil, order = "thunderclap", ult = false}
-        self.shiftMaster.fallingStrike = {string = "A03T", id = FourCC("A03T"), buff = nil, order = "clusterrockets", ult = false}
-        self.shiftMaster.shiftStorm = {string = "A03C", id = FourCC("A03C"), buff = nil, order = "channel", ult = true}
-        self.shiftMaster.felForm = {string = "A02Y", id = FourCC("A02Y"), buff = nil, order = "metamorphosis", ult = true}
+        self.shiftMaster.four = "E002"
+        self.shiftMaster.fourAlter = "h00Q"
+        self.shiftMaster.id = FourCC(self.shiftMaster.four)
+        self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
+        self.shiftMaster.shiftBack = {four = "A03U", id = FourCC("A03U"), buff = 0, order = "stomp", ult = false}
+        self.shiftMaster.shiftForward = {four = "A030", id = FourCC("A030"), buff = 0, order = "thunderclap", ult = false}
+        self.shiftMaster.fallingStrike = {four = "A03T", id = FourCC("A03T"), buff = 0, order = "clusterrockets", ult = false}
+        self.shiftMaster.shiftStorm = {four = "A03C", id = FourCC("A03C"), buff = 0, order = "channel", ult = true}
+        self.shiftMaster.felForm = {four = "A02Y", id = FourCC("A02Y"), buff = 0, order = "metamorphosis", ult = true}
 
         self.H00R = "manaAddict"
         self.manaAddict = {}
-        self.manaAddict.string = "H00R"
-        self.manaAddict.alter = "h00B"
-        self.manaAddict.idAlter = FourCC(self.manaAddict.alter)
-        self.manaAddict.id = FourCC(self.manaAddict.string)
-        self.manaAddict.manaShield = {string = "A001", id = FourCC("A001"), buff = FourCC("BNms"), order = "manashieldon", ult = false}
-        self.manaAddict.frostNova = {string = "A03S", id = FourCC("A03S"), buff = nil, order = "flamestrike", ult = false}
-        self.manaAddict.manaOverload = {string = "A018", id = FourCC("A018"), buff = nil, order = "manashield", ult = false}
-        self.manaAddict.manaBurst = {string = "A02B", id = FourCC("A02B"), buff = nil, order = "custerrockets", ult = false}
-        self.manaAddict.starfall = {string = "A015", id = FourCC("A015"), buff = nil, order = "starfall", ult = true}
+        self.manaAddict.four = "H00R"
+        self.manaAddict.fourAlter = "h00B"
+        self.manaAddict.id = FourCC(self.manaAddict.four)
+        self.manaAddict.idAlter = FourCC(self.manaAddict.fourAlter)
+        self.manaAddict.manaShield = {four = "A001", id = FourCC("A001"), buff = FourCC("BNms"), order = "manashieldon", ult = false}
+        self.manaAddict.frostNova = {four = "A03S", id = FourCC("A03S"), buff = 0, order = "flamestrike", ult = false}
+        self.manaAddict.manaOverload = {four = "A018", id = FourCC("A018"), buff = 0, order = "manashield", ult = false}
+        self.manaAddict.manaBurst = {four = "A02B", id = FourCC("A02B"), buff = 0, order = "custerrockets", ult = false}
+        self.manaAddict.starfall = {four = "A015", id = FourCC("A015"), buff = 0, order = "starfall", ult = true}
 
         self.H00J = "timeMage"
         self.timeMage = {}
-        self.timeMage.string = "H00J"
-        self.timeMage.alter = "h00Z"
-        self.timeMage.idAlter = FourCC(self.timeMage.alter)
-        self.timeMage.id = FourCC(self.timeMage.string)
-        self.timeMage.chronoAtrophy = {string = "A04K", id = FourCC("A04K"), buff = nil, order = "flamestrike", ult = false}
-        self.timeMage.decay = {string = "A032", id = FourCC("A032"), buff = nil, order = "shadowstrike", ult = false}
-        self.timeMage.timeTravel = {string = "A04P", id = FourCC("A04P"), buff = nil, order = "clusterrockets", ult = false}
-        self.timeMage.paradox = {string = "A04N", id = FourCC("A04N"), buff = nil, order = "tranquility", ult = true}
+        self.timeMage.four = "H00J"
+        self.timeMage.fourAlter = "h00Z"
+        self.timeMage.id = FourCC(self.timeMage.four)
+        self.timeMage.idAlter = FourCC(self.timeMage.fourAlter)
+        self.timeMage.chronoAtrophy = {four = "A04K", id = FourCC("A04K"), buff = 0, order = "flamestrike", ult = false}
+        self.timeMage.decay = {four = "A032", id = FourCC("A032"), buff = 0, order = "shadowstrike", ult = false}
+        self.timeMage.timeTravel = {four = "A04P", id = FourCC("A04P"), buff = 0, order = "clusterrockets", ult = false}
+        self.timeMage.paradox = {four = "A04N", id = FourCC("A04N"), buff = 0, order = "tranquility", ult = true}
 
 
         function self:spell( heroUnit, spellName )
@@ -1194,14 +1222,17 @@ function init_heroClass()
             spellDetails.level = self:level(heroUnit, spellName)
             spellDetails.cooldown = self:cooldown(heroUnit, spellName)
             spellDetails.hasBuff = self:hasBuff(heroUnit, spellName)
-            spellDetails.mana = self:mana(heroUnit, spellName, level)
+            spellDetails.mana = self:mana(heroUnit, spellName, spellDetails.level)
             spellDetails.manaLeft = heroUnit.mana - spellDetails.mana
 
             if spellDetails.level > 0 and spellDetails.cooldown == 0 and spellDetails.manaLeft >= 0 then
-                spellDetails.cacastablest = true
+                spellDetails.castable = true
             else
                 spellDetails.castable = false
             end
+
+            print(spellName .. " : " .. spellDetails.level)
+            print("Castable: " .. tostring(spellDetails.castable))
 
             return spellDetails
         end
@@ -1220,10 +1251,10 @@ function init_heroClass()
 
         function self:hasBuff(heroUnit, spellName)
 
-            if self[heroUnit.id][spellName].buff == nil then
+            if self[heroUnit.name][spellName].buff == 0 then
                 return false
             else
-                return UnitHasBuffBJ(heroUnit.unit, self[heroUnit.id][spellName].buff)
+                return UnitHasBuffBJ(heroUnit.unit, self[heroUnit.name][spellName].buff)
             end
         end
 
@@ -1234,10 +1265,10 @@ end
 
 function init_AIClass()
 	-- Create the table for the class definition
-	ai = {}
+	ai_Class = {}
 
 	-- Define the new() function
-	ai.new = function()
+	ai_Class.new = function()
 		local self = {}
 		self.heroes = {}
 		self.heroOptions = {
@@ -1271,7 +1302,7 @@ function init_AIClass()
 			self.tick = 5.00 / I2R(self.count)
 
 			local i = self.heroOptions[self.count]
-			BJDebugMsg("Name: " .. i)
+			print("Name: " .. i)
 
 			table.insert(self.heroes, i)
 
@@ -1280,11 +1311,16 @@ function init_AIClass()
 			self[i].unit = heroUnit
 			GroupAddUnit(udg_AI_Heroes, self[i].unit)
 
-			self[i].id = UnitId2String(GetUnitTypeId(heroUnit))
-			print(self[i].id)
+			
+			self[i].id = GetUnitTypeId(heroUnit)
+			self[i].four = CC2Four(self[i].id)
+			print("Four: " .. self[i].four)
 
-			self[i].name = hero[self[i].id]
-			print(self[i].name)
+			self[i].name = hero[self[i].four]
+			print("Name" .. self[i].name)
+
+			
+			
 
 			self[i].player = GetOwningPlayer(heroUnit)
 			self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
@@ -1317,7 +1353,7 @@ function init_AIClass()
 			self[i].unitAttacking = nil
 			self[i].unitChasing = nil
 
-			if self[i].id == hero.brawler then -- Brawler
+			if self[i].four == hero.brawler.four then -- Brawler
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.02
 
@@ -1336,7 +1372,7 @@ function init_AIClass()
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 500.00
 
-			elseif self[i].id == hero.manaAddict then -- Mana Addict
+			elseif self[i].four == hero.manaAddict.four then -- Mana Addict
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.75
 
@@ -1355,7 +1391,7 @@ function init_AIClass()
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
 
-			elseif self[i].id == hero.tactition then -- Tactition
+			elseif self[i].four == hero.tactition.four then -- Tactition
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.20
 
@@ -1373,7 +1409,7 @@ function init_AIClass()
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
 
-			elseif self[i].id == hero.timeMage then -- Time Mage
+			elseif self[i].four == hero.timeMage.four then -- Time Mage
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.10
 
@@ -1392,7 +1428,7 @@ function init_AIClass()
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 700.00
 
-			elseif self[i].id == hero.shiftMaster then -- Shifter
+			elseif self[i].four == hero.shiftMaster.four then -- Shifter
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.15
 
@@ -1631,20 +1667,22 @@ function init_AIClass()
 			end
 		end
 
+
 		-- AI Run Specifics
 		function self:STATEAbilities(i)
-			if self[i].name == "Mana Addict" then
+			if self[i].name == "manaAddict" then
 				self:manaAddictAI(i)
-			elseif self[i].name == "Brawler" then
+			elseif self[i].name == "brawler" then
 				self:brawlerAI(i)
-			elseif self[i].name == "Shifter" then
-				self:shifterAI(i)
-			elseif self[i].name == "Tactition" then
+			elseif self[i].name == "shiftMaster" then
+				self:shiftMasterAI(i)
+			elseif self[i].name == "tactition" then
 				self:tactitionAI(i)
-			elseif self[i].name == "Time Mage" then
+			elseif self[i].name == "timeMage" then
 				self:timeMageAI(i)
 			end
 		end
+
 
 		-- AI has Low Health
 		function self:STATELowHealth(i)
@@ -1873,7 +1911,7 @@ function init_AIClass()
 
 			if curSpell.castable == true and curSpell.hasBuff == false then
 				print("Casting Mana Shield")
-				IssueImmediateOrder(self[i].unit, curSpell.string)
+				IssueImmediateOrder(self[i].unit, curSpell.order)
 				self:castSpell(i)
 			end
 
@@ -1882,10 +1920,10 @@ function init_AIClass()
 
 			if self[i].casting == false then
 				-- Mana Drain
-				local curSpell = hero:spell(self[i], "manaDrain")
+				local curSpell = hero:spell(self[i], "manaOverload")
 				if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
 					print("Casting Mana Overload")
-					IssueImmediateOrder(self[i].unit, curSpell.string)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
 					self:castSpell(i)
 				end
 			end
@@ -1898,18 +1936,25 @@ function init_AIClass()
 				local curSpell = hero:spell(self[i], "frostNova")
 				if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
 					print("Frost Nova")
-					IssuePointOrder(self[i].unit, curSpell.string, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
+					IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
 					self:castSpell(i)
 				end
 			end
 		end
+
+
+
 
 		function self:brawlerAI(i)
 			if self[i].casting == false then
 			end
 		end
 
-		function self:shifterAI(i)
+
+
+
+		-- Shift Master Spell AI
+		function self:shiftMasterAI(i)
 			local shiftBackLevel = GetUnitAbilityLevel(self[i].unit, shiftBack.spell)
 			local shiftForwardLevel = GetUnitAbilityLevel(self[i].unit, shiftForward.spell)
 
@@ -2037,7 +2082,7 @@ function init_AIClass()
 						self[i].lifePercent < 85
 				 then
 					-- Bolster
-					IssueImmediateOrder(self[i].unit, ironDefense.string)
+					IssueImmediateOrder(self[i].unit, ironDefense.id)
 					self:castSpell(i)
 				elseif
 					BlzGetUnitAbilityCooldownRemaining(self[i].unit, bolster.spell) == 0.00 and
@@ -2047,7 +2092,7 @@ function init_AIClass()
 						self[i].countUnitEnemy > 2
 				 then
 					-- Attack
-					IssueImmediateOrder(self[i].unit, bolster.string)
+					IssueImmediateOrder(self[i].unit, bolster.id)
 					self:castSpell(i, 2)
 				elseif
 					BlzGetUnitAbilityCooldownRemaining(self[i].unit, attack.spell) == 0.00 and
