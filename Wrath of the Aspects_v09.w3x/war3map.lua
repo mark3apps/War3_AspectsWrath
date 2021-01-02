@@ -993,7 +993,7 @@ function Computer_Picks()
 				y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 
-			randInt = GetRandomInt(2, 2)
+			randInt = GetRandomInt(3, 3)
 			if (randInt == 1) then
 				udg_TEMP_Unit = CreateUnit(selPlayer, hero.brawler.id, x, y, 0)
 			elseif (randInt == 2) then
@@ -1102,52 +1102,11 @@ function InitTrig_Hero_Level_Up()
 		t,
 		function()
 			-- Get Locals
-			local heroLevel = GetHeroLevel(GetLevelingUnit())
 			local u = GetLevelingUnit()
-			local uType = GetUnitTypeId(u)
 
-			-- Remove Ability Points
-			if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
-				ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-			elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
-				ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-			elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
-				ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-			end
-
-			-- If Computer, Learn Abilities
-			if GetPlayerController(GetOwningPlayer(u)) == MAP_CONTROL_COMPUTER then
-				if uType == FourCC("H00R") then -- Mana Addict
-					SelectHeroSkill(u, FourCC("A015")) -- Starfall
-					SelectHeroSkill(u, FourCC("A001")) -- Mana Shield
-					SelectHeroSkill(u, FourCC("A03S")) -- Frost Nova
-					SelectHeroSkill(u, FourCC("A018")) -- Mana Overload
-					SelectHeroSkill(u, FourCC("A02B")) -- Mana Burst
-				elseif uType == FourCC("E001") then -- Brawler
-					SelectHeroSkill(u, FourCC("A029")) -- Unleash Rage
-					SelectHeroSkill(u, FourCC("A01Y")) -- Drain
-					SelectHeroSkill(u, FourCC("A007")) -- Bloodlust
-					SelectHeroSkill(u, FourCC("A002")) -- War Stomp
-				elseif uType == FourCC("E002") then -- Shifter
-					SelectHeroSkill(u, FourCC("A03C")) -- Shifting Bladestorm
-					SelectHeroSkill(u, FourCC("A02Y")) -- Fel Form
-					SelectHeroSkill(u, FourCC("A03U")) -- Shift Back
-					SelectHeroSkill(u, FourCC("A030")) -- Shift Forwards
-					SelectHeroSkill(u, FourCC("A03T")) -- Falling Strike
-				elseif uType == FourCC("H009") then -- Tactition
-					SelectHeroSkill(u, FourCC("A042")) -- Inspire
-					SelectHeroSkill(u, FourCC("A01I")) -- Raise Banner
-					SelectHeroSkill(u, FourCC("A01B")) -- Attack
-					SelectHeroSkill(u, FourCC("A01Z")) -- Bolster
-					SelectHeroSkill(u, FourCC("A019")) -- Iron Defense
-				elseif uType == FourCC("H00J") then -- Time Mage
-					SelectHeroSkill(u, FourCC("A04N")) -- Paradox
-					SelectHeroSkill(u, FourCC("A04I")) -- Dimensional Phase
-					SelectHeroSkill(u, FourCC("A04P")) -- Time Travel
-					SelectHeroSkill(u, FourCC("A04K")) -- Chrono Atrophy
-					SelectHeroSkill(u, FourCC("A032")) -- Decay
-				end
-			end
+			debugfunc(function()
+				hero.levelUp(u)
+			end, "hero.levelUp")
 		end
 	)
 end
@@ -1167,6 +1126,11 @@ function init_heroClass()
         self.brawler.fourAlter = "h00I"
         self.brawler.id = FourCC(self.brawler.four)
         self.brawler.idAlter = FourCC(self.brawler.fourAlter)
+        self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
+        self.brawler.drain = {name="Drain", four = "A01Y", id = FourCC("A01Y"), buff = 0, order = "stomp", ult = false}
+        self.brawler.bloodlust = {name="Bloodlust", four = "A007", id = FourCC("A007"), buff = 0, order = "stomp", ult = false}
+        self.brawler.warstomp = {name="War Stomp", four = "A002", id = FourCC("A002"), buff = 0, order = "stomp", ult = false}
+        self.brawler.unleashRage = {name="Unleassh Rage", four = "A029", id = FourCC("A029"), buff = 0, order = "stomp", ult = true}
 
 
         self.H009 = "tactition"
@@ -1175,11 +1139,12 @@ function init_heroClass()
         self.tactition.fourAlter = "h00Y"
         self.tactition.id = FourCC(self.tactition.four)
         self.tactition.idAlter = FourCC(self.tactition.fourAlter)
-        self.tactition.ironDefense = {four = "A019", id = FourCC("A019"), buff = 0, order = "roar", ult = false}
-        self.tactition.raiseBanner = {four = "A01I", id = FourCC("A01I"), buff = 0, order = "healingward", ult = false}
-        self.tactition.attack = {four = "A01B", id = FourCC("A01B"), buff = 0, order = "fingerofdeath", ult = false}
-        self.tactition.bolster = {four = "A01Z", id = FourCC("A01Z"), buff = 0, order = "tranquility", ult = false}
-        self.tactition.inspire = {four = "A042", id = FourCC("A042"), buff = 0, order = "channel", ult = true}
+        self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
+        self.tactition.ironDefense = {name="Iron Defense", four = "A019", id = FourCC("A019"), buff = 0, order = "roar", ult = false}
+        self.tactition.raiseBanner = {name="Raise Banner", four = "A01I", id = FourCC("A01I"), buff = 0, order = "healingward", ult = false}
+        self.tactition.attack = {name="Attack!", four = "A01B", id = FourCC("A01B"), buff = 0, order = "fingerofdeath", ult = false}
+        self.tactition.bolster = {name="Bolster", four = "A01Z", id = FourCC("A01Z"), buff = 0, order = "tranquility", ult = false}
+        self.tactition.inspire = {name="Inspire", four = "A042", id = FourCC("A042"), buff = 0, order = "channel", ult = true}
 
         self.E002 = "shiftMaster"
         self.shiftMaster = {}
@@ -1187,11 +1152,12 @@ function init_heroClass()
         self.shiftMaster.fourAlter = "h00Q"
         self.shiftMaster.id = FourCC(self.shiftMaster.four)
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
-        self.shiftMaster.shiftBack = {four = "A03U", id = FourCC("A03U"), buff = 0, order = "stomp", ult = false}
-        self.shiftMaster.shiftForward = {four = "A030", id = FourCC("A030"), buff = 0, order = "thunderclap", ult = false}
-        self.shiftMaster.fallingStrike = {four = "A03T", id = FourCC("A03T"), buff = 0, order = "clusterrockets", ult = false}
-        self.shiftMaster.shiftStorm = {four = "A03C", id = FourCC("A03C"), buff = 0, order = "channel", ult = true}
-        self.shiftMaster.felForm = {four = "A02Y", id = FourCC("A02Y"), buff = 0, order = "metamorphosis", ult = true}
+        self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "shiftBack", "fallingStrike", "shiftForward"}
+        self.shiftMaster.shiftBack = {name="Shift Back", four = "A03U", id = FourCC("A03U"), buff = 0, order = "stomp", ult = false}
+        self.shiftMaster.shiftForward = {name="Shift Forward", four = "A030", id = FourCC("A030"), buff = 0, order = "thunderclap", ult = false}
+        self.shiftMaster.fallingStrike = {name="Falling Strike", four = "A03T", id = FourCC("A03T"), buff = 0, order = "clusterrockets", ult = false}
+        self.shiftMaster.shiftStorm = {name="Shift Storm", four = "A03C", id = FourCC("A03C"), buff = 0, order = "channel", ult = true}
+        self.shiftMaster.felForm = {name="Fel Form", four = "A02Y", id = FourCC("A02Y"), buff = 0, order = "metamorphosis", ult = true}
 
         self.H00R = "manaAddict"
         self.manaAddict = {}
@@ -1199,11 +1165,12 @@ function init_heroClass()
         self.manaAddict.fourAlter = "h00B"
         self.manaAddict.id = FourCC(self.manaAddict.four)
         self.manaAddict.idAlter = FourCC(self.manaAddict.fourAlter)
-        self.manaAddict.manaShield = {four = "A001", id = FourCC("A001"), buff = FourCC("BNms"), order = "manashieldon", ult = false}
-        self.manaAddict.frostNova = {four = "A03S", id = FourCC("A03S"), buff = 0, order = "flamestrike", ult = false}
-        self.manaAddict.manaOverload = {four = "A018", id = FourCC("A018"), buff = 0, order = "manashield", ult = false}
-        self.manaAddict.manaBurst = {four = "A02B", id = FourCC("A02B"), buff = 0, order = "custerrockets", ult = false}
-        self.manaAddict.starfall = {four = "A015", id = FourCC("A015"), buff = 0, order = "starfall", ult = true}
+        self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "frostNova", "manaOverload", "manaBurst"}
+        self.manaAddict.manaShield = {name="Mana Shield", four = "A001", id = FourCC("A001"), buff = FourCC("BNms"), order = "manashieldon", ult = false}
+        self.manaAddict.frostNova = {name="Frost Nova", four = "A03S", id = FourCC("A03S"), buff = 0, order = "flamestrike", ult = false}
+        self.manaAddict.manaOverload = {name="Mana Overload", four = "A018", id = FourCC("A018"), buff = 0, order = "manashield", ult = false}
+        self.manaAddict.manaBurst = {name="Mana Burst", four = "A02B", id = FourCC("A02B"), buff = 0, order = "custerrockets", ult = false}
+        self.manaAddict.starfall = {name="Starfall", four = "A015", id = FourCC("A015"), buff = 0, order = "starfall", ult = true}
 
         self.H00J = "timeMage"
         self.timeMage = {}
@@ -1211,10 +1178,11 @@ function init_heroClass()
         self.timeMage.fourAlter = "h00Z"
         self.timeMage.id = FourCC(self.timeMage.four)
         self.timeMage.idAlter = FourCC(self.timeMage.fourAlter)
-        self.timeMage.chronoAtrophy = {four = "A04K", id = FourCC("A04K"), buff = 0, order = "flamestrike", ult = false}
-        self.timeMage.decay = {four = "A032", id = FourCC("A032"), buff = 0, order = "shadowstrike", ult = false}
-        self.timeMage.timeTravel = {four = "A04P", id = FourCC("A04P"), buff = 0, order = "clusterrockets", ult = false}
-        self.timeMage.paradox = {four = "A04N", id = FourCC("A04N"), buff = 0, order = "tranquility", ult = true}
+        self.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
+        self.timeMage.chronoAtrophy = {name="Chrono Atrophy", four = "A04K", id = FourCC("A04K"), buff = 0, order = "flamestrike", ult = false}
+        self.timeMage.decay = {name="Decay", four = "A032", id = FourCC("A032"), buff = 0, order = "shadowstrike", ult = false}
+        self.timeMage.timeTravel = {name="Time Travel", four = "A04P", id = FourCC("A04P"), buff = 0, order = "clusterrockets", ult = false}
+        self.timeMage.paradox = {name="Paradox", four = "A04N", id = FourCC("A04N"), buff = 0, order = "tranquility", ult = true}
 
 
         function self:spell( heroUnit, spellName )
@@ -1256,6 +1224,45 @@ function init_heroClass()
             else
                 return UnitHasBuffBJ(heroUnit.unit, self[heroUnit.name][spellName].buff)
             end
+        end
+
+
+        function self.levelUp(unit)
+            local heroFour = CC2Four(GetUnitTypeId(unit))
+            local heroLevel = GetHeroLevel(unit)
+            local spells = self[self[heroFour]]
+
+            print(self[heroFour])
+
+            -- Remove Ability Points
+			if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
+				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+			elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
+				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+			elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
+				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+			end
+
+            print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
+
+            -- Learn Skill if the Hero is owned by a Computer
+            if GetPlayerController(GetOwningPlayer(unit)) == MAP_CONTROL_COMPUTER then
+                local unspentPoints = GetHeroSkillPoints(unit)
+
+                print("Unspent Abilities: " .. unspentPoints)
+
+                if unspentPoints > 0 then
+                    for i=1, #spells.spellLearnOrder do
+                        print(spells.spellLearnOrder[i])
+                        SelectHeroSkill(unit, spells[spells.spellLearnOrder[i]].id)
+
+                        if GetHeroSkillPoints(unit) == 0 then break end
+                    end
+                end
+            end
+
+
+            
         end
 
         return self
@@ -1311,16 +1318,12 @@ function init_AIClass()
 			self[i].unit = heroUnit
 			GroupAddUnit(udg_AI_Heroes, self[i].unit)
 
-			
 			self[i].id = GetUnitTypeId(heroUnit)
 			self[i].four = CC2Four(self[i].id)
 			print("Four: " .. self[i].four)
 
 			self[i].name = hero[self[i].four]
 			print("Name" .. self[i].name)
-
-			
-			
 
 			self[i].player = GetOwningPlayer(heroUnit)
 			self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
@@ -1371,7 +1374,6 @@ function init_AIClass()
 				self[i].clumpRange = 100.00
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 500.00
-
 			elseif self[i].four == hero.manaAddict.four then -- Mana Addict
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.75
@@ -1390,7 +1392,6 @@ function init_AIClass()
 				self[i].clumpRange = 100.00
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
-
 			elseif self[i].four == hero.tactition.four then -- Tactition
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.20
@@ -1408,7 +1409,6 @@ function init_AIClass()
 				self[i].clumpRange = 250.00
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
-
 			elseif self[i].four == hero.timeMage.four then -- Time Mage
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.10
@@ -1427,7 +1427,6 @@ function init_AIClass()
 				self[i].clumpRange = 250.00
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 700.00
-
 			elseif self[i].four == hero.shiftMaster.four then -- Shifter
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.15
@@ -1667,7 +1666,6 @@ function init_AIClass()
 			end
 		end
 
-
 		-- AI Run Specifics
 		function self:STATEAbilities(i)
 			if self[i].name == "manaAddict" then
@@ -1682,7 +1680,6 @@ function init_AIClass()
 				self:timeMageAI(i)
 			end
 		end
-
 
 		-- AI has Low Health
 		function self:STATELowHealth(i)
@@ -1900,93 +1897,76 @@ function init_AIClass()
 			IssuePointOrder(self[i].unit, "attack", unitX, unitY)
 		end
 
+		-- Finders
+		function self:getHeroName(unit)
+			return self.heroOptions[S2I(GetUnitUserData(unit))]
+		end
+
+		function self:getHeroData(unit)
+			return self[self:getHeroName(unit)]
+		end
+
+		-- Hero AI
+
 		function self:manaAddictAI(i)
+			local curSpell
+
 			--  Always Cast
 			-------
 
 			-- Mana Shield
-			local curSpell
-			
 			curSpell = hero:spell(self[i], "manaShield")
-
 			if curSpell.castable == true and curSpell.hasBuff == false then
-				print("Casting Mana Shield")
+				print(curSpell.name)
 				IssueImmediateOrder(self[i].unit, curSpell.order)
 				self:castSpell(i)
 			end
 
-			--  Cast when Health is low
+			--  Cast available all the time
 			-------
-
 			if self[i].casting == false then
+
 				-- Mana Drain
-				local curSpell = hero:spell(self[i], "manaOverload")
+				curSpell = hero:spell(self[i], "manaOverload")
 				if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
-					print("Casting Mana Overload")
+					print(curSpell.name)
 					IssueImmediateOrder(self[i].unit, curSpell.order)
 					self:castSpell(i)
 				end
+
 			end
 
 			-- Normal Cast
 			--------
 
 			if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
+
 				-- Frost Nova
-				local curSpell = hero:spell(self[i], "frostNova")
+				curSpell = hero:spell(self[i], "frostNova")
 				if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
-					print("Frost Nova")
+					print(curSpell.name)
 					IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
 					self:castSpell(i)
 				end
+
 			end
 		end
 
-
-
-
 		function self:brawlerAI(i)
+			local curSpell
+
 			if self[i].casting == false then
 			end
 		end
-
-
-
 
 		-- Shift Master Spell AI
 		function self:shiftMasterAI(i)
-			local shiftBackLevel = GetUnitAbilityLevel(self[i].unit, shiftBack.spell)
-			local shiftForwardLevel = GetUnitAbilityLevel(self[i].unit, shiftForward.spell)
+			local curSpell
 
-			--  Cast when Health is low
-			-------
-			if (self[i].lowLife == true or self[i].fleeing == true) and self[i].casting == false then
-				-- Fel Form
-				if
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, felFormSpell) == 0.00 and
-						(self[i].mana) > I2R(BlzGetAbilityManaCost(felFormSpell, felFormLevel)) and
-						felFormLevel > 0 and
-						self[i].casting == false
-				 then
-					-- Shift Back
-					--print("Fel Form Danger")
-					IssueImmediateOrder(self[i].unit, "metamorphosis")
-					self:castSpell(i, true)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, shiftBackSpell) == 0.00 and
-						(self[i].mana) > I2R(BlzGetAbilityManaCost(shiftBackSpell, shiftBackLevel)) and
-						shiftBackLevel > 0 and
-						self[i].casting == false
-				 then
-					--print("Shift Back Danger")
-					IssueImmediateOrder(self[i].unit, "stomp")
-					self:castSpell(i, 1, true)
-				end
-			end
 
-			--  Normal Cast Spells
-			-------
-			if self[i].casting == false then
+			-- Normal Cast Spells
+			if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
+
 				-- Custom Intel
 				local g = CreateGroup()
 				local u = nil
@@ -2008,69 +1988,48 @@ function init_AIClass()
 				DestroyGroup(g)
 
 				-- Shift Back
+				local curSpell = hero:spell(self[i], "shiftBack")
+				if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
+					print(curSpell.name)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
+					self:castSpell(i)
+				end
+
+				-- Shift Forward
+				curSpell = hero:spell(self[i], "shiftForward")
+				if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
+					print(curSpell.name)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
+					self:castSpell(i)
+				end
+
+				-- Falling Strike
+				curSpell = hero:spell(self[i], "fallingStrike")
 				if
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, shiftBackSpell) == 0.00 and
-						(self[i].mana + 40) > I2R(BlzGetAbilityManaCost(shiftBackSpell, shiftBackLevel)) and
-						shiftBackLevel > 0 and
-						self[i].countUnitEnemyClose > 4
+					(self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00) and curSpell.castable == true and
+						curSpell.manaLeft > 45
 				 then
-					-- Shift Forward
-					--print("Shift Back")
-					IssueImmediateOrder(self[i].unit, "stomp")
-					self:castSpell(i, 1)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, shiftForwardSpell) == 0.00 and shiftForwardLevel > 0 and
-						(((self[i].mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, shiftForwardLevel)) and
-							self[i].countUnitEnemyClose > 4) or
-							(self[i].manaPercent > 70 and self[i].countUnitEnemyClose > 2))
-				 then
-					-- Falling Stike
-					--print("Shift Forward")
-					IssueImmediateOrder(self[i].unit, "thunderclap")
-					self:castSpell(i, 1)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, fallingStrikeSpell) == 0.00 and
-						(self[i].mana + 40) > I2R(BlzGetAbilityManaCost(fallingStrikeSpell, fallingStrikeLevel)) and
-						fallingStrikeLevel > 0 and
-						(self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00)
-				 then
-					-- ShiftStorm
+					print(curSpell.name)
+
 					if self[i].powerEnemy > 250.00 then
-						IssuePointOrder(
-							self[i].unit,
-							"clusterrockets",
-							GetUnitX(self[i].unitPowerEnemy),
-							GetUnitY(self[i].unitPowerEnemy)
-						)
+						IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].unitPowerEnemy), GetUnitY(self[i].unitPowerEnemy))
 					else
-						IssuePointOrder(self[i].unit, "clusterrockets", GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
+						IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
 					end
 
-					--print("Falling Strike")
-					self:castSpell(i, 1)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, shiftStormSpell) == 0.00 and
-						(self[i].mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, shiftStormLevel)) and
-						shiftStormLevel > 0 and
-						self[i].countUnitEnemyClose > 6 and
-						illusionsNearby >= 2
-				 then
-					-- Fel Form
-					--print("Shift Storm")
-					IssueImmediateOrder(self[i].unit, "channel")
 					self:castSpell(i)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, felFormSpell) == 0.00 and
-						(self[i].mana + 50) > I2R(BlzGetAbilityManaCost(felFormSpell, felFormLevel)) and
-						felFormLevel > 0 and
-						self[i].countUnitEnemy > 5
-				 then
-					--print("Fel Form")
-					IssueImmediateOrder(self[i].unit, "metamorphosis")
+				end
+
+				-- Shift Storm
+				curSpell = hero:spell(self[i], "shiftStorm")
+				if self[i].countUnitEnemy >= 6 and curSpell.castable == true and curSpell.manaLeft > 30 then
+					print(curSpell.name)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
 					self:castSpell(i)
 				end
 			end
 		end
+
 
 		function self:tactitionAI(i)
 			if self[i].casting == false then
@@ -9389,7 +9348,7 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(6), ConvertPlayerColor(6))
     SetPlayerRacePreference(Player(6), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(6), false)
-    SetPlayerController(Player(6), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(6), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(7), 7)
     SetPlayerColor(Player(7), ConvertPlayerColor(7))
     SetPlayerRacePreference(Player(7), RACE_PREF_HUMAN)
@@ -9775,16 +9734,17 @@ function InitCustomTeams()
 end
 
 function InitAllyPriorities()
-    SetStartLocPrioCount(0, 9)
+    SetStartLocPrioCount(0, 10)
     SetStartLocPrio(0, 0, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(0, 1, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(0, 2, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(0, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 4, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 4, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 9, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(1, 11)
     SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -9797,46 +9757,50 @@ function InitAllyPriorities()
     SetStartLocPrio(1, 8, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 9, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(2, 9)
+    SetStartLocPrioCount(2, 10)
     SetStartLocPrio(2, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 1, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 2, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 4, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(3, 9)
+    SetStartLocPrio(2, 4, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(3, 10)
     SetStartLocPrio(3, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 2, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 4, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(4, 9)
+    SetStartLocPrio(3, 4, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(4, 10)
     SetStartLocPrio(4, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 4, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(5, 9)
+    SetStartLocPrio(4, 4, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(5, 10)
     SetStartLocPrio(5, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 4, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 4, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 9, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(6, 10)
     SetStartLocPrio(6, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -9848,56 +9812,61 @@ function InitAllyPriorities()
     SetStartLocPrio(6, 7, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 8, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(7, 9)
+    SetStartLocPrioCount(7, 10)
     SetStartLocPrio(7, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(8, 9)
+    SetStartLocPrio(7, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(8, 10)
     SetStartLocPrio(8, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(9, 9)
+    SetStartLocPrio(8, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(9, 10)
     SetStartLocPrio(9, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(10, 9)
+    SetStartLocPrio(9, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(10, 10)
     SetStartLocPrio(10, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(11, 9)
+    SetStartLocPrio(10, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(11, 10)
     SetStartLocPrio(11, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 9, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(12, 2)
     SetStartLocPrio(12, 0, 5, MAP_LOC_PRIO_LOW)
     SetStartLocPrio(12, 1, 17, MAP_LOC_PRIO_LOW)

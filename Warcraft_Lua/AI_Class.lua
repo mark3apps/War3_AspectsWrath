@@ -46,16 +46,12 @@ function init_AIClass()
 			self[i].unit = heroUnit
 			GroupAddUnit(udg_AI_Heroes, self[i].unit)
 
-			
 			self[i].id = GetUnitTypeId(heroUnit)
 			self[i].four = CC2Four(self[i].id)
 			print("Four: " .. self[i].four)
 
 			self[i].name = hero[self[i].four]
 			print("Name" .. self[i].name)
-
-			
-			
 
 			self[i].player = GetOwningPlayer(heroUnit)
 			self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
@@ -106,7 +102,6 @@ function init_AIClass()
 				self[i].clumpRange = 100.00
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 500.00
-
 			elseif self[i].four == hero.manaAddict.four then -- Mana Addict
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.75
@@ -125,7 +120,6 @@ function init_AIClass()
 				self[i].clumpRange = 100.00
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
-
 			elseif self[i].four == hero.tactition.four then -- Tactition
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.20
@@ -143,7 +137,6 @@ function init_AIClass()
 				self[i].clumpRange = 250.00
 				self[i].intelRange = 1000.00
 				self[i].closeRange = 400.00
-
 			elseif self[i].four == hero.timeMage.four then -- Time Mage
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.10
@@ -162,7 +155,6 @@ function init_AIClass()
 				self[i].clumpRange = 250.00
 				self[i].intelRange = 1100.00
 				self[i].closeRange = 700.00
-
 			elseif self[i].four == hero.shiftMaster.four then -- Shifter
 				self[i].healthFactor = 1.00
 				self[i].manaFactor = 0.15
@@ -402,7 +394,6 @@ function init_AIClass()
 			end
 		end
 
-
 		-- AI Run Specifics
 		function self:STATEAbilities(i)
 			if self[i].name == "manaAddict" then
@@ -417,7 +408,6 @@ function init_AIClass()
 				self:timeMageAI(i)
 			end
 		end
-
 
 		-- AI has Low Health
 		function self:STATELowHealth(i)
@@ -635,93 +625,76 @@ function init_AIClass()
 			IssuePointOrder(self[i].unit, "attack", unitX, unitY)
 		end
 
+		-- Finders
+		function self:getHeroName(unit)
+			return self.heroOptions[S2I(GetUnitUserData(unit))]
+		end
+
+		function self:getHeroData(unit)
+			return self[self:getHeroName(unit)]
+		end
+
+		-- Hero AI
+
 		function self:manaAddictAI(i)
+			local curSpell
+
 			--  Always Cast
 			-------
 
 			-- Mana Shield
-			local curSpell
-			
 			curSpell = hero:spell(self[i], "manaShield")
-
 			if curSpell.castable == true and curSpell.hasBuff == false then
-				print("Casting Mana Shield")
+				print(curSpell.name)
 				IssueImmediateOrder(self[i].unit, curSpell.order)
 				self:castSpell(i)
 			end
 
-			--  Cast when Health is low
+			--  Cast available all the time
 			-------
-
 			if self[i].casting == false then
+
 				-- Mana Drain
-				local curSpell = hero:spell(self[i], "manaOverload")
+				curSpell = hero:spell(self[i], "manaOverload")
 				if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
-					print("Casting Mana Overload")
+					print(curSpell.name)
 					IssueImmediateOrder(self[i].unit, curSpell.order)
 					self:castSpell(i)
 				end
+
 			end
 
 			-- Normal Cast
 			--------
 
 			if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
+
 				-- Frost Nova
-				local curSpell = hero:spell(self[i], "frostNova")
+				curSpell = hero:spell(self[i], "frostNova")
 				if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
-					print("Frost Nova")
+					print(curSpell.name)
 					IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
 					self:castSpell(i)
 				end
+
 			end
 		end
 
-
-
-
 		function self:brawlerAI(i)
+			local curSpell
+
 			if self[i].casting == false then
 			end
 		end
-
-
-
 
 		-- Shift Master Spell AI
 		function self:shiftMasterAI(i)
-			local shiftBackLevel = GetUnitAbilityLevel(self[i].unit, shiftBack.spell)
-			local shiftForwardLevel = GetUnitAbilityLevel(self[i].unit, shiftForward.spell)
+			local curSpell
 
-			--  Cast when Health is low
-			-------
-			if (self[i].lowLife == true or self[i].fleeing == true) and self[i].casting == false then
-				-- Fel Form
-				if
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, felFormSpell) == 0.00 and
-						(self[i].mana) > I2R(BlzGetAbilityManaCost(felFormSpell, felFormLevel)) and
-						felFormLevel > 0 and
-						self[i].casting == false
-				 then
-					-- Shift Back
-					--print("Fel Form Danger")
-					IssueImmediateOrder(self[i].unit, "metamorphosis")
-					self:castSpell(i, true)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, shiftBackSpell) == 0.00 and
-						(self[i].mana) > I2R(BlzGetAbilityManaCost(shiftBackSpell, shiftBackLevel)) and
-						shiftBackLevel > 0 and
-						self[i].casting == false
-				 then
-					--print("Shift Back Danger")
-					IssueImmediateOrder(self[i].unit, "stomp")
-					self:castSpell(i, 1, true)
-				end
-			end
 
-			--  Normal Cast Spells
-			-------
-			if self[i].casting == false then
+			-- Normal Cast Spells
+			if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
+
 				-- Custom Intel
 				local g = CreateGroup()
 				local u = nil
@@ -743,69 +716,48 @@ function init_AIClass()
 				DestroyGroup(g)
 
 				-- Shift Back
+				local curSpell = hero:spell(self[i], "shiftBack")
+				if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
+					print(curSpell.name)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
+					self:castSpell(i)
+				end
+
+				-- Shift Forward
+				curSpell = hero:spell(self[i], "shiftForward")
+				if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
+					print(curSpell.name)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
+					self:castSpell(i)
+				end
+
+				-- Falling Strike
+				curSpell = hero:spell(self[i], "fallingStrike")
 				if
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, shiftBackSpell) == 0.00 and
-						(self[i].mana + 40) > I2R(BlzGetAbilityManaCost(shiftBackSpell, shiftBackLevel)) and
-						shiftBackLevel > 0 and
-						self[i].countUnitEnemyClose > 4
+					(self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00) and curSpell.castable == true and
+						curSpell.manaLeft > 45
 				 then
-					-- Shift Forward
-					--print("Shift Back")
-					IssueImmediateOrder(self[i].unit, "stomp")
-					self:castSpell(i, 1)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, shiftForwardSpell) == 0.00 and shiftForwardLevel > 0 and
-						(((self[i].mana + 40) > I2R(BlzGetAbilityManaCost(shiftForwardSpell, shiftForwardLevel)) and
-							self[i].countUnitEnemyClose > 4) or
-							(self[i].manaPercent > 70 and self[i].countUnitEnemyClose > 2))
-				 then
-					-- Falling Stike
-					--print("Shift Forward")
-					IssueImmediateOrder(self[i].unit, "thunderclap")
-					self:castSpell(i, 1)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, fallingStrikeSpell) == 0.00 and
-						(self[i].mana + 40) > I2R(BlzGetAbilityManaCost(fallingStrikeSpell, fallingStrikeLevel)) and
-						fallingStrikeLevel > 0 and
-						(self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00)
-				 then
-					-- ShiftStorm
+					print(curSpell.name)
+
 					if self[i].powerEnemy > 250.00 then
-						IssuePointOrder(
-							self[i].unit,
-							"clusterrockets",
-							GetUnitX(self[i].unitPowerEnemy),
-							GetUnitY(self[i].unitPowerEnemy)
-						)
+						IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].unitPowerEnemy), GetUnitY(self[i].unitPowerEnemy))
 					else
-						IssuePointOrder(self[i].unit, "clusterrockets", GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
+						IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
 					end
 
-					--print("Falling Strike")
-					self:castSpell(i, 1)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, shiftStormSpell) == 0.00 and
-						(self[i].mana + 40) > I2R(BlzGetAbilityManaCost(shiftStormSpell, shiftStormLevel)) and
-						shiftStormLevel > 0 and
-						self[i].countUnitEnemyClose > 6 and
-						illusionsNearby >= 2
-				 then
-					-- Fel Form
-					--print("Shift Storm")
-					IssueImmediateOrder(self[i].unit, "channel")
 					self:castSpell(i)
-				elseif
-					BlzGetUnitAbilityCooldownRemaining(self[i].unit, felFormSpell) == 0.00 and
-						(self[i].mana + 50) > I2R(BlzGetAbilityManaCost(felFormSpell, felFormLevel)) and
-						felFormLevel > 0 and
-						self[i].countUnitEnemy > 5
-				 then
-					--print("Fel Form")
-					IssueImmediateOrder(self[i].unit, "metamorphosis")
+				end
+
+				-- Shift Storm
+				curSpell = hero:spell(self[i], "shiftStorm")
+				if self[i].countUnitEnemy >= 6 and curSpell.castable == true and curSpell.manaLeft > 30 then
+					print(curSpell.name)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
 					self:castSpell(i)
 				end
 			end
 		end
+
 
 		function self:tactitionAI(i)
 			if self[i].casting == false then

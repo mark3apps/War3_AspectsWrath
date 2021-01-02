@@ -62,7 +62,7 @@ function Computer_Picks()
 				y = GetRectCenterY(gg_rct_Right_Hero)
 			end
 
-			randInt = GetRandomInt(2, 2)
+			randInt = GetRandomInt(3, 3)
 			if (randInt == 1) then
 				udg_TEMP_Unit = CreateUnit(selPlayer, hero.brawler.id, x, y, 0)
 			elseif (randInt == 2) then
@@ -171,52 +171,11 @@ function InitTrig_Hero_Level_Up()
 		t,
 		function()
 			-- Get Locals
-			local heroLevel = GetHeroLevel(GetLevelingUnit())
 			local u = GetLevelingUnit()
-			local uType = GetUnitTypeId(u)
 
-			-- Remove Ability Points
-			if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
-				ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-			elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
-				ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-			elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
-				ModifyHeroSkillPoints(GetLevelingUnit(), bj_MODIFYMETHOD_SUB, 1)
-			end
-
-			-- If Computer, Learn Abilities
-			if GetPlayerController(GetOwningPlayer(u)) == MAP_CONTROL_COMPUTER then
-				if uType == FourCC("H00R") then -- Mana Addict
-					SelectHeroSkill(u, FourCC("A015")) -- Starfall
-					SelectHeroSkill(u, FourCC("A001")) -- Mana Shield
-					SelectHeroSkill(u, FourCC("A03S")) -- Frost Nova
-					SelectHeroSkill(u, FourCC("A018")) -- Mana Overload
-					SelectHeroSkill(u, FourCC("A02B")) -- Mana Burst
-				elseif uType == FourCC("E001") then -- Brawler
-					SelectHeroSkill(u, FourCC("A029")) -- Unleash Rage
-					SelectHeroSkill(u, FourCC("A01Y")) -- Drain
-					SelectHeroSkill(u, FourCC("A007")) -- Bloodlust
-					SelectHeroSkill(u, FourCC("A002")) -- War Stomp
-				elseif uType == FourCC("E002") then -- Shifter
-					SelectHeroSkill(u, FourCC("A03C")) -- Shifting Bladestorm
-					SelectHeroSkill(u, FourCC("A02Y")) -- Fel Form
-					SelectHeroSkill(u, FourCC("A03U")) -- Shift Back
-					SelectHeroSkill(u, FourCC("A030")) -- Shift Forwards
-					SelectHeroSkill(u, FourCC("A03T")) -- Falling Strike
-				elseif uType == FourCC("H009") then -- Tactition
-					SelectHeroSkill(u, FourCC("A042")) -- Inspire
-					SelectHeroSkill(u, FourCC("A01I")) -- Raise Banner
-					SelectHeroSkill(u, FourCC("A01B")) -- Attack
-					SelectHeroSkill(u, FourCC("A01Z")) -- Bolster
-					SelectHeroSkill(u, FourCC("A019")) -- Iron Defense
-				elseif uType == FourCC("H00J") then -- Time Mage
-					SelectHeroSkill(u, FourCC("A04N")) -- Paradox
-					SelectHeroSkill(u, FourCC("A04I")) -- Dimensional Phase
-					SelectHeroSkill(u, FourCC("A04P")) -- Time Travel
-					SelectHeroSkill(u, FourCC("A04K")) -- Chrono Atrophy
-					SelectHeroSkill(u, FourCC("A032")) -- Decay
-				end
-			end
+			debugfunc(function()
+				hero.levelUp(u)
+			end, "hero.levelUp")
 		end
 	)
 end
