@@ -12153,3 +12153,9 @@ STRING 3999
 Books Scrolls
 }
 
+STRING 4000
+// Abilities: A053 (Permanent Immolation), EditorSuffix (Editor Suffix)
+{
+Inferno
+}
+

@@ -86,8 +86,8 @@ function init_heroClass()
                 spellDetails.castable = false
             end
 
-            print(spellName .. " : " .. spellDetails.level)
-            print("Castable: " .. tostring(spellDetails.castable))
+            --print(spellName .. " : " .. spellDetails.level)
+            --print("Castable: " .. tostring(spellDetails.castable))
 
             return spellDetails
         end

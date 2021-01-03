@@ -5,7 +5,7 @@
             "type": "lua",
             "request": "launch",
             "name": "Launch",
-            "program": "${workspaceFolder}/init_Abilities.lua"
+            "program": "${workspaceFolder}\\Warcraft_Lua\\Map_Setup.lua"
         }
     ]
 }

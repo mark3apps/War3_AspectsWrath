@@ -1,12 +1,19 @@
-function init_SpawnClass()
+function init_spawnClass()
 	-- Create the table for the class definition
-	spawn = {}
+	spawn_Class = {}
 
 	-- Define the new() function
-	spawn.new = function()
+	spawn_Class.new = function()
 		local self = {}
 
 		self.bases = {}
+		self.timer = CreateTimer()
+		self.wave = 1
+		self.baseI = 0
+
+		self.cycleInterval = 5.00
+		self.baseInterval = 0.4
+		self.waveInterval = 20.00
 
 		function self.addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
 			-- Add all of the info the base and add the base name to the base list

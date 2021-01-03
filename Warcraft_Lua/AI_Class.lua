@@ -1,4 +1,4 @@
-function init_AIClass()
+function init_aiClass()
 	-- Create the table for the class definition
 	ai_Class = {}
 
@@ -34,7 +34,7 @@ function init_AIClass()
 
 		function self:initHero(heroUnit)
 			self.count = self.count + 1
-			self.tick = 5.00 / I2R(self.count)
+			self.tick = (1.00 + (self.count * 0.1)) / self.count
 
 			local i = self.heroOptions[self.count]
 			print("Name: " .. i)
@@ -48,10 +48,7 @@ function init_AIClass()
 
 			self[i].id = GetUnitTypeId(heroUnit)
 			self[i].four = CC2Four(self[i].id)
-			print("Four: " .. self[i].four)
-
 			self[i].name = hero[self[i].four]
-			print("Name" .. self[i].name)
 
 			self[i].player = GetOwningPlayer(heroUnit)
 			self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
@@ -178,7 +175,7 @@ function init_AIClass()
 
 		-- Update Intel
 		function self:updateIntel(i)
-			--print(self[i].name)
+
 			-- Only run if the hero is alive
 			if (self[i].alive == true) then
 				-- Update info about the AI Hero
@@ -374,10 +371,12 @@ function init_AIClass()
 				self[i].powerBase = self[i].powerBase + (0.25 * I2R(self[i].level))
 				self[i].powerHero = self[i].powerBase + (self[i].powerLevel * I2R(self[i].level))
 
-			--print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
-			--print("Clump Both: " .. R2S(self[i].clumpBothPower))
-			--print("Hero Power: " .. R2S(self[i].powerHero))
-			--print("Power Level: " .. R2S(self[i].powerCount))
+				--print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
+				--print("Clump Both: " .. R2S(self[i].clumpBothPower))
+				print("Enemies Nearby: " .. self[i].countUnitEnemy)
+				print("Power Clump Enemy: " .. self[i].powerEnemy)
+				--print("Hero Power: " .. R2S(self[i].powerHero))
+				--print("Power Level: " .. R2S(self[i].powerCount))
 			end
 		end
 
