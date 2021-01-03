@@ -1,4 +1,6 @@
 function init_Lua()
+	debugPrint = 2
+
 	-- Define Classes
 	debugfunc(
 		function()
@@ -8,38 +10,50 @@ function init_Lua()
 		end,
 		"Define Classes"
 	)
+	dprint("Classes Defined", 2)
 
 	-- Init Classes
 	debugfunc(
 		function()
-			hero = hero_Class.new()
-			ai = ai_Class.new()
-			spawn = spawn_Class.new()
+			hero = hero_Class:new()
+			ai = ai_Class:new()
+			spawn = spawn_Class:new()
 		end,
 		"Init Classes"
 	)
+
+	dprint("Classes Initialized", 2)
 
 	-- Init Trigger
 	debugfunc(
 		function()
 			initTrig_Auto_Zoom()
-			InitTrig_AI_MAIN()
-			InitTrig_Computer_Picks()
-
-			InitTrig_Hero_Level_Up()
-			InitTrig_AI_Spell_Start()
+			Init_Hero_Levels_Up()
+			Init_AI_Spell_Start()
 		end,
 		"Init Triggers"
 	)
 
+	dprint("Triggers Initialized", 2)
+
 	-- Spawn Base / Unit Setup
-	spawnAddBases()
-	spawnAddUnits()
-	spawn:startSpawn()
+	-- Init Trigger
+	debugfunc(
+		function()
+			spawnAddBases()
+			spawnAddUnits()
+			spawnTriggers()
+		end,
+		"Init Spawn"
+	)
+
+	dprint("Spann Setup", 2)
 
 	-- Setup Delayed Init Triggers
 	init_Delayed_1()
 	init_Delayed_10()
+
+	dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -52,8 +66,11 @@ function init_Delayed_1()
 			debugfunc(
 				function()
 					ai:pickHeroes()
-					ai:init_loop()
+					dprint("pick Heroes Successfull", 2)
+					ai:init_loopStates()
+					dprint("AI Started", 2)
 					spawn:startSpawn()
+					dprint("Spawn Started", 2)
 				end,
 				"Start Delayed Triggers"
 			)
@@ -112,10 +129,11 @@ function init_spawnClass()
 		self.alliedBaseAlive = false
 		self.fedBaseAlive = false
 		self.unitInWave = false
+		self.unitInLevel = false
 		self.numOfUnits = 0
 		self.unitType = ""
 
-		function self.addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
+		function self:addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
 			-- Add all of the info the base and add the base name to the base list
 			self[baseName] = {
 				allied = {startPoint = alliedStart, endPoint = alliedEnd, condition = alliedCondition},
@@ -127,7 +145,7 @@ function init_spawnClass()
 			self.baseCount = self.baseCount + 1
 		end
 
-		function self.addUnit(baseName, unitType, numOfUnits, waves, levelStart, levelEnd)
+		function self:addUnit(baseName, unitType, numOfUnits, waves, levelStart, levelEnd)
 			table.insert(
 				self[baseName].units,
 				{unitType = unitType, numOfUnits = numOfUnits, waves = waves, level = {levelStart, levelEnd}}
@@ -143,27 +161,24 @@ function init_spawnClass()
 
 			for index, value in ipairs(waves) do
 				if value == self.wave then
-					self.unitInLevel = true
+					self.unitInWave = true
 					return true
 				end
 			end
 
-			self.unitInLevel = false
+			self.unitInWave = false
 			return true
 		end
 
 		function self:isUnitInLevel()
-			local levelStart, levelEnd =
-				self[self.base].units[self.unitIndex].level[1],
-				self[self.base].units[self.unitIndex].level[2]
+			local levelStart = self[self.base].units[self.unitIndex].level[1]
+			local levelEnd = self[self.base].units[self.unitIndex].level[2]
 
 			if (self.creepLevel >= levelStart and self.creepLevel <= levelEnd) then
 				self.unitInLevel = true
-				return true
+			else
+				self.unitInLevel = false
 			end
-
-			self.unitInLevel = true
-			return true
 		end
 
 		function self:baseAlive()
@@ -171,7 +186,8 @@ function init_spawnClass()
 			self.fedBaseAlive = IsUnitAliveBJ(self[self.base].fed.condition)
 		end
 
-		function self.checkSpawnUnit()
+
+		function self:checkSpawnUnit()
 			self:baseAlive(self.base)
 			self:isUnitInWave()
 			self:isUnitInLevel()
@@ -179,20 +195,27 @@ function init_spawnClass()
 			self.unitType = self[self.base].units[self.unitIndex].unitType
 		end
 
-		function self.spawnUnits()
+		function self:spawnUnits()
 			local pStart
 			local pDest
 			local spawnedUnit
 
-			for i = 1, self.unitCount(self.base) do
+			dprint("Creep Level: " .. self.creepLevel)
+
+			for i = 1, self:unitCount(self.base) do
+				self.unitIndex = i
 				self:checkSpawnUnit()
+				dprint("Working 1")
+				print(self.unitInLevel)
+				print(self.unitInWave)
+
 
 				if self.unitInWave and self.unitInLevel then
 					if self.alliedBaseAlive then
 						for i = 1, self.numOfUnits do
 							pStart = GetRandomLocInRect(self[self.base].allied.startPoint)
 							pDest = GetRandomLocInRect(self[self.base].allied.endPoint)
-
+							dprint("Working A")
 							spawnedUnit = CreateUnitAtLoc(Player(GetRandomInt(18, 20)), FourCC(self.unitType), pStart, bj_UNIT_FACING)
 							SetUnitUserData(spawnedUnit, self[self.base].destination)
 							IssuePointOrderLoc(spawnedUnit, "attack", pDest)
@@ -206,7 +229,7 @@ function init_spawnClass()
 						for i = 1, self.numOfUnits do
 							pStart = GetRandomLocInRect(self[self.base].fed.startPoint)
 							pDest = GetRandomLocInRect(self[self.base].fed.endPoint)
-
+							dprint("Working P")
 							spawnedUnit = CreateUnitAtLoc(Player(GetRandomInt(21, 23)), FourCC(self.unitType), pStart, bj_UNIT_FACING)
 							SetUnitUserData(spawnedUnit, self[self.base].destination)
 							IssuePointOrderLoc(spawnedUnit, "attack", pDest)
@@ -215,12 +238,15 @@ function init_spawnClass()
 							RemoveLocation(pDest)
 						end
 					end
+					dprint("Working 2")
 				end
+				dprint("Working 3")
+				dprint("--")
 			end
 		end
 
 		-- Run the Spawn Loop
-		function self:loop()
+		function self:loopSpawn()
 			-- Iterate everything up
 			self.baseI = self.baseI + 1
 
@@ -245,10 +271,9 @@ function init_spawnClass()
 
 			-- Spawn the Units at the selected Base
 			DisableTrigger(gg_trg_Creeps_keep_going_after_Order)
-			self.spawnUnits()
+			self:spawnUnits()
 			EnableTrigger(gg_trg_Creeps_keep_going_after_Order)
 		end
-
 
 		function self:upgradeCreeps()
 			self.creepLevel = self.creepLevel + 1
@@ -264,28 +289,51 @@ function init_spawnClass()
 
 		-- Start the Spawn Loop
 		function self:startSpawn()
-			
 			-- Start Spawn Timer
 			StartTimerBJ(self.timer, false, 1)
-
-			-- Create Spawn Loop Trigger
-			self.Trig_loop = CreateTrigger()
-			TriggerRegisterTimerExpireEventBJ(self.Trig_loop, self.timer)
-			TriggerAddAction(self.Trig_loop, self:loop())
+			TriggerRegisterTimerExpireEventBJ(Trig_spawnLoop, self.timer)
 
 			-- Set up Creep Level Timer
 			StartTimerBJ(self.creepLevelTimer, false, 100)
-
-			-- Create Upgrade Trigger
-			self.Trig_upgradeCreeps = CreateTrigger()
-			TriggerRegisterTimerExpireEvent(self.creepLevelTimer, self.Trig_upgradeCreeps)
-			TriggerAddAction(self.Trig_upgradeCreeps, self:upgradeCreeps())
-
+			TriggerRegisterTimerExpireEvent(Trig_upgradeCreeps, self.creepLevelTimer)
 		end
 
+		--
+		-- Class Triggers
+		--
 
 		return self
 	end
+end
+
+function spawnTriggers()
+	-- Create Spawn Loop Trigger
+	Trig_spawnLoop = CreateTrigger()
+	TriggerAddAction(
+		Trig_spawnLoop,
+		function()
+			debugfunc(
+				function()
+					spawn:loopSpawn()
+				end,
+				"spawn:loopSpawn"
+			)
+		end
+	)
+
+	-- Create Upgrade Trigger
+	Trig_upgradeCreeps = CreateTrigger()
+	TriggerAddAction(
+		Trig_upgradeCreeps,
+		function()
+			debugfunc(
+				function()
+					spawn:upgradeCreeps()
+				end,
+				"spawn:upgradeCreeps()"
+			)
+		end
+	)
 end
 
 -- AI Class
@@ -297,6 +345,7 @@ function init_aiClass()
 	ai_Class.new = function()
 		local self = {}
 		self.heroes = {}
+		self.heroGroup = CreateGroup()
 		self.heroOptions = {
 			"heroA",
 			"heroB",
@@ -335,7 +384,7 @@ function init_aiClass()
 			self[i] = {}
 
 			self[i].unit = heroUnit
-			GroupAddUnit(udg_AI_Heroes, self[i].unit)
+			GroupAddUnit(self.heroGroup, self[i].unit)
 
 			self[i].id = GetUnitTypeId(heroUnit)
 			self[i].four = CC2Four(self[i].id)
@@ -547,7 +596,7 @@ function init_aiClass()
 			end
 		end
 
-		function self:loop() -- Start AI Loop
+		function self:loopStates() -- Start AI Loop
 			if self.loop >= self.count then
 				self.loop = 1
 			else
@@ -579,11 +628,11 @@ function init_aiClass()
 			)
 		end
 
-		function self:init_loop()
+		function self:init_loopStates()
 			if (self.count > 0) then
-				self.trig_loop = CreateTrigger()
-				TriggerRegisterTimerEvent(self.trig_loop, ai.tick, true)
-				TriggerAddAction(self.trig_loop, ai:loop())
+				self.trig_loopStates = CreateTrigger()
+				TriggerRegisterTimerEvent(self.trig_loopStates, ai.tick, true)
+				TriggerAddAction(self.trig_loopStates, ai:loopStates())
 			end
 		end
 
@@ -1529,6 +1578,14 @@ end
 -- Functions
 --
 
+function dprint(message, level)
+	level = level or 1
+
+	if debugPrint >= level then
+		print("|cff00ff00[debug " .. level .. "]|r " .. tostring(message))
+	end
+end
+
 function distance(x1, y1, x2, y2) -- Find Distance between points
 	return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
@@ -1542,7 +1599,7 @@ function debugfunc(func, name) -- Turn on runtime logging
 		end
 	)
 	if not passed then
-		print(name, passed, data)
+		print("|cffff0000[ERROR]|r" .. name, passed, data)
 	end
 	passed = nil
 	data = nil
@@ -1557,54 +1614,6 @@ end
 --
 
 -- AI Triggers
-
-function InitTrig_AI_Spell_Start() -- AI Casts a Spell
-	local t = CreateTrigger()
-	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
-
-	TriggerAddCondition(
-		t,
-		Condition(
-			function()
-				return IsUnitInGroup(GetTriggerUnit(), udg_AI_Heroes)
-			end
-		)
-	)
-
-	TriggerAddAction(
-		t,
-		function()
-			debugfunc(
-				function()
-					local pickedHero = ai.heroOptions[S2I(GetUnitUserData(GetTriggerUnit()))]
-
-					ai:castSpell(pickedHero)
-				end,
-				"ai:castSpell"
-			)
-		end
-	)
-end
-
-function InitTrig_Hero_Level_Up() -- AI Levels Up
-	local t = CreateTrigger()
-
-	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
-	TriggerAddAction(
-		t,
-		function()
-			-- Get Locals
-			local u = GetLevelingUnit()
-
-			debugfunc(
-				function()
-					hero.levelUp(u)
-				end,
-				"hero.levelUp"
-			)
-		end
-	)
-end
 
 -- Spawn Set up
 function spawnAddBases()
@@ -2021,8 +2030,6 @@ function spawnAddUnits()
 	spawn:addUnit("undead", "unec", 1, {1, 2, 3, 4, 5, 6, 7}, 3, 12) -- Necromancer
 	spawn:addUnit("undead", "nerw", 1, {1, 6}, 4, 12) -- Warlock
 	spawn:addUnit("undead", "nfgl", 1, {2, 5, 8}, 5, 12) -- Giant Skeleton
-
-	return true
 end
 
 -- Camera Setup
@@ -2052,3 +2059,54 @@ function initTrig_Auto_Zoom()
 	)
 end
 
+--
+-- Game Action Triggers
+--
+
+-- Hero Levels Up
+function Init_Hero_Levels_Up()
+	local t = CreateTrigger()
+
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
+	TriggerAddAction(
+		t,
+		function()
+			-- Get Locals
+			local levelingUnit = GetLevelingUnit()
+
+			debugfunc(
+				function()
+					hero.levelUp(levelingUnit)
+				end,
+				"hero.levelUp"
+			)
+		end
+	)
+end
+
+-- Unit Casts Spell
+function Init_AI_Spell_Start()
+	local t = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
+
+	TriggerAddAction(
+		t,
+		function()
+			local triggerUnit = GetTriggerUnit()
+
+			debugfunc(
+				function()
+					CAST_aiHero(triggerUnit)
+				end,
+				"CAST_aiHero"
+			)
+		end
+	)
+end
+
+function CAST_aiHero(triggerUnit)
+	if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+		local pickedHero = ai.heroOptions[S2I(GetUnitUserData(triggerUnit))]
+		ai:castSpell(pickedHero)
+	end
+end
