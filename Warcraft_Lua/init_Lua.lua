@@ -173,6 +173,8 @@ function init_spawnClass()
 		function self:isUnitInLevel()
 			local levelStart = self[self.base].units[self.unitIndex].level[1]
 			local levelEnd = self[self.base].units[self.unitIndex].level[2]
+			
+			dprint("Levels: " .. levelStart .. " " .. levelEnd)
 
 			if (self.creepLevel >= levelStart and self.creepLevel <= levelEnd) then
 				self.unitInLevel = true
@@ -211,6 +213,8 @@ function init_spawnClass()
 
 
 				if self.unitInWave and self.unitInLevel then
+					dprint("Working 3")
+					
 					if self.alliedBaseAlive then
 						for i = 1, self.numOfUnits do
 							pStart = GetRandomLocInRect(self[self.base].allied.startPoint)
@@ -240,7 +244,7 @@ function init_spawnClass()
 					end
 					dprint("Working 2")
 				end
-				dprint("Working 3")
+			
 				dprint("--")
 			end
 		end
