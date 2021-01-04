@@ -168,7 +168,6 @@ udg_Spell_Player = nil
 udg_Attack_Interval = 0.0
 udg_Hero_Levels = __jarray(0)
 udg_FA_Level = 0
-udg_Alters = {}
 udg_TEMP_Pos_Move = nil
 udg_Gates_Open = nil
 udg_Gates_Closed = nil
@@ -393,8 +392,6 @@ gg_trg_Revive_Hero_Timer = nil
 gg_trg_End_Of_Game_Left = nil
 gg_trg_End_Of_Game_Right = nil
 gg_trg_SPAWN_Move_All = nil
-gg_trg_Level_Up_Creeps = nil
-gg_trg_Set_up_Creep_Timer = nil
 gg_trg_Melee_Initialization = nil
 gg_trg_Hero_Picked = nil
 gg_trg_Hero_Add_Starting_Abilities = nil
@@ -444,6 +441,7 @@ gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
+gg_trg_testing = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -881,8 +879,7 @@ function init_Lua()
         initTrig_Auto_Zoom()
         Init_Hero_Levels_Up()
         Init_AI_Spell_Start()
-        init_spawnTimer()
-        init_creepUpgradeTimer()
+        init_spawnTimers()
     end, "Init Triggers")
 
     dprint("Triggers Initialized", 2)
@@ -899,6 +896,11 @@ function init_Lua()
     -- Setup Delayed Init Triggers
     init_Delayed_1()
     init_Delayed_10()
+
+    -- Do the rest of the Map Initialization
+    debugfunc(function()
+        Init_Map()
+    end, "Init Map")
 
     dprint("Init Finished")
 end
@@ -955,7 +957,7 @@ function init_spawnClass()
         self.waveInterval = 20.00
 
         self.creepLevel = 1
-        self.creeplevelTimer = CreateTimer()
+        self.creepLevelTimer = CreateTimer()
 
         self.wave = 1
         self.base = ""
@@ -1113,10 +1115,7 @@ function init_spawnClass()
         end
 
         function self:upgradeCreeps()
-            print("UPGRADE!")
             self.creepLevel = self.creepLevel + 1
-            print("UPGRADE!")
-            print("Creep Level: " .. self.creepLevel)
 
             if self.creepLevel >= 12 then
                 DisableTrigger(self.Trig_upgradeCreeps)
@@ -1129,8 +1128,10 @@ function init_spawnClass()
         function self:startSpawn()
             -- Start Spawn Timer
             StartTimerBJ(self.timer, false, 1)
-            StartTimerBJ(self.creepLevelTimer, false, 1)
+            StartTimerBJ(self.creepLevelTimer, false, 90)
 
+            TriggerRegisterTimerExpireEvent(Trig_spawnLoop, self.timer)
+            TriggerRegisterTimerExpireEvent(Trig_upgradeCreeps, self.creepLevelTimer)
         end
 
         --
@@ -1141,24 +1142,18 @@ function init_spawnClass()
     end
 end
 
-function init_spawnTimer()
+function init_spawnTimers()
     -- Create Spawn Loop Trigger
-	Trig_spawnLoop = CreateTrigger()
-	TriggerRegisterTimerExpireEvent(Trig_spawnLoop, self.timer)
+    Trig_spawnLoop = CreateTrigger()
     TriggerAddAction(Trig_spawnLoop, function()
         debugfunc(function()
             spawn:loopSpawn()
         end, "spawn:loopSpawn")
     end)
-end
 
-
-function init_creepUpgradeTimer()
-    -- Create Upgrade Trigger
-	Trig_upgradeCreeps = CreateTrigger()
-	TriggerRegisterTimerExpireEvent(Trig_upgradeCreeps, self.creepLevelTimer)
-	TriggerAddAction(Trig_upgradeCreeps, function()
-		print("Is this even working?")
+    Trig_upgradeCreeps = CreateTrigger()
+    TriggerAddAction(Trig_upgradeCreeps, function()
+        print("Is this even working?")
         debugfunc(function()
             spawn:upgradeCreeps()
         end, "spawn:upgradeCreeps()")
@@ -1173,6 +1168,7 @@ function init_aiClass()
     -- Define the new() function
     ai_Class.new = function()
         local self = {}
+
         self.heroes = {}
         self.heroGroup = CreateGroup()
         self.heroOptions = {"heroA", "heroB", "heroC", "heroD", "heroE", "heroF", "heroG", "heroH", "heroI", "heroJ",
@@ -1333,77 +1329,29 @@ function init_aiClass()
         -- AI Picks Hero
         function self:pickHeroes()
             local i = 1
-            local randInt
             local count = 12
-            local x
-            local y
-            local selPlayer
-            local g
-            local u
+            local x, y, u, selPlayer, lastCreatedHero, randInt, heroName
 
             while (i <= count) do
                 selPlayer = ConvertedPlayer(i)
                 if (GetPlayerController(selPlayer) == MAP_CONTROL_COMPUTER) then
                     if (i < 7) then
                         udg_INT_TeamNumber[i] = 1
-                        x = GetRectCenterX(gg_rct_Left_Hero)
-                        y = GetRectCenterY(gg_rct_Left_Hero)
                     else
                         udg_INT_TeamNumber[i] = 2
-                        x = GetRectCenterX(gg_rct_Right_Hero)
-                        y = GetRectCenterY(gg_rct_Right_Hero)
                     end
 
+                    -- Pick random hero
                     randInt = GetRandomInt(3, 3)
-                    if (randInt == 1) then
-                        udg_TEMP_Unit = CreateUnit(selPlayer, hero.brawler.id, x, y, 0)
-                    elseif (randInt == 2) then
-                        udg_TEMP_Unit = CreateUnit(selPlayer, hero.manaAddict.id, x, y, 0)
-                    elseif (randInt == 3) then
-                        udg_TEMP_Unit = CreateUnit(selPlayer, hero.shiftMaster.id, x, y, 0)
-                    elseif (randInt == 4) then
-                        udg_TEMP_Unit = CreateUnit(selPlayer, hero.tactition.id, x, y, 0)
-                    elseif (randInt == 5) then
-                        udg_TEMP_Unit = CreateUnit(selPlayer, hero.timeMage.id, x, y, 0)
-                    end
+                    heroName = hero.heroes[randInt]
+                    lastCreatedHero = CreateUnit(selPlayer, hero[heroName].id, 0, 0, 0)
 
-                    UnitAddItemByIdSwapped(FourCC("I000"), udg_TEMP_Unit)
-                    udg_UNIT_pickedHero[GetConvertedPlayerId(selPlayer)] = udg_TEMP_Unit
-                    ConditionalTriggerExecute(gg_trg_Hero_Add_Starting_Abilities)
-
+                    -- Add Starting Spells
                     debugfunc(function()
-                        self:initHero(udg_TEMP_Unit)
+                        hero:setupHero(lastCreatedHero)
+                        self:initHero(lastCreatedHero)
                     end, "Init Hero")
 
-                    g = GetUnitsOfPlayerAndTypeId(selPlayer, FourCC("halt"))
-
-                    while true do
-                        u = FirstOfGroup(g)
-                        if u == nil then
-                            break
-                        end
-
-                        if (GetUnitTypeId(udg_TEMP_Unit) == hero.brawler.id) then
-                            ReplaceUnitBJ(u, hero.brawler.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
-                        elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.manaAddict.id) then
-                            ReplaceUnitBJ(u, hero.manaAddict.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
-                        elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.tactition.id) then
-                            ReplaceUnitBJ(u, hero.tactition.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
-                        elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.timeMage.id) then
-                            ReplaceUnitBJ(u, hero.timeMage.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
-                        elseif (GetUnitTypeId(udg_TEMP_Unit) == hero.shiftMaster.id) then
-                            ReplaceUnitBJ(u, hero.shiftMaster.idAlter, bj_UNIT_STATE_METHOD_RELATIVE)
-
-                            UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A031"))
-                            UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A005"))
-                            UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A037"))
-                        end
-
-                        udg_Alters[GetConvertedPlayerId(selPlayer)] = GetLastReplacedUnitBJ()
-
-                        GroupRemoveUnit(g, u)
-                    end
-                    DestroyGroup(g)
                 end
 
                 i = i + 1
@@ -1669,6 +1617,8 @@ function init_aiClass()
 
         -- AI Run Specifics
         function self:STATEAbilities(i)
+            local heroName = self[i].name
+
             if self[i].name == "manaAddict" then
                 self:manaAddictAI(i)
             elseif self[i].name == "brawler" then
@@ -2068,6 +2018,17 @@ function init_heroClass()
     hero_Class.new = function()
         local self = {}
 
+        self.items = {"teleportation"}
+        self.item = {}
+        self.item.teleportation = {
+            name = "Staff of Teleportation",
+            four = "I000",
+            id = FourCC("I000"),
+            order = ""
+        }
+
+        self.heroes = {"brawler", "manaAddict", "shiftMaster", "tactition", "timeMage"}
+
         self.E001 = "brawler"
         self.brawler = {}
         self.brawler.four = "E001"
@@ -2075,6 +2036,9 @@ function init_heroClass()
         self.brawler.id = FourCC(self.brawler.four)
         self.brawler.idAlter = FourCC(self.brawler.fourAlter)
         self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
+        self.brawler.startingSpells = {}
+        self.brawler.permanentSpells = {}
+        self.brawler.startingItems = {"teleportation"}
         self.brawler.drain = {
             name = "Drain",
             four = "A01Y",
@@ -2115,6 +2079,9 @@ function init_heroClass()
         self.tactition.id = FourCC(self.tactition.four)
         self.tactition.idAlter = FourCC(self.tactition.fourAlter)
         self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
+        self.tactition.startingSpells = {"raiseBanner"}
+        self.tactition.permanentSpells = {}
+        self.tactition.startingItems = {"teleportation"}
         self.tactition.ironDefense = {
             name = "Iron Defense",
             four = "A019",
@@ -2163,6 +2130,33 @@ function init_heroClass()
         self.shiftMaster.id = FourCC(self.shiftMaster.four)
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "shiftBack", "fallingStrike", "shiftForward"}
+        self.shiftMaster.startingSpells = {"felForm"}
+        self.shiftMaster.permanentSpells = {"felForm", "attributeBonus", "shadeStrength", "swiftMoves"}
+        self.shiftMaster.startingItems = {"teleportation"}
+        self.shiftMaster.attributeBonus = {
+            name = "Attribute Bonus",
+            four = "A031",
+            id = FourCC("A031"),
+            buff = 0,
+            order = "",
+            ult = false
+        }
+        self.shiftMaster.shadeStrength = {
+            name = "Shade Strength",
+            four = "A037",
+            id = FourCC("A037"),
+            buff = 0,
+            order = "",
+            ult = false
+        }
+        self.shiftMaster.swiftMoves = {
+            name = "Swift Moves",
+            four = "A005",
+            id = FourCC("A005"),
+            buff = 0,
+            order = "",
+            ult = false
+        }
         self.shiftMaster.shiftBack = {
             name = "Shift Back",
             four = "A03U",
@@ -2211,6 +2205,9 @@ function init_heroClass()
         self.manaAddict.id = FourCC(self.manaAddict.four)
         self.manaAddict.idAlter = FourCC(self.manaAddict.fourAlter)
         self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "frostNova", "manaOverload", "manaBurst"}
+        self.manaAddict.startingSpells = {"manaShield"}
+        self.manaAddict.permanentSpells = {}
+        self.manaAddict.startingItems = {"teleportation"}
         self.manaAddict.manaShield = {
             name = "Mana Shield",
             four = "A001",
@@ -2259,6 +2256,9 @@ function init_heroClass()
         self.timeMage.id = FourCC(self.timeMage.four)
         self.timeMage.idAlter = FourCC(self.timeMage.fourAlter)
         self.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
+        self.timeMage.startingSpells = {}
+        self.timeMage.permanentSpells = {}
+        self.timeMage.startingItems = {"teleportation"}
         self.timeMage.chronoAtrophy = {
             name = "Chrono Atrophy",
             four = "A04K",
@@ -2334,8 +2334,9 @@ function init_heroClass()
 
         function self.levelUp(unit)
             local heroFour = CC2Four(GetUnitTypeId(unit))
+            local heroName = self[heroFour]
             local heroLevel = GetHeroLevel(unit)
-            local spells = self[self[heroFour]]
+            local spells = self[heroName]
 
             print(self[heroFour])
 
@@ -2367,6 +2368,69 @@ function init_heroClass()
                     end
                 end
             end
+        end
+
+        function self:setupHero(unit)
+            local heroFour = CC2Four(GetUnitTypeId(unit))
+            local heroName = self[heroFour]
+            local player = GetOwningPlayer(unit)
+            local playerNumber = GetConvertedPlayerId(player)
+            local heroLevel = GetHeroLevel(unit)
+            local spells = self[heroName]
+            local picked, u, x, y
+            local g = CreateGroup()
+
+            -- Get home Base Location
+            if playerNumber < 7 then
+                x = GetRectCenterX(gg_rct_Left_Hero)
+                y = GetRectCenterY(gg_rct_Left_Hero)
+            else
+                x = GetRectCenterX(gg_rct_Right_Hero)
+                y = GetRectCenterY(gg_rct_Right_Hero)
+            end
+
+            -- Move hero to home base
+            SetUnitPosition(unit, x, y)
+
+            -- Give the hero the required Skill points for the spells
+            ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
+            for i = 1, #spells.startingSpells do
+                picked = spells[spells.startingSpells[i]]
+
+                -- Have the hero learn the spell
+                SelectHeroSkill(unit, pickedSpell.id)
+            end
+
+            -- Add the Permanent Spells for the Hero
+            for i = 1, #spells.permanentSpells do
+                picked = spells[spells.permanentSpells[i]]
+
+                -- Make the Spell Permanent
+                UnitMakeAbilityPermanent(unit, true, pickedSpell.id)
+            end
+
+            -- Give the Hero starting Items
+            for i = 1, #spells.startingItems do
+                picked = self.item[#spells.startingItem[i]]
+
+                -- Make the Spell Permanent
+                UnitAddItemById(unit, picked.id)
+            end
+
+            -- Set up Alter
+            g = GetUnitsOfPlayerAndTypeId(player, FourCC("halt"))
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                -- Replace Unit Alter
+                ReplaceUnitBJ(u, self[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
         end
 
         return self
@@ -2433,10 +2497,10 @@ function spawnAddBases()
         gg_rct_Left_Everything, gg_unit_h00E_0081, 2)
     spawn:addBase("cityElves", gg_rct_City_Elves_Left, gg_rct_Right_Everything, gg_unit_hvlt_0207,
         gg_rct_City_Elves_Right, gg_rct_Left_Everything, gg_unit_hvlt_0406, 2)
-    spawn:addBase("cityFront", gg_rct_Front_Town_Left, gg_rct_Right_Everything, gg_unit_n00B_0364,
-        gg_rct_Front_City_Right, gg_rct_Left_Everything, gg_unit_n00B_0399, 2)
-    spawn:addBase("citySide", gg_rct_Left_City, gg_rct_Right_Everything, gg_unit_n00B_0102, gg_rct_Right_City,
-        gg_rct_Left_Everything, gg_unit_n00B_0038, 2)
+    spawn:addBase("cityFront", gg_rct_Front_Town_Left, gg_rct_Right_Start, gg_unit_n00B_0364, gg_rct_Front_City_Right,
+        gg_rct_Left_Start, gg_unit_n00B_0399, 2)
+    spawn:addBase("citySide", gg_rct_Left_City, gg_rct_Right_Start_Bottom, gg_unit_n00B_0102, gg_rct_Right_City,
+        gg_rct_Left_Start_Top, gg_unit_n00B_0038, 2)
     spawn:addBase("kobold", gg_rct_Furbolg_Left, gg_rct_Right_Start_Top, gg_unit_ngt2_0525, gg_rct_Furbolg_Right,
         gg_rct_Left_Start_Bottom, gg_unit_ngt2_0455, 1)
     spawn:addBase("highElves", gg_rct_Left_High_Elves, gg_rct_Right_Start_Top, gg_unit_nheb_0109,
@@ -2523,7 +2587,7 @@ function spawnAddUnits()
 
     -- City Front Spawn
     spawn:addUnit("cityFront", "h007", 2, {2, 3, 4, 5, 6, 7}, 1, 2) -- Militia 1
-    spawn:addUnit("cityFront", "h015", 3, {2, 3, 4, 5, 6, 7}, 3, 5) -- Militia 2
+    spawn:addUnit("cityFront", "h015", 3, {2, 3, 4, 5, 6, 7}, 1, 5) -- Militia 2
     spawn:addUnit("cityFront", "hfoo", 3, {2, 3, 4, 5, 6, 7}, 4, 12) -- Footman 1
     spawn:addUnit("cityFront", "hcth", 2, {2, 3, 4, 5, 6}, 6, 12) -- Captian
 
@@ -2686,6 +2750,96 @@ function CAST_aiHero(triggerUnit)
         local pickedHero = ai.heroOptions[S2I(GetUnitUserData(triggerUnit))]
         ai:castSpell(pickedHero)
     end
+end
+
+function Init_PlayerBuysUnit()
+    local t = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SELL)
+    TriggerAddAction(t, function()
+        local sellingUnit = GetSellingUnit()
+        local buyingUnit = GetBuyingUnit()
+        local soldUnit = GetSoldUnit()
+        local buyingPlayer = GetOwningPlayer(buyingUnit)
+        local sellingPlayer = GetOwningPlayer(sellingUnit)
+
+        debugfunc(function()
+
+            -- Hero picked at beginning of game
+            if sellingUnit == gg_unit_n00C_0082 then
+                local g = CreateGroup()
+                g = GetUnitsOfPlayerAndTypeId(buyingPlayer, FourCC("h00H"))
+
+                if CountUnitsInGroup(g) == 1 then
+                    hero:setupHero(soldUnit)
+                else
+                    RemoveUnit(soldUnit)
+                end
+                DestroyGroup(g)
+            end
+        end, "hero:setupHero")
+
+    end)
+end
+
+function Init_Map()
+
+    FogEnableOff()
+    FogMaskEnableOff()
+    MeleeStartingVisibility()
+    udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
+    udg_ALL_PLAYERS = GetPlayersAll()
+
+    -- Turn on Bounty
+    ForForce(udg_ALL_PLAYERS, function()
+        SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer())
+    end)
+
+    -- Add Computers to their group
+    udg_PLAYERcomputers[1] = Player(18)
+    udg_PLAYERcomputers[2] = Player(19)
+    udg_PLAYERcomputers[3] = Player(20)
+    udg_PLAYERcomputers[4] = Player(21)
+    udg_PLAYERcomputers[5] = Player(22)
+    udg_PLAYERcomputers[6] = Player(23)
+
+    -- Create the Allied Computers
+    ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
+    ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
+    ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
+
+    -- Create the Federation Computers
+    ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
+    ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
+    ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
+
+    -- Create the Allied Users
+    ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
+
+    -- Create the Federation Users
+    ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
+
+    -- Change the color of Player 1 and Player 2
+    SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
+    SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
+
+    -- Change the color of the computer players to all match
+    ForForce(udg_PLAYERGRPallied, function()
+        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true)
+    end)
+    ForForce(udg_PLAYERGRPfederation, function()
+        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
+    end)
+
 end
 
 function InitSounds()
@@ -3912,6 +4066,15 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
     CameraSetupSetDestPosition(gg_cam_Camera_007, -24871.4, 1100.2, 0.0)
+end
+
+function Trig_testing_Actions()
+    SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
+end
+
+function InitTrig_testing()
+    gg_trg_testing = CreateTrigger()
+    TriggerAddAction(gg_trg_testing, Trig_testing_Actions)
 end
 
 function Trig_FUNC_Calculate_Level_Factor_Func002Func001C()
@@ -8753,272 +8916,13 @@ function InitTrig_SPAWN_Move_All()
     TriggerAddAction(gg_trg_SPAWN_Move_All, Trig_SPAWN_Move_All_Actions)
 end
 
-function Trig_Level_Up_Creeps_Func005C()
-    if (not (udg_INTcreepLevel >= 12)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Level_Up_Creeps_Actions()
-    udg_INTcreepLevel = (udg_INTcreepLevel + 1)
-    StartTimerBJ(udg_CreepUpgrade, false, (70.00 + (15.00 * I2R(udg_INTcreepLevel))))
-    TimerDialogSetTitleBJ(udg_TIMEWINcreepLevelUpgrade, (("Level " .. I2S(udg_INTcreepLevel)) .. " - Upgrading in:"))
-    if (Trig_Level_Up_Creeps_Func005C()) then
-        DestroyTimerDialogBJ(udg_TIMEWINcreepLevelUpgrade)
-        PauseTimerBJ(true, udg_CreepUpgrade)
-        DisableTrigger(GetTriggeringTrigger())
-    else
-    end
-end
-
-function InitTrig_Level_Up_Creeps()
-    gg_trg_Level_Up_Creeps = CreateTrigger()
-    DisableTrigger(gg_trg_Level_Up_Creeps)
-    TriggerRegisterTimerExpireEventBJ(gg_trg_Level_Up_Creeps, udg_CreepUpgrade)
-    TriggerAddAction(gg_trg_Level_Up_Creeps, Trig_Level_Up_Creeps_Actions)
-end
-
-function Trig_Set_up_Creep_Timer_Func005A()
-    TimerDialogDisplayForPlayerBJ(true, udg_TIMEWINcreepLevelUpgrade, GetEnumPlayer())
-end
-
-function Trig_Set_up_Creep_Timer_Actions()
-    StartTimerBJ(udg_CreepUpgrade, false, 90.00)
-    CreateTimerDialogBJ(udg_CreepUpgrade, (("Level " .. (I2S(udg_INTcreepLevel) .. " - ")) .. "Upgrading in:"))
-    udg_TIMEWINcreepLevelUpgrade = GetLastCreatedTimerDialogBJ()
-    ForForce(udg_ALL_PLAYERS, Trig_Set_up_Creep_Timer_Func005A)
-end
-
-function InitTrig_Set_up_Creep_Timer()
-    gg_trg_Set_up_Creep_Timer = CreateTrigger()
-    DisableTrigger(gg_trg_Set_up_Creep_Timer)
-    TriggerRegisterTimerEventSingle(gg_trg_Set_up_Creep_Timer, 5.00)
-    TriggerAddAction(gg_trg_Set_up_Creep_Timer, Trig_Set_up_Creep_Timer_Actions)
-end
-
-function Trig_Melee_Initialization_Func012A()
-    SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer())
-end
-
-function Trig_Melee_Initialization_Func042A()
-    SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true)
-end
-
-function Trig_Melee_Initialization_Func043A()
-    SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
-end
-
 function Trig_Melee_Initialization_Actions()
         init_Lua()
-    FogEnableOff()
-    FogMaskEnableOff()
-    TriggerExecute(gg_trg_Default_Unit_Groups_and_Regions)
-    MeleeStartingVisibility()
-    udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
-    udg_ALL_PLAYERS = GetPlayersAll()
-    ForForce(udg_ALL_PLAYERS, Trig_Melee_Initialization_Func012A)
-    udg_PLAYERcomputers[1] = Player(18)
-    udg_PLAYERcomputers[2] = Player(19)
-    udg_PLAYERcomputers[3] = Player(20)
-    udg_PLAYERcomputers[4] = Player(21)
-    udg_PLAYERcomputers[5] = Player(22)
-    udg_PLAYERcomputers[6] = Player(23)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
-    SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
-    SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
-    ForForce(udg_PLAYERGRPallied, Trig_Melee_Initialization_Func042A)
-    ForForce(udg_PLAYERGRPfederation, Trig_Melee_Initialization_Func043A)
 end
 
 function InitTrig_Melee_Initialization()
     gg_trg_Melee_Initialization = CreateTrigger()
     TriggerAddAction(gg_trg_Melee_Initialization, Trig_Melee_Initialization_Actions)
-end
-
-function Trig_Hero_Picked_Conditions()
-    if (not (GetSellingUnit() == gg_unit_n00C_0082)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Picked_Func002Func001C()
-    if (not (IsUnitAlly(GetBuyingUnit(), ForcePickRandomPlayer(udg_PLAYERGRPallied)) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Picked_Func002Func013Func001C()
-    if (not (GetUnitTypeId(GetSoldUnit()) == FourCC("E001"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Picked_Func002Func013Func002C()
-    if (not (GetUnitTypeId(GetSoldUnit()) == FourCC("H00R"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Picked_Func002Func013Func003C()
-    if (not (GetUnitTypeId(GetSoldUnit()) == FourCC("H009"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Picked_Func002Func013Func004C()
-    if (not (GetUnitTypeId(GetSoldUnit()) == FourCC("H00J"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Picked_Func002Func013Func005C()
-    if (not (GetUnitTypeId(GetSoldUnit()) == FourCC("E002"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Picked_Func002Func013A()
-    if (Trig_Hero_Picked_Func002Func013Func001C()) then
-        ReplaceUnitBJ(GetEnumUnit(), FourCC("h00I"), bj_UNIT_STATE_METHOD_RELATIVE)
-    else
-    end
-    if (Trig_Hero_Picked_Func002Func013Func002C()) then
-        ReplaceUnitBJ(GetEnumUnit(), FourCC("h00B"), bj_UNIT_STATE_METHOD_RELATIVE)
-    else
-    end
-    if (Trig_Hero_Picked_Func002Func013Func003C()) then
-        ReplaceUnitBJ(GetEnumUnit(), FourCC("h00Y"), bj_UNIT_STATE_METHOD_RELATIVE)
-    else
-    end
-    if (Trig_Hero_Picked_Func002Func013Func004C()) then
-        ReplaceUnitBJ(GetEnumUnit(), FourCC("h00Z"), bj_UNIT_STATE_METHOD_RELATIVE)
-    else
-    end
-    if (Trig_Hero_Picked_Func002Func013Func005C()) then
-        ReplaceUnitBJ(GetEnumUnit(), FourCC("h00Q"), bj_UNIT_STATE_METHOD_RELATIVE)
-                UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A031"))
-                UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A005"))
-                UnitMakeAbilityPermanent(udg_TEMP_Unit, true, FourCC("A037"))
-    else
-    end
-    udg_Alters[GetConvertedPlayerId(GetOwningPlayer(udg_TEMP_Unit))] = GetLastReplacedUnitBJ()
-end
-
-function Trig_Hero_Picked_Func002C()
-    if (not (CountUnitsInGroup(GetUnitsOfPlayerAndTypeId(GetOwningPlayer(GetSoldUnit()), FourCC("h00H"))) == 1)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Picked_Actions()
-    if (Trig_Hero_Picked_Func002C()) then
-        if (Trig_Hero_Picked_Func002Func001C()) then
-            SetUnitPositionLoc(GetSoldUnit(), GetRectCenter(gg_rct_Left_Castle))
-        else
-            SetUnitPositionLoc(GetSoldUnit(), GetRectCenter(gg_rct_Right_Castle))
-        end
-        udg_UNIT_pickedHero[GetConvertedPlayerId(GetOwningPlayer(GetSoldUnit()))] = GetSoldUnit()
-        udg_TEMP_Unit = GetSoldUnit()
-        ConditionalTriggerExecute(gg_trg_Hero_Add_Starting_Abilities)
-        RemoveUnit(GetBuyingUnit())
-        UnitAddItemByIdSwapped(FourCC("I000"), udg_TEMP_Unit)
-        ResetToGameCameraForPlayer(GetOwningPlayer(GetBuyingUnit()), 0)
-        PanCameraToTimedLocForPlayer(GetOwningPlayer(GetBuyingUnit()), GetUnitLoc(GetSoldUnit()), 0)
-        SelectUnitForPlayerSingle(GetSoldUnit(), GetOwningPlayer(GetSoldUnit()))
-        udg_TEMP_UnitGroup = GetUnitsOfPlayerAndTypeId(GetOwningPlayer(udg_TEMP_Unit), FourCC("halt"))
-        ForGroupBJ(udg_TEMP_UnitGroup, Trig_Hero_Picked_Func002Func013A)
-                DestroyGroup ( udg_TEMP_UnitGroup )
-                EnableTrigger(trg_Auto_Zoom)
-    else
-        DisplayTextToForce(GetForceOfPlayer(GetOwningPlayer(GetBuyingUnit())), "TRIGSTR_402")
-        RemoveUnit(GetSoldUnit())
-    end
-end
-
-function InitTrig_Hero_Picked()
-    gg_trg_Hero_Picked = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Hero_Picked, EVENT_PLAYER_UNIT_SELL)
-    TriggerAddCondition(gg_trg_Hero_Picked, Condition(Trig_Hero_Picked_Conditions))
-    TriggerAddAction(gg_trg_Hero_Picked, Trig_Hero_Picked_Actions)
-end
-
-function Trig_Hero_Add_Starting_Abilities_Func001C()
-    if (not (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H00R"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Add_Starting_Abilities_Func002C()
-    if (not (GetUnitTypeId(udg_TEMP_Unit) == FourCC("E002"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Add_Starting_Abilities_Func003C()
-    if (not (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H009"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Add_Starting_Abilities_Func004C()
-    if (not (GetUnitTypeId(udg_TEMP_Unit) == FourCC("H00J"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Hero_Add_Starting_Abilities_Actions()
-    if (Trig_Hero_Add_Starting_Abilities_Func001C()) then
-        SelectHeroSkill(udg_TEMP_Unit, FourCC("A001"))
-    else
-    end
-    if (Trig_Hero_Add_Starting_Abilities_Func002C()) then
-        SelectHeroSkill(udg_TEMP_Unit, FourCC("A02Y"))
-    else
-    end
-    if (Trig_Hero_Add_Starting_Abilities_Func003C()) then
-        SelectHeroSkill(udg_TEMP_Unit, FourCC("A01I"))
-    else
-    end
-    if (Trig_Hero_Add_Starting_Abilities_Func004C()) then
-        SelectHeroSkill(udg_TEMP_Unit, FourCC("A04I"))
-    else
-    end
-    ModifyHeroSkillPoints(udg_TEMP_Unit, bj_MODIFYMETHOD_ADD, 1)
-end
-
-function InitTrig_Hero_Add_Starting_Abilities()
-    gg_trg_Hero_Add_Starting_Abilities = CreateTrigger()
-    TriggerAddAction(gg_trg_Hero_Add_Starting_Abilities, Trig_Hero_Add_Starting_Abilities_Actions)
 end
 
 function Trig_Select_Tavern_Create_Units_Func001A()
@@ -9157,6 +9061,7 @@ function InitTrig_Default_Unit_Groups_and_Regions()
 end
 
 function InitCustomTriggers()
+    InitTrig_testing()
     InitTrig_FUNC_Calculate_Level_Factor()
     InitTrig_Open_Gate_Right_Murloc()
     InitTrig_Open_Gate_Left_Murloc()
@@ -9252,11 +9157,7 @@ function InitCustomTriggers()
     InitTrig_End_Of_Game_Left()
     InitTrig_End_Of_Game_Right()
     InitTrig_SPAWN_Move_All()
-    InitTrig_Level_Up_Creeps()
-    InitTrig_Set_up_Creep_Timer()
     InitTrig_Melee_Initialization()
-    InitTrig_Hero_Picked()
-    InitTrig_Hero_Add_Starting_Abilities()
     InitTrig_Select_Tavern_Create_Units()
     InitTrig_Select_Tavern()
     InitTrig_Default_Unit_Groups_and_Regions()
