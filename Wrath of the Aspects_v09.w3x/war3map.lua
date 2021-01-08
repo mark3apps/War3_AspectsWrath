@@ -295,6 +295,7 @@ gg_cam_Camera_005 = nil
 gg_cam_Camera_006 = nil
 gg_cam_Camera_007 = nil
 gg_snd_PurgeTarget1 = nil
+gg_trg_testing = nil
 gg_trg_FUNC_Calculate_Level_Factor = nil
 gg_trg_Open_Gate_Right_Murloc = nil
 gg_trg_Open_Gate_Left_Murloc = nil
@@ -441,7 +442,6 @@ gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
-gg_trg_testing = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -854,32 +854,466 @@ function InitGlobals()
     end
 end
 
+function Init_orderStrings()
+    oid = {
+        OFFSET = 851970,
+        absorb = 852529,
+        acidbomb = 852662,
+        acolyteharvest = 852185,
+        AImove = 851988,
+        ambush = 852131,
+        ancestralspirit = 852490,
+        ancestralspirittarget = 852491,
+        animatedead = 852217,
+        antimagicshell = 852186,
+        attack = 851983,
+        attackground = 851984,
+        attackonce = 851985,
+        attributemodskill = 852576,
+        auraunholy = 852215,
+        auravampiric = 852216,
+        autodispel = 852132,
+        autodispeloff = 852134,
+        autodispelon = 852133,
+        autoentangle = 852505,
+        autoentangleinstant = 852506,
+        autoharvestgold = 852021,
+        autoharvestlumber = 852022,
+        avatar = 852086,
+        avengerform = 852531,
+        awaken = 852466,
+        banish = 852486,
+        barkskin = 852135,
+        barkskinoff = 852137,
+        barkskinon = 852136,
+        battleroar = 852099,
+        battlestations = 852099,
+        bearform = 852138,
+        berserk = 852100,
+        blackarrow = 852577,
+        blackarrowoff = 852579,
+        blackarrowon = 852578,
+        blight = 852187,
+        blink = 852525,
+        blizzard = 852089,
+        bloodlust = 852101,
+        bloodlustoff = 852103,
+        bloodluston = 852102,
+        board = 852043,
+        breathoffire = 852580,
+        breathoffrost = 852560,
+        build = 851994,
+        burrow = 852533,
+        cannibalize = 852188,
+        carrionscarabs = 852551,
+        carrionscarabsinstant = 852554,
+        carrionscarabsoff = 852553,
+        carrionscarabson = 852552,
+        carrionswarm = 852218,
+        chainlightning = 852119,
+        channel = 852600,
+        charm = 852581,
+        chemicalrage = 852663,
+        cloudoffog = 852473,
+        clusterrockets = 852652,
+        coldarrows = 852244,
+        coldarrowstarg = 852243,
+        controlmagic = 852474,
+        corporealform = 852493,
+        corrosivebreath = 852140,
+        coupleinstant = 852508,
+        coupletarget = 852507,
+        creepanimatedead = 852246,
+        creepdevour = 852247,
+        creepheal = 852248,
+        creephealoff = 852250,
+        creephealon = 852249,
+        creepthunderbolt = 852252,
+        creepthunderclap = 852253,
+        cripple = 852189,
+        curse = 852190,
+        curseoff = 852192,
+        curseon = 852191,
+        cyclone = 852144,
+        darkconversion = 852228,
+        darkportal = 852229,
+        darkritual = 852219,
+        darksummoning = 852220,
+        deathanddecay = 852221,
+        deathcoil = 852222,
+        deathpact = 852223,
+        decouple = 852509,
+        defend = 852055,
+        detectaoe = 852015,
+        detonate = 852145,
+        devour = 852104,
+        devourmagic = 852536,
+        disassociate = 852240,
+        disenchant = 852495,
+        dismount = 852470,
+        dispel = 852057,
+        divineshield = 852090,
+        doom = 852583,
+        drain = 852487,
+        dreadlordinferno = 852224,
+        dropitem = 852001,
+        drunkenhaze = 852585,
+        earthquake = 852121,
+        eattree = 852146,
+        elementalfury = 852586,
+        ensnare = 852106,
+        ensnareoff = 852108,
+        ensnareon = 852107,
+        entangle = 852147,
+        entangleinstant = 852148,
+        entanglingroots = 852171,
+        etherealform = 852496,
+        evileye = 852105,
+        faeriefire = 852149,
+        faeriefireoff = 852151,
+        faeriefireon = 852150,
+        fanofknives = 852526,
+        farsight = 852122,
+        fingerofdeath = 852230,
+        firebolt = 852231,
+        flamestrike = 852488,
+        flamingarrows = 852174,
+        flamingarrowstarg = 852173,
+        flamingattack = 852540,
+        flamingattacktarg = 852539,
+        flare = 852060,
+        forceboard = 852044,
+        forceofnature = 852176,
+        forkedlightning = 852586,
+        freezingbreath = 852195,
+        frenzy = 852561,
+        frenzyoff = 852563,
+        frenzyon = 852562,
+        frostarmor = 852225,
+        frostarmoroff = 852459,
+        frostarmoron = 852458,
+        frostnova = 852226,
+        getitem = 851981,
+        gold2lumber = 852233,
+        grabtree = 852511,
+        harvest = 852018,
+        heal = 852063,
+        healingspray = 852664,
+        healingward = 852109,
+        healingwave = 852501,
+        healoff = 852065,
+        healon = 852064,
+        hex = 852502,
+        holdposition = 851993,
+        holybolt = 852092,
+        howlofterror = 852588,
+        humanbuild = 851995,
+        immolation = 852177,
+        impale = 852555,
+        incineratearrow = 852670,
+        incineratearrowoff = 852672,
+        incineratearrowon = 852671,
+        inferno = 852232,
+        innerfire = 852066,
+        innerfireoff = 852068,
+        innerfireon = 852067,
+        instant = 852200,
+        invisibility = 852069,
+        itemillusion = 852274,
+        lavamonster = 852667,
+        lightningshield = 852110,
+        load = 852046,
+        loadarcher = 852142,
+        loadcorpse = 852050,
+        loadcorpseinstant = 852053,
+        locustswarm = 852556,
+        lumber2gold = 852234,
+        magicdefense = 852478,
+        magicleash = 852480,
+        magicundefense = 852479,
+        manaburn = 852179,
+        manaflareoff = 852513,
+        manaflareon = 852512,
+        manashieldoff = 852590,
+        manashieldon = 852589,
+        massteleport = 852093,
+        mechanicalcritter = 852564,
+        metamorphosis = 852180,
+        militia = 852072,
+        militiaconvert = 852071,
+        militiaoff = 852073,
+        militiaunconvert = 852651,
+        mindrot = 852565,
+        mirrorimage = 852123,
+        monsoon = 852591,
+        mount = 852469,
+        mounthippogryph = 852143,
+        move = 851986,
+        nagabuild = 852467,
+        neutraldetectaoe = 852023,
+        neutralinteract = 852566,
+        neutralspell = 852630,
+        nightelfbuild = 851997,
+        orcbuild = 851996,
+        parasite = 852601,
+        parasiteoff = 852603,
+        parasiteon = 852602,
+        patrol = 851990,
+        phaseshift = 852514,
+        phaseshiftinstant = 852517,
+        phaseshiftoff = 852516,
+        phaseshifton = 852515,
+        phoenixfire = 852481,
+        phoenixmorph = 852482,
+        poisonarrows = 852255,
+        poisonarrowstarg = 852254,
+        polymorph = 852074,
+        possession = 852196,
+        preservation = 852568,
+        purge = 852111,
+        rainofchaos = 852237,
+        rainoffire = 852238,
+        raisedead = 852197,
+        raisedeadoff = 852199,
+        raisedeadon = 852198,
+        ravenform = 852155,
+        recharge = 852157,
+        rechargeoff = 852159,
+        rechargeon = 852158,
+        rejuvination = 852160,
+        renew = 852161,
+        renewoff = 852163,
+        renewon = 852162,
+        repair = 852024,
+        repairoff = 852026,
+        repairon = 852025,
+        replenish = 852542,
+        replenishlife = 852545,
+        replenishlifeoff = 852547,
+        replenishlifeon = 852546,
+        replenishmana = 852548,
+        replenishmanaoff = 852550,
+        replenishmanaon = 852549,
+        replenishoff = 852544,
+        replenishon = 852543,
+        request_hero = 852239,
+        requestsacrifice = 852201,
+        restoration = 852202,
+        restorationoff = 852204,
+        restorationon = 852203,
+        resumebuild = 851999,
+        resumeharvesting = 852017,
+        resurrection = 852094,
+        returnresources = 852020,
+        revenge = 852241,
+        revive = 852039,
+        roar = 852164,
+        robogoblin = 852656,
+        root = 852165,
+        sacrifice = 852205,
+        sanctuary = 852569,
+        scout = 852181,
+        selfdestruct = 852040,
+        selfdestructoff = 852042,
+        selfdestructon = 852041,
+        sentinel = 852182,
+        setrally = 851980,
+        shadowsight = 852570,
+        shadowstrike = 852527,
+        shockwave = 852125,
+        silence = 852592,
+        sleep = 852227,
+        slow = 852075,
+        slowoff = 852077,
+        slowon = 852076,
+        smart = 851971,
+        soulburn = 852668,
+        soulpreservation = 852242,
+        spellshield = 852571,
+        spellshieldaoe = 852572,
+        spellsteal = 852483,
+        spellstealoff = 852485,
+        spellstealon = 852484,
+        spies = 852235,
+        spiritlink = 852499,
+        spiritofvengeance = 852528,
+        spirittroll = 852573,
+        spiritwolf = 852126,
+        stampede = 852593,
+        standdown = 852113,
+        starfall = 852183,
+        stasistrap = 852114,
+        steal = 852574,
+        stomp = 852127,
+        stoneform = 852206,
+        stop = 851972,
+        submerge = 852604,
+        summonfactory = 852658,
+        summongrizzly = 852594,
+        summonphoenix = 852489,
+        summonquillbeast = 852595,
+        summonwareagle = 852596,
+        tankdroppilot = 852079,
+        tankloadpilot = 852080,
+        tankpilot = 852081,
+        taunt = 852520,
+        thunderbolt = 852095,
+        thunderclap = 852096,
+        tornado = 852597,
+        townbelloff = 852083,
+        townbellon = 852082,
+        tranquility = 852184,
+        transmute = 852665,
+        unavatar = 852087,
+        unavengerform = 852532,
+        unbearform = 852139,
+        unburrow = 852534,
+        uncoldarrows = 852245,
+        uncorporealform = 852494,
+        undeadbuild = 851998,
+        undefend = 852056,
+        undivineshield = 852091,
+        unetherealform = 852497,
+        unflamingarrows = 852175,
+        unflamingattack = 852541,
+        unholyfrenzy = 852209,
+        unimmolation = 852178,
+        unload = 852047,
+        unloadall = 852048,
+        unloadallcorpses = 852054,
+        unloadallinstant = 852049,
+        unpoisonarrows = 852256,
+        unravenform = 852156,
+        unrobogoblin = 852657,
+        unroot = 852166,
+        unstableconcoction = 852500,
+        unstoneform = 852207,
+        unsubmerge = 852605,
+        unsummon = 852210,
+        unwindwalk = 852130,
+        vengeance = 852521,
+        vengeanceinstant = 852524,
+        vengeanceoff = 852523,
+        vengeanceon = 852522,
+        volcano = 852669,
+        voodoo = 852503,
+        ward = 852504,
+        waterelemental = 852097,
+        wateryminion = 852598,
+        web = 852211,
+        weboff = 852213,
+        webon = 852212,
+        whirlwind = 852128,
+        windwalk = 852129,
+        wispharvest = 852214,
+        scrollofspeed = 852285,
+        cancel = 851976,
+        moveslot1 = 852002,
+        moveslot2 = 852003,
+        moveslot3 = 852004,
+        moveslot4 = 852005,
+        moveslot5 = 852006,
+        moveslot6 = 852007,
+        useslot1 = 852008,
+        useslot2 = 852009,
+        useslot3 = 852010,
+        useslot4 = 852011,
+        useslot5 = 852012,
+        useslot6 = 852013,
+        skillmenu = 852000,
+        stunned = 851973,
+        instant1 = 851991,
+        instant2 = 851987,
+        instant3 = 851975,
+        instant4 = 852019
+    }
+    ordersIgnore = {
+        waterelemental = oid.waterelemental,
+        forkedlightning = oid.forkedlightning,
+        frostarmor = oid.frostarmor,
+        stomp = oid.stomp,
+        faeriefire = oid.faeriefire,
+        purge = oid.purge,
+        rainoffire = oid.rainoffire,
+        attack = oid.attack,
+        stop = oid.stop,
+        rejuvination = oid.rejuvination,
+        bloodlust = oid.bloodlust,
+        defend = oid.defend,
+        undefend = oid.undefend,
+        lightningshield = oid.lightningshield,
+        spellsteal = oid.spellsteal,
+        roar = oid.roar,
+        slow = oid.slow,
+        dispel = oid.dispel,
+        bearform = oid.bearform,
+        unbearform = oid.unbearform,
+        polymorph = oid.polymorph,
+        breathoffrost = oid.breathoffrost,
+        curse = oid.curse,
+        parasite = oid.parasite,
+        innerfire = oid.innerfire,
+        recharge = oid.recharge,
+        carrionswarm = oid.carrionswarm,
+        thunderclap = oid.thunderclap,
+        holybolt = oid.holybolt,
+        shockwave = oid.shockwave,
+        berserk = oid.berserk,
+        locustswarm = oid.locustswarm,
+        chainlightning = oid.chainlightning,
+        coldarrows = oid.coldarrows,
+        ensnare = oid.ensnare,
+        magicdefense = oid.magicdefense,
+        magicundefense = oid.magicundefense,
+        devourmagic = oid.devourmagic,
+        summonwareagle = oid.summonwareagle,
+        whirlwind = oid.whirlwind,
+        flamingarrows = oid.flamingarrows,
+        parasiteon = oid.parasiteon
+    }
+end
+
 function init_Lua()
-    debugPrint = 2
+    debugprint = 2
 
     -- Define Classes
     debugfunc(function()
+        Init_orderStrings()
+        init_indexerClass()
         init_heroClass()
         init_spawnClass()
         init_aiClass()
     end, "Define Classes")
     dprint("Classes Defined", 2)
 
+    -- Start the Map init
+    Init_Map()
+
     -- Init Classes
     debugfunc(function()
-        hero = hero_Class:new()
-        ai = ai_Class:new()
-        spawn = spawn_Class:new()
+        indexer = indexer_Class.new()
+        hero = hero_Class.new()
+        ai = ai_Class.new()
+        spawn = spawn_Class.new()
+
     end, "Init Classes")
 
     dprint("Classes Initialized", 2)
 
     -- Init Trigger
     debugfunc(function()
-        initTrig_Auto_Zoom()
-        Init_Hero_Levels_Up()
-        Init_AI_Spell_Start()
+
+        init_AutoZoom()
+        Init_HeroLevelsUp()
+        Init_UnitCastsSpell()
+        Init_PlayerBuysUnit()
         init_spawnTimers()
+        Init_UnitEntersMap()
+        Init_stopCasting()
+        Init_finishCasting()
+        Init_IssuedOrder()
+        Init_UnitDies()
+        Init_UnitEntersMap()
     end, "Init Triggers")
 
     dprint("Triggers Initialized", 2)
@@ -897,11 +1331,6 @@ function init_Lua()
     init_Delayed_1()
     init_Delayed_10()
 
-    -- Do the rest of the Map Initialization
-    debugfunc(function()
-        Init_Map()
-    end, "Init Map")
-
     dprint("Init Finished")
 end
 
@@ -911,9 +1340,11 @@ function init_Delayed_1()
     TriggerRegisterTimerEventSingle(t, 1)
     TriggerAddAction(t, function()
         debugfunc(function()
-            ai:pickHeroes()
+            --ai:pickHeroes()
             dprint("pick Heroes Successfull", 2)
-            ai:init_loopStates()
+            --ai:init_loopStates()
+
+            orderStartingUnits()
             dprint("AI Started", 2)
             spawn:startSpawn()
             dprint("Spawn Started", 2)
@@ -927,8 +1358,8 @@ function init_Delayed_10()
     TriggerRegisterTimerEventSingle(t, 10)
     TriggerAddAction(t, function()
         debugfunc(function()
-            FogMaskEnableOn()
-            FogEnableOn()
+            -- FogMaskEnableOn()
+            -- FogEnableOn()
 
             -- Set up the Creep Event Timer
             StartTimerBJ(udg_EventTimer, false, 350.00)
@@ -939,6 +1370,116 @@ end
 --
 -- Init Classes
 --
+
+function init_indexerClass()
+    indexer_Class = {}
+
+    indexer_Class.new = function()
+        local self = {}
+
+        self.data = {}
+
+        function self:add(unit, order)
+            order = order or "attack"
+            local unitId = GetHandleId(unit)
+
+            local x = GetUnitX(unit)
+            local y = GetUnitY(unit)
+            print("Testing:" .. unitId)
+            self.data[unitId] = {}
+            self.data[unitId] = {
+                xSpawn = x,
+                ySpawn = y,
+                order = order,
+                unit = unit,
+                sfx = {}
+            }
+        end
+
+        function self:updateEnd(unit, x, y)
+            local unitId = GetHandleId(unit)
+            self.data[unitId].xEnd = x
+            self.data[unitId].yEnd = y
+        end
+
+        function self:order(unit, order)
+
+            local unitId = GetHandleId(unit)
+            local alliedForce = IsUnitInForce(unit, udg_PLAYERGRPallied)
+            local p, x, y
+            local data = self.data[unitId]
+            order = order or data.order
+
+            if data.xEnd == nil or data.yEnd == nil then
+
+                if RectContainsUnit(gg_rct_Big_Top_Left, unit) or RectContainsUnit(gg_rct_Big_Top_Left_Center, unit) or
+                    RectContainsUnit(gg_rct_Big_Top_Right_Center, unit) or RectContainsUnit(gg_rct_Big_Top_Right, unit) then
+
+                    if alliedForce then
+                        p = GetRandomLocInRect(gg_rct_Right_Start_Top)
+                    else
+                        p = GetRandomLocInRect(gg_rct_Left_Start_Top)
+                    end
+
+                elseif RectContainsUnit(gg_rct_Big_Middle_Left, unit) or
+                    RectContainsUnit(gg_rct_Big_Middle_Left_Center, unit) or
+                    RectContainsUnit(gg_rct_Big_Middle_Right_Center, unit) or
+                    RectContainsUnit(gg_rct_Big_Middle_Right, unit) then
+
+                    if alliedForce then
+                        p = GetRandomLocInRect(gg_rct_Right_Start)
+                    else
+                        p = GetRandomLocInRect(gg_rct_Left_Start)
+                    end
+
+                else
+
+                    if alliedForce then
+                        p = GetRandomLocInRect(gg_rct_Right_Start_Bottom)
+                    else
+                        p = GetRandomLocInRect(gg_rct_Left_Start_Bottom)
+                    end
+                end
+
+                x = GetLocationX(p)
+                y = GetLocationY(p)
+                RemoveLocation(p)
+
+                self.data[unitId].xEnd = x
+                self.data[unitId].yEnd = y
+            else
+                x = data.xEnd
+                y = data.yEnd
+            end
+
+            -- Issue Order
+            IssuePointOrder(unit, order, x, y)
+        end
+
+        function self:addKey(unit, key, value)
+            value = value or 0
+            local unitId = GetHandleId(unit)
+            self.data[unitId][key] = value
+        end
+
+        function self:get(unit)
+            local unitId = GetHandleId(unit)
+            return self.data[unitId]
+        end
+
+        function self:set(unit, data)
+            local unitId = GetHandleId(unit)
+            self.data[unitId] = data
+        end
+
+        function self:remove(unit)
+            self.data[GetHandleId(unit)] = nil
+            return true
+        end
+
+        return self
+    end
+end
 
 -- Spawn Class
 function init_spawnClass()
@@ -962,7 +1503,7 @@ function init_spawnClass()
         self.wave = 1
         self.base = ""
         self.baseI = 0
-        self.unitIndex = ""
+        self.indexer = ""
         self.alliedBaseAlive = false
         self.fedBaseAlive = false
         self.unitInWave = false
@@ -970,8 +1511,7 @@ function init_spawnClass()
         self.numOfUnits = 0
         self.unitType = ""
 
-        function self:addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition,
-            destination)
+        function self:addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition)
             -- Add all of the info the base and add the base name to the base list
             self[baseName] = {
                 allied = {
@@ -1005,7 +1545,7 @@ function init_spawnClass()
         end
 
         function self:isUnitInWave()
-            local waves = self[self.base].units[self.unitIndex].waves
+            local waves = self[self.base].units[self.indexer].waves
 
             for index, value in ipairs(waves) do
                 if value == self.wave then
@@ -1019,8 +1559,8 @@ function init_spawnClass()
         end
 
         function self:isUnitInLevel()
-            local levelStart = self[self.base].units[self.unitIndex].level[1]
-            local levelEnd = self[self.base].units[self.unitIndex].level[2]
+            local levelStart = self[self.base].units[self.indexer].level[1]
+            local levelEnd = self[self.base].units[self.indexer].level[2]
 
             if (self.creepLevel >= levelStart and self.creepLevel <= levelEnd) then
                 self.unitInLevel = true
@@ -1038,17 +1578,15 @@ function init_spawnClass()
             self:baseAlive(self.base)
             self:isUnitInWave()
             self:isUnitInLevel()
-            self.numOfUnits = self[self.base].units[self.unitIndex].numOfUnits
-            self.unitType = self[self.base].units[self.unitIndex].unitType
+            self.numOfUnits = self[self.base].units[self.indexer].numOfUnits
+            self.unitType = self[self.base].units[self.indexer].unitType
         end
 
         function self:spawnUnits()
-            local pStart
-            local pDest
-            local spawnedUnit
+            local pStart, xStart, yStart, pDest, xDest, yDest, spawnedUnit
 
             for i = 1, self:unitCount(self.base) do
-                self.unitIndex = i
+                self.indexer = i
                 self:checkSpawnUnit()
 
                 if self.unitInWave and self.unitInLevel then
@@ -1056,28 +1594,47 @@ function init_spawnClass()
                     if self.alliedBaseAlive then
                         for n = 1, self.numOfUnits do
                             pStart = GetRandomLocInRect(self[self.base].allied.startPoint)
-                            pDest = GetRandomLocInRect(self[self.base].allied.endPoint)
-                            spawnedUnit = CreateUnitAtLoc(Player(GetRandomInt(18, 20)), FourCC(self.unitType), pStart,
-                                              bj_UNIT_FACING)
-                            SetUnitUserData(spawnedUnit, self[self.base].destination)
-                            IssuePointOrderLoc(spawnedUnit, "attack", pDest)
-
+                            xStart = GetLocationX(pStart)
+                            yStart = GetLocationY(pStart)
                             RemoveLocation(pStart)
+
+                            pDest = GetRandomLocInRect(self[self.base].allied.endPoint)
+                            xDest = GetLocationX(pDest)
+                            yDest = GetLocationY(pDest)
                             RemoveLocation(pDest)
+
+                            print(self.unitType)
+
+                            spawnedUnit = CreateUnit(Player(GetRandomInt(18, 20)), FourCC(self.unitType), xStart,
+                                              yStart, bj_UNIT_FACING)
+
+                            indexer:add(spawnedUnit)
+                            indexer:updateEnd(spawnedUnit, xDest, yDest)
+                            indexer:order(spawnedUnit)
+
                         end
                     end
 
                     if self.fedBaseAlive then
                         for n = 1, self.numOfUnits do
-                            pStart = GetRandomLocInRect(self[self.base].fed.startPoint)
-                            pDest = GetRandomLocInRect(self[self.base].fed.endPoint)
-                            spawnedUnit = CreateUnitAtLoc(Player(GetRandomInt(21, 23)), FourCC(self.unitType), pStart,
-                                              bj_UNIT_FACING)
-                            SetUnitUserData(spawnedUnit, self[self.base].destination)
-                            IssuePointOrderLoc(spawnedUnit, "attack", pDest)
 
+                            pStart = GetRandomLocInRect(self[self.base].fed.startPoint)
+                            xStart = GetLocationX(pStart)
+                            yStart = GetLocationY(pStart)
                             RemoveLocation(pStart)
+
+                            pDest = GetRandomLocInRect(self[self.base].fed.endPoint)
+                            xDest = GetLocationX(pDest)
+                            yDest = GetLocationY(pDest)
                             RemoveLocation(pDest)
+
+                            print(self.unitType)
+                            spawnedUnit = CreateUnit(Player(GetRandomInt(21, 23)), FourCC(self.unitType), xStart,
+                            yStart, bj_UNIT_FACING)
+
+                            indexer:add(spawnedUnit)
+                            indexer:updateEnd(spawnedUnit, xDest, yDest)
+                            indexer:order(spawnedUnit)
                         end
                     end
                 end
@@ -1109,9 +1666,9 @@ function init_spawnClass()
             self.base = self.bases[self.baseI]
 
             -- Spawn the Units at the selected Base
-            DisableTrigger(gg_trg_Creeps_keep_going_after_Order)
+            DisableTrigger(Trig_UnitEntersMap)
             self:spawnUnits()
-            EnableTrigger(gg_trg_Creeps_keep_going_after_Order)
+            EnableTrigger(Trig_UnitEntersMap)
         end
 
         function self:upgradeCreeps()
@@ -1122,6 +1679,8 @@ function init_spawnClass()
             else
                 StartTimerBJ(self.creepLevelTimer, false, (70 + (15 * self.creepLevel)))
             end
+            
+            DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)
         end
 
         -- Start the Spawn Loop
@@ -1153,7 +1712,6 @@ function init_spawnTimers()
 
     Trig_upgradeCreeps = CreateTrigger()
     TriggerAddAction(Trig_upgradeCreeps, function()
-        print("Is this even working?")
         debugfunc(function()
             spawn:upgradeCreeps()
         end, "spawn:upgradeCreeps()")
@@ -2382,15 +2940,17 @@ function init_heroClass()
 
             -- Get home Base Location
             if playerNumber < 7 then
-                x = GetRectCenterX(gg_rct_Left_Hero)
-                y = GetRectCenterY(gg_rct_Left_Hero)
+                x = GetRectCenterX(gg_rct_Left_Castle)
+                y = GetRectCenterY(gg_rct_Left_Castle)
             else
-                x = GetRectCenterX(gg_rct_Right_Hero)
-                y = GetRectCenterY(gg_rct_Right_Hero)
+                x = GetRectCenterX(gg_rct_Right_Castle)
+                y = GetRectCenterY(gg_rct_Right_Castle)
             end
 
             -- Move hero to home base
             SetUnitPosition(unit, x, y)
+            SelectUnitForPlayerSingle(unit, player)
+            PanCameraToTimedForPlayer(player, x, y, 0)
 
             -- Give the hero the required Skill points for the spells
             ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
@@ -2398,7 +2958,7 @@ function init_heroClass()
                 picked = spells[spells.startingSpells[i]]
 
                 -- Have the hero learn the spell
-                SelectHeroSkill(unit, pickedSpell.id)
+                SelectHeroSkill(unit, picked.id)
             end
 
             -- Add the Permanent Spells for the Hero
@@ -2406,12 +2966,12 @@ function init_heroClass()
                 picked = spells[spells.permanentSpells[i]]
 
                 -- Make the Spell Permanent
-                UnitMakeAbilityPermanent(unit, true, pickedSpell.id)
+                UnitMakeAbilityPermanent(unit, true, picked.id)
             end
 
             -- Give the Hero starting Items
             for i = 1, #spells.startingItems do
-                picked = self.item[#spells.startingItem[i]]
+                picked = self.item[spells.startingItems[i]]
 
                 -- Make the Spell Permanent
                 UnitAddItemById(unit, picked.id)
@@ -2444,7 +3004,7 @@ end
 function dprint(message, level)
     level = level or 1
 
-    if debugPrint >= level then
+    if debugprint >= level then
         print("|cff00ff00[debug " .. level .. "]|r " .. tostring(message))
     end
 end
@@ -2480,55 +3040,55 @@ function spawnAddBases()
     -- addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
 
     spawn:addBase("arcane", gg_rct_Left_Arcane, gg_rct_Right_Start_Bottom, gg_unit_h003_0015, gg_rct_Right_Arcane,
-        gg_rct_Left_Start_Top, gg_unit_h003_0007, 3)
+        gg_rct_Left_Start_Top, gg_unit_h003_0007)
     spawn:addBase("arcaneCreep", gg_rct_Left_Arcane, gg_rct_Left_Elemental_Start, gg_unit_h003_0015,
-        gg_rct_Right_Arcane, gg_rct_Right_Elemental_Start, gg_unit_h003_0007, 7)
-    spawn:addBase("arcaneHero", gg_rct_Arcane_Hero_Left, gg_rct_Right_Start_Bottom, gg_unit_hars_0017,
-        gg_rct_Arcane_Hero_Right, gg_rct_Left_Start_Top, gg_unit_hars_0158, 3)
+        gg_rct_Right_Arcane, gg_rct_Right_Elemental_Start, gg_unit_h003_0007)
+    spawn:addBase("arcaneHero", gg_rct_Arcane_Hero_Left, gg_rct_Right_Start_Bottom, gg_unit_h014_0241,
+        gg_rct_Arcane_Hero_Right, gg_rct_Left_Start_Top, gg_unit_h014_0043)
     spawn:addBase("arcaneTop", gg_rct_Arcane_Left_Top, gg_rct_Right_Start_Bottom, gg_unit_hars_0355,
-        gg_rct_Arcane_Right_Top, gg_rct_Left_Start_Top, gg_unit_hars_0293, 3)
+        gg_rct_Arcane_Right_Top, gg_rct_Left_Start_Top, gg_unit_hars_0293)
     spawn:addBase("arcaneBottom", gg_rct_Arcane_Left_Bottom, gg_rct_Right_Start_Bottom, gg_unit_hars_0292,
-        gg_rct_Arcane_Right_Bottom, gg_rct_Left_Start_Top, gg_unit_hars_0303, 3)
+        gg_rct_Arcane_Right_Bottom, gg_rct_Left_Start_Top, gg_unit_hars_0303)
     spawn:addBase("blacksmith", gg_rct_Blacksmith_Left, gg_rct_Right_Everything, gg_unit_n00K_0802,
-        gg_rct_Blacksmith_Right, gg_rct_Left_Everything, gg_unit_n00K_0477, 2)
+        gg_rct_Blacksmith_Right, gg_rct_Left_Everything, gg_unit_n00K_0477)
     spawn:addBase("blacksmithCreep", gg_rct_Blacksmith_Left, gg_rct_Zombie_End_Left, gg_unit_n00K_0802,
-        gg_rct_Blacksmith_Right, gg_rct_Zombie_End_Right, gg_unit_n00K_0477, 10)
+        gg_rct_Blacksmith_Right, gg_rct_Zombie_End_Right, gg_unit_n00K_0477)
     spawn:addBase("castle", gg_rct_Left_Hero, gg_rct_Right_Everything, gg_unit_h00E_0033, gg_rct_Right_Hero,
-        gg_rct_Left_Everything, gg_unit_h00E_0081, 2)
+        gg_rct_Left_Everything, gg_unit_h00E_0081)
     spawn:addBase("cityElves", gg_rct_City_Elves_Left, gg_rct_Right_Everything, gg_unit_hvlt_0207,
-        gg_rct_City_Elves_Right, gg_rct_Left_Everything, gg_unit_hvlt_0406, 2)
+        gg_rct_City_Elves_Right, gg_rct_Left_Everything, gg_unit_hvlt_0406)
     spawn:addBase("cityFront", gg_rct_Front_Town_Left, gg_rct_Right_Start, gg_unit_n00B_0364, gg_rct_Front_City_Right,
-        gg_rct_Left_Start, gg_unit_n00B_0399, 2)
+        gg_rct_Left_Start, gg_unit_n00B_0399)
     spawn:addBase("citySide", gg_rct_Left_City, gg_rct_Right_Start_Bottom, gg_unit_n00B_0102, gg_rct_Right_City,
-        gg_rct_Left_Start_Top, gg_unit_n00B_0038, 2)
+        gg_rct_Left_Start_Top, gg_unit_n00B_0038)
     spawn:addBase("kobold", gg_rct_Furbolg_Left, gg_rct_Right_Start_Top, gg_unit_ngt2_0525, gg_rct_Furbolg_Right,
-        gg_rct_Left_Start_Bottom, gg_unit_ngt2_0455, 1)
+        gg_rct_Left_Start_Bottom, gg_unit_ngt2_0455)
     spawn:addBase("highElves", gg_rct_Left_High_Elves, gg_rct_Right_Start_Top, gg_unit_nheb_0109,
-        gg_rct_Right_High_Elves, gg_rct_Left_Start_Bottom, gg_unit_nheb_0036, 1)
+        gg_rct_Right_High_Elves, gg_rct_Left_Start_Bottom, gg_unit_nheb_0036)
     spawn:addBase("highElvesCreep", gg_rct_Left_High_Elves, gg_rct_Aspect_of_Forest_Left, gg_unit_nheb_0109,
-        gg_rct_Right_High_Elves, gg_rct_Aspect_of_Forest_Right, gg_unit_nheb_0036, 9)
+        gg_rct_Right_High_Elves, gg_rct_Aspect_of_Forest_Right, gg_unit_nheb_0036)
     spawn:addBase("merc", gg_rct_Camp_Bottom, gg_rct_Right_Start_Bottom, gg_unit_n001_0048, gg_rct_Camp_Top,
-        gg_rct_Left_Start_Top, gg_unit_n001_0049, 3)
+        gg_rct_Left_Start_Top, gg_unit_n001_0049)
     spawn:addBase("mine", gg_rct_Left_Workshop, gg_rct_Right_Start_Bottom, gg_unit_h006_0074, gg_rct_Right_Workshop,
-        gg_rct_Left_Start_Top, gg_unit_h006_0055, 3)
+        gg_rct_Left_Start_Top, gg_unit_h006_0055)
     spawn:addBase("naga", gg_rct_Naga_Left, gg_rct_Right_Start_Top, gg_unit_nntt_0135, gg_rct_Naga_Right,
-        gg_rct_Left_Start_Bottom, gg_unit_nntt_0132, 1)
+        gg_rct_Left_Start_Bottom, gg_unit_nntt_0132)
     spawn:addBase("murloc", gg_rct_Murloc_Spawn_Left, gg_rct_Right_Start_Top, gg_unit_nmh1_0735,
-        gg_rct_Murloc_Spawn_Right, gg_rct_Left_Start_Bottom, gg_unit_nmh1_0783, 1)
+        gg_rct_Murloc_Spawn_Right, gg_rct_Left_Start_Bottom, gg_unit_nmh1_0783)
     spawn:addBase("nagaCreep", gg_rct_Naga_Left, gg_rct_Murloc_Left, gg_unit_nntt_0135, gg_rct_Naga_Right,
-        gg_rct_Murloc_Right, gg_unit_nntt_0132, 8)
+        gg_rct_Murloc_Right, gg_unit_nntt_0132)
     spawn:addBase("nightElves", gg_rct_Left_Tree, gg_rct_Right_Start_Top, gg_unit_e003_0058, gg_rct_Right_Tree,
-        gg_rct_Left_Start_Bottom, gg_unit_e003_0014, 1)
+        gg_rct_Left_Start_Bottom, gg_unit_e003_0014)
     spawn:addBase("orc", gg_rct_Left_Orc, gg_rct_Right_Start_Top, gg_unit_o001_0075, gg_rct_Right_Orc,
-        gg_rct_Left_Start_Bottom, gg_unit_o001_0078, 1)
+        gg_rct_Left_Start_Bottom, gg_unit_o001_0078)
     spawn:addBase("shipyard", gg_rct_Left_Shipyard, gg_rct_Shipyard_End, gg_unit_eshy_0120, gg_rct_Right_Shipyard,
-        gg_rct_Shipyard_End, gg_unit_eshy_0047, 1)
+        gg_rct_Shipyard_End, gg_unit_eshy_0047)
     spawn:addBase("hshipyard", gg_rct_Human_Shipyard_Left, gg_rct_Right_Shipyard, gg_unit_hshy_0011,
         gg_rct_Human_Shipyard_Right, gg_rct_Left_Shipyard, gg_unit_hshy_0212, 3)
     spawn:addBase("town", gg_rct_Left_Forward_Camp, gg_rct_Right_Start_Bottom, gg_unit_h00F_0029, gg_rct_Right_Forward,
-        gg_rct_Left_Start_Top, gg_unit_h00F_0066, 3)
+        gg_rct_Left_Start_Top, gg_unit_h00F_0066)
     spawn:addBase("undead", gg_rct_Undead_Left, gg_rct_Right_Start, gg_unit_u001_0262, gg_rct_Undead_Right,
-        gg_rct_Left_Start, gg_unit_u001_0264, 2)
+        gg_rct_Left_Start, gg_unit_u001_0264)
 end
 
 function spawnAddUnits()
@@ -2615,7 +3175,7 @@ function spawnAddUnits()
     spawn:addUnit("highElvesCreep", "h010", 2, {1, 2, 3, 4, 5}, 5, 12) -- Elven Guardian
 
     -- Merc Spawn
-    spawn:addUnit("merc", "nooL", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Rogue
+    spawn:addUnit("merc", "n00L", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Rogue
     spawn:addUnit("merc", "n003", 2, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Merc Archer
     spawn:addUnit("merc", "n002", 3, {2, 3, 4, 7, 8, 9, 10}, 3, 12) -- Merc
     spawn:addUnit("merc", "n008", 1, {1, 2, 3, 4, 5, 6, 8, 9, 10}, 4, 12) -- Enforcer
@@ -2693,12 +3253,12 @@ function spawnAddUnits()
 end
 
 -- Camera Setup
-function initTrig_Auto_Zoom()
-    trg_Auto_Zoom = CreateTrigger()
-    DisableTrigger(trg_Auto_Zoom)
-    TriggerRegisterTimerEventPeriodic(trg_Auto_Zoom, 3.00)
+function init_AutoZoom()
+    Trig_AutoZoom = CreateTrigger()
+    -- DisableTrigger(Trig_AutoZoom)
+    TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
 
-    TriggerAddAction(trg_Auto_Zoom, function()
+    TriggerAddAction(Trig_AutoZoom, function()
         local i = 1
         local ug = CreateGroup()
 
@@ -2717,7 +3277,7 @@ end
 --
 
 -- Hero Levels Up
-function Init_Hero_Levels_Up()
+function Init_HeroLevelsUp()
     local t = CreateTrigger()
 
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
@@ -2732,7 +3292,7 @@ function Init_Hero_Levels_Up()
 end
 
 -- Unit Casts Spell
-function Init_AI_Spell_Start()
+function Init_UnitCastsSpell()
     local t = CreateTrigger()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
 
@@ -2768,8 +3328,8 @@ function Init_PlayerBuysUnit()
             if sellingUnit == gg_unit_n00C_0082 then
                 local g = CreateGroup()
                 g = GetUnitsOfPlayerAndTypeId(buyingPlayer, FourCC("h00H"))
-
                 if CountUnitsInGroup(g) == 1 then
+                    RemoveUnit(buyingUnit)
                     hero:setupHero(soldUnit)
                 else
                     RemoveUnit(soldUnit)
@@ -2840,6 +3400,128 @@ function Init_Map()
         SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
     end)
 
+end
+
+function Init_UnitEntersMap()
+    Trig_UnitEntersMap = CreateTrigger()
+    TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
+    TriggerAddAction(Trig_UnitEntersMap, function()
+        local triggerUnit = GetTriggerUnit()
+        -- addUnitsToIndex(triggerUnit)
+    end)
+end
+
+function addUnitsToIndex(unit)
+
+    indexer:add(unit)
+
+    if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and IsUnitType(unit, UNIT_TYPE_HERO) == false and
+        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
+            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
+        indexer:order(unit)
+    end
+
+end
+
+function Init_UnitDies()
+    Trig_UnitDies = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
+    TriggerAddAction(Trig_UnitDies, function()
+        local dieingUnit = GetTriggerUnit()
+
+        indexer:remove(dieingUnit)
+
+    end)
+end
+
+function orderStartingUnits()
+    local g = CreateGroup()
+    local u
+
+    g = GetUnitsInRectAll(GetPlayableMapRect())
+    while true do
+        u = FirstOfGroup(g)
+        if u == nil then
+            break
+        end
+
+        debugfunc(function()
+            indexer:add(u)
+            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
+                (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
+                    IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
+                print("Order this thing")
+                indexer:updateEnd(u)
+                indexer:order(u)
+            end
+        end, "Index")
+
+        GroupRemoveUnit(g, u)
+    end
+    DestroyGroup(g)
+end
+
+-- Unit Issued Target or no Target Order
+function Init_IssuedOrder()
+    local t = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_ISSUED_ORDER)
+
+    local triggerUnit = GetTriggerUnit()
+    local orderId = GetIssuedOrderId()
+    local orderString = OrderId2String(orderId)
+
+    if ordersIgnore[orderString] ~= nil and IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
+        IsUnitType(unit, UNIT_TYPE_HERO) == false and GetUnitTypeId(unit) ~= FourCC("uloc") and GetUnitTypeId(unit) ~=
+        FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and GetUnitTypeId(unit) ~= FourCC("h00N") and
+        GetUnitTypeId(unit) ~= FourCC("h00O") and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
+        FourCC("o006") and UnitHasBuffBJ(unit, FourCC("B006")) == false and --[[ Attack! Buff --]] GetOwningPlayer(unit) ~=
+        Player(17) and GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
+
+            PolledWait(0.5)
+            indexer:order(unit, "attack")
+    end
+end
+
+
+-- Unit finishes casting a spell
+function Init_finishCasting()
+    local t = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_FINISH)
+    TriggerAddAction(t, function()
+
+        local triggerUnit = GetTriggerUnit()
+        unitKeepMoving(triggerUnit)
+    end)
+end
+
+-- Unit finishes Stops a spell
+function Init_stopCasting()
+    local t = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
+    TriggerAddAction(t, function()
+
+        local triggerUnit = GetTriggerUnit()
+        unitKeepMoving(triggerUnit)
+    end)
+end
+
+
+function unitKeepMoving(unit)
+    if 
+    GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and
+    IsUnitType(unit, UNIT_TYPE_HERO) == false and
+    UnitHasBuffBJ(unit, FourCC("B006")) == false and
+    GetUnitTypeId(unit) ~= FourCC("h00M") and 
+    GetUnitTypeId(unit) ~= FourCC("h00M") and 
+    GetUnitTypeId(unit) ~= FourCC("h000") and 
+    GetUnitTypeId(unit) ~= FourCC("h00V") and 
+    GetUnitTypeId(unit) ~= FourCC("h00O") and 
+    (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true)
+    then
+        PolledWait(0.5)
+        indexer:order(unit, "attack")
+    end
 end
 
 function InitSounds()
@@ -4070,6 +4752,7 @@ end
 
 function Trig_testing_Actions()
     SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
+    DisplayTextToForce(GetPlayersAll(), OrderId2StringBJ(GetIssuedOrderIdBJ()))
 end
 
 function InitTrig_testing()
@@ -6243,6 +6926,7 @@ end
 
 function InitTrig_Creeps_keep_going_after_Order()
     gg_trg_Creeps_keep_going_after_Order = CreateTrigger()
+    DisableTrigger(gg_trg_Creeps_keep_going_after_Order)
     TriggerRegisterAnyUnitEventBJ(gg_trg_Creeps_keep_going_after_Order, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
     TriggerRegisterAnyUnitEventBJ(gg_trg_Creeps_keep_going_after_Order, EVENT_PLAYER_UNIT_ISSUED_ORDER)
     TriggerAddCondition(gg_trg_Creeps_keep_going_after_Order, Condition(Trig_Creeps_keep_going_after_Order_Conditions))
@@ -6297,6 +6981,7 @@ end
 
 function InitTrig_Creeps_keep_going_after_Spell()
     gg_trg_Creeps_keep_going_after_Spell = CreateTrigger()
+    DisableTrigger(gg_trg_Creeps_keep_going_after_Spell)
     TriggerRegisterAnyUnitEventBJ(gg_trg_Creeps_keep_going_after_Spell, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
     TriggerRegisterAnyUnitEventBJ(gg_trg_Creeps_keep_going_after_Spell, EVENT_PLAYER_UNIT_SPELL_FINISH)
     TriggerAddCondition(gg_trg_Creeps_keep_going_after_Spell, Condition(Trig_Creeps_keep_going_after_Spell_Conditions))
@@ -6341,6 +7026,7 @@ end
 
 function InitTrig_Order_Units_LOOP()
     gg_trg_Order_Units_LOOP = CreateTrigger()
+    DisableTrigger(gg_trg_Order_Units_LOOP)
     TriggerRegisterTimerEventPeriodic(gg_trg_Order_Units_LOOP, 1.00)
     TriggerAddAction(gg_trg_Order_Units_LOOP, Trig_Order_Units_LOOP_Actions)
 end
@@ -6548,6 +7234,7 @@ end
 
 function InitTrig_FUNC_Move_Creeps()
     gg_trg_FUNC_Move_Creeps = CreateTrigger()
+    DisableTrigger(gg_trg_FUNC_Move_Creeps)
     TriggerAddAction(gg_trg_FUNC_Move_Creeps, Trig_FUNC_Move_Creeps_Actions)
 end
 
