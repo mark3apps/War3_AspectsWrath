@@ -1,4 +1,86 @@
-function Init_orderStrings()
+function getRectDetails(region)
+    return {centerX = GetRectCenterX(region), centerY = GetRectCenterY(region), minX = GetRectMinX(region), maxX = GetRectMaxX(region), minY = GetRectMinY(region), maxY = GetRectMaxY(region)}
+end
+
+function Init_luaGlobals()
+    loc = {}
+
+    loc.arcaneLeft = getRectDetails(gg_rct_Left_Arcane)
+    loc.arcaneRight.reg = getRectDetails(gg_rct_Right_Arcane)
+    loc.castleLeft.reg = getRectDetails(gg_rct_Left_Castle)
+    loc.castleRight.reg = getRectDetails(gg_rct_Right_Castle)
+    loc.elfLeft.reg = getRectDetails(gg_rct_Elf_Base_Left)
+    loc.elfRight.reg = getRectDetails(gg_rct_Elf_Base_Right)
+    loc.arcaneLeft.reg = CreateRegion()
+    loc.arcaneRight.reg = CreateRegion()
+    loc.castleLeft.reg = CreateRegion()
+    loc.castleRight.reg = CreateRegion()
+    loc.elfLeft.reg = CreateRegion()
+    loc.elfRight.reg = CreateRegion()
+    RegionAddRect(loc.arcaneLeft.reg, gg_rct_Left_Arcane)
+    RegionAddRect(loc.arcaneRight.reg, gg_rct_Right_Arcane)
+    RegionAddRect(loc.castleLeft.reg, gg_rct_Left_Castle)
+    RegionAddRect(loc.castleRight.reg, gg_rct_Right_Castle)
+    RegionAddRect(loc.elfLeft.reg, gg_rct_Elf_Base_Left)
+    RegionAddRect(loc.elfRight.reg, gg_rct_Elf_Base_Right)
+
+    loc.everythingLeft.reg = getRectDetails(gg_rct_Left_Everything)
+    loc.everythingRight.reg = getRectDetails(gg_rct_Right_Everything)
+    loc.bottomLeft.reg = getRectDetails(gg_rct_Left_Start_Bottom)
+    loc.bottomRight.reg = getRectDetails(gg_rct_Right_Start_Bottom)
+    loc.middleLeft.reg = getRectDetails(gg_rct_Left_Start_Middle)
+    loc.middleRight.reg = getRectDetails(gg_rct_Right_Start_Middle)
+    loc.topLeft.reg = getRectDetails(gg_rct_Left_Start_Top)
+    loc.topRight.reg = getRectDetails(gg_rct_Right_Start_Top)
+    loc.everythingLeft.reg = CreateRegion()
+    loc.everythingRight.reg = CreateRegion()
+    loc.bottomLeft.reg = CreateRegion()
+    loc.bottomRight.reg = CreateRegion()
+    loc.middleLeft.reg = CreateRegion()
+    loc.middleRight.reg = CreateRegion()
+    loc.topLeft.reg = CreateRegion()
+    loc.topRight.reg = CreateRegion()
+    RegionAddRect(loc.everythingLeft.reg, gg_rct_Left_Everything)
+    RegionAddRect(loc.everythingRight.reg, gg_rct_Right_Everything)
+    RegionAddRect(loc.bottomLeft.reg, gg_rct_Left_Start_Bottom)
+    RegionAddRect(loc.bottomRight.reg, gg_rct_Right_Start_Bottom)
+    RegionAddRect(loc.middleLeft.reg, gg_rct_Left_Start_Middle)
+    RegionAddRect(loc.middleRight.reg, gg_rct_Right_Start_Middle)
+    RegionAddRect(loc.topLeft.reg, gg_rct_Left_Start_Top)
+    RegionAddRect(loc.topRight.reg, gg_rct_Right_Start_Top)
+
+    loc.spawnArcaneLeft.reg = getRectDetails(gg_rct_Left_Mage_Base)
+    loc.spawnArcaneLeft.reg = getRectDetails(gg_rct_Right_Mage_Base)
+    loc.spawnArcaneHeroLeft.reg = getRectDetails(gg_rct_Arcane_Hero_Left)
+    loc.spawnArcaneHeroRight.reg = getRectDetails(gg_rct_Arcane_Hero_Right)
+    loc.spawnElementalTopLeft.reg = getRectDetails(gg_rct_Arcane_Left_Top)
+    loc.spawnElementalTopRight.reg = getRectDetails(gg_rct_Arcane_Right_Top)
+    loc.spawnElementalBottomLeft.reg = getRectDetails(gg_rct_Arcane_Left_Bottom)
+    loc.spawnElementalBottomRight.reg = getRectDetails(gg_rct_Arcane_Right_Bottom)
+    loc.spawnHeroLeft.reg = getRectDetails(gg_rct_Left_Hero)
+    loc.spawnHeroRight.reg = getRectDetails(gg_rct_Right_Hero)
+    loc.spawnArcaneLeft.reg = CreateRegion()
+    loc.spawnArcaneLeft.reg = CreateRegion()
+    loc.spawnArcaneHeroLeft.reg = CreateRegion()
+    loc.spawnArcaneHeroRight.reg = CreateRegion()
+    loc.spawnElementalTopLeft.reg = CreateRegion()
+    loc.spawnElementalTopRight.reg = CreateRegion()
+    loc.spawnElementalBottomLeft.reg = CreateRegion()
+    loc.spawnElementalBottomLeft.reg = CreateRegion()
+    loc.spawnElementalBottomRight.reg = CreateRegion()
+    loc.spawnHeroLeft.reg = CreateRegion()
+    loc.spawnHeroRight.reg = CreateRegion()
+    RegionAddRect(loc.spawnArcaneLeft.reg, gg_rct_Left_Mage_Base)
+    RegionAddRect(loc.spawnArcaneLeft.reg, gg_rct_Right_Mage_Base)
+    RegionAddRect(loc.spawnArcaneHeroLeft.reg, gg_rct_Arcane_Hero_Left)
+    RegionAddRect(loc.spawnArcaneHeroRight.reg, gg_rct_Arcane_Hero_Right)
+    RegionAddRect(loc.spawnElementalTopLeft.reg, gg_rct_Arcane_Left_Top)
+    RegionAddRect(loc.spawnElementalTopRight.reg, gg_rct_Arcane_Right_Top)
+    RegionAddRect(loc.spawnElementalBottomLeft.reg, gg_rct_Arcane_Left_Bottom)
+    RegionAddRect(loc.spawnElementalBottomRight.reg, gg_rct_Arcane_Right_Bottom)
+    RegionAddRect(loc.spawnHeroLeft.reg, gg_rct_Left_Hero)
+    RegionAddRect(loc.spawnHeroRight.reg, gg_rct_Right_Hero)
+
     oid = {
         OFFSET = 851970,
         absorb = 852529,
@@ -422,7 +504,7 @@ function init_Lua()
 
     -- Define Classes
     debugfunc(function()
-        Init_orderStrings()
+        Init_LuaGlobals()
         init_indexerClass()
         init_heroClass()
         init_spawnClass()
@@ -2548,7 +2630,7 @@ function Init_UnitEntersMap()
     TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
     TriggerAddAction(Trig_UnitEntersMap, function()
         local triggerUnit = GetTriggerUnit()
-        -- addUnitsToIndex(triggerUnit)
+        addUnitsToIndex(triggerUnit)
     end)
 end
 
@@ -2662,34 +2744,36 @@ end
 function keepUnitsMoving()
 
     -- Unit Enters Left Start Bottom
-    local t1 = CreateTrigger()
-    TriggerRegisterEnterRectSimple(t1, gg_rct_Left_Start_Bottom)
-    TriggerRegisterEnterRectSimple(t1, gg_rct_Right_Start_Bottom)
-    TriggerRegisterEnterRectSimple(t1, gg_rct_Right_Start_Bottom)
-    TriggerAddAction(t1, function()
-        local enterUnit = GetTriggerUnit()
-        local isAllied = IsPlayerInForce(GetOwningPlayer(enterUnit), udg_PLAYERGRPallied)
-        local isFed = IsPlayerInForce(GetOwningPlayer(enterUnit), udg_PLAYERGRPfederation)
+    local t = CreateTrigger()
+    TriggerRegisterEnterRegionSimple(t, loc.arcaneLeft)
+    TriggerRegisterEnterRegionSimple(t, loc.arcaneRight)
+    TriggerRegisterEnterRegionSimple(t, loc.castleLeft)
+    TriggerRegisterEnterRegionSimple(t, loc.castleRight)
+    TriggerRegisterEnterRegionSimple(t, loc.elfLeft)
+    TriggerRegisterEnterRegionSimple(t, loc.elfRight)
 
-        if isAllied then
-            
-        elseif isFed then
+    TriggerRegisterEnterRegionSimple(t, loc.bottomLeft)
+    TriggerRegisterEnterRegionSimple(t, loc.bottomRight)
+    TriggerRegisterEnterRegionSimple(t, loc.middleLeft)
+    TriggerRegisterEnterRegionSimple(t, loc.middleRight)
+    TriggerRegisterEnterRegionSimple(t, loc.topLeft)
+    TriggerRegisterEnterRegionSimple(t, loc.topRight)
+
+    TriggerAddAction(t, function()
+
+        local unit = GetTriggerUnit()
+        local region = GetTriggeringRegion()
+        local player = GetOwningPlayer(unit)
+        local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
+        local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
+
+        if isAllied or isFed then
             
         end
     end)
 
-        -- Unit Enters Right Start Bottom
-        local t1 = CreateTrigger()
-        
-        TriggerAddAction(t1, function()
-            local enterUnit = GetTriggerUnit()
-            local isAllied = IsPlayerInForce(GetOwningPlayer(enterUnit), udg_PLAYERGRPallied)
-            local isFed = IsPlayerInForce(GetOwningPlayer(enterUnit), udg_PLAYERGRPfederation)
-    
-            if isAllied then
-                
-            elseif isFed then
-                
-            end
-        end)
+end
+
+function getRandomPointInRegion(region)
+    return GetRandomReal(region.minX, region.maxX), GetRandomReal(region.minY, region.maxY)
 end

@@ -444,6 +444,7 @@ gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
 gg_rct_Left_Start_Middle = nil
 gg_rct_Right_Start_Middle = nil
+gg_rct_Region_090 = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -4654,6 +4655,7 @@ function CreateRegions()
     gg_rct_Murloc_Spawn_Right = Rect(-4064.0, -13696.0, -2656.0, -12160.0)
     gg_rct_Left_Start_Middle = Rect(-16128.0, -6528.0, -15872.0, -3776.0)
     gg_rct_Right_Start_Middle = Rect(-7264.0, -5184.0, -7008.0, -2432.0)
+    gg_rct_Region_090 = Rect(-15680.0, -9088.0, -15648.0, -9056.0)
 end
 
 function CreateCameras()
