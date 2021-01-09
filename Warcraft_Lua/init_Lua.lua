@@ -484,9 +484,9 @@ function init_Delayed_1()
     TriggerRegisterTimerEventSingle(t, 1)
     TriggerAddAction(t, function()
         debugfunc(function()
-            --ai:pickHeroes()
+            -- ai:pickHeroes()
             dprint("pick Heroes Successfull", 2)
-            --ai:init_loopStates()
+            -- ai:init_loopStates()
 
             orderStartingUnits()
             dprint("AI Started", 2)
@@ -529,7 +529,7 @@ function init_indexerClass()
 
             local x = GetUnitX(unit)
             local y = GetUnitY(unit)
-            print("Testing:" .. unitId)
+
             self.data[unitId] = {}
             self.data[unitId] = {
                 xSpawn = x,
@@ -747,8 +747,6 @@ function init_spawnClass()
                             yDest = GetLocationY(pDest)
                             RemoveLocation(pDest)
 
-                            print(self.unitType)
-
                             spawnedUnit = CreateUnit(Player(GetRandomInt(18, 20)), FourCC(self.unitType), xStart,
                                               yStart, bj_UNIT_FACING)
 
@@ -772,9 +770,8 @@ function init_spawnClass()
                             yDest = GetLocationY(pDest)
                             RemoveLocation(pDest)
 
-                            print(self.unitType)
                             spawnedUnit = CreateUnit(Player(GetRandomInt(21, 23)), FourCC(self.unitType), xStart,
-                            yStart, bj_UNIT_FACING)
+                                              yStart, bj_UNIT_FACING)
 
                             indexer:add(spawnedUnit)
                             indexer:updateEnd(spawnedUnit, xDest, yDest)
@@ -823,7 +820,7 @@ function init_spawnClass()
             else
                 StartTimerBJ(self.creepLevelTimer, false, (70 + (15 * self.creepLevel)))
             end
-            
+
             DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)
         end
 
@@ -2622,11 +2619,10 @@ function Init_IssuedOrder()
         FourCC("o006") and UnitHasBuffBJ(unit, FourCC("B006")) == false and --[[ Attack! Buff --]] GetOwningPlayer(unit) ~=
         Player(17) and GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
 
-            PolledWait(0.5)
-            indexer:order(unit, "attack")
+        PolledWait(0.5)
+        indexer:order(unit, "attack")
     end
 end
-
 
 -- Unit finishes casting a spell
 function Init_finishCasting()
@@ -2650,20 +2646,50 @@ function Init_stopCasting()
     end)
 end
 
-
 function unitKeepMoving(unit)
-    if 
-    GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and
-    IsUnitType(unit, UNIT_TYPE_HERO) == false and
-    UnitHasBuffBJ(unit, FourCC("B006")) == false and
-    GetUnitTypeId(unit) ~= FourCC("h00M") and 
-    GetUnitTypeId(unit) ~= FourCC("h00M") and 
-    GetUnitTypeId(unit) ~= FourCC("h000") and 
-    GetUnitTypeId(unit) ~= FourCC("h00V") and 
-    GetUnitTypeId(unit) ~= FourCC("h00O") and 
-    (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true)
-    then
+    if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
+        UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
+        FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
+        GetUnitTypeId(unit) ~= FourCC("h00O") and
+        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
+            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
         PolledWait(0.5)
         indexer:order(unit, "attack")
     end
+end
+
+
+function keepUnitsMoving()
+
+    -- Unit Enters Left Start Bottom
+    local t1 = CreateTrigger()
+    TriggerRegisterEnterRectSimple(t1, gg_rct_Left_Start_Bottom)
+    TriggerRegisterEnterRectSimple(t1, gg_rct_Right_Start_Bottom)
+    TriggerRegisterEnterRectSimple(t1, gg_rct_Right_Start_Bottom)
+    TriggerAddAction(t1, function()
+        local enterUnit = GetTriggerUnit()
+        local isAllied = IsPlayerInForce(GetOwningPlayer(enterUnit), udg_PLAYERGRPallied)
+        local isFed = IsPlayerInForce(GetOwningPlayer(enterUnit), udg_PLAYERGRPfederation)
+
+        if isAllied then
+            
+        elseif isFed then
+            
+        end
+    end)
+
+        -- Unit Enters Right Start Bottom
+        local t1 = CreateTrigger()
+        
+        TriggerAddAction(t1, function()
+            local enterUnit = GetTriggerUnit()
+            local isAllied = IsPlayerInForce(GetOwningPlayer(enterUnit), udg_PLAYERGRPallied)
+            local isFed = IsPlayerInForce(GetOwningPlayer(enterUnit), udg_PLAYERGRPfederation)
+    
+            if isAllied then
+                
+            elseif isFed then
+                
+            end
+        end)
 end
