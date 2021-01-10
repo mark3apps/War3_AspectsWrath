@@ -18,7 +18,8 @@ function init_locationClass()
                 maxY = GetRectMaxY(rect)
             }
             self[name].reg = CreateRegion()
-            self[name].reg = RegionAddRect(rect)
+            RegionAddRect(self[name].reg, rect)
+
             self[name].rect = rect
             self[name].name = name
 
@@ -50,7 +51,7 @@ end
 
 function addRegions()
     loc:add("arcaneLeft", gg_rct_Left_Arcane, "castleLeft", false)
-
+    print("Working1")
     loc:add("arcaneRight", gg_rct_Right_Arcane, "castleRight", true)
     loc:add("castleLeft", gg_rct_Left_Castle)
     loc:add("castleRight", gg_rct_Right_Castle)
