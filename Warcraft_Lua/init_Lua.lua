@@ -51,10 +51,11 @@ end
 
 function addRegions()
     loc:add("arcaneLeft", gg_rct_Left_Arcane, "castleLeft", false)
-    print("Working1")
     loc:add("arcaneRight", gg_rct_Right_Arcane, "castleRight", true)
     loc:add("castleLeft", gg_rct_Left_Castle)
     loc:add("castleRight", gg_rct_Right_Castle)
+    loc:add("startLeft", gg_rct_Left_Start)
+    loc:add("startLeft", gg_rct_Right_Start)
     loc:add("elfLeft", gg_rct_Elf_Base_Left, "castleLeft", false)
     loc:add("elfRight", gg_rct_Elf_Base_Right, "casteRight", true)
 
@@ -62,8 +63,8 @@ function addRegions()
     loc:add("everythingRight", gg_rct_Right_Everything, "castleRight", true)
     loc:add("bottomLeft", gg_rct_Left_Start_Bottom, "arcaneLeft", false)
     loc:add("bottomRight", gg_rct_Right_Start_Bottom, "elfRight", true)
-    loc:add("middleLeft", gg_rct_Left_Start_Middle, "", false)
-    loc:add("middleRight", gg_rct_Right_Start_Middle, "", true)
+    loc:add("middleLeft", gg_rct_Left_Start_Middle, "startLeft", false)
+    loc:add("middleRight", gg_rct_Right_Start_Middle, "startRight", true)
     loc:add("topLeft", gg_rct_Left_Start_Top, "elfLeft", false)
     loc:add("topRight", gg_rct_Right_Start_Top, "arcaneRight", true)
 
@@ -507,6 +508,7 @@ function init_triggers()
     Trig_AutoZoom = CreateTrigger()
     Trig_UnitEntersMap = CreateTrigger()
     Trig_UnitDies = CreateTrigger()
+    Trig_IssuedOrder = CreateTrigger()
 end
 
 function init_Lua()
@@ -515,7 +517,7 @@ function init_Lua()
     -- Define Classes
     debugfunc(function()
         init_triggers()
-        
+
         Init_luaGlobals()
         init_locationClass()
         init_indexerClass()
@@ -536,44 +538,43 @@ function init_Lua()
         hero = hero_Class.new()
         ai = ai_Class.new()
         spawn = spawn_Class.new()
-        
+
     end, "Init Classes")
 
     dprint("Classes Initialized", 2)
 
-    -- -- Init Trigger
-    -- debugfunc(function()
+    -- Init Trigger
+    debugfunc(function()
 
-    --     init_AutoZoom()
-    --     Init_HeroLevelsUp()
-    --     Init_UnitCastsSpell()
-    --     Init_PlayerBuysUnit()
-    --     init_spawnTimers()
-    --     Init_UnitEntersMap()
-    --     Init_stopCasting()
-    --     Init_finishCasting()
-    --     Init_IssuedOrder()
-    --     Init_UnitDies()
-    --     Init_UnitEntersMap()
-    --     init_MoveToNext()
-    -- end, "Init Triggers")
+        init_AutoZoom()
+        Init_HeroLevelsUp()
+        Init_UnitCastsSpell()
+        Init_PlayerBuysUnit()
+        init_spawnTimers()
+        Init_UnitEntersMap()
+        Init_stopCasting()
+        Init_finishCasting()
+        Init_IssuedOrder()
+        Init_UnitDies()
+        init_MoveToNext()
+    end, "Init Triggers")
 
-    -- dprint("Triggers Initialized", 2)
+    dprint("Triggers Initialized", 2)
 
-    -- -- Spawn Base / Unit Setup
-    -- -- Init Trigger
-    -- debugfunc(function()
-    --     spawnAddBases()
-    --     spawnAddUnits()
-    -- end, "Init Spawn")
+    -- Spawn Base / Unit Setup
+    -- Init Trigger
+    debugfunc(function()
+        spawnAddBases()
+        spawnAddUnits()
+    end, "Init Spawn")
 
-    -- dprint("Spawn Setup", 2)
+    dprint("Spawn Setup", 2)
 
-    -- -- Setup Delayed Init Triggers
-    -- init_Delayed_1()
-    -- init_Delayed_10()
+    -- Setup Delayed Init Triggers
+    init_Delayed_1()
+    init_Delayed_10()
 
-    -- dprint("Init Finished")
+    dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -648,11 +649,12 @@ function init_indexerClass()
 
             local unitId = GetHandleId(unit)
             local alliedForce = IsUnitInForce(unit, udg_PLAYERGRPallied)
-            local p, x, y
-            local data = self.data[unitId]
-            order = order or data.order
+            local p
+            local x = self.data[unitId].xEnd
+            local y = self.data[unitId].yEnd
+            order = order or self.data[unitId].order
 
-            if data.xEnd == nil or data.yEnd == nil then
+            if  self.data[unitId].xEnd == nil or  self.data[unitId].yEnd == nil then
 
                 if RectContainsUnit(gg_rct_Big_Top_Left, unit) or RectContainsUnit(gg_rct_Big_Top_Left_Center, unit) or
                     RectContainsUnit(gg_rct_Big_Top_Right_Center, unit) or RectContainsUnit(gg_rct_Big_Top_Right, unit) then
@@ -689,9 +691,6 @@ function init_indexerClass()
 
                 self.data[unitId].xEnd = x
                 self.data[unitId].yEnd = y
-            else
-                x = data.xEnd
-                y = data.yEnd
             end
 
             -- Issue Order
@@ -942,14 +941,13 @@ end
 
 function init_spawnTimers()
     -- Create Spawn Loop Trigger
-    
+
     TriggerAddAction(Trig_spawnLoop, function()
         debugfunc(function()
             spawn:loopSpawn()
         end, "spawn:loopSpawn")
     end)
 
-    
     TriggerAddAction(Trig_upgradeCreeps, function()
         debugfunc(function()
             spawn:upgradeCreeps()
@@ -2296,8 +2294,8 @@ function spawnAddBases()
         gg_rct_Left_Everything, gg_unit_h00E_0081)
     spawn:addBase("cityElves", gg_rct_City_Elves_Left, gg_rct_Right_Everything, gg_unit_hvlt_0207,
         gg_rct_City_Elves_Right, gg_rct_Left_Everything, gg_unit_hvlt_0406)
-    spawn:addBase("cityFront", gg_rct_Front_Town_Left, gg_rct_Right_Start, gg_unit_n00B_0364, gg_rct_Front_City_Right,
-        gg_rct_Left_Start, gg_unit_n00B_0399)
+    spawn:addBase("cityFront", gg_rct_Front_Town_Left, gg_rct_Right_Start_Middle, gg_unit_n00B_0364, gg_rct_Front_City_Right,
+    gg_rct_Left_Start_Middle, gg_unit_n00B_0399)
     spawn:addBase("citySide", gg_rct_Left_City, gg_rct_Right_Start_Bottom, gg_unit_n00B_0102, gg_rct_Right_City,
         gg_rct_Left_Start_Top, gg_unit_n00B_0038)
     spawn:addBase("kobold", gg_rct_Furbolg_Left, gg_rct_Right_Start_Top, gg_unit_ngt2_0525, gg_rct_Furbolg_Right,
@@ -2320,14 +2318,14 @@ function spawnAddBases()
         gg_rct_Left_Start_Bottom, gg_unit_e003_0014)
     spawn:addBase("orc", gg_rct_Left_Orc, gg_rct_Right_Start_Top, gg_unit_o001_0075, gg_rct_Right_Orc,
         gg_rct_Left_Start_Bottom, gg_unit_o001_0078)
-    spawn:addBase("shipyard", gg_rct_Left_Shipyard, gg_rct_Shipyard_End, gg_unit_eshy_0120, gg_rct_Right_Shipyard,
-        gg_rct_Shipyard_End, gg_unit_eshy_0047)
-    spawn:addBase("hshipyard", gg_rct_Human_Shipyard_Left, gg_rct_Right_Shipyard, gg_unit_hshy_0011,
-        gg_rct_Human_Shipyard_Right, gg_rct_Left_Shipyard, gg_unit_hshy_0212, 3)
+    spawn:addBase("shipyard", gg_rct_Left_Shipyard, gg_rct_Human_Shipyard_Right, gg_unit_eshy_0120, gg_rct_Right_Shipyard,
+        gg_rct_Human_Shipyard_Left, gg_unit_eshy_0047)
+    spawn:addBase("hshipyard", gg_rct_Human_Shipyard_Left, gg_rct_Human_Shipyard_Right, gg_unit_hshy_0011,
+        gg_rct_Human_Shipyard_Right, gg_rct_Human_Shipyard_Left, gg_unit_hshy_0212, 3)
     spawn:addBase("town", gg_rct_Left_Forward_Camp, gg_rct_Right_Start_Bottom, gg_unit_h00F_0029, gg_rct_Right_Forward,
         gg_rct_Left_Start_Top, gg_unit_h00F_0066)
-    spawn:addBase("undead", gg_rct_Undead_Left, gg_rct_Right_Start, gg_unit_u001_0262, gg_rct_Undead_Right,
-        gg_rct_Left_Start, gg_unit_u001_0264)
+    spawn:addBase("undead", gg_rct_Undead_Left, gg_rct_Right_Start_Middle, gg_unit_u001_0262, gg_rct_Undead_Right,
+    gg_rct_Left_Start_Middle, gg_unit_u001_0264)
 end
 
 function spawnAddUnits()
@@ -2493,7 +2491,7 @@ end
 
 -- Camera Setup
 function init_AutoZoom()
-    
+
     -- DisableTrigger(Trig_AutoZoom)
     TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
     TriggerAddAction(Trig_AutoZoom, function()
@@ -2641,7 +2639,7 @@ function Init_Map()
 end
 
 function Init_UnitEntersMap()
-    
+
     TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
     TriggerAddAction(Trig_UnitEntersMap, function()
         local triggerUnit = GetTriggerUnit()
@@ -2662,7 +2660,7 @@ function addUnitsToIndex(unit)
 end
 
 function Init_UnitDies()
-    
+
     TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
     TriggerAddAction(Trig_UnitDies, function()
         local dieingUnit = GetTriggerUnit()
@@ -2688,8 +2686,7 @@ function orderStartingUnits()
             if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
                 (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
                     IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
-                print("Order this thing")
-                indexer:updateEnd(u)
+
                 indexer:order(u)
             end
         end, "Index")
@@ -2701,24 +2698,27 @@ end
 
 -- Unit Issued Target or no Target Order
 function Init_IssuedOrder()
-    local t = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
-    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_ISSUED_ORDER)
+    
+    TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+    TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_ORDER)
 
-    local triggerUnit = GetTriggerUnit()
-    local orderId = GetIssuedOrderId()
-    local orderString = OrderId2String(orderId)
+    TriggerAddAction(Trig_IssuedOrder, function()
+        local triggerUnit = GetTriggerUnit()
+        local orderId = GetIssuedOrderId()
+        local orderString = OrderId2String(orderId)
 
-    if ordersIgnore[orderString] ~= nil and IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
-        IsUnitType(unit, UNIT_TYPE_HERO) == false and GetUnitTypeId(unit) ~= FourCC("uloc") and GetUnitTypeId(unit) ~=
-        FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and GetUnitTypeId(unit) ~= FourCC("h00N") and
-        GetUnitTypeId(unit) ~= FourCC("h00O") and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
-        FourCC("o006") and UnitHasBuffBJ(unit, FourCC("B006")) == false and --[[ Attack! Buff --]] GetOwningPlayer(unit) ~=
-        Player(17) and GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
+        if ordersIgnore[orderString] ~= nil and IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) == false and
+            IsUnitType(triggerUnit, UNIT_TYPE_HERO) == false and GetUnitTypeId(triggerUnit) ~= FourCC("uloc") and GetUnitTypeId(triggerUnit) ~=
+            FourCC("h000") and GetUnitTypeId(triggerUnit) ~= FourCC("h00V") and GetUnitTypeId(triggerUnit) ~= FourCC("h00N") and
+            GetUnitTypeId(triggerUnit) ~= FourCC("h00O") and GetUnitTypeId(triggerUnit) ~= FourCC("h00M") and GetUnitTypeId(triggerUnit) ~=
+            FourCC("o006") and UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]] GetOwningPlayer(
+                triggerUnit) ~= Player(17) and GetOwningPlayer(triggerUnit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
 
-        PolledWait(0.5)
-        indexer:order(unit, "attack")
-    end
+            PolledWait(0.5)
+            indexer:order(triggerUnit)
+        end
+    end)
+
 end
 
 -- Unit finishes casting a spell
@@ -2759,8 +2759,8 @@ function init_MoveToNext()
 
     TriggerAddAction(Trig_moveToNext, function()
 
-        local unit = GetTriggerUnit()
-        local player = GetOwningPlayer(unit)
+        local triggerUnit = GetTriggerUnit()
+        local player = GetOwningPlayer(triggerUnit)
         local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
         local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
 
@@ -2768,8 +2768,10 @@ function init_MoveToNext()
             local region = loc:getRegion(GetTriggeringRegion())
 
             if (isAllied and region.allied) or (isFed and region.fed) then
-                indexer:updateEnd(unit, loc:getRandomXY(loc[region.next]))
-                indexer:order(unit, "attack")
+                local x, y = loc:getRandomXY(loc[region.next])
+
+                indexer:updateEnd(triggerUnit, x, y)
+                indexer:order(triggerUnit)
             end
         end
     end)

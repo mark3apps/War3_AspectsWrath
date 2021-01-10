@@ -11938,13 +11938,13 @@ STRING 3963
 }
 
 STRING 3964
-// Units: h015 (Militia), EditorSuffix (Name - Editor Suffix)
+// Units: h015 (Hardened Militia), EditorSuffix (Name - Editor Suffix)
 {
  (2)
 }
 
 STRING 3965
-// Units: h016 (Militia), EditorSuffix (Name - Editor Suffix)
+// Units: h016 (Veteren Militia), EditorSuffix (Name - Editor Suffix)
 {
  (3)
 }
@@ -11998,25 +11998,25 @@ Sub Wall Buttress
 }
 
 STRING 3974
-// Units: h017 (Footman), EditorSuffix (Name - Editor Suffix)
+// Units: h017 (Hardened Footman), EditorSuffix (Name - Editor Suffix)
 {
  (2)
 }
 
 STRING 3975
-// Units: h011 (Footman), EditorSuffix (Name - Editor Suffix)
+// Units: h011 (Veteren Footman), EditorSuffix (Name - Editor Suffix)
 {
  (3)
 }
 
 STRING 3976
-// Units: h00S (Captain), EditorSuffix (Name - Editor Suffix)
+// Units: h00S (Hardened Captain), EditorSuffix (Name - Editor Suffix)
 {
  (2)
 }
 
 STRING 3977
-// Units: h018 (Captain), EditorSuffix (Name - Editor Suffix)
+// Units: h018 (Veteren Captain), EditorSuffix (Name - Editor Suffix)
 {
  (3)
 }
@@ -12157,5 +12157,41 @@ STRING 4000
 // Abilities: A053 (Permanent Immolation), EditorSuffix (Editor Suffix)
 {
 Inferno
+}
+
+STRING 4001
+// Units: h015 (Hardened Militia), Name (Name)
+{
+Hardened Militia
+}
+
+STRING 4002
+// Units: h016 (Veteren Militia), Name (Name)
+{
+Veteren Militia
+}
+
+STRING 4003
+// Units: h017 (Hardened Footman), Name (Name)
+{
+Hardened Footman
+}
+
+STRING 4004
+// Units: h011 (Veteren Footman), Name (Name)
+{
+Veteren Footman
+}
+
+STRING 4005
+// Units: h00S (Hardened Captain), Name (Name)
+{
+Hardened Captain
+}
+
+STRING 4006
+// Units: h018 (Veteren Captain), Name (Name)
+{
+Veteren Captain
 }
 
