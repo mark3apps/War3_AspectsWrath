@@ -287,6 +287,9 @@ gg_rct_Left_Mage_Base = nil
 gg_rct_Right_Mage_Base = nil
 gg_rct_Murloc_Spawn_Left = nil
 gg_rct_Murloc_Spawn_Right = nil
+gg_rct_Left_Start_Middle = nil
+gg_rct_Right_Start_Middle = nil
+gg_rct_Region_090 = nil
 gg_cam_Castle_1 = nil
 gg_cam_Castle_2 = nil
 gg_cam_Castle_3 = nil
@@ -442,9 +445,6 @@ gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
-gg_rct_Left_Start_Middle = nil
-gg_rct_Right_Start_Middle = nil
-gg_rct_Region_090 = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -857,7 +857,89 @@ function InitGlobals()
     end
 end
 
-function Init_orderStrings()
+function init_locationClass()
+
+    loc_Class = {}
+
+    loc_Class.new = function()
+        local self = {}
+        self.regions = {}
+
+        function self:add(name, rect, nextRect, allied)
+            nextRect = nextRect or ""
+            allied = allied or false
+            self[name] = {
+                centerX = GetRectCenterX(rect),
+                centerY = GetRectCenterY(rect),
+                minX = GetRectMinX(rect),
+                maxX = GetRectMaxX(rect),
+                minY = GetRectMinY(rect),
+                maxY = GetRectMaxY(rect)
+            }
+            self[name].reg = CreateRegion()
+            self[name].reg = RegionAddRect(rect)
+            self[name].rect = rect
+            self[name].name = name
+
+            self[name].direction = direction
+            self.regions[GetHandleId(self[name].rect)] = name
+            self.regions[GetHandleId(self[name].reg)] = name
+
+            if nextRect ~= "" then
+                TriggerRegisterEnterRegionSimple(Trig_moveToNext, self[name].reg)
+                self[name].next = nextRect
+                self[name].allied = allied
+                self[name].fed = not allied
+            end
+        end
+
+        function self:getRandomXY(region)
+            return GetRandomReal(region.minX, region.maxX), GetRandomReal(region.minY, region.maxY)
+        end
+
+        function self:getRegion(region)
+            local regionName = self.regions[GetHandleId(region)]
+            return self[regionName]
+        end
+
+        return self
+    end
+
+end
+
+function addRegions()
+    loc:add("arcaneLeft", gg_rct_Left_Arcane, "castleLeft", false)
+
+    loc:add("arcaneRight", gg_rct_Right_Arcane, "castleRight", true)
+    loc:add("castleLeft", gg_rct_Left_Castle)
+    loc:add("castleRight", gg_rct_Right_Castle)
+    loc:add("elfLeft", gg_rct_Elf_Base_Left, "castleLeft", false)
+    loc:add("elfRight", gg_rct_Elf_Base_Right, "casteRight", true)
+
+    loc:add("everythingLeft", gg_rct_Left_Everything, "castleLeft", false)
+    loc:add("everythingRight", gg_rct_Right_Everything, "castleRight", true)
+    loc:add("bottomLeft", gg_rct_Left_Start_Bottom, "arcaneLeft", false)
+    loc:add("bottomRight", gg_rct_Right_Start_Bottom, "elfRight", true)
+    loc:add("middleLeft", gg_rct_Left_Start_Middle, "", false)
+    loc:add("middleRight", gg_rct_Right_Start_Middle, "", true)
+    loc:add("topLeft", gg_rct_Left_Start_Top, "elfLeft", false)
+    loc:add("topRight", gg_rct_Right_Start_Top, "arcaneRight", true)
+
+    loc:add("spawnArcaneLeft", gg_rct_Right_Mage_Base)
+    loc:add("spawnArcaneHeroLeft", gg_rct_Arcane_Hero_Left)
+    loc:add("spawnArcaneHeroRight", gg_rct_Arcane_Hero_Right)
+    loc:add("spawnElementalTopLeft", gg_rct_Arcane_Left_Top)
+    loc:add("spawnElementalTopRight", gg_rct_Arcane_Right_Top)
+    loc:add("spawnElementalBottomLeft", gg_rct_Arcane_Left_Bottom)
+    loc:add("spawnElementalBottomRight", gg_rct_Arcane_Right_Bottom)
+    loc:add("spawnHeroLeft", gg_rct_Left_Hero)
+    loc:add("spawnHeroRight", gg_rct_Right_Hero)
+
+    local x, y = loc:getRandomXY(loc.arcaneLeft)
+end
+
+function Init_luaGlobals()
+
     oid = {
         OFFSET = 851970,
         absorb = 852529,
@@ -1276,12 +1358,24 @@ function Init_orderStrings()
     }
 end
 
+function init_triggers()
+    Trig_moveToNext = CreateTrigger()
+    Trig_spawnLoop = CreateTrigger()
+    Trig_upgradeCreeps = CreateTrigger()
+    Trig_AutoZoom = CreateTrigger()
+    Trig_UnitEntersMap = CreateTrigger()
+    Trig_UnitDies = CreateTrigger()
+end
+
 function init_Lua()
     debugprint = 2
 
     -- Define Classes
     debugfunc(function()
-        Init_orderStrings()
+        init_triggers()
+        
+        Init_luaGlobals()
+        init_locationClass()
         init_indexerClass()
         init_heroClass()
         init_spawnClass()
@@ -1294,47 +1388,50 @@ function init_Lua()
 
     -- Init Classes
     debugfunc(function()
+        loc = loc_Class.new()
+        addRegions()
         indexer = indexer_Class.new()
         hero = hero_Class.new()
         ai = ai_Class.new()
         spawn = spawn_Class.new()
-
+        
     end, "Init Classes")
 
     dprint("Classes Initialized", 2)
 
-    -- Init Trigger
-    debugfunc(function()
+    -- -- Init Trigger
+    -- debugfunc(function()
 
-        init_AutoZoom()
-        Init_HeroLevelsUp()
-        Init_UnitCastsSpell()
-        Init_PlayerBuysUnit()
-        init_spawnTimers()
-        Init_UnitEntersMap()
-        Init_stopCasting()
-        Init_finishCasting()
-        Init_IssuedOrder()
-        Init_UnitDies()
-        Init_UnitEntersMap()
-    end, "Init Triggers")
+    --     init_AutoZoom()
+    --     Init_HeroLevelsUp()
+    --     Init_UnitCastsSpell()
+    --     Init_PlayerBuysUnit()
+    --     init_spawnTimers()
+    --     Init_UnitEntersMap()
+    --     Init_stopCasting()
+    --     Init_finishCasting()
+    --     Init_IssuedOrder()
+    --     Init_UnitDies()
+    --     Init_UnitEntersMap()
+    --     init_MoveToNext()
+    -- end, "Init Triggers")
 
-    dprint("Triggers Initialized", 2)
+    -- dprint("Triggers Initialized", 2)
 
-    -- Spawn Base / Unit Setup
-    -- Init Trigger
-    debugfunc(function()
-        spawnAddBases()
-        spawnAddUnits()
-    end, "Init Spawn")
+    -- -- Spawn Base / Unit Setup
+    -- -- Init Trigger
+    -- debugfunc(function()
+    --     spawnAddBases()
+    --     spawnAddUnits()
+    -- end, "Init Spawn")
 
-    dprint("Spawn Setup", 2)
+    -- dprint("Spawn Setup", 2)
 
-    -- Setup Delayed Init Triggers
-    init_Delayed_1()
-    init_Delayed_10()
+    -- -- Setup Delayed Init Triggers
+    -- init_Delayed_1()
+    -- init_Delayed_10()
 
-    dprint("Init Finished")
+    -- dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -1703,14 +1800,14 @@ end
 
 function init_spawnTimers()
     -- Create Spawn Loop Trigger
-    Trig_spawnLoop = CreateTrigger()
+    
     TriggerAddAction(Trig_spawnLoop, function()
         debugfunc(function()
             spawn:loopSpawn()
         end, "spawn:loopSpawn")
     end)
 
-    Trig_upgradeCreeps = CreateTrigger()
+    
     TriggerAddAction(Trig_upgradeCreeps, function()
         debugfunc(function()
             spawn:upgradeCreeps()
@@ -3254,10 +3351,9 @@ end
 
 -- Camera Setup
 function init_AutoZoom()
-    Trig_AutoZoom = CreateTrigger()
+    
     -- DisableTrigger(Trig_AutoZoom)
     TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
-
     TriggerAddAction(Trig_AutoZoom, function()
         local i = 1
         local ug = CreateGroup()
@@ -3265,7 +3361,7 @@ function init_AutoZoom()
         while (i <= 12) do
             ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
             SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-                (1700.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+                (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
             DestroyGroup(ug)
             i = i + 1
         end
@@ -3403,11 +3499,11 @@ function Init_Map()
 end
 
 function Init_UnitEntersMap()
-    Trig_UnitEntersMap = CreateTrigger()
+    
     TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
     TriggerAddAction(Trig_UnitEntersMap, function()
         local triggerUnit = GetTriggerUnit()
-        -- addUnitsToIndex(triggerUnit)
+        addUnitsToIndex(triggerUnit)
     end)
 end
 
@@ -3424,7 +3520,7 @@ function addUnitsToIndex(unit)
 end
 
 function Init_UnitDies()
-    Trig_UnitDies = CreateTrigger()
+    
     TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
     TriggerAddAction(Trig_UnitDies, function()
         local dieingUnit = GetTriggerUnit()
@@ -3515,6 +3611,27 @@ function unitKeepMoving(unit)
         PolledWait(0.5)
         indexer:order(unit, "attack")
     end
+end
+
+function init_MoveToNext()
+
+    TriggerAddAction(Trig_moveToNext, function()
+
+        local unit = GetTriggerUnit()
+        local player = GetOwningPlayer(unit)
+        local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
+        local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
+
+        if isAllied or isFed then
+            local region = loc:getRegion(GetTriggeringRegion())
+
+            if (isAllied and region.allied) or (isFed and region.fed) then
+                indexer:updateEnd(unit, loc:getRandomXY(loc[region.next]))
+                indexer:order(unit, "attack")
+            end
+        end
+    end)
+
 end
 
 function InitSounds()
