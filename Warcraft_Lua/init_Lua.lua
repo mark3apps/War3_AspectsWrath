@@ -2305,7 +2305,7 @@ function spawnAddBases()
 
     spawn:addBase("arcane", "sArcaneLeft", "bottomRight", gg_unit_h003_0015, "sArcaneRight", "topLeft",
         gg_unit_h003_0007)
-    spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormLeft",
+    spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormRight",
         gg_unit_h003_0007)
     spawn:addBase("arcaneHero", "sArcaneHeroLeft", "bottomRight", gg_unit_h014_0241, "sArcaneHeroRight", "topLeft",
         gg_unit_h014_0043)
@@ -2328,7 +2328,7 @@ function spawnAddBases()
     spawn:addBase("kobold", "sKolboldLeft", "topRight", gg_unit_ngt2_0525, "sKolboldRight", "bottomLeft",
         gg_unit_ngt2_0455)
     spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109, "sElfRight", "bottomLeft", gg_unit_nheb_0036)
-    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft", gg_unit_nheb_0109, "sElfRight", "cForestLeft",
+    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft", gg_unit_nheb_0109, "sElfRight", "cForestRight",
         gg_unit_nheb_0036)
     spawn:addBase("merc", "sCampLeft", "bottomRight", gg_unit_n001_0048, "sCampRight", "topLeft", gg_unit_n001_0049)
     spawn:addBase("mine", "sWorkshopLeft", "bottomRight", gg_unit_h006_0074, "sWorkshopRight", "topLeft",
@@ -2792,7 +2792,7 @@ function init_MoveToNext()
             local region = loc:getRegion(GetTriggeringRegion())
 
             if (isAllied and region.allied) or (isFed and region.fed) then
-                local x, y = loc:getRandomXY(loc[region.next])
+                local x, y = loc:getRandomXY(region.next)
 
                 indexer:updateEnd(triggerUnit, x, y)
                 indexer:order(triggerUnit)
