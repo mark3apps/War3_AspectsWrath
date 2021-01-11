@@ -3161,7 +3161,7 @@ function spawnAddBases()
 
     spawn:addBase("arcane", "sArcaneLeft", "bottomRight", gg_unit_h003_0015, "sArcaneRight", "topLeft",
         gg_unit_h003_0007)
-    spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormLeft",
+    spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormRight",
         gg_unit_h003_0007)
     spawn:addBase("arcaneHero", "sArcaneHeroLeft", "bottomRight", gg_unit_h014_0241, "sArcaneHeroRight", "topLeft",
         gg_unit_h014_0043)
@@ -3184,7 +3184,7 @@ function spawnAddBases()
     spawn:addBase("kobold", "sKolboldLeft", "topRight", gg_unit_ngt2_0525, "sKolboldRight", "bottomLeft",
         gg_unit_ngt2_0455)
     spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109, "sElfRight", "bottomLeft", gg_unit_nheb_0036)
-    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft", gg_unit_nheb_0109, "sElfRight", "cForestLeft",
+    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft", gg_unit_nheb_0109, "sElfRight", "cForestRight",
         gg_unit_nheb_0036)
     spawn:addBase("merc", "sCampLeft", "bottomRight", gg_unit_n001_0048, "sCampRight", "topLeft", gg_unit_n001_0049)
     spawn:addBase("mine", "sWorkshopLeft", "bottomRight", gg_unit_h006_0074, "sWorkshopRight", "topLeft",
@@ -3648,7 +3648,7 @@ function init_MoveToNext()
             local region = loc:getRegion(GetTriggeringRegion())
 
             if (isAllied and region.allied) or (isFed and region.fed) then
-                local x, y = loc:getRandomXY(loc[region.next])
+                local x, y = loc:getRandomXY(region.next)
 
                 indexer:updateEnd(triggerUnit, x, y)
                 indexer:order(triggerUnit)
@@ -3893,6 +3893,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -21632.0, -4416.0, 270.000, FourCC("n000"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -11584.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -10816.0, 270.000, FourCC("h00G"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -13696.0, -6656.0, 270.000, FourCC("hhou"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -21632.0, -12928.0, 270.000, FourCC("h00T"))
     u = BlzCreateUnitWithSkin(p, FourCC("npgf"), -15648.0, -2080.0, 270.000, FourCC("npgf"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -21632.0, -9472.0, 270.000, FourCC("h00T"))
@@ -3974,8 +3975,10 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nefm"), -24800.0, 864.0, 270.000, FourCC("nefm"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -17952.0, -6016.0, 0.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19200.0, -4800.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -13184.0, -6656.0, 270.000, FourCC("hhou"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -14528.0, -1216.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ofor"), -14944.0, -2208.0, 270.000, FourCC("ofor"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -13696.0, -6336.0, 270.000, FourCC("hhou"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -19232.0, -7328.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -15232.0, -1792.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncnt"), -15712.0, -3680.0, 270.000, FourCC("ncnt"))
@@ -4080,7 +4083,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -16480.0, -288.0, 270.000, FourCC("ngnh"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngwr"), -16736.0, -9248.0, 270.000, FourCC("ngwr"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13408.0, -8032.0, 270.000, FourCC("ncb9"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -12960.0, -7968.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -12960.0, -8096.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -13536.0, -7520.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -13664.0, -7968.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13792.0, -7712.0, 270.000, FourCC("ncb9"))
