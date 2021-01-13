@@ -854,56 +854,278 @@ function InitGlobals()
     end
 end
 
-function init_locationClass()
+function init_Lua()
+    debugprint = 2
 
-    loc_Class = {}
+    -- Define Classes
+    debugfunc(function()
+        init_triggers()
 
-    loc_Class.new = function()
-        local self = {}
-        self.regions = {}
+        Init_luaGlobals()
+        init_locationClass()
+        init_indexerClass()
+        init_heroClass()
+        init_spawnClass()
+        init_aiClass()
+    end, "Define Classes")
+    dprint("Classes Defined", 2)
 
-        function self:add(name, rect, nextRect, allied)
-            nextRect = nextRect or ""
-            allied = allied or false
-            self[name] = {
-                centerX = GetRectCenterX(rect),
-                centerY = GetRectCenterY(rect),
-                minX = GetRectMinX(rect),
-                maxX = GetRectMaxX(rect),
-                minY = GetRectMinY(rect),
-                maxY = GetRectMaxY(rect)
-            }
-            self[name].reg = CreateRegion()
-            RegionAddRect(self[name].reg, rect)
+    -- Start the Map init
+    Init_Map()
 
-            self[name].rect = rect
-            self[name].name = name
+    -- Init Classes
+    debugfunc(function()
+        loc = loc_Class.new()
+        addRegions()
+        indexer = indexer_Class.new()
+        hero = hero_Class.new()
+        ai = ai_Class.new()
+        spawn = spawn_Class.new()
 
-            self[name].direction = direction
-            self.regions[GetHandleId(self[name].rect)] = name
-            self.regions[GetHandleId(self[name].reg)] = name
+    end, "Init Classes")
 
-            if nextRect ~= "" then
-                TriggerRegisterEnterRegionSimple(Trig_moveToNext, self[name].reg)
-                self[name].next = nextRect
-                self[name].allied = allied
-                self[name].fed = not allied
-            end
+    dprint("Classes Initialized", 2)
+
+    -- Init Trigger
+    debugfunc(function()
+
+        init_AutoZoom()
+        Init_HeroLevelsUp()
+        Init_UnitCastsSpell()
+        Init_PlayerBuysUnit()
+        init_spawnTimers()
+        Init_UnitEntersMap()
+        Init_stopCasting()
+        Init_finishCasting()
+        Init_IssuedOrder()
+        Init_UnitDies()
+        init_MoveToNext()
+    end, "Init Triggers")
+
+    dprint("Triggers Initialized", 2)
+
+    -- Spawn Base / Unit Setup
+    -- Init Trigger
+    debugfunc(function()
+        spawnAddBases()
+        spawnAddUnits()
+    end, "Init Spawn")
+
+    dprint("Spawn Setup", 2)
+
+    -- Setup Delayed Init Triggers
+    init_Delayed_1()
+    init_Delayed_10()
+
+    dprint("Init Finished")
+end
+
+-- Init Delayed Functions 1 second after Map Init
+function init_Delayed_1()
+    local t = CreateTrigger()
+    TriggerRegisterTimerEventSingle(t, 1)
+    TriggerAddAction(t, function()
+        debugfunc(function()
+            ai:pickHeroes()
+            dprint("pick Heroes Successfull", 2)
+            ai:init_loopStates()
+            dprint("AI Started", 2)
+
+            orderStartingUnits()
+            spawn:startSpawn()
+
+            dprint("Spawn Started", 2)
+        end, "Start Delayed Triggers")
+    end)
+end
+
+-- Init Delayed Functions 10 second after Map Init
+function init_Delayed_10()
+    local t = CreateTrigger()
+    TriggerRegisterTimerEventSingle(t, 10)
+    TriggerAddAction(t, function()
+        debugfunc(function()
+            -- FogMaskEnableOn()
+            -- FogEnableOn()
+
+            -- Set up the Creep Event Timer
+            StartTimerBJ(udg_EventTimer, false, 350.00)
+        end, "Start Delayed Triggers")
+    end)
+end
+
+function Init_Map()
+
+    FogEnableOff()
+    FogMaskEnableOff()
+    MeleeStartingVisibility()
+    udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
+    udg_ALL_PLAYERS = GetPlayersAll()
+
+    -- Turn on Bounty
+    ForForce(udg_ALL_PLAYERS, function()
+        SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer())
+    end)
+
+    -- Add Computers to their group
+    udg_PLAYERcomputers[1] = Player(18)
+    udg_PLAYERcomputers[2] = Player(19)
+    udg_PLAYERcomputers[3] = Player(20)
+    udg_PLAYERcomputers[4] = Player(21)
+    udg_PLAYERcomputers[5] = Player(22)
+    udg_PLAYERcomputers[6] = Player(23)
+
+    -- Create the Allied Computers
+    ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
+    ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
+    ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
+
+    -- Create the Federation Computers
+    ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
+    ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
+    ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
+
+    -- Create the Allied Users
+    ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
+    ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
+
+    -- Create the Federation Users
+    ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
+    ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
+
+    -- Change the color of Player 1 and Player 2
+    SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
+    SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
+
+    -- Change the color of the computer players to all match
+    ForForce(udg_PLAYERGRPallied, function()
+        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true)
+    end)
+    ForForce(udg_PLAYERGRPfederation, function()
+        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
+    end)
+
+end
+
+function init_spawnTimers()
+    -- Create Spawn Loop Trigger
+
+    TriggerAddAction(Trig_spawnLoop, function()
+        debugfunc(function()
+            spawn:loopSpawn()
+        end, "spawn:loopSpawn")
+    end)
+
+    TriggerAddAction(Trig_upgradeCreeps, function()
+        debugfunc(function()
+            spawn:upgradeCreeps()
+        end, "spawn:upgradeCreeps()")
+    end)
+end
+
+--
+-- Triggers
+--
+
+-- Camera Setup
+function init_AutoZoom()
+
+    -- DisableTrigger(Trig_AutoZoom)
+    TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
+    TriggerAddAction(Trig_AutoZoom, function()
+        local i = 1
+        local ug = CreateGroup()
+
+        while (i <= 12) do
+            ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
+            SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
+                (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+            DestroyGroup(ug)
+            i = i + 1
         end
+    end)
+end
 
-        function self:getRandomXY(name)
-            local  region = self[name]
-            return GetRandomReal(region.minX, region.maxX), GetRandomReal(region.minY, region.maxY)
-        end
 
-        function self:getRegion(region)
-            local regionName = self.regions[GetHandleId(region)]
-            return self[regionName]
-        end
+function CAST_aiHero(triggerUnit)
+    if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+        local heroName = indexer:get(triggerUnit).heroName
+        ai:castSpell(heroName)
+    end
+end
 
-        return self
+
+-- Add unit to index then order to move if unit is computer controlled and a correct unit
+function addUnitsToIndex(unit)
+
+    indexer:add(unit)
+
+    if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and IsUnitType(unit, UNIT_TYPE_HERO) == false and
+        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
+            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
+        indexer:order(unit)
     end
 
+end
+
+-- Order starting units to attack
+function orderStartingUnits()
+    local g = CreateGroup()
+    local u
+
+    g = GetUnitsInRectAll(GetPlayableMapRect())
+    while true do
+        u = FirstOfGroup(g)
+        if u == nil then
+            break
+        end
+
+        debugfunc(function()
+
+            indexer:add(u)
+            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
+                (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
+                    IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
+
+                indexer:order(u)
+            end
+        end, "Index")
+
+        GroupRemoveUnit(g, u)
+    end
+    DestroyGroup(g)
+end
+
+-- Tell unit to keep Attack-Moving to it's indexed destination
+function unitKeepMoving(unit)
+    if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
+        UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
+        FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
+        GetUnitTypeId(unit) ~= FourCC("h00O") and
+        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
+            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
+        PolledWait(0.5)
+        indexer:order(unit, "attack")
+    end
+end
+
+
+function init_triggers()
+    Trig_moveToNext = CreateTrigger()
+    Trig_spawnLoop = CreateTrigger()
+    Trig_upgradeCreeps = CreateTrigger()
+    Trig_AutoZoom = CreateTrigger()
+    Trig_UnitEntersMap = CreateTrigger()
+    Trig_UnitDies = CreateTrigger()
+    Trig_IssuedOrder = CreateTrigger()
 end
 
 function addRegions()
@@ -1396,449 +1618,307 @@ function Init_luaGlobals()
     }
 end
 
-function init_triggers()
-    Trig_moveToNext = CreateTrigger()
-    Trig_spawnLoop = CreateTrigger()
-    Trig_upgradeCreeps = CreateTrigger()
-    Trig_AutoZoom = CreateTrigger()
-    Trig_UnitEntersMap = CreateTrigger()
-    Trig_UnitDies = CreateTrigger()
-    Trig_IssuedOrder = CreateTrigger()
+-- Spawn Set up
+function spawnAddBases()
+    -- addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
+
+    spawn:addBase("arcane", "sArcaneLeft", "bottomRight", gg_unit_h003_0015, "sArcaneRight", "topLeft",
+        gg_unit_h003_0007)
+    spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormRight",
+        gg_unit_h003_0007)
+    spawn:addBase("arcaneHero", "sArcaneHeroLeft", "bottomRight", gg_unit_h014_0241, "sArcaneHeroRight", "topLeft",
+        gg_unit_h014_0043)
+    spawn:addBase("arcaneTop", "sElementalTopLeft", "bottomRight", gg_unit_hars_0355, "sElementalTopRight", "topLeft",
+        gg_unit_hars_0293)
+    spawn:addBase("arcaneBottom", "sElementalBottomLeft", "bottomRight", gg_unit_hars_0292, "sElementalBottomRight",
+        "topLeft", gg_unit_hars_0303)
+    spawn:addBase("blacksmith", "sCityBlacksmithLeft", "everythingRight", gg_unit_n00K_0802, "sCityBlacksmithRight",
+        "everythingLeft", gg_unit_n00K_0477)
+    spawn:addBase("blacksmithCreep", "sCityBlacksmithLeft", "cDeathLeft", gg_unit_n00K_0802, "sCityBlacksmithRight",
+        "cDeathRight", gg_unit_n00K_0477)
+    spawn:addBase("castle", "sHeroLeft", "everythingRight", gg_unit_h00E_0033, "sHeroRight", "everythingLeft",
+        gg_unit_h00E_0081)
+    spawn:addBase("cityElves", "sCityElfLeft", "everythingRight", gg_unit_hvlt_0207, "sCityElfRight", "everythingLeft",
+        gg_unit_hvlt_0406)
+    spawn:addBase("cityFront", "sCityFrontLeft", "middleRight", gg_unit_n00B_0364, "sCityFrontRight", "middleLeft",
+        gg_unit_n00B_0399)
+    spawn:addBase("citySide", "sCitySideLeft", "bottomRight", gg_unit_n00B_0102, "sCitySideRight", "topLeft",
+        gg_unit_n00B_0038)
+    spawn:addBase("kobold", "sKolboldLeft", "topRight", gg_unit_ngt2_0525, "sKolboldRight", "bottomLeft",
+        gg_unit_ngt2_0455)
+    spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109, "sElfRight", "bottomLeft", gg_unit_nheb_0036)
+    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft", gg_unit_nheb_0109, "sElfRight", "cForestRight",
+        gg_unit_nheb_0036)
+    spawn:addBase("merc", "sCampLeft", "bottomRight", gg_unit_n001_0048, "sCampRight", "topLeft", gg_unit_n001_0049)
+    spawn:addBase("mine", "sWorkshopLeft", "bottomRight", gg_unit_h006_0074, "sWorkshopRight", "topLeft",
+        gg_unit_h006_0055)
+    spawn:addBase("naga", "sNagaLeft", "topRight", gg_unit_nntt_0135, "sNagaRight", "bottomLeft", gg_unit_nntt_0132)
+    spawn:addBase("murloc", "sMurlocLeft", "topRight", gg_unit_nmh1_0735, "sMurlocRight", "bottomLeft",
+        gg_unit_nmh1_0783)
+    spawn:addBase("nagaCreep", "sNagaLeft", "cTidesLeft", gg_unit_nntt_0135, "sNagaRight", "cTidesRight",
+        gg_unit_nntt_0132)
+    spawn:addBase("nightElves", "sTreeLeft", "topRight", gg_unit_e003_0058, "sTreeRight", "bottomLeft",
+        gg_unit_e003_0014)
+    spawn:addBase("orc", "sOrcLeft", "topRight", gg_unit_o001_0075, "sOrcRight", "bottomLeft", gg_unit_o001_0078)
+    spawn:addBase("shipyard", "sElfShipyardLeft", "sHumanShipyardRight", gg_unit_eshy_0120, "sElfShipyardRight",
+        "sHumanShipyardLeft", gg_unit_eshy_0047)
+    spawn:addBase("hshipyard", "sHumanShipyardLeft", "sHumanShipyardRight", gg_unit_hshy_0011, "sHumanShipyardRight",
+        "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
+    spawn:addBase("town", "sTownLeft", "bottomRight", gg_unit_h00F_0029, "sTownRight", "topLeft", gg_unit_h00F_0066)
+    spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0262, "sUndeadRight", "middleLeft",
+        gg_unit_u001_0264)
 end
 
-function init_Lua()
-    debugprint = 2
+function spawnAddUnits()
+    -- addUnit(baseName, unitType, numOfUnits, {waves}, levelStart, levelEnd)
 
-    -- Define Classes
-    debugfunc(function()
-        init_triggers()
+    -- Arcane Spawn
+    spawn:addUnit("arcane", "h00C", 2, {5, 6, 7, 8, 9}, 3, 12) -- Sorcress
+    spawn:addUnit("arcane", "hgry", 1, {2, 3, 4, 5, 6, 8, 10}, 10, 12) -- Gryphon Rider
 
-        Init_luaGlobals()
-        init_locationClass()
-        init_indexerClass()
-        init_heroClass()
-        init_spawnClass()
-        init_aiClass()
-    end, "Define Classes")
-    dprint("Classes Defined", 2)
+    -- Arcane Creep Spawn
+    spawn:addUnit("arcaneCreep", "narg", 2, {1, 2, 3, 4}, 2, 12) -- Battle Golem
+    spawn:addUnit("arcaneCreep", "hwt2", 1, {1, 2, 3, 4}, 3, 12) -- Water Elemental (Level 2)
+    spawn:addUnit("arcaneCreep", "hwt3", 1, {1, 2, 3, 4}, 4, 12) -- Water Elemental (Level 3)
+    spawn:addUnit("arcaneCreep", "h00K", 1, {1, 2, 3, 4, 5, 10}, 6, 12) -- Magi Defender
 
-    -- Start the Map init
-    Init_Map()
+    -- Arcane Hero Sapwn
+    spawn:addUnit("arcaneHero", "n00A", 1, {5, 6}, 7, 12) -- Supreme Wizard
+    spawn:addUnit("arcaneHero", "nsgg", 1, {4, 6}, 9, 12) -- Seige Golem
 
-    -- Init Classes
-    debugfunc(function()
-        loc = loc_Class.new()
-        addRegions()
-        indexer = indexer_Class.new()
-        hero = hero_Class.new()
-        ai = ai_Class.new()
-        spawn = spawn_Class.new()
+    -- Arcane Top Spawn
+    spawn:addUnit("arcaneTop", "narg", 4, {4, 5, 6}, 2, 12) -- Battle Golem
+    spawn:addUnit("arcaneTop", "hwt2", 1, {4, 5, 6}, 4, 12) -- Water Elemental (Level 2)
+    spawn:addUnit("arcaneTop", "hwt3", 1, {5, 6}, 8, 12) -- Water Elemental (Level 3)
 
-    end, "Init Classes")
+    -- Arcane Bottom Spawn
+    spawn:addUnit("arcaneBottom", "narg", 4, {1, 2, 3}, 2, 12) -- Battle Golem
+    spawn:addUnit("arcaneBottom", "hwt2", 1, {1, 2, 3}, 4, 12) -- Water Elemental (Level 2)
+    spawn:addUnit("arcaneBottom", "hwt3", 1, {2, 3}, 8, 12) -- Water Elemental (Level 3)
 
-    dprint("Classes Initialized", 2)
+    -- Blacksmith Spawn
+    spawn:addUnit("blacksmith", "hfoo", 1, {1, 2, 3, 4, 5}, 3, 12) -- Footman 1
+    spawn:addUnit("blacksmith", "h00L", 1, {1, 2, 3, 4}, 4, 12) -- Knight
+    spawn:addUnit("blacksmith", "h00L", 1, {1, 2, 3, 4}, 5, 12) -- Knight
+    spawn:addUnit("blacksmith", "h017", 1, {1, 2, 3}, 6, 12) -- Scarlet Commander
+    spawn:addUnit("blacksmith", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
+    spawn:addUnit("blacksmith", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
-    -- Init Trigger
-    debugfunc(function()
+    -- Blacksmith Creep Spawn
+    spawn:addUnit("blacksmithCreep", "h007", 4, {1, 2, 3, 4}, 1, 6) -- Militia
+    spawn:addUnit("blacksmithCreep", "nhea", 1, {1, 2, 3, 4}, 3, 12) -- Archer
+    spawn:addUnit("blacksmithCreep", "hspt", 1, {1, 2, 3, 4}, 5, 12) -- Tower Guard
+    spawn:addUnit("blacksmithCreep", "h011", 2, {1, 2, 3, 4, 5}, 8, 12) -- Scarlet Commander
+    spawn:addUnit("blacksmithCreep", "hcth", 2, {1, 2, 3, 4, 5}, 11, 12) -- Captian
 
-        init_AutoZoom()
-        Init_HeroLevelsUp()
-        Init_UnitCastsSpell()
-        Init_PlayerBuysUnit()
-        init_spawnTimers()
-        Init_UnitEntersMap()
-        Init_stopCasting()
-        Init_finishCasting()
-        Init_IssuedOrder()
-        Init_UnitDies()
-        init_MoveToNext()
-    end, "Init Triggers")
+    -- Castle Spawn
+    spawn:addUnit("castle", "h018", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 8, 12) -- Commander
 
-    dprint("Triggers Initialized", 2)
+    -- City Elves
+    spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6}, 1, 3) -- Archer
+    spawn:addUnit("cityElves", "hspt", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 2, 3) -- Tower Guard
+    spawn:addUnit("cityElves", "hspt", 2, {1, 2, 3, 4, 5, 6, 7}, 4, 5) -- Tower Guard
+    spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4}, 3, 12) -- Mystic
+    spawn:addUnit("cityElves", "hspt", 3, {1, 2, 3, 4, 5, 6}, 6, 12) -- Tower Guard
+    spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Archer
+    spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4, 5, 6, 7}, 7, 12) -- Mystic
 
-    -- Spawn Base / Unit Setup
-    -- Init Trigger
-    debugfunc(function()
-        spawnAddBases()
-        spawnAddUnits()
-    end, "Init Spawn")
+    -- City Front Spawn
+    spawn:addUnit("cityFront", "h007", 2, {2, 3, 4, 5, 6, 7}, 1, 2) -- Militia 1
+    spawn:addUnit("cityFront", "h015", 3, {2, 3, 4, 5, 6, 7}, 1, 5) -- Militia 2
+    spawn:addUnit("cityFront", "hfoo", 3, {2, 3, 4, 5, 6, 7}, 4, 12) -- Footman 1
+    spawn:addUnit("cityFront", "hcth", 2, {2, 3, 4, 5, 6}, 6, 12) -- Captian
 
-    dprint("Spawn Setup", 2)
+    -- City Side Spawn
+    spawn:addUnit("citySide", "h015", 1, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
+    spawn:addUnit("citySide", "hfoo", 2, {6, 7, 8, 9, 10}, 2, 12) -- Footman 1
+    spawn:addUnit("citySide", "h015", 2, {1, 2, 3, 4, 6}, 3, 12) -- Militia 1
 
-    -- Setup Delayed Init Triggers
-    init_Delayed_1()
-    init_Delayed_10()
+    -- Kobold Spawn
+    spawn:addUnit("kobold", "nkob", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Kobold
+    spawn:addUnit("kobold", "nkot", 1, {1, 2, 3, 5, 7, 9}, 3, 12) -- Kobold Tunneler
+    spawn:addUnit("kobold", "nkog", 1, {1, 3, 5, 7, 9}, 4, 12) -- Kobold Geomancer
+    spawn:addUnit("kobold", "nkol", 1, {4, 6, 8}, 5, 12) -- Kobold Taskmaster
 
-    dprint("Init Finished")
-end
+    -- High Elves
+    spawn:addUnit("highElves", "earc", 2, {1, 2, 3, 4, 5}, 1, 12) -- Ranger
+    spawn:addUnit("highElves", "e000", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 2, 12) -- Elite Ranger
+    spawn:addUnit("highElves", "hhes", 4, {1, 2, 3, 4}, 4, 12) -- Swordsman
+    spawn:addUnit("highElves", "nemi", 1, {1, 2, 3, 4, 5, 6}, 5, 12) -- Emmisary
 
--- Init Delayed Functions 1 second after Map Init
-function init_Delayed_1()
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 1)
-    TriggerAddAction(t, function()
-        debugfunc(function()
-            -- ai:pickHeroes()
-            dprint("pick Heroes Successfull", 2)
-            -- ai:init_loopStates()
+    -- High Elves Creep
+    spawn:addUnit("highElvesCreep", "hhes", 2, {1, 2, 3, 4}, 1, 12) -- Swordsman
+    spawn:addUnit("highElvesCreep", "nhea", 1, {1, 2, 3, 4, 5}, 2, 12) -- Archer
+    spawn:addUnit("highElvesCreep", "nemi", 1, {1, 2, 3, 4}, 4, 12) -- Emmisary
+    spawn:addUnit("highElvesCreep", "h010", 2, {1, 2, 3, 4, 5}, 5, 12) -- Elven Guardian
 
-            orderStartingUnits()
-            dprint("AI Started", 2)
-            spawn:startSpawn()
-            dprint("Spawn Started", 2)
-        end, "Start Delayed Triggers")
-    end)
-end
+    -- Merc Spawn
+    spawn:addUnit("merc", "n00L", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Rogue
+    spawn:addUnit("merc", "n003", 2, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Merc Archer
+    spawn:addUnit("merc", "n002", 3, {2, 3, 4, 7, 8, 9, 10}, 3, 12) -- Merc
+    spawn:addUnit("merc", "n008", 1, {1, 2, 3, 4, 5, 6, 8, 9, 10}, 4, 12) -- Enforcer
+    spawn:addUnit("merc", "nass", 1, {6, 7, 8, 9, 10}, 5, 12) -- Assasin
+    spawn:addUnit("merc", "n004", 1, {7, 8, 9, 10}, 1, 12) -- Wizard Warrior
+    spawn:addUnit("merc", "n005", 1, {7, 8, 9, 10}, 6, 12) -- Bandit Lord
 
--- Init Delayed Functions 10 second after Map Init
-function init_Delayed_10()
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 10)
-    TriggerAddAction(t, function()
-        debugfunc(function()
-            -- FogMaskEnableOn()
-            -- FogEnableOn()
+    -- Mine Spawn
+    spawn:addUnit("mine", "h001", 1, {2, 3, 4, 5, 6}, 2, 12) -- Morter Team
+    spawn:addUnit("mine", "h008", 2, {1, 2, 3, 4, 5, 6, 7, 8}, 3, 12) -- Rifleman
+    spawn:addUnit("mine", "h013", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Rifleman Long
+    spawn:addUnit("mine", "ncg2", 2, {1, 2, 3, 4, 5, 6, 7}, 4, 12) -- Clockwerk Goblin
+    spawn:addUnit("mine", "hmtt", 1, {1, 3, 5, 7}, 5, 12) -- Seige Engine
+    spawn:addUnit("mine", "n00F", 1, {2, 3, 4, 5, 6, 7}, 6, 12) -- Automaton
 
-            -- Set up the Creep Event Timer
-            StartTimerBJ(udg_EventTimer, false, 350.00)
-        end, "Start Delayed Triggers")
-    end)
+    -- Murloc Spawn
+    spawn:addUnit("murloc", "nmcf", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Mur'gul Cliffrunner
+    spawn:addUnit("murloc", "nnmg", 1, {2, 4, 6, 7, 8}, 2, 12) -- Mur'gul Reaver
+    spawn:addUnit("murloc", "nmsn", 1, {1, 3, 4, 6, 9}, 3, 12) -- Mur'gul Snarecaster
+    spawn:addUnit("murloc", "nmtw", 1, {1, 3, 6}, 6, 12) -- Mur'gul Tidewarrior
+
+    -- Naga Spawn
+    spawn:addUnit("naga", "nmyr", 2, {1, 3, 4, 6, 7, 9, 10}, 1, 12) -- Naga Myrmidon
+    spawn:addUnit("naga", "nnsw", 1, {4, 5, 7, 9, 10}, 3, 12) -- Naga Siren
+    spawn:addUnit("naga", "nnrg", 1, {5, 8, 9, 10}, 6, 12) -- Naga Royal Guard
+    spawn:addUnit("naga", "nhyc", 1, {1, 3, 5, 8, 9}, 9, 12) -- Dragon Turtle
+
+    -- Naga Creep Spawn
+    spawn:addUnit("nagaCreep", "nmyr", 2, {1, 2, 3, 4}, 2, 12) -- Naga Myrmidon
+    spawn:addUnit("nagaCreep", "nnsw", 1, {2, 3, 4, 5}, 3, 12) -- Naga Siren
+    spawn:addUnit("nagaCreep", "nsnp", 2, {2, 3, 4, 5, 6}, 5, 12) -- Snap Dragon
+
+    -- Night Elves Spawn
+    spawn:addUnit("nightElves", "nwat", 1, {3, 4, 5, 6, 7, 8, 9}, 2, 12) -- Sentry
+    spawn:addUnit("nightElves", "edry", 1, {1, 4, 5, 7, 9}, 3, 12) -- Dryad
+    spawn:addUnit("nightElves", "edoc", 2, {1, 3, 5, 7, 9}, 4, 12) -- Druid of the Claw
+    spawn:addUnit("nightElves", "e005", 1, {2, 4, 6, 8}, 5, 12) -- Mountain Giant
+    spawn:addUnit("nightElves", "nwnr", 1, {5, 10}, 9, 12) -- Ent
+
+    -- Orc Spawn
+    spawn:addUnit("orc", "o002", 2, {1, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Grunt
+    spawn:addUnit("orc", "o002", 2, {5, 6, 7, 8, 9}, 3, 12) -- Grunt
+    spawn:addUnit("orc", "nftr", 1, {4, 5, 7, 8, 9, 10}, 2, 12) -- Spearman
+    spawn:addUnit("orc", "nogo", 3, {2, 4, 6, 8, 10}, 4, 12) -- Ogre
+    spawn:addUnit("orc", "nw2w", 1, {1, 3, 5, 7, 9}, 3, 12) -- Warlock
+    spawn:addUnit("orc", "owad", 1, {1, 6, 9}, 6, 12) -- Orc Warchief
+    -- spawn:addUnit("orc", "ocat", 1, {1,5}, 6, 12)  -- Demolisher
+
+    -- Human Shipyard Spawn
+    spawn:addUnit("hshipyard", "hdes", 1, {2, 4}, 1, 2) -- Human Frigate
+    spawn:addUnit("hshipyard", "hdes", 1, {2, 4, 8}, 3, 4) -- Human Frigate
+    spawn:addUnit("hshipyard", "hdes", 1, {2, 4, 6, 8}, 5, 12) -- Human Frigate
+    spawn:addUnit("hshipyard", "hbsh", 1, {3, 8}, 6, 12) -- Human Battleship
+
+    -- Night Elf Shipyard Spawn
+    spawn:addUnit("shipyard", "edes", 1, {1, 6}, 2, 3) -- Night Elf Frigate
+    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6}, 4, 5) -- Night Elf Frigate
+    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6, 10}, 6, 12) -- Night Elf Frigate
+    spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
+
+    -- Town Spawn
+    spawn:addUnit("town", "h007", 3, {1, 2, 3, 4, 5}, 1, 5) -- Militia
+    spawn:addUnit("town", "h007", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3, 12) -- Militia
+    spawn:addUnit("town", "hcth", 1, {1, 2, 3, 4}, 2, 12) -- Captian
+    spawn:addUnit("town", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
+    spawn:addUnit("town", "hfoo", 5, {1, 2, 5, 6, 8}, 5, 12) -- Footman
+    spawn:addUnit("town", "h00L", 2, {1, 3, 7, 9}, 4, 12) -- Knight
+
+    -- Undead Spawn
+    spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "uskm", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
+    spawn:addUnit("undead", "unec", 1, {1, 2, 3, 4, 5, 6, 7}, 3, 12) -- Necromancer
+    spawn:addUnit("undead", "nerw", 1, {1, 6}, 4, 12) -- Warlock
+    spawn:addUnit("undead", "nfgl", 1, {2, 5, 8}, 5, 12) -- Giant Skeleton
 end
 
 --
--- Init Classes
+-- Functions
 --
+function dprint(message, level)
+    level = level or 1
 
-function init_indexerClass()
-    indexer_Class = {}
-
-    indexer_Class.new = function()
-        local self = {}
-
-        self.data = {}
-
-        function self:add(unit, order)
-            order = order or "attack"
-            local unitId = GetHandleId(unit)
-
-            if self.data[unitId] == nil then
-                local x = GetUnitX(unit)
-                local y = GetUnitY(unit)
-
-                self.data[unitId] = {}
-                self.data[unitId] = {
-                    xSpawn = x,
-                    ySpawn = y,
-                    order = order,
-                    unit = unit,
-                    sfx = {}
-                }
-            end
-        end
-
-        function self:updateEnd(unit, x, y)
-            local unitId = GetHandleId(unit)
-            self.data[unitId].xEnd = x
-            self.data[unitId].yEnd = y
-        end
-
-        function self:order(unit, order)
-
-            local unitId = GetHandleId(unit)
-            local alliedForce = IsUnitInForce(unit, udg_PLAYERGRPallied)
-            local p
-            local x = self.data[unitId].xEnd
-            local y = self.data[unitId].yEnd
-            order = order or self.data[unitId].order
-
-            if self.data[unitId].xEnd == nil or self.data[unitId].yEnd == nil then
-
-                if RectContainsUnit(gg_rct_Big_Top_Left, unit) or RectContainsUnit(gg_rct_Big_Top_Left_Center, unit) or
-                    RectContainsUnit(gg_rct_Big_Top_Right_Center, unit) or RectContainsUnit(gg_rct_Big_Top_Right, unit) then
-
-                    if alliedForce then
-                        p = GetRandomLocInRect(gg_rct_Right_Start_Top)
-                    else
-                        p = GetRandomLocInRect(gg_rct_Left_Start_Top)
-                    end
-
-                elseif RectContainsUnit(gg_rct_Big_Middle_Left, unit) or
-                    RectContainsUnit(gg_rct_Big_Middle_Left_Center, unit) or
-                    RectContainsUnit(gg_rct_Big_Middle_Right_Center, unit) or
-                    RectContainsUnit(gg_rct_Big_Middle_Right, unit) then
-
-                    if alliedForce then
-                        p = GetRandomLocInRect(gg_rct_Right_Start)
-                    else
-                        p = GetRandomLocInRect(gg_rct_Left_Start)
-                    end
-
-                else
-
-                    if alliedForce then
-                        p = GetRandomLocInRect(gg_rct_Right_Start_Bottom)
-                    else
-                        p = GetRandomLocInRect(gg_rct_Left_Start_Bottom)
-                    end
-                end
-
-                x = GetLocationX(p)
-                y = GetLocationY(p)
-                RemoveLocation(p)
-
-                self.data[unitId].xEnd = x
-                self.data[unitId].yEnd = y
-            end
-
-            -- Issue Order
-            IssuePointOrder(unit, order, x, y)
-        end
-
-        function self:addKey(unit, key, value)
-            value = value or 0
-            local unitId = GetHandleId(unit)
-            self.data[unitId][key] = value
-        end
-
-        function self:get(unit)
-            local unitId = GetHandleId(unit)
-            return self.data[unitId]
-        end
-
-        function self:set(unit, data)
-            local unitId = GetHandleId(unit)
-            self.data[unitId] = data
-        end
-
-        function self:remove(unit)
-            self.data[GetHandleId(unit)] = nil
-            return true
-        end
-
-        return self
+    if debugprint >= level then
+        print("|cff00ff00[debug " .. level .. "]|r " .. tostring(message))
     end
 end
 
--- Spawn Class
-function init_spawnClass()
-    -- Create the table for the class definition
-    spawn_Class = {}
+function distance(x1, y1, x2, y2) -- Find Distance between points
+    return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
+end
 
-    -- Define the new() function
-    spawn_Class.new = function()
+function debugfunc(func, name) -- Turn on runtime logging
+    local passed, data = pcall(function()
+        func()
+        return "func " .. name .. " passed"
+    end)
+    if not passed then
+        print("|cffff0000[ERROR]|r" .. name, passed, data)
+    end
+    passed = nil
+    data = nil
+end
+
+function CC2Four(num) -- Convert from Handle ID to Four Char
+    return string.pack(">I4", num)
+end
+
+--
+-- Location Class
+-----------------
+function init_locationClass()
+
+    loc_Class = {}
+
+    loc_Class.new = function()
         local self = {}
+        self.regions = {}
 
-        self.bases = {}
-        self.baseCount = 0
-        self.timer = CreateTimer()
-        self.cycleInterval = 5.00
-        self.baseInterval = 0.4
-        self.waveInterval = 20.00
-
-        self.creepLevel = 1
-        self.creepLevelTimer = CreateTimer()
-
-        self.wave = 1
-        self.base = ""
-        self.baseI = 0
-        self.indexer = ""
-        self.alliedBaseAlive = false
-        self.fedBaseAlive = false
-        self.unitInWave = false
-        self.unitInLevel = true
-        self.numOfUnits = 0
-        self.unitType = ""
-
-        function self:addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition)
-            -- Add all of the info the base and add the base name to the base list
-            self[baseName] = {
-                allied = {
-                    startPoint = alliedStart,
-                    endPoint = alliedEnd,
-                    condition = alliedCondition
-                },
-                fed = {
-                    startPoint = fedStart,
-                    endPoint = fedEnd,
-                    condition = fedCondition
-                },
-                destination = destination,
-                units = {}
+        function self:add(name, rect, nextRect, allied)
+            nextRect = nextRect or ""
+            allied = allied or false
+            self[name] = {
+                centerX = GetRectCenterX(rect),
+                centerY = GetRectCenterY(rect),
+                minX = GetRectMinX(rect),
+                maxX = GetRectMaxX(rect),
+                minY = GetRectMinY(rect),
+                maxY = GetRectMaxY(rect)
             }
-            table.insert(self.bases, baseName)
-            self.baseCount = self.baseCount + 1
-        end
+            self[name].reg = CreateRegion()
+            RegionAddRect(self[name].reg, rect)
 
-        function self:addUnit(baseName, unitType, numOfUnits, waves, levelStart, levelEnd)
-            table.insert(self[baseName].units, {
-                unitType = unitType,
-                numOfUnits = numOfUnits,
-                waves = waves,
-                level = {levelStart, levelEnd}
-            })
-        end
+            self[name].rect = rect
+            self[name].name = name
 
-        function self:unitCount()
-            return #self[self.base].units
-        end
+            self[name].direction = direction
+            self.regions[GetHandleId(self[name].rect)] = name
+            self.regions[GetHandleId(self[name].reg)] = name
 
-        function self:isUnitInWave()
-            local waves = self[self.base].units[self.indexer].waves
-
-            for index, value in ipairs(waves) do
-                if value == self.wave then
-                    self.unitInWave = true
-                    return true
-                end
-            end
-
-            self.unitInWave = false
-            return true
-        end
-
-        function self:isUnitInLevel()
-            local levelStart = self[self.base].units[self.indexer].level[1]
-            local levelEnd = self[self.base].units[self.indexer].level[2]
-
-            if (self.creepLevel >= levelStart and self.creepLevel <= levelEnd) then
-                self.unitInLevel = true
-            else
-                self.unitInLevel = false
+            if nextRect ~= "" then
+                TriggerRegisterEnterRegionSimple(Trig_moveToNext, self[name].reg)
+                self[name].next = nextRect
+                self[name].allied = allied
+                self[name].fed = not allied
             end
         end
 
-        function self:baseAlive()
-            self.alliedBaseAlive = IsUnitAliveBJ(self[self.base].allied.condition)
-            self.fedBaseAlive = IsUnitAliveBJ(self[self.base].fed.condition)
+        function self:getRandomXY(name)
+            local region = self[name]
+            return GetRandomReal(region.minX, region.maxX), GetRandomReal(region.minY, region.maxY)
         end
 
-        function self:checkSpawnUnit()
-            self:baseAlive(self.base)
-            self:isUnitInWave()
-            self:isUnitInLevel()
-            self.numOfUnits = self[self.base].units[self.indexer].numOfUnits
-            self.unitType = self[self.base].units[self.indexer].unitType
+        function self:getRegion(region)
+            local regionName = self.regions[GetHandleId(region)]
+            return self[regionName]
         end
-
-        function self:spawnUnits()
-            local pStart, xStart, yStart, pDest, xDest, yDest, spawnedUnit
-
-            for i = 1, self:unitCount(self.base) do
-                self.indexer = i
-                self:checkSpawnUnit()
-
-                if self.unitInWave and self.unitInLevel then
-
-                    if self.alliedBaseAlive then
-                        for n = 1, self.numOfUnits do
-
-                            xStart, yStart = loc:getRandomXY(self[self.base].allied.startPoint)
-                            xDest, yDest = loc:getRandomXY(self[self.base].allied.endPoint)
-
-                            spawnedUnit = CreateUnit(Player(GetRandomInt(18, 20)), FourCC(self.unitType), xStart,
-                                              yStart, bj_UNIT_FACING)
-
-                            indexer:add(spawnedUnit)
-                            indexer:updateEnd(spawnedUnit, xDest, yDest)
-                            indexer:order(spawnedUnit)
-
-                        end
-                    end
-
-                    if self.fedBaseAlive then
-                        for n = 1, self.numOfUnits do
-                            xStart, yStart = loc:getRandomXY(self[self.base].fed.startPoint)
-                            xDest, yDest = loc:getRandomXY(self[self.base].fed.endPoint)
-
-                            spawnedUnit = CreateUnit(Player(GetRandomInt(21, 23)), FourCC(self.unitType), xStart,
-                                              yStart, bj_UNIT_FACING)
-
-                            indexer:add(spawnedUnit)
-                            indexer:updateEnd(spawnedUnit, xDest, yDest)
-                            indexer:order(spawnedUnit)
-                        end
-                    end
-                end
-            end
-        end
-
-        -- Run the Spawn Loop
-        function self:loopSpawn()
-            -- Iterate everything up
-            self.baseI = self.baseI + 1
-
-            if (self.baseI > self.baseCount) then
-                self.baseI = 0
-                self.wave = self.wave + 1
-
-                if self.wave > 10 then
-                    self.wave = 1
-                    StartTimerBJ(self.timer, false, self.cycleInterval)
-                else
-                    StartTimerBJ(self.timer, false, self.waveInterval)
-                end
-
-                return true
-            else
-                StartTimerBJ(self.timer, false, self.baseInterval)
-            end
-
-            -- Find the Base to Spawn Next
-            self.base = self.bases[self.baseI]
-
-            -- Spawn the Units at the selected Base
-            DisableTrigger(Trig_UnitEntersMap)
-            self:spawnUnits()
-            EnableTrigger(Trig_UnitEntersMap)
-        end
-
-        function self:upgradeCreeps()
-            self.creepLevel = self.creepLevel + 1
-
-            if self.creepLevel >= 12 then
-                DisableTrigger(self.Trig_upgradeCreeps)
-            else
-                StartTimerBJ(self.creepLevelTimer, false, (70 + (15 * self.creepLevel)))
-            end
-
-            DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)
-        end
-
-        -- Start the Spawn Loop
-        function self:startSpawn()
-            -- Start Spawn Timer
-            StartTimerBJ(self.timer, false, 1)
-            StartTimerBJ(self.creepLevelTimer, false, 90)
-
-            TriggerRegisterTimerExpireEvent(Trig_spawnLoop, self.timer)
-            TriggerRegisterTimerExpireEvent(Trig_upgradeCreeps, self.creepLevelTimer)
-        end
-
-        --
-        -- Class Triggers
-        --
 
         return self
     end
+
 end
 
-function init_spawnTimers()
-    -- Create Spawn Loop Trigger
-
-    TriggerAddAction(Trig_spawnLoop, function()
-        debugfunc(function()
-            spawn:loopSpawn()
-        end, "spawn:loopSpawn")
-    end)
-
-    TriggerAddAction(Trig_upgradeCreeps, function()
-        debugfunc(function()
-            spawn:upgradeCreeps()
-        end, "spawn:upgradeCreeps()")
-    end)
-end
-
--- AI Class
+--
+-- AI Classes
+-----------------
 function init_aiClass()
     -- Create the table for the class definition
     ai_Class = {}
@@ -1893,7 +1973,10 @@ function init_aiClass()
             self[i].heroesFriend = CreateGroup()
             self[i].heroesEnemy = CreateGroup()
             self[i].lifeHistory = {0.00, 0.00, 0.00}
-            SetUnitUserData(self[i].unit, self.count)
+
+            indexer:add(self[i].unit)
+            indexer:addKey("heroName", i)
+            indexer:addKey("heroNumber", self.count)
 
             self[i].alive = false
             self[i].fleeing = false
@@ -2519,13 +2602,8 @@ function init_aiClass()
             IssuePointOrder(self[i].unit, "attack", unitX, unitY)
         end
 
-        -- Finders
-        function self:getHeroName(unit)
-            return self.heroOptions[S2I(GetUnitUserData(unit))]
-        end
-
         function self:getHeroData(unit)
-            return self[self:getHeroName(unit)]
+            return self[indexer:get(unit).heroName]
         end
 
         -- Hero AI
@@ -2686,8 +2764,9 @@ function init_aiClass()
     end
 end
 
--- Hero Class
-
+--
+-- Hero Skills / Abilities Class
+-----------------
 function init_heroClass()
     -- Create Class Definition
     hero_Class = {}
@@ -3016,7 +3095,6 @@ function init_heroClass()
             local heroLevel = GetHeroLevel(unit)
             local spells = self[heroName]
 
-            print(self[heroFour])
 
             -- Remove Ability Points
             if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
@@ -3118,278 +3196,326 @@ function init_heroClass()
 end
 
 --
--- Functions
---
+-- Unit Indexer Class
+-----------------
+function init_indexerClass()
+    indexer_Class = {}
 
-function dprint(message, level)
-    level = level or 1
+    indexer_Class.new = function()
+        local self = {}
 
-    if debugprint >= level then
-        print("|cff00ff00[debug " .. level .. "]|r " .. tostring(message))
-    end
-end
+        self.data = {}
 
-function distance(x1, y1, x2, y2) -- Find Distance between points
-    return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
-end
+        function self:add(unit, order)
+            order = order or "attack"
+            local unitId = GetHandleId(unit)
 
-function debugfunc(func, name) -- Turn on runtime logging
-    local passed, data = pcall(function()
-        func()
-        return "func " .. name .. " passed"
-    end)
-    if not passed then
-        print("|cffff0000[ERROR]|r" .. name, passed, data)
-    end
-    passed = nil
-    data = nil
-end
+            if self.data[unitId] == nil then
+                local x = GetUnitX(unit)
+                local y = GetUnitY(unit)
 
-function CC2Four(num) -- Convert from Handle ID to Four Char
-    return string.pack(">I4", num)
-end
-
---
--- Triggers
---
-
--- AI Triggers
-
--- Spawn Set up
-function spawnAddBases()
-    -- addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
-
-    spawn:addBase("arcane", "sArcaneLeft", "bottomRight", gg_unit_h003_0015, "sArcaneRight", "topLeft",
-        gg_unit_h003_0007)
-    spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormRight",
-        gg_unit_h003_0007)
-    spawn:addBase("arcaneHero", "sArcaneHeroLeft", "bottomRight", gg_unit_h014_0241, "sArcaneHeroRight", "topLeft",
-        gg_unit_h014_0043)
-    spawn:addBase("arcaneTop", "sElementalTopLeft", "bottomRight", gg_unit_hars_0355, "sElementalTopRight", "topLeft",
-        gg_unit_hars_0293)
-    spawn:addBase("arcaneBottom", "sElementalBottomLeft", "bottomRight", gg_unit_hars_0292, "sElementalBottomRight",
-        "topLeft", gg_unit_hars_0303)
-    spawn:addBase("blacksmith", "sCityBlacksmithLeft", "everythingRight", gg_unit_n00K_0802, "sCityBlacksmithRight",
-        "everythingLeft", gg_unit_n00K_0477)
-    spawn:addBase("blacksmithCreep", "sCityBlacksmithLeft", "cDeathLeft", gg_unit_n00K_0802, "sCityBlacksmithRight",
-        "cDeathRight", gg_unit_n00K_0477)
-    spawn:addBase("castle", "sHeroLeft", "everythingRight", gg_unit_h00E_0033, "sHeroRight", "everythingLeft",
-        gg_unit_h00E_0081)
-    spawn:addBase("cityElves", "sCityElfLeft", "everythingRight", gg_unit_hvlt_0207, "sCityElfRight", "everythingLeft",
-        gg_unit_hvlt_0406)
-    spawn:addBase("cityFront", "sCityFrontLeft", "middleRight", gg_unit_n00B_0364, "sCityFrontRight", "middleLeft",
-        gg_unit_n00B_0399)
-    spawn:addBase("citySide", "sCitySideLeft", "bottomRight", gg_unit_n00B_0102, "sCitySideRight", "topLeft",
-        gg_unit_n00B_0038)
-    spawn:addBase("kobold", "sKolboldLeft", "topRight", gg_unit_ngt2_0525, "sKolboldRight", "bottomLeft",
-        gg_unit_ngt2_0455)
-    spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109, "sElfRight", "bottomLeft", gg_unit_nheb_0036)
-    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft", gg_unit_nheb_0109, "sElfRight", "cForestRight",
-        gg_unit_nheb_0036)
-    spawn:addBase("merc", "sCampLeft", "bottomRight", gg_unit_n001_0048, "sCampRight", "topLeft", gg_unit_n001_0049)
-    spawn:addBase("mine", "sWorkshopLeft", "bottomRight", gg_unit_h006_0074, "sWorkshopRight", "topLeft",
-        gg_unit_h006_0055)
-    spawn:addBase("naga", "sNagaLeft", "topRight", gg_unit_nntt_0135, "sNagaRight", "bottomLeft", gg_unit_nntt_0132)
-    spawn:addBase("murloc", "sMurlocLeft", "topRight", gg_unit_nmh1_0735, "sMurlocRight", "bottomLeft",
-        gg_unit_nmh1_0783)
-    spawn:addBase("nagaCreep", "sNagaLeft", "cTidesLeft", gg_unit_nntt_0135, "sNagaRight", "cTidesRight",
-        gg_unit_nntt_0132)
-    spawn:addBase("nightElves", "sTreeLeft", "topRight", gg_unit_e003_0058, "sTreeRight", "bottomLeft",
-        gg_unit_e003_0014)
-    spawn:addBase("orc", "sOrcLeft", "topRight", gg_unit_o001_0075, "sOrcRight", "bottomLeft", gg_unit_o001_0078)
-    spawn:addBase("shipyard", "sElfShipyardLeft", "sHumanShipyardRight", gg_unit_eshy_0120, "sElfShipyardRight",
-        "sHumanShipyardLeft", gg_unit_eshy_0047)
-    spawn:addBase("hshipyard", "sHumanShipyardLeft", "sHumanShipyardRight", gg_unit_hshy_0011, "sHumanShipyardRight",
-        "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
-    spawn:addBase("town", "sTownLeft", "bottomRight", gg_unit_h00F_0029, "sTownRight", "topLeft", gg_unit_h00F_0066)
-    spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0262, "sUndeadRight", "middleLeft",
-        gg_unit_u001_0264)
-end
-
-function spawnAddUnits()
-    -- addUnit(baseName, unitType, numOfUnits, {waves}, levelStart, levelEnd)
-
-    -- Arcane Spawn
-    spawn:addUnit("arcane", "h00C", 2, {5, 6, 7, 8, 9}, 3, 12) -- Sorcress
-    spawn:addUnit("arcane", "hgry", 1, {2, 3, 4, 5, 6, 8, 10}, 10, 12) -- Gryphon Rider
-
-    -- Arcane Creep Spawn
-    spawn:addUnit("arcaneCreep", "narg", 2, {1, 2, 3, 4}, 2, 12) -- Battle Golem
-    spawn:addUnit("arcaneCreep", "hwt2", 1, {1, 2, 3, 4}, 3, 12) -- Water Elemental (Level 2)
-    spawn:addUnit("arcaneCreep", "hwt3", 1, {1, 2, 3, 4}, 4, 12) -- Water Elemental (Level 3)
-    spawn:addUnit("arcaneCreep", "h00K", 1, {1, 2, 3, 4, 5, 10}, 6, 12) -- Magi Defender
-
-    -- Arcane Hero Sapwn
-    spawn:addUnit("arcaneHero", "n00A", 1, {5, 6}, 7, 12) -- Supreme Wizard
-    spawn:addUnit("arcaneHero", "nsgg", 1, {4, 6}, 9, 12) -- Seige Golem
-
-    -- Arcane Top Spawn
-    spawn:addUnit("arcaneTop", "narg", 4, {4, 5, 6}, 2, 12) -- Battle Golem
-    spawn:addUnit("arcaneTop", "hwt2", 1, {4, 5, 6}, 4, 12) -- Water Elemental (Level 2)
-    spawn:addUnit("arcaneTop", "hwt3", 1, {5, 6}, 8, 12) -- Water Elemental (Level 3)
-
-    -- Arcane Bottom Spawn
-    spawn:addUnit("arcaneBottom", "narg", 4, {1, 2, 3}, 2, 12) -- Battle Golem
-    spawn:addUnit("arcaneBottom", "hwt2", 1, {1, 2, 3}, 4, 12) -- Water Elemental (Level 2)
-    spawn:addUnit("arcaneBottom", "hwt3", 1, {2, 3}, 8, 12) -- Water Elemental (Level 3)
-
-    -- Blacksmith Spawn
-    spawn:addUnit("blacksmith", "hfoo", 1, {1, 2, 3, 4, 5}, 3, 12) -- Footman 1
-    spawn:addUnit("blacksmith", "h00L", 1, {1, 2, 3, 4}, 4, 12) -- Knight
-    spawn:addUnit("blacksmith", "h00L", 1, {1, 2, 3, 4}, 5, 12) -- Knight
-    spawn:addUnit("blacksmith", "h017", 1, {1, 2, 3}, 6, 12) -- Scarlet Commander
-    spawn:addUnit("blacksmith", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
-    spawn:addUnit("blacksmith", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
-
-    -- Blacksmith Creep Spawn
-    spawn:addUnit("blacksmithCreep", "h007", 4, {1, 2, 3, 4}, 1, 6) -- Militia
-    spawn:addUnit("blacksmithCreep", "nhea", 1, {1, 2, 3, 4}, 3, 12) -- Archer
-    spawn:addUnit("blacksmithCreep", "hspt", 1, {1, 2, 3, 4}, 5, 12) -- Tower Guard
-    spawn:addUnit("blacksmithCreep", "h011", 2, {1, 2, 3, 4, 5}, 8, 12) -- Scarlet Commander
-    spawn:addUnit("blacksmithCreep", "hcth", 2, {1, 2, 3, 4, 5}, 11, 12) -- Captian
-
-    -- Castle Spawn
-    spawn:addUnit("castle", "h018", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 8, 12) -- Commander
-
-    -- City Elves
-    spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6}, 1, 3) -- Archer
-    spawn:addUnit("cityElves", "hspt", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 2, 3) -- Tower Guard
-    spawn:addUnit("cityElves", "hspt", 2, {1, 2, 3, 4, 5, 6, 7}, 4, 5) -- Tower Guard
-    spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4}, 3, 12) -- Mystic
-    spawn:addUnit("cityElves", "hspt", 3, {1, 2, 3, 4, 5, 6}, 6, 12) -- Tower Guard
-    spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Archer
-    spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4, 5, 6, 7}, 7, 12) -- Mystic
-
-    -- City Front Spawn
-    spawn:addUnit("cityFront", "h007", 2, {2, 3, 4, 5, 6, 7}, 1, 2) -- Militia 1
-    spawn:addUnit("cityFront", "h015", 3, {2, 3, 4, 5, 6, 7}, 1, 5) -- Militia 2
-    spawn:addUnit("cityFront", "hfoo", 3, {2, 3, 4, 5, 6, 7}, 4, 12) -- Footman 1
-    spawn:addUnit("cityFront", "hcth", 2, {2, 3, 4, 5, 6}, 6, 12) -- Captian
-
-    -- City Side Spawn
-    spawn:addUnit("citySide", "h015", 1, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
-    spawn:addUnit("citySide", "hfoo", 2, {6, 7, 8, 9, 10}, 2, 12) -- Footman 1
-    spawn:addUnit("citySide", "h015", 2, {1, 2, 3, 4, 6}, 3, 12) -- Militia 1
-
-    -- Kobold Spawn
-    spawn:addUnit("kobold", "nkob", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Kobold
-    spawn:addUnit("kobold", "nkot", 1, {1, 2, 3, 5, 7, 9}, 3, 12) -- Kobold Tunneler
-    spawn:addUnit("kobold", "nkog", 1, {1, 3, 5, 7, 9}, 4, 12) -- Kobold Geomancer
-    spawn:addUnit("kobold", "nkol", 1, {4, 6, 8}, 5, 12) -- Kobold Taskmaster
-
-    -- High Elves
-    spawn:addUnit("highElves", "earc", 2, {1, 2, 3, 4, 5}, 1, 12) -- Ranger
-    spawn:addUnit("highElves", "e000", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 2, 12) -- Elite Ranger
-    spawn:addUnit("highElves", "hhes", 4, {1, 2, 3, 4}, 4, 12) -- Swordsman
-    spawn:addUnit("highElves", "nemi", 1, {1, 2, 3, 4, 5, 6}, 5, 12) -- Emmisary
-
-    -- High Elves Creep
-    spawn:addUnit("highElvesCreep", "hhes", 2, {1, 2, 3, 4}, 1, 12) -- Swordsman
-    spawn:addUnit("highElvesCreep", "nhea", 1, {1, 2, 3, 4, 5}, 2, 12) -- Archer
-    spawn:addUnit("highElvesCreep", "nemi", 1, {1, 2, 3, 4}, 4, 12) -- Emmisary
-    spawn:addUnit("highElvesCreep", "h010", 2, {1, 2, 3, 4, 5}, 5, 12) -- Elven Guardian
-
-    -- Merc Spawn
-    spawn:addUnit("merc", "n00L", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Rogue
-    spawn:addUnit("merc", "n003", 2, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Merc Archer
-    spawn:addUnit("merc", "n002", 3, {2, 3, 4, 7, 8, 9, 10}, 3, 12) -- Merc
-    spawn:addUnit("merc", "n008", 1, {1, 2, 3, 4, 5, 6, 8, 9, 10}, 4, 12) -- Enforcer
-    spawn:addUnit("merc", "nass", 1, {6, 7, 8, 9, 10}, 5, 12) -- Assasin
-    spawn:addUnit("merc", "n004", 1, {7, 8, 9, 10}, 1, 12) -- Wizard Warrior
-    spawn:addUnit("merc", "n005", 1, {7, 8, 9, 10}, 6, 12) -- Bandit Lord
-
-    -- Mine Spawn
-    spawn:addUnit("mine", "h001", 1, {2, 3, 4, 5, 6}, 2, 12) -- Morter Team
-    spawn:addUnit("mine", "h008", 2, {1, 2, 3, 4, 5, 6, 7, 8}, 3, 12) -- Rifleman
-    spawn:addUnit("mine", "h013", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Rifleman Long
-    spawn:addUnit("mine", "ncg2", 2, {1, 2, 3, 4, 5, 6, 7}, 4, 12) -- Clockwerk Goblin
-    spawn:addUnit("mine", "hmtt", 1, {1, 3, 5, 7}, 5, 12) -- Seige Engine
-    spawn:addUnit("mine", "n00F", 1, {2, 3, 4, 5, 6, 7}, 6, 12) -- Automaton
-
-    -- Murloc Spawn
-    spawn:addUnit("murloc", "nmcf", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Mur'gul Cliffrunner
-    spawn:addUnit("murloc", "nnmg", 1, {2, 4, 6, 7, 8}, 2, 12) -- Mur'gul Reaver
-    spawn:addUnit("murloc", "nmsn", 1, {1, 3, 4, 6, 9}, 3, 12) -- Mur'gul Snarecaster
-    spawn:addUnit("murloc", "nmtw", 1, {1, 3, 6}, 6, 12) -- Mur'gul Tidewarrior
-
-    -- Naga Spawn
-    spawn:addUnit("naga", "nmyr", 2, {1, 3, 4, 6, 7, 9, 10}, 1, 12) -- Naga Myrmidon
-    spawn:addUnit("naga", "nnsw", 1, {4, 5, 7, 9, 10}, 3, 12) -- Naga Siren
-    spawn:addUnit("naga", "nnrg", 1, {5, 8, 9, 10}, 6, 12) -- Naga Royal Guard
-    spawn:addUnit("naga", "nhyc", 1, {1, 3, 5, 8, 9}, 9, 12) -- Dragon Turtle
-
-    -- Naga Creep Spawn
-    spawn:addUnit("nagaCreep", "nmyr", 2, {1, 2, 3, 4}, 2, 12) -- Naga Myrmidon
-    spawn:addUnit("nagaCreep", "nnsw", 1, {2, 3, 4, 5}, 3, 12) -- Naga Siren
-    spawn:addUnit("nagaCreep", "nsnp", 2, {2, 3, 4, 5, 6}, 5, 12) -- Snap Dragon
-
-    -- Night Elves Spawn
-    spawn:addUnit("nightElves", "nwat", 1, {3, 4, 5, 6, 7, 8, 9}, 2, 12) -- Sentry
-    spawn:addUnit("nightElves", "edry", 1, {1, 4, 5, 7, 9}, 3, 12) -- Dryad
-    spawn:addUnit("nightElves", "edoc", 2, {1, 3, 5, 7, 9}, 4, 12) -- Druid of the Claw
-    spawn:addUnit("nightElves", "e005", 1, {2, 4, 6, 8}, 5, 12) -- Mountain Giant
-    spawn:addUnit("nightElves", "nwnr", 1, {5, 10}, 9, 12) -- Ent
-
-    -- Orc Spawn
-    spawn:addUnit("orc", "o002", 2, {1, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Grunt
-    spawn:addUnit("orc", "o002", 2, {5, 6, 7, 8, 9}, 3, 12) -- Grunt
-    spawn:addUnit("orc", "nftr", 1, {4, 5, 7, 8, 9, 10}, 2, 12) -- Spearman
-    spawn:addUnit("orc", "nogo", 3, {2, 4, 6, 8, 10}, 4, 12) -- Ogre
-    spawn:addUnit("orc", "nw2w", 1, {1, 3, 5, 7, 9}, 3, 12) -- Warlock
-    spawn:addUnit("orc", "owad", 1, {1, 6, 9}, 6, 12) -- Orc Warchief
-    -- spawn:addUnit("orc", "ocat", 1, {1,5}, 6, 12)  -- Demolisher
-
-    -- Human Shipyard Spawn
-    spawn:addUnit("hshipyard", "hdes", 1, {2, 4}, 1, 2) -- Human Frigate
-    spawn:addUnit("hshipyard", "hdes", 1, {2, 4, 8}, 3, 4) -- Human Frigate
-    spawn:addUnit("hshipyard", "hdes", 1, {2, 4, 6, 8}, 5, 12) -- Human Frigate
-    spawn:addUnit("hshipyard", "hbsh", 1, {3, 8}, 6, 12) -- Human Battleship
-
-    -- Night Elf Shipyard Spawn
-    spawn:addUnit("shipyard", "edes", 1, {1, 6}, 2, 3) -- Night Elf Frigate
-    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6}, 4, 5) -- Night Elf Frigate
-    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6, 10}, 6, 12) -- Night Elf Frigate
-    spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
-
-    -- Town Spawn
-    spawn:addUnit("town", "h007", 3, {1, 2, 3, 4, 5}, 1, 5) -- Militia
-    spawn:addUnit("town", "h007", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3, 12) -- Militia
-    spawn:addUnit("town", "hcth", 1, {1, 2, 3, 4}, 2, 12) -- Captian
-    spawn:addUnit("town", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
-    spawn:addUnit("town", "hfoo", 5, {1, 2, 5, 6, 8}, 5, 12) -- Footman
-    spawn:addUnit("town", "h00L", 2, {1, 3, 7, 9}, 4, 12) -- Knight
-
-    -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul
-    spawn:addUnit("undead", "uskm", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
-    spawn:addUnit("undead", "unec", 1, {1, 2, 3, 4, 5, 6, 7}, 3, 12) -- Necromancer
-    spawn:addUnit("undead", "nerw", 1, {1, 6}, 4, 12) -- Warlock
-    spawn:addUnit("undead", "nfgl", 1, {2, 5, 8}, 5, 12) -- Giant Skeleton
-end
-
--- Camera Setup
-function init_AutoZoom()
-
-    -- DisableTrigger(Trig_AutoZoom)
-    TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
-    TriggerAddAction(Trig_AutoZoom, function()
-        local i = 1
-        local ug = CreateGroup()
-
-        while (i <= 12) do
-            ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-            SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-                (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
-            DestroyGroup(ug)
-            i = i + 1
+                self.data[unitId] = {}
+                self.data[unitId] = {
+                    xSpawn = x,
+                    ySpawn = y,
+                    order = order,
+                    unit = unit,
+                    sfx = {}
+                }
+            end
         end
-    end)
+
+        function self:updateEnd(unit, x, y)
+            local unitId = GetHandleId(unit)
+            self.data[unitId].xEnd = x
+            self.data[unitId].yEnd = y
+        end
+
+        function self:order(unit, order)
+
+            local unitId = GetHandleId(unit)
+            local alliedForce = IsUnitInForce(unit, udg_PLAYERGRPallied)
+            local p
+            local x = self.data[unitId].xEnd
+            local y = self.data[unitId].yEnd
+            order = order or self.data[unitId].order
+
+            if self.data[unitId].xEnd == nil or self.data[unitId].yEnd == nil then
+
+                if RectContainsUnit(gg_rct_Big_Top_Left, unit) or RectContainsUnit(gg_rct_Big_Top_Left_Center, unit) or
+                    RectContainsUnit(gg_rct_Big_Top_Right_Center, unit) or RectContainsUnit(gg_rct_Big_Top_Right, unit) then
+
+                    if alliedForce then
+                        p = GetRandomLocInRect(gg_rct_Right_Start_Top)
+                    else
+                        p = GetRandomLocInRect(gg_rct_Left_Start_Top)
+                    end
+
+                elseif RectContainsUnit(gg_rct_Big_Middle_Left, unit) or
+                    RectContainsUnit(gg_rct_Big_Middle_Left_Center, unit) or
+                    RectContainsUnit(gg_rct_Big_Middle_Right_Center, unit) or
+                    RectContainsUnit(gg_rct_Big_Middle_Right, unit) then
+
+                    if alliedForce then
+                        p = GetRandomLocInRect(gg_rct_Right_Start)
+                    else
+                        p = GetRandomLocInRect(gg_rct_Left_Start)
+                    end
+
+                else
+
+                    if alliedForce then
+                        p = GetRandomLocInRect(gg_rct_Right_Start_Bottom)
+                    else
+                        p = GetRandomLocInRect(gg_rct_Left_Start_Bottom)
+                    end
+                end
+
+                x = GetLocationX(p)
+                y = GetLocationY(p)
+                RemoveLocation(p)
+
+                self.data[unitId].xEnd = x
+                self.data[unitId].yEnd = y
+            end
+
+            -- Issue Order
+            IssuePointOrder(unit, order, x, y)
+        end
+
+        function self:addKey(unit, key, value)
+            value = value or 0
+            local unitId = GetHandleId(unit)
+            self.data[unitId][key] = value
+        end
+
+        function self:get(unit)
+            local unitId = GetHandleId(unit)
+            return self.data[unitId]
+        end
+
+        function self:set(unit, data)
+            local unitId = GetHandleId(unit)
+            self.data[unitId] = data
+        end
+
+        function self:remove(unit)
+            self.data[GetHandleId(unit)] = nil
+            return true
+        end
+
+        return self
+    end
+end
+
+--
+-- Spawn Class
+-----------------
+function init_spawnClass()
+    -- Create the table for the class definition
+    spawn_Class = {}
+
+    -- Define the new() function
+    spawn_Class.new = function()
+        local self = {}
+
+        self.bases = {}
+        self.baseCount = 0
+        self.timer = CreateTimer()
+        self.cycleInterval = 5.00
+        self.baseInterval = 0.4
+        self.waveInterval = 20.00
+
+        self.creepLevel = 1
+        self.creepLevelTimer = CreateTimer()
+
+        self.wave = 1
+        self.base = ""
+        self.baseI = 0
+        self.indexer = ""
+        self.alliedBaseAlive = false
+        self.fedBaseAlive = false
+        self.unitInWave = false
+        self.unitInLevel = true
+        self.numOfUnits = 0
+        self.unitType = ""
+
+        function self:addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition)
+            -- Add all of the info the base and add the base name to the base list
+            self[baseName] = {
+                allied = {
+                    startPoint = alliedStart,
+                    endPoint = alliedEnd,
+                    condition = alliedCondition
+                },
+                fed = {
+                    startPoint = fedStart,
+                    endPoint = fedEnd,
+                    condition = fedCondition
+                },
+                destination = destination,
+                units = {}
+            }
+            table.insert(self.bases, baseName)
+            self.baseCount = self.baseCount + 1
+        end
+
+        function self:addUnit(baseName, unitType, numOfUnits, waves, levelStart, levelEnd)
+            table.insert(self[baseName].units, {
+                unitType = unitType,
+                numOfUnits = numOfUnits,
+                waves = waves,
+                level = {levelStart, levelEnd}
+            })
+        end
+
+        function self:unitCount()
+            return #self[self.base].units
+        end
+
+        function self:isUnitInWave()
+            local waves = self[self.base].units[self.indexer].waves
+
+            for index, value in ipairs(waves) do
+                if value == self.wave then
+                    self.unitInWave = true
+                    return true
+                end
+            end
+
+            self.unitInWave = false
+            return true
+        end
+
+        function self:isUnitInLevel()
+            local levelStart = self[self.base].units[self.indexer].level[1]
+            local levelEnd = self[self.base].units[self.indexer].level[2]
+
+            if (self.creepLevel >= levelStart and self.creepLevel <= levelEnd) then
+                self.unitInLevel = true
+            else
+                self.unitInLevel = false
+            end
+        end
+
+        function self:baseAlive()
+            self.alliedBaseAlive = IsUnitAliveBJ(self[self.base].allied.condition)
+            self.fedBaseAlive = IsUnitAliveBJ(self[self.base].fed.condition)
+        end
+
+        function self:checkSpawnUnit()
+            self:baseAlive(self.base)
+            self:isUnitInWave()
+            self:isUnitInLevel()
+            self.numOfUnits = self[self.base].units[self.indexer].numOfUnits
+            self.unitType = self[self.base].units[self.indexer].unitType
+        end
+
+        function self:spawnUnits()
+            local pStart, xStart, yStart, pDest, xDest, yDest, spawnedUnit
+
+            for i = 1, self:unitCount(self.base) do
+                self.indexer = i
+                self:checkSpawnUnit()
+
+                if self.unitInWave and self.unitInLevel then
+
+                    if self.alliedBaseAlive then
+                        for n = 1, self.numOfUnits do
+
+                            xStart, yStart = loc:getRandomXY(self[self.base].allied.startPoint)
+                            xDest, yDest = loc:getRandomXY(self[self.base].allied.endPoint)
+
+                            spawnedUnit = CreateUnit(Player(GetRandomInt(18, 20)), FourCC(self.unitType), xStart,
+                                              yStart, bj_UNIT_FACING)
+
+                            indexer:add(spawnedUnit)
+                            indexer:updateEnd(spawnedUnit, xDest, yDest)
+                            indexer:order(spawnedUnit)
+
+                        end
+                    end
+
+                    if self.fedBaseAlive then
+                        for n = 1, self.numOfUnits do
+                            xStart, yStart = loc:getRandomXY(self[self.base].fed.startPoint)
+                            xDest, yDest = loc:getRandomXY(self[self.base].fed.endPoint)
+
+                            spawnedUnit = CreateUnit(Player(GetRandomInt(21, 23)), FourCC(self.unitType), xStart,
+                                              yStart, bj_UNIT_FACING)
+
+                            indexer:add(spawnedUnit)
+                            indexer:updateEnd(spawnedUnit, xDest, yDest)
+                            indexer:order(spawnedUnit)
+                        end
+                    end
+                end
+            end
+        end
+
+        -- Run the Spawn Loop
+        function self:loopSpawn()
+            -- Iterate everything up
+            self.baseI = self.baseI + 1
+
+            if (self.baseI > self.baseCount) then
+                self.baseI = 0
+                self.wave = self.wave + 1
+
+                if self.wave > 10 then
+                    self.wave = 1
+                    StartTimerBJ(self.timer, false, self.cycleInterval)
+                else
+                    StartTimerBJ(self.timer, false, self.waveInterval)
+                end
+
+                return true
+            else
+                StartTimerBJ(self.timer, false, self.baseInterval)
+            end
+
+            -- Find the Base to Spawn Next
+            self.base = self.bases[self.baseI]
+
+            -- Spawn the Units at the selected Base
+            DisableTrigger(Trig_UnitEntersMap)
+            self:spawnUnits()
+            EnableTrigger(Trig_UnitEntersMap)
+        end
+
+        function self:upgradeCreeps()
+            self.creepLevel = self.creepLevel + 1
+
+            if self.creepLevel >= 12 then
+                DisableTrigger(self.Trig_upgradeCreeps)
+            else
+                StartTimerBJ(self.creepLevelTimer, false, (70 + (15 * self.creepLevel)))
+            end
+
+            DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)
+        end
+
+        -- Start the Spawn Loop
+        function self:startSpawn()
+            -- Start Spawn Timer
+            StartTimerBJ(self.timer, false, 1)
+            StartTimerBJ(self.creepLevelTimer, false, 90)
+
+            TriggerRegisterTimerExpireEvent(Trig_spawnLoop, self.timer)
+            TriggerRegisterTimerExpireEvent(Trig_upgradeCreeps, self.creepLevelTimer)
+        end
+
+        --
+        -- Class Triggers
+        --
+
+        return self
+    end
 end
 
 --
 -- Game Action Triggers
 --
-
 -- Hero Levels Up
 function Init_HeroLevelsUp()
     local t = CreateTrigger()
@@ -3419,13 +3545,7 @@ function Init_UnitCastsSpell()
     end)
 end
 
-function CAST_aiHero(triggerUnit)
-    if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-        local pickedHero = ai.heroOptions[S2I(GetUnitUserData(triggerUnit))]
-        ai:castSpell(pickedHero)
-    end
-end
-
+-- Unit buys Unit
 function Init_PlayerBuysUnit()
     local t = CreateTrigger()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SELL)
@@ -3455,67 +3575,7 @@ function Init_PlayerBuysUnit()
     end)
 end
 
-function Init_Map()
-
-    FogEnableOff()
-    FogMaskEnableOff()
-    MeleeStartingVisibility()
-    udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
-    udg_ALL_PLAYERS = GetPlayersAll()
-
-    -- Turn on Bounty
-    ForForce(udg_ALL_PLAYERS, function()
-        SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer())
-    end)
-
-    -- Add Computers to their group
-    udg_PLAYERcomputers[1] = Player(18)
-    udg_PLAYERcomputers[2] = Player(19)
-    udg_PLAYERcomputers[3] = Player(20)
-    udg_PLAYERcomputers[4] = Player(21)
-    udg_PLAYERcomputers[5] = Player(22)
-    udg_PLAYERcomputers[6] = Player(23)
-
-    -- Create the Allied Computers
-    ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
-
-    -- Create the Federation Computers
-    ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
-
-    -- Create the Allied Users
-    ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
-
-    -- Create the Federation Users
-    ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
-
-    -- Change the color of Player 1 and Player 2
-    SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
-    SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
-
-    -- Change the color of the computer players to all match
-    ForForce(udg_PLAYERGRPallied, function()
-        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true)
-    end)
-    ForForce(udg_PLAYERGRPfederation, function()
-        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
-    end)
-
-end
-
+-- Unit enters the Map
 function Init_UnitEntersMap()
 
     TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
@@ -3523,56 +3583,6 @@ function Init_UnitEntersMap()
         local triggerUnit = GetTriggerUnit()
         addUnitsToIndex(triggerUnit)
     end)
-end
-
-function addUnitsToIndex(unit)
-
-    indexer:add(unit)
-
-    if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and IsUnitType(unit, UNIT_TYPE_HERO) == false and
-        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
-            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
-        indexer:order(unit)
-    end
-
-end
-
-function Init_UnitDies()
-
-    TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
-    TriggerAddAction(Trig_UnitDies, function()
-        local dieingUnit = GetTriggerUnit()
-
-        indexer:remove(dieingUnit)
-
-    end)
-end
-
-function orderStartingUnits()
-    local g = CreateGroup()
-    local u
-
-    g = GetUnitsInRectAll(GetPlayableMapRect())
-    while true do
-        u = FirstOfGroup(g)
-        if u == nil then
-            break
-        end
-
-        debugfunc(function()
-
-            indexer:add(u)
-            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
-                (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
-                    IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
-
-                indexer:order(u)
-            end
-        end, "Index")
-
-        GroupRemoveUnit(g, u)
-    end
-    DestroyGroup(g)
 end
 
 -- Unit Issued Target or no Target Order
@@ -3623,20 +3633,19 @@ function Init_stopCasting()
     end)
 end
 
-function unitKeepMoving(unit)
-    if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
-        UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
-        FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
-        GetUnitTypeId(unit) ~= FourCC("h00O") and
-        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
-            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
-        PolledWait(0.5)
-        indexer:order(unit, "attack")
-    end
+-- Unit Dies
+function Init_UnitDies()
+    TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
+    TriggerAddAction(Trig_UnitDies, function()
+        local dieingUnit = GetTriggerUnit()
+
+        indexer:remove(dieingUnit)
+
+    end)
 end
 
+-- Unit Enters region (Special)
 function init_MoveToNext()
-
     TriggerAddAction(Trig_moveToNext, function()
 
         local triggerUnit = GetTriggerUnit()
@@ -3655,7 +3664,6 @@ function init_MoveToNext()
             end
         end
     end)
-
 end
 
 function InitSounds()
