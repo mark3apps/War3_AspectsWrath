@@ -14,6 +14,7 @@ DamageBonusNormal=1.00,1.50,1.00,0.85,1.00,0.70,0.50,1.00
 DamageBonusPierce=2.00,0.75,1.00,0.45,1.00,0.30,0.50,1.50
 DamageBonusSiege=1.00,0.50,1.00,1.50,1.00,0.70,0.50,1.50
 DamageBonusSpells=1.00,1.00,1.00,0.40,1.00,1.00,0.50,1.00
+DecayTime=10.0
 FoodCeiling=200
 GlobalExperience=0
 GrantHeroXP=400

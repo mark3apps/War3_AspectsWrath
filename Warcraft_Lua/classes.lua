@@ -112,8 +112,8 @@ function init_aiClass()
             self[i].lifeHistory = {0.00, 0.00, 0.00}
 
             indexer:add(self[i].unit)
-            indexer:addKey("heroName", i)
-            indexer:addKey("heroNumber", self.count)
+            indexer:addKey(self[i].unit, "heroName", i)
+            indexer:addKey(self[i].unit, "heroNumber", self.count)
 
             self[i].alive = false
             self[i].fleeing = false
@@ -233,11 +233,6 @@ function init_aiClass()
             while (i <= count) do
                 selPlayer = ConvertedPlayer(i)
                 if (GetPlayerController(selPlayer) == MAP_CONTROL_COMPUTER) then
-                    if (i < 7) then
-                        udg_INT_TeamNumber[i] = 1
-                    else
-                        udg_INT_TeamNumber[i] = 2
-                    end
 
                     -- Pick random hero
                     randInt = GetRandomInt(3, 3)
@@ -256,49 +251,11 @@ function init_aiClass()
             end
         end
 
-        function self:loopStates() -- Start AI Loop
-            if self.loop >= self.count then
-                self.loop = 1
-            else
-                self.loop = self.loop + 1
-            end
-
-            print(" -- ")
-            local i = self.heroOptions[self.loop]
-
-            debugfunc(function()
-                self:updateIntel(i)
-
-                if self:isAlive(i) then
-                    self:STATEDead(i)
-                    self:STATELowHealth(i)
-                    self:STATEStopFleeing(i)
-                    self:STATEFleeing(i)
-                    self:STATEHighHealth(i)
-                    self:STATEcastingSpell(i)
-                    self:STATEAbilities(i)
-                    self:CleanUp(i)
-                else
-                    self:STATERevived(i)
-                end
-                print("Finished")
-            end, "AI STATES")
-        end
-
-        function self:init_loopStates()
-            if (self.count > 0) then
-                self.trig_loopStates = CreateTrigger()
-                TriggerRegisterTimerEvent(self.trig_loopStates, ai.tick, true)
-                TriggerAddAction(self.trig_loopStates, ai:loopStates())
-            end
-        end
-
         -- Update Intel
         function self:updateIntel(i)
             -- Only run if the hero is alive
             if (self[i].alive == true) then
                 -- Update info about the AI Hero
-
                 self[i].x = GetUnitX(self[i].unit)
                 self[i].y = GetUnitY(self[i].unit)
                 self[i].life = GetWidgetLife(self[i].unit)
@@ -495,8 +452,8 @@ function init_aiClass()
 
                 -- print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
                 -- print("Clump Both: " .. R2S(self[i].clumpBothPower))
-                print("Enemies Nearby: " .. self[i].countUnitEnemy)
-                print("Power Clump Enemy: " .. self[i].powerEnemy)
+                -- print("Enemies Nearby: " .. self[i].countUnitEnemy)
+                -- print("Power Clump Enemy: " .. self[i].powerEnemy)
                 -- print("Hero Power: " .. R2S(self[i].powerHero))
                 -- print("Power Level: " .. R2S(self[i].powerCount))
             end
@@ -1424,6 +1381,11 @@ function init_indexerClass()
             value = value or 0
             local unitId = GetHandleId(unit)
             self.data[unitId][key] = value
+        end
+
+        function self:getKey(unit, key)
+            local unitId = GetHandleId(unit)
+            return self.data[unitId][key]
         end
 
         function self:get(unit)

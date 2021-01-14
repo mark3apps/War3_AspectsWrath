@@ -1,0 +1,298 @@
+[Misc]
+
+// gold text data
+GoldTextColor=255,255,220,0
+GoldTextVelocity=0,0.03,100
+GoldTextLifetime=2
+GoldTextFadeStart=1
+
+// lumber text data
+LumberTextColor=255,0,200,80
+LumberTextVelocity=0,0.03,100
+LumberTextLifetime=2
+LumberTextFadeStart=1
+
+// bounty text data
+BountyTextColor=255,255,220,0
+BountyTextVelocity=0,0.03,100
+BountyTextLifetime=3
+BountyTextFadeStart=2
+
+// missile 'miss' text tag data
+MissTextColor=255,255,0,0
+MissTextVelocity=0,0.03,100
+MissTextLifetime=3
+MissTextFadeStart=1
+
+// CriticalStrike text tag data
+CriticalStrikeTextColor=255,255,0,0
+CriticalStrikeTextVelocity=0,0.04,100
+CriticalStrikeTextLifetime=5
+CriticalStrikeTextFadeStart=2
+
+// ManaBurn text tag data
+ManaBurnTextColor=255,82,82,255
+ManaBurnTextVelocity=0,0.04,100
+ManaBurnTextLifetime=5
+ManaBurnTextFadeStart=2
+
+// CriticalStrike text tag data
+BashTextColor=255,0,0,255
+BashTextVelocity=0,0.04,100
+BashTextLifetime=5
+BashTextFadeStart=2
+
+ActiveButtonColor=255,75,150,255
+
+[QuestIndicatorTimeout]
+QuestIndicatorTimeout=10
+
+[CameraMargins]
+// Defines the distance (in cells) between the camera bounds and
+// the playable map edge
+left=4
+right=4
+top=2
+bottom=2
+
+[UnpathableMargins]
+// Defines the default number of unpathable cells to add to each map edge
+left=6
+right=6
+top=8
+bottom=4
+
+[DefaultZFog]
+Style=0
+Start=20000
+End=50000
+Density=0
+Color=0,0,0,0
+
+[TerrainZFog]
+Style=0
+Start=3000
+End=5000
+Density=0.5
+Color=255,0,0,0
+
+[MenuZFog]
+Style=0
+Start=100
+End=5500
+Density=1
+Color=255,11,20,11
+
+[TutorialZFog]
+Style=0
+Start=0
+End=2000
+Density=0.5
+Color=255,0,51,77
+
+[HumanZFog]
+Style=0
+Start=0
+End=9000
+Density=0.5
+Color=255,77,77,51
+
+[OrcZFog]
+Style=0
+Start=0
+End=2950
+Density=0.5
+Color=255,77,51,0
+
+[UndeadZFog]
+Style=0
+Start=0
+End=8000
+Density=0.5
+Color=255,0,51,51
+
+[NightElfZFog]
+Style=0
+Start=0
+End=1600
+Density=0.5
+Color=255,51,77,128
+
+[Terrain]
+// terrain parameters
+
+// Maximum slope in degrees, (86+ will disable slope limits)
+MaxSlope=90
+
+// Global height limits
+// 0 = low ground, each cliff level = 128
+MaxHeight=3000
+MinHeight=-3000
+
+[FlyerMap]
+// Radius, in pathing cells, to search for maximum height
+MaximizeRadius=6
+// Number of times to halve map size
+SmoothLevels=3
+
+[Sound]
+Attenuation=3.0
+MinDist=1200
+MaxDist=20000
+MusicFadeRate=16
+MusicFadeInterval=500
+
+[Light]
+// Vector from light to world
+Direction=0.3,0.3,-0.25
+
+[SelectionCircle]
+// Defines different textures to be used based on selection circle size.
+// The Size## value defines the largest size which uses the given textures.
+// Note that the last size does not need a Size## value since anything bigger
+// than the next size down uses it.
+NumSizes=3
+Size00=100
+Texture00=ReplaceableTextures\Selection\SelectionCircleSmall
+TextureDotted00=ReplaceableTextures\Selection\SelectionCircleSmallDotted
+
+Size01=300
+Texture01=ReplaceableTextures\Selection\SelectionCircleMed
+TextureDotted01=ReplaceableTextures\Selection\SelectionCircleMedDotted
+
+Texture02=ReplaceableTextures\Selection\SelectionCircleLarge
+TextureDotted02=ReplaceableTextures\Selection\SelectionCircleLargeDotted
+
+// This value is multiplied by the SLK scale field to get the circle size
+ScaleFactor=72
+
+// This value is added to the selection circle height
+// when on walkable doodads.
+// Note: this is also applied to shadow images
+ImageWalkableZOffset=15
+
+// Colors
+ColorFriend=255,0,255,0
+ColorNeutral=255,255,255,0
+ColorEnemy=255,255,0,0
+AllyOffset=0.2
+
+[Blight]
+Texture=TerrainArt\Blight\Blight
+PuffModel=Environment\BlightDoodad\BlightDoodad.mdl
+PuffDuration=3000 // Duration of a puff, in milliseconds
+PuffInterval=2500 // Interval between checks for new puffs, in milliseconds
+PuffChance=0.7 // Chance for a vertex to create a puff (per interval), in percent
+
+// Dirt Chance Table
+// Specifies the chance (in percent) that a neighboring vertex will be changed to dirt
+// when a vertex is blighted.  Due to symmetry, only five unique values are needed
+// for a 2 vertex radius.  The the upper right quadrant of the table is:
+//
+//        s2 sd d2
+//        s1 d1 sd
+//        cn s1 s2
+//
+// where 'cn' is the center vertex, 's' means "straight", 'd' means "diagonal".
+// Note that the chance for 'cn' is always 100%, and not listed here.
+//
+
+DCT_s1=5
+DCT_s2=10
+DCT_sd=15
+DCT_d1=5
+DCT_d2=20
+
+[Water]
+// Depth-based colors
+// The water plane is vertex colored based on the water "depth": the distance
+// from the water plane to the ground.  These values define the colors for two
+// distinct ranges: "shallow" (MinDepth to DeepLevel) and "deep" (DeepLevel to MaxDepth).
+// where the color is found by interpolating between the corresponding colors given
+// in TerrainArt/Water.slk.
+//
+
+MinDepth=10
+DeepLevel=64
+MaxDepth=72
+
+// DeepLevelPathing defines the depth below which water
+// is considered "deep" for pathing and placement rules.
+
+DeepLevelPathing=52
+
+// WavesDepth defines the depth that terrain vertices need to be below the
+// water before they will be considered "under" water for wave generation
+
+WavesDepth=25
+
+[FogOfWar]
+FoggedTerrain=170,16,16,32
+BlackMaskedTerrain=255,0,0,0
+DarkMaskedTerrain=230,0,0,0
+BoundaryTerrain=230,0,0,0
+FoggedBoundaryTerrain=170,16,16,32
+FoggedObject=255,64,64,96
+BlackMaskedObject=255,0,0,0
+DarkMaskedObject=255,32,32,48
+BoundaryObject=255,0,0,0
+FoggedBoundaryObject=255,64,64,96
+ShadowImageColor=170,0,0,0
+
+FogColorPlayer=255,255,255,255
+FogColorAlly=255,255,255,0
+FogColorEnemy=255,255,0,0
+FogColorResource=255,32,128,128
+FogColorItem=255,240,240,0
+FogColorHero=255,255,255,128
+FogColorDestructable=255,0,160,128
+FogColorCreepAllied=255,255,120,0
+FogColorBlackMaskAlpha=0
+FogColorDarkMaskAlpha=40
+FogColorFogMaskAlpha=128
+FogColorVisibleAlpha=255
+FogColorBlightMask=0,63,63,64
+
+[Minimap]
+MinimapColorBorder=255,60,60,70
+
+[TargetingColors]
+TargetLightColor=180,0,255,0
+SelTargetColor=255,240,200,0
+
+[Glue]
+ControlFadeDuration=0.25
+CustomLoadTimerDuration=10.0
+
+[InfoPanel]
+MeleeRangeMax=128
+SpeedVerySlow=175   // lower bound, everything below this is "very slow"
+SpeedSlow=220
+SpeedAverage=280
+SpeedFast=350      // upper bound, everything above this is "very fast"
+AttackVerySlow=3   // upper bound, everything above this is "very slow"
+AttackSlow=2
+AttackAverage=1.5
+AttackFast=1       // lower bound, everything below this is "very fast"
+
+[BattleNetTiers]
+// how many wins are needed to attain that tier
+BattleNetTier2=25       // Footman
+BattleNetTier3=250      // Knight
+BattleNetTier4=500     // ArchMage
+BattleNetTier5=1500     // Uther
+
+[Occlusion]
+MarkImage=ReplaceableTextures\Occlusion\OcclusionMark
+MarkColor=255,255,0,255
+OccluderColor=128,255,255,255
+OccluderFadeTime=300 // Time to fade to OccluderColor, in milliseconds
+BuildingsOcclude=0
+
+[PlacementAlpha]
+PlacementAlpha=200
+
+[PingColor]
+PingColor=255,0,255,0
+PingAttackColor=255,255,0,0
+PingAdvisorColor=255,255,255,0

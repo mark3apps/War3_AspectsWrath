@@ -6,6 +6,7 @@ function init_triggers()
     Trig_UnitEntersMap = CreateTrigger()
     Trig_UnitDies = CreateTrigger()
     Trig_IssuedOrder = CreateTrigger()
+    Trig_aiLoopStates = CreateTrigger()
 end
 
 function addRegions()

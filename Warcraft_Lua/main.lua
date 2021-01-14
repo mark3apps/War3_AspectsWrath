@@ -32,7 +32,8 @@ function init_Lua()
 
     -- Init Trigger
     debugfunc(function()
-
+        ExecuteFunc("gg_trg_baseAndHeals")
+        
         init_AutoZoom()
         Init_HeroLevelsUp()
         Init_UnitCastsSpell()
@@ -72,7 +73,7 @@ function init_Delayed_1()
         debugfunc(function()
             ai:pickHeroes()
             dprint("pick Heroes Successfull", 2)
-            ai:init_loopStates()
+            init_aiLoopStates()
             dprint("AI Started", 2)
 
             orderStartingUnits()
@@ -100,7 +101,6 @@ end
 
 function Init_Map()
 
-    FogEnableOff()
     FogMaskEnableOff()
     MeleeStartingVisibility()
     udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
@@ -159,6 +159,43 @@ function Init_Map()
 
 end
 
+function init_aiLoopStates()
+    if (ai.count > 0) then
+        local t = CreateTrigger()
+        TriggerRegisterTimerEventPeriodic(t, 2)
+        TriggerAddAction(t, function()
+            print(" -- ")
+            if ai.loop >= ai.count then
+                ai.loop = 1
+            else
+                ai.loop = ai.loop + 1
+            end
+
+            
+            local i = ai.heroOptions[ai.loop]
+            print(i)
+
+            debugfunc(function()
+                ai:updateIntel(i)
+
+                if ai:isAlive(i) then
+                    ai:STATEDead(i)
+                    ai:STATELowHealth(i)
+                    ai:STATEStopFleeing(i)
+                    ai:STATEFleeing(i)
+                    ai:STATEHighHealth(i)
+                    ai:STATEcastingSpell(i)
+                    ai:STATEAbilities(i)
+                    ai:CleanUp(i)
+                else
+                    ai:STATERevived(i)
+                end
+                print("Finished")
+            end, "AI STATES")
+        end)
+    end
+end
+
 function init_spawnTimers()
     -- Create Spawn Loop Trigger
 
@@ -201,7 +238,7 @@ end
 
 function CAST_aiHero(triggerUnit)
     if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-        local heroName = indexer:get(triggerUnit).heroName
+        local heroName = indexer:getKey(triggerUnit, "heroName")
         ai:castSpell(heroName)
     end
 end
