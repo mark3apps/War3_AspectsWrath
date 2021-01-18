@@ -156,6 +156,23 @@ do
     function MarkGameStarted()
         real()
         local trigger = CreateTrigger()
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_G, 0, true)
+        TriggerAddAction(trigger, function()
+
+            local player = GetTriggerPlayer()
+            local playerDetails = hero.players[GetConvertedPlayerId(player)]
+            SelectUnitForPlayerSingle(playerDetails.alter, player)
+            PanCameraToForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero))
+        end)
+
+        local trigger = CreateTrigger()
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_D, 0, true)
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_D, 0, true)
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_D, 0, true)
@@ -165,10 +182,18 @@ do
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_D, 0, true)
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_D, 0, true)
         TriggerAddAction(trigger, function()
-            local player = GetTriggerPlayer()
-            local playerNumber = GetConvertedPlayerId(player)
 
-            SelectUnitForPlayerSingle(hero.players[playerNumber].alter, GetTriggerPlayer())
+            local player = GetTriggerPlayer()
+            local pNumber = GetConvertedPlayerId(player)
+
+            if hero.players[pNumber].cameraLock == true then
+                StopCameraForPlayerBJ(player)
+                
+                hero.players[pNumber].cameraLock = false
+            else
+                SetCameraTargetControllerNoZForPlayer(player, playerDetails.hero, 0, 0, false)
+                hero.players[pNumber].cameraLock = true
+            end
         end)
 
         local trigger = CreateTrigger()
@@ -181,10 +206,9 @@ do
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_F, 0, true)
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_F, 0, true)
         TriggerAddAction(trigger, function()
-            local player = GetTriggerPlayer()
-            local playerNumber = GetConvertedPlayerId(player)
 
-            SelectUnitForPlayerSingle(hero.players[playerNumber].hero, GetTriggerPlayer())
+            local player = GetTriggerPlayer()
+            SelectUnitForPlayerSingle(hero.players[GetConvertedPlayerId(player)].hero, player)
         end)
     end
 end

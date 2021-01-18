@@ -447,6 +447,8 @@ gg_cam_Left_Base_Hero_Cam = nil
 gg_cam_Right_Base_Hero_Cam = nil
 gg_rct_Region_037 = nil
 gg_rct_Region_043 = nil
+gg_trg_Armor_Hardening = nil
+gg_trg_Slam = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -3643,19 +3645,18 @@ do
     function MarkGameStarted()
         real()
         local trigger = CreateTrigger()
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_G, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_G, 0, true)
         TriggerAddAction(trigger, function()
-            local player = GetTriggerPlayer()
-            local playerNumber = GetConvertedPlayerId(player)
 
-            SelectUnitForPlayerSingle(hero.players[playerNumber].alter, GetTriggerPlayer())
+            local player = GetTriggerPlayer()
+            SelectUnitForPlayerSingle(hero.players[GetConvertedPlayerId(player)].alter, player)
         end)
 
         local trigger = CreateTrigger()
@@ -3668,10 +3669,9 @@ do
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_F, 0, true)
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_F, 0, true)
         TriggerAddAction(trigger, function()
+            
             local player = GetTriggerPlayer()
-            local playerNumber = GetConvertedPlayerId(player)
-
-            SelectUnitForPlayerSingle(hero.players[playerNumber].hero, GetTriggerPlayer())
+            SelectUnitForPlayerSingle(hero.players[GetConvertedPlayerId(player)].hero, player)
         end)
     end
 end
@@ -5019,6 +5019,7 @@ function Trig_testing_Actions()
     AdjustPlayerStateBJ(50, Player(0), PLAYER_STATE_RESOURCE_LUMBER)
     ConditionalTriggerExecute(gg_trg_baseAndHeals)
     SelectUnitForPlayerSingle(GetTriggerUnit(), Player(0))
+    StopCameraForPlayerBJ(Player(0))
 end
 
 function InitTrig_testing()
@@ -5481,6 +5482,78 @@ function InitTrig_Creep_Revive_Count()
     DisableTrigger(gg_trg_Creep_Revive_Count)
     TriggerRegisterTimerEventPeriodic(gg_trg_Creep_Revive_Count, 10.00)
     TriggerAddAction(gg_trg_Creep_Revive_Count, Trig_Creep_Revive_Count_Actions)
+end
+
+function Trig_Armor_Hardening_Conditions()
+    if (not (GetResearched() == FourCC("R00G"))) then
+        return false
+    end
+    return true
+end
+
+function Trig_Armor_Hardening_Func001002002001()
+    return (GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetResearchingUnit()))
+end
+
+function Trig_Armor_Hardening_Func001002002002()
+    return (IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO) == true)
+end
+
+function Trig_Armor_Hardening_Func001002002()
+    return GetBooleanAnd(Trig_Armor_Hardening_Func001002002001(), Trig_Armor_Hardening_Func001002002002())
+end
+
+function Trig_Armor_Hardening_Func002A()
+    SetUnitAbilityLevelSwapped(FourCC("A058"), GetEnumUnit(), (GetPlayerTechCountSimple(FourCC("R00G"), GetOwningPlayer(GetResearchingUnit())) + 1))
+end
+
+function Trig_Armor_Hardening_Actions()
+    udg_TEMP_UnitGroup = GetUnitsInRectMatching(GetPlayableMapRect(), Condition(Trig_Armor_Hardening_Func001002002))
+    ForGroupBJ(udg_TEMP_UnitGroup, Trig_Armor_Hardening_Func002A)
+        DestroyGroup ( udg_TEMP_UnitGroup )
+end
+
+function InitTrig_Armor_Hardening()
+    gg_trg_Armor_Hardening = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(gg_trg_Armor_Hardening, EVENT_PLAYER_UNIT_RESEARCH_FINISH)
+    TriggerAddCondition(gg_trg_Armor_Hardening, Condition(Trig_Armor_Hardening_Conditions))
+    TriggerAddAction(gg_trg_Armor_Hardening, Trig_Armor_Hardening_Actions)
+end
+
+function Trig_Slam_Conditions()
+    if (not (GetResearched() == FourCC("R00H"))) then
+        return false
+    end
+    return true
+end
+
+function Trig_Slam_Func001002002001()
+    return (GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetResearchingUnit()))
+end
+
+function Trig_Slam_Func001002002002()
+    return (IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO) == true)
+end
+
+function Trig_Slam_Func001002002()
+    return GetBooleanAnd(Trig_Slam_Func001002002001(), Trig_Slam_Func001002002002())
+end
+
+function Trig_Slam_Func002A()
+    SetUnitAbilityLevelSwapped(FourCC("A057"), GetEnumUnit(), (GetPlayerTechCountSimple(FourCC("R00H"), GetOwningPlayer(GetResearchingUnit())) + 1))
+end
+
+function Trig_Slam_Actions()
+    udg_TEMP_UnitGroup = GetUnitsInRectMatching(GetPlayableMapRect(), Condition(Trig_Slam_Func001002002))
+    ForGroupBJ(udg_TEMP_UnitGroup, Trig_Slam_Func002A)
+        DestroyGroup ( udg_TEMP_UnitGroup )
+end
+
+function InitTrig_Slam()
+    gg_trg_Slam = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(gg_trg_Slam, EVENT_PLAYER_UNIT_RESEARCH_FINISH)
+    TriggerAddCondition(gg_trg_Slam, Condition(Trig_Slam_Conditions))
+    TriggerAddAction(gg_trg_Slam, Trig_Slam_Actions)
 end
 
 function Trig_Shade_Strength_Copy_Conditions()
@@ -10012,6 +10085,8 @@ function InitCustomTriggers()
     InitTrig_Open_Gate_Right_Aspect_of_Forest()
     InitTrig_Creep_Dies_Init()
     InitTrig_Creep_Revive_Count()
+    InitTrig_Armor_Hardening()
+    InitTrig_Slam()
     InitTrig_Shade_Strength_Copy()
     InitTrig_Mana_Overload_Research()
     InitTrig_Frost_Attack_Research()
