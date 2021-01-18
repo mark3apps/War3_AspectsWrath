@@ -90,8 +90,8 @@ function init_Delayed_10()
     TriggerRegisterTimerEventSingle(t, 10)
     TriggerAddAction(t, function()
         debugfunc(function()
-            -- FogMaskEnableOn()
-            -- FogEnableOn()
+            FogMaskEnableOn()
+            FogEnableOn()
 
             -- Set up the Creep Event Timer
             StartTimerBJ(udg_EventTimer, false, 350.00)
@@ -102,6 +102,7 @@ end
 function Init_Map()
 
     FogMaskEnableOff()
+    FogEnableOff()
     MeleeStartingVisibility()
     udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
     udg_ALL_PLAYERS = GetPlayersAll()
