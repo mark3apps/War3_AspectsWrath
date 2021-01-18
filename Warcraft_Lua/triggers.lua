@@ -139,14 +139,11 @@ function init_MoveToNext()
         local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
         local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
 
-        print(isAllied)
-
         if isAllied or isFed then
             local region = loc:getRegion(GetTriggeringRegion())
 
             if (isAllied and region.allied) or (isFed and region.fed) then
                 local x, y = loc:getRandomXY(region.next)
-                print("x=" .. x .. " y=" .. y)
                 indexer:updateEnd(triggerUnit, x, y)
                 indexer:order(triggerUnit)
             end
