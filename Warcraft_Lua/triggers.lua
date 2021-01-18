@@ -124,8 +124,9 @@ function Init_UnitDies()
     TriggerAddAction(Trig_UnitDies, function()
         local dieingUnit = GetTriggerUnit()
 
-        indexer:remove(dieingUnit)
-
+        if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
+            indexer:remove(dieingUnit)
+        end
     end)
 end
 
@@ -138,15 +139,87 @@ function init_MoveToNext()
         local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
         local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
 
+        print(isAllied)
+
         if isAllied or isFed then
             local region = loc:getRegion(GetTriggeringRegion())
 
             if (isAllied and region.allied) or (isFed and region.fed) then
                 local x, y = loc:getRandomXY(region.next)
-
+                print("x=" .. x .. " y=" .. y)
                 indexer:updateEnd(triggerUnit, x, y)
                 indexer:order(triggerUnit)
             end
         end
     end)
+end
+
+
+
+--
+-- Trigger Functions
+-----------------
+
+
+-- Add unit to index then order to move if unit is computer controlled and a correct unit
+    function addUnitsToIndex(unit)
+
+        if not IsUnitType(unit, UNIT_TYPE_HERO) then
+            indexer:add(unit)
+    
+            if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
+                (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
+                    IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
+                indexer:order(unit)
+            end
+        end
+    end
+
+
+    function CAST_aiHero(triggerUnit)
+        if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+            local heroName = indexer:getKey(triggerUnit, "heroName")
+            ai:castSpell(heroName)
+        end
+    end
+
+    -- Order starting units to attack
+function orderStartingUnits()
+    local g = CreateGroup()
+    local u
+
+    g = GetUnitsInRectAll(GetPlayableMapRect())
+    while true do
+        u = FirstOfGroup(g)
+        if u == nil then
+            break
+        end
+
+        debugfunc(function()
+
+            indexer:add(u)
+            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
+                (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
+                    IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
+
+                indexer:order(u)
+            end
+        end, "Index")
+
+        GroupRemoveUnit(g, u)
+    end
+    DestroyGroup(g)
+end
+
+-- Tell unit to keep Attack-Moving to it's indexed destination
+function unitKeepMoving(unit)
+    if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
+        UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
+        FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
+        GetUnitTypeId(unit) ~= FourCC("h00O") and
+        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
+            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
+        PolledWait(0.5)
+        indexer:order(unit, "attack")
+    end
 end

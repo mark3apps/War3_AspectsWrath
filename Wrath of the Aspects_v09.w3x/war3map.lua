@@ -295,6 +295,8 @@ gg_cam_Camera_005 = nil
 gg_cam_Camera_006 = nil
 gg_cam_Camera_007 = nil
 gg_snd_PurgeTarget1 = nil
+gg_trg_Level100 = nil
+gg_trg_fogofwar = nil
 gg_trg_testing = nil
 gg_trg_FUNC_Calculate_Level_Factor = nil
 gg_trg_Open_Gate_Right_Murloc = nil
@@ -416,7 +418,6 @@ gg_unit_nntt_0135 = nil
 gg_unit_h006_0055 = nil
 gg_unit_h00E_0033 = nil
 gg_unit_eshy_0120 = nil
-gg_unit_hars_0017 = nil
 gg_unit_nntt_0132 = nil
 gg_unit_hshy_0011 = nil
 gg_unit_hvlt_0406 = nil
@@ -427,7 +428,7 @@ gg_unit_e003_0014 = nil
 gg_unit_nheb_0109 = nil
 gg_unit_n00K_0477 = nil
 gg_unit_n00B_0364 = nil
-gg_unit_hars_0158 = nil
+gg_unit_h014_0017 = nil
 gg_unit_n00B_0399 = nil
 gg_unit_n00K_0802 = nil
 gg_unit_hvlt_0207 = nil
@@ -442,8 +443,9 @@ gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
-gg_trg_Level100 = nil
-gg_trg_fogofwar = nil
+gg_unit_h014_0158 = nil
+gg_cam_Left_Base_Hero_Cam = nil
+gg_cam_Right_Base_Hero_Cam = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -891,7 +893,7 @@ function init_Lua()
     -- Init Trigger
     debugfunc(function()
         ExecuteFunc("gg_trg_baseAndHeals")
-        
+
         init_AutoZoom()
         Init_HeroLevelsUp()
         Init_UnitCastsSpell()
@@ -1029,7 +1031,6 @@ function init_aiLoopStates()
                 ai.loop = ai.loop + 1
             end
 
-            
             local i = ai.heroOptions[ai.loop]
             print(i)
 
@@ -1094,67 +1095,10 @@ function init_AutoZoom()
 end
 
 
-function CAST_aiHero(triggerUnit)
-    if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-        local heroName = indexer:getKey(triggerUnit, "heroName")
-        ai:castSpell(heroName)
-    end
-end
 
 
--- Add unit to index then order to move if unit is computer controlled and a correct unit
-function addUnitsToIndex(unit)
 
-    indexer:add(unit)
 
-    if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and IsUnitType(unit, UNIT_TYPE_HERO) == false and
-        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
-            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
-        indexer:order(unit)
-    end
-
-end
-
--- Order starting units to attack
-function orderStartingUnits()
-    local g = CreateGroup()
-    local u
-
-    g = GetUnitsInRectAll(GetPlayableMapRect())
-    while true do
-        u = FirstOfGroup(g)
-        if u == nil then
-            break
-        end
-
-        debugfunc(function()
-
-            indexer:add(u)
-            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
-                (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
-                    IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
-
-                indexer:order(u)
-            end
-        end, "Index")
-
-        GroupRemoveUnit(g, u)
-    end
-    DestroyGroup(g)
-end
-
--- Tell unit to keep Attack-Moving to it's indexed destination
-function unitKeepMoving(unit)
-    if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
-        UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
-        FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
-        GetUnitTypeId(unit) ~= FourCC("h00O") and
-        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
-            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
-        PolledWait(0.5)
-        indexer:order(unit, "attack")
-    end
-end
 
 
 function init_triggers()
@@ -1666,8 +1610,8 @@ function spawnAddBases()
         gg_unit_h003_0007)
     spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormRight",
         gg_unit_h003_0007)
-    spawn:addBase("arcaneHero", "sArcaneHeroLeft", "bottomRight", gg_unit_h014_0241, "sArcaneHeroRight", "topLeft",
-        gg_unit_h014_0043)
+    spawn:addBase("arcaneHero", "sArcaneHeroLeft", "bottomRight", gg_unit_h014_0017, "sArcaneHeroRight", "topLeft",
+        gg_unit_h014_0158)
     spawn:addBase("arcaneTop", "sElementalTopLeft", "bottomRight", gg_unit_hars_0355, "sElementalTopRight", "topLeft",
         gg_unit_hars_0293)
     spawn:addBase("arcaneBottom", "sElementalBottomLeft", "bottomRight", gg_unit_hars_0292, "sElementalBottomRight",
@@ -2010,7 +1954,6 @@ function init_aiClass()
                 self[i].teamNumber = 1
             end
 
-            print("Team:" .. self[i].teamNumber)
             self[i].heroesFriend = CreateGroup()
             self[i].heroesEnemy = CreateGroup()
             self[i].lifeHistory = {0.00, 0.00, 0.00}
@@ -2773,12 +2716,18 @@ function init_heroClass()
     hero_Class.new = function()
         local self = {}
 
-        self.items = {"teleportation"}
+        self.items = {"teleportation", "restorationPotion"}
         self.item = {}
         self.item.teleportation = {
             name = "Staff of Teleportation",
             four = "I000",
             id = FourCC("I000"),
+            order = ""
+        }
+        self.item.restorationPotion = {
+            name = "Restoration Potion",
+            four = "I005",
+            id = FourCC("I005"),
             order = ""
         }
 
@@ -2793,7 +2742,7 @@ function init_heroClass()
         self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
         self.brawler.startingSpells = {}
         self.brawler.permanentSpells = {}
-        self.brawler.startingItems = {"teleportation"}
+        self.brawler.startingItems = {"teleportation", "restorationPotion"}
         self.brawler.drain = {
             name = "Drain",
             four = "A01Y",
@@ -2836,7 +2785,7 @@ function init_heroClass()
         self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
         self.tactition.startingSpells = {"raiseBanner"}
         self.tactition.permanentSpells = {}
-        self.tactition.startingItems = {"teleportation"}
+        self.tactition.startingItems = {"teleportation", "restorationPotion"}
         self.tactition.ironDefense = {
             name = "Iron Defense",
             four = "A019",
@@ -2887,7 +2836,7 @@ function init_heroClass()
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "shiftBack", "fallingStrike", "shiftForward"}
         self.shiftMaster.startingSpells = {"felForm"}
         self.shiftMaster.permanentSpells = {"felForm", "attributeBonus", "shadeStrength", "swiftMoves"}
-        self.shiftMaster.startingItems = {"teleportation"}
+        self.shiftMaster.startingItems = {"teleportation", "restorationPotion"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
             four = "A031",
@@ -2962,7 +2911,7 @@ function init_heroClass()
         self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "frostNova", "manaOverload", "manaBurst"}
         self.manaAddict.startingSpells = {"manaShield"}
         self.manaAddict.permanentSpells = {}
-        self.manaAddict.startingItems = {"teleportation"}
+        self.manaAddict.startingItems = {"teleportation", "restorationPotion"}
         self.manaAddict.manaShield = {
             name = "Mana Shield",
             four = "A001",
@@ -3013,7 +2962,7 @@ function init_heroClass()
         self.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
         self.timeMage.startingSpells = {}
         self.timeMage.permanentSpells = {}
-        self.timeMage.startingItems = {"teleportation"}
+        self.timeMage.startingItems = {"teleportation", "restorationPotion"}
         self.timeMage.chronoAtrophy = {
             name = "Chrono Atrophy",
             four = "A04K",
@@ -3091,9 +3040,11 @@ function init_heroClass()
             local heroFour = CC2Four(GetUnitTypeId(unit))
             local heroName = self[heroFour]
             local heroLevel = GetHeroLevel(unit)
+            local heroPlayer = GetOwningPlayer(unit)
             local spells = self[heroName]
 
-
+            AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
+     
             -- Remove Ability Points
             if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
                 ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
@@ -3106,7 +3057,7 @@ function init_heroClass()
             print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
 
             -- Learn Skill if the Hero is owned by a Computer
-            if GetPlayerController(GetOwningPlayer(unit)) == MAP_CONTROL_COMPUTER then
+            if GetPlayerController(heroPlayer) == MAP_CONTROL_COMPUTER then
                 local unspentPoints = GetHeroSkillPoints(unit)
 
                 print("Unspent Abilities: " .. unspentPoints)
@@ -3327,7 +3278,7 @@ function init_spawnClass()
         self.timer = CreateTimer()
         self.cycleInterval = 5.00
         self.baseInterval = 0.4
-        self.waveInterval = 20.00
+        self.waveInterval = 28.00
 
         self.creepLevel = 1
         self.creepLevelTimer = CreateTimer()
@@ -3642,8 +3593,9 @@ function Init_UnitDies()
     TriggerAddAction(Trig_UnitDies, function()
         local dieingUnit = GetTriggerUnit()
 
-        indexer:remove(dieingUnit)
-
+        if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
+            indexer:remove(dieingUnit)
+        end
     end)
 end
 
@@ -3656,12 +3608,14 @@ function init_MoveToNext()
         local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
         local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
 
+        print(isAllied)
+
         if isAllied or isFed then
             local region = loc:getRegion(GetTriggeringRegion())
 
             if (isAllied and region.allied) or (isFed and region.fed) then
                 local x, y = loc:getRandomXY(region.next)
-
+                print("x=" .. x .. " y=" .. y)
                 indexer:updateEnd(triggerUnit, x, y)
                 indexer:order(triggerUnit)
             end
@@ -3669,6 +3623,75 @@ function init_MoveToNext()
     end)
 end
 
+
+
+--
+-- Trigger Functions
+-----------------
+
+
+-- Add unit to index then order to move if unit is computer controlled and a correct unit
+    function addUnitsToIndex(unit)
+
+        if not IsUnitType(unit, UNIT_TYPE_HERO) then
+            indexer:add(unit)
+    
+            if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
+                (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
+                    IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
+                indexer:order(unit)
+            end
+        end
+    end
+
+
+    function CAST_aiHero(triggerUnit)
+        if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+            local heroName = indexer:getKey(triggerUnit, "heroName")
+            ai:castSpell(heroName)
+        end
+    end
+
+    -- Order starting units to attack
+function orderStartingUnits()
+    local g = CreateGroup()
+    local u
+
+    g = GetUnitsInRectAll(GetPlayableMapRect())
+    while true do
+        u = FirstOfGroup(g)
+        if u == nil then
+            break
+        end
+
+        debugfunc(function()
+
+            indexer:add(u)
+            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
+                (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
+                    IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
+
+                indexer:order(u)
+            end
+        end, "Index")
+
+        GroupRemoveUnit(g, u)
+    end
+    DestroyGroup(g)
+end
+
+-- Tell unit to keep Attack-Moving to it's indexed destination
+function unitKeepMoving(unit)
+    if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
+        UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
+        FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
+        GetUnitTypeId(unit) ~= FourCC("h00O") and
+        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
+            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
+        PolledWait(0.5)
+        indexer:order(unit, "attack")
+    end
+end
 function InitSounds()
     gg_snd_PurgeTarget1 = CreateSound("Abilities/Spells/Orc/Purge/PurgeTarget1.flac", false, true, true, 0, 0, "SpellsEAX")
     SetSoundParamsFromLabel(gg_snd_PurgeTarget1, "Purge")
@@ -3794,14 +3817,14 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -17120.0, 352.0, 270.000, FourCC("ngnh"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22400.0, -10496.0, 270.000, FourCC("n007"))
     gg_unit_hshy_0011 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -14624.0, -9184.0, 270.000, FourCC("hshy"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -15232.0, -9536.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -15232.0, -9472.0, 270.000, FourCC("h00X"))
     gg_unit_h003_0015 = BlzCreateUnitWithSkin(p, FourCC("h003"), -23488.0, -11200.0, 270.000, FourCC("h003"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23680.0, -5376.0, 270.000, FourCC("n000"))
-    gg_unit_hars_0017 = BlzCreateUnitWithSkin(p, FourCC("hars"), -19648.0, -11200.0, 270.000, FourCC("hars"))
+    gg_unit_h014_0017 = BlzCreateUnitWithSkin(p, FourCC("h014"), -19712.0, -11200.0, 270.000, FourCC("h014"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -14528.0, -6848.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -16064.0, -8192.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -22400.0, -11008.0, 270.000, FourCC("nft2"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10976.0, -12768.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11680.0, -11808.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22720.0, -10112.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23744.0, -4032.0, 270.000, FourCC("n000"))
@@ -3811,7 +3834,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22400.0, -11904.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22720.0, -12288.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -15680.0, -7808.0, 270.000, FourCC("h00X"))
-    gg_unit_n001_0048 = BlzCreateUnitWithSkin(p, FourCC("n001"), -12544.0, -11904.0, 270.000, FourCC("n001"))
+    gg_unit_n001_0048 = BlzCreateUnitWithSkin(p, FourCC("n001"), -12736.0, -12096.0, 270.000, FourCC("n001"))
     SetUnitColor(gg_unit_n001_0048, ConvertPlayerColor(9))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -22400.0, -11392.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -14272.0, -9536.0, 270.000, FourCC("h00X"))
@@ -3821,7 +3844,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -16416.0, -7008.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17280.0, -4928.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -22720.0, -5824.0, 270.000, FourCC("h004"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11040.0, -11168.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11296.0, -12576.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("o005"), -14656.0, -1152.0, 270.000, FourCC("o005"))
     u = BlzCreateUnitWithSkin(p, FourCC("o003"), -14688.0, -1632.0, 270.000, FourCC("o003"))
@@ -3840,7 +3863,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20352.0, -7360.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17280.0, -5312.0, 270.000, FourCC("h00X"))
     gg_unit_nheb_0109 = BlzCreateUnitWithSkin(p, FourCC("nheb"), -24896.0, 1280.0, 270.000, FourCC("nheb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10848.0, -10784.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11040.0, -10976.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -16736.0, -8544.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20288.0, -5632.0, 270.000, FourCC("hgtw"))
@@ -3866,10 +3889,10 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -23232.0, -768.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -24704.0, 256.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -14656.0, -1792.0, 270.000, FourCC("otrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12000.0, -11168.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11936.0, -11040.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -23936.0, 640.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -24256.0, 256.0, 270.000, FourCC("negt"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -13216.0, -11296.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -13344.0, -11424.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -19968.0, 2304.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -13376.0, -2240.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -20224.0, 1152.0, 270.000, FourCC("nntg"))
@@ -3941,12 +3964,12 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11872.0, -9632.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -19872.0, -2208.0, 270.000, FourCC("e007"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10464.0, -12256.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10272.0, -12256.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -19360.0, 3424.0, 270.000, FourCC("n00Z"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20160.0, -4928.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20160.0, -4544.0, 270.000, FourCC("hgtw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12320.0, -11040.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12320.0, -10976.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -21056.0, -11200.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18272.0, -4960.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -24192.0, -5248.0, 270.000, FourCC("n000"))
@@ -4051,8 +4074,8 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nfv4"), -21984.0, -5024.0, 0.000, FourCC("nfv4"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -19552.0, -7840.0, 90.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -19360.0, -7840.0, 90.000, FourCC("ncbb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14048.0, -8608.0, 270.000, FourCC("ncb9"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14240.0, -8608.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14048.0, -8544.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14240.0, -8544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("nwc1"), -16192.0, -2432.0, 270.000, FourCC("nwc1"))
     u = BlzCreateUnitWithSkin(p, FourCC("obar"), -16768.0, -2176.0, 270.000, FourCC("obar"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -20256.0, 1632.0, 270.000, FourCC("nnad"))
@@ -4211,7 +4234,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11168.0, 2080.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -2240.0, -8128.0, 270.000, FourCC("ngob"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -3968.0, 2560.0, 270.000, FourCC("nft2"))
-    gg_unit_hars_0158 = BlzCreateUnitWithSkin(p, FourCC("hars"), -3520.0, 2112.0, 270.000, FourCC("hars"))
+    gg_unit_h014_0158 = BlzCreateUnitWithSkin(p, FourCC("h014"), -3456.0, 2112.0, 270.000, FourCC("h014"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -1280.0, 3648.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -8640.0, -7872.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -7936.0, -7296.0, 270.000, FourCC("otrb"))
@@ -4504,9 +4527,7 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("ncen"), 5090.3, -12508.0, 280.324, FourCC("ncen"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), 3843.9, 3270.7, 211.922, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), 5246.8, -12490.2, 258.411, FourCC("ncks"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), 2775.9, -13020.7, 244.032, FourCC("ncks"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("nelb"), -27327.0, -9069.4, 174.670, FourCC("nelb"))
     SetUnitAcquireRange(u, 200.0)
     u = BlzCreateUnitWithSkin(p, FourCC("nmsc"), -22007.8, 4824.2, 307.640, FourCC("nmsc"))
@@ -4529,7 +4550,6 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), -28435.4, 3807.3, 4.064, FourCC("ncks"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncen"), -25787.4, 3950.5, 114.584, FourCC("ncen"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00N"), 3681.0, -8378.2, 262.232, FourCC("n00N"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), -25943.9, 3932.7, 64.032, FourCC("ncks"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), 2986.2, 4060.0, 354.979, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), 3153.2, 3974.5, 18.095, FourCC("nvdl"))
@@ -4546,25 +4566,20 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), 4529.9, 2237.7, 67.942, FourCC("nvdw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncnk"), -25962.6, 4105.4, 0.919, FourCC("ncnk"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncim"), 492.2, -12942.4, 129.799, FourCC("ncim"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("ncer"), 441.7, -12782.0, 152.904, FourCC("ncer"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), 4727.4, 2240.6, 122.380, FourCC("nvdw"))
     u = BlzCreateUnitWithSkin(p, FourCC("uabo"), -27023.1, -7100.7, 247.980, FourCC("uabo"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncer"), 297.1, -12956.9, 123.976, FourCC("ncer"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncnk"), 2794.6, -13193.4, 180.919, FourCC("ncnk"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("ncnk"), 5265.5, -12662.9, 246.715, FourCC("ncnk"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), 402.4, -13113.4, 21.339, FourCC("ncea"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), 2796.5, -13425.8, 114.560, FourCC("ncks"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("ncen"), 2634.9, -13380.6, 73.164, FourCC("ncen"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncen"), 5105.7, -12850.1, 316.984, FourCC("ncen"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), 658.2, -13021.9, 230.327, FourCC("ncea"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncer"), 713.4, -12900.2, 144.411, FourCC("ncer"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncen"), 2619.4, -13038.5, 294.584, FourCC("ncen"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), 5267.4, -12895.3, 184.064, FourCC("ncks"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), 4409.1, 1988.8, 0.253, FourCC("nvdg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), 3992.2, 3927.3, 166.536, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), 4826.5, 2006.0, 73.105, FourCC("nvdg"))
@@ -4641,7 +4656,7 @@ function CreateNeutralPassiveBuildings()
     local unitID
     local t
     local life
-    gg_unit_n00C_0082 = BlzCreateUnitWithSkin(p, FourCC("n00C"), -8448.0, -13632.0, 270.000, FourCC("n00C"))
+    gg_unit_n00C_0082 = BlzCreateUnitWithSkin(p, FourCC("n00C"), -9088.0, -15488.0, 270.000, FourCC("n00C"))
     SetUnitColor(gg_unit_n00C_0082, ConvertPlayerColor(0))
 end
 
@@ -4652,6 +4667,8 @@ function CreateNeutralPassive()
     local t
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("nrac"), -9042.5, -3357.1, 138.800, FourCC("nrac"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hprt"), -23998.7, 5624.9, 183.590, FourCC("hprt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hprt"), -16816.2, -15942.4, 130.855, FourCC("hprt"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhmc"), -16214.9, 3292.9, 44.672, FourCC("nhmc"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhmc"), -16322.2, 2508.8, 103.044, FourCC("nhmc"))
     u = BlzCreateUnitWithSkin(p, FourCC("nder"), -18610.1, -2856.3, 237.081, FourCC("nder"))
@@ -4815,7 +4832,7 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_Castle_2, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Castle_2, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Castle_2, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Castle_2, 1128.8, -4133.0, 0.0)
+    CameraSetupSetDestPosition(gg_cam_Castle_2, 1197.3, -4374.6, 0.0)
     gg_cam_Castle_3 = CreateCameraSetup()
     CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_ROTATION, 35.4, 0.0)
@@ -4881,6 +4898,32 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
     CameraSetupSetDestPosition(gg_cam_Camera_007, -24871.4, 1100.2, 0.0)
+    gg_cam_Left_Base_Hero_Cam = CreateCameraSetup()
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_ROTATION, 99.1, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_ANGLE_OF_ATTACK, 320.7, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_TARGET_DISTANCE, 2415.8, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_ROLL, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_FARZ, 10000.0, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_NEARZ, 16.0, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
+    CameraSetupSetDestPosition(gg_cam_Left_Base_Hero_Cam, -24312.7, -3862.7, 0.0)
+    gg_cam_Right_Base_Hero_Cam = CreateCameraSetup()
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_ROTATION, 279.8, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_ANGLE_OF_ATTACK, 319.3, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_TARGET_DISTANCE, 2415.8, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_ROLL, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_FARZ, 10000.0, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_NEARZ, 16.0, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
+    CameraSetupSetDestPosition(gg_cam_Right_Base_Hero_Cam, 1052.8, -5272.7, 0.0)
 end
 
 function Trig_Level100_Func001001002001()
@@ -4922,7 +4965,7 @@ end
 
 function Trig_testing_Actions()
     SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
-    DisplayTextToForce(GetPlayersAll(), OrderId2StringBJ(GetIssuedOrderIdBJ()))
+    AdjustPlayerStateBJ(50, Player(0), PLAYER_STATE_RESOURCE_LUMBER)
 end
 
 function InitTrig_testing()
@@ -9838,7 +9881,7 @@ function Trig_baseAndHeals_Actions()
     GroupAddUnitSimple(gg_unit_hvlt_0406, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_n00K_0477, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_nheb_0036, udg_UNIT_Bases[1])
-    GroupAddUnitSimple(gg_unit_hars_0158, udg_UNIT_Bases[1])
+    GroupAddUnitSimple(gg_unit_h014_0158, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_hars_0293, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_hars_0303, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_u001_0262, udg_UNIT_Bases[1])
@@ -9859,7 +9902,7 @@ function Trig_baseAndHeals_Actions()
     GroupAddUnitSimple(gg_unit_hvlt_0207, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_n00K_0802, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_nheb_0109, udg_UNIT_Bases[2])
-    GroupAddUnitSimple(gg_unit_hars_0017, udg_UNIT_Bases[2])
+    GroupAddUnitSimple(gg_unit_h014_0017, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_hars_0355, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_hars_0292, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_u001_0264, udg_UNIT_Bases[2])

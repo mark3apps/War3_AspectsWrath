@@ -33,7 +33,7 @@ function init_Lua()
     -- Init Trigger
     debugfunc(function()
         ExecuteFunc("gg_trg_baseAndHeals")
-        
+
         init_AutoZoom()
         Init_HeroLevelsUp()
         Init_UnitCastsSpell()
@@ -171,7 +171,6 @@ function init_aiLoopStates()
                 ai.loop = ai.loop + 1
             end
 
-            
             local i = ai.heroOptions[ai.loop]
             print(i)
 
@@ -236,65 +235,8 @@ function init_AutoZoom()
 end
 
 
-function CAST_aiHero(triggerUnit)
-    if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-        local heroName = indexer:getKey(triggerUnit, "heroName")
-        ai:castSpell(heroName)
-    end
-end
 
 
--- Add unit to index then order to move if unit is computer controlled and a correct unit
-function addUnitsToIndex(unit)
 
-    indexer:add(unit)
 
-    if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and IsUnitType(unit, UNIT_TYPE_HERO) == false and
-        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
-            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
-        indexer:order(unit)
-    end
-
-end
-
--- Order starting units to attack
-function orderStartingUnits()
-    local g = CreateGroup()
-    local u
-
-    g = GetUnitsInRectAll(GetPlayableMapRect())
-    while true do
-        u = FirstOfGroup(g)
-        if u == nil then
-            break
-        end
-
-        debugfunc(function()
-
-            indexer:add(u)
-            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
-                (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
-                    IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
-
-                indexer:order(u)
-            end
-        end, "Index")
-
-        GroupRemoveUnit(g, u)
-    end
-    DestroyGroup(g)
-end
-
--- Tell unit to keep Attack-Moving to it's indexed destination
-function unitKeepMoving(unit)
-    if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
-        UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
-        FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
-        GetUnitTypeId(unit) ~= FourCC("h00O") and
-        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
-            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
-        PolledWait(0.5)
-        indexer:order(unit, "attack")
-    end
-end
 

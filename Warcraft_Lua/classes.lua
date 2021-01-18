@@ -869,12 +869,18 @@ function init_heroClass()
     hero_Class.new = function()
         local self = {}
 
-        self.items = {"teleportation"}
+        self.items = {"teleportation", "restorationPotion"}
         self.item = {}
         self.item.teleportation = {
             name = "Staff of Teleportation",
             four = "I000",
             id = FourCC("I000"),
+            order = ""
+        }
+        self.item.restorationPotion = {
+            name = "Restoration Potion",
+            four = "I005",
+            id = FourCC("I005"),
             order = ""
         }
 
@@ -889,7 +895,7 @@ function init_heroClass()
         self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
         self.brawler.startingSpells = {}
         self.brawler.permanentSpells = {}
-        self.brawler.startingItems = {"teleportation"}
+        self.brawler.startingItems = {"teleportation", "restorationPotion"}
         self.brawler.drain = {
             name = "Drain",
             four = "A01Y",
@@ -932,7 +938,7 @@ function init_heroClass()
         self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
         self.tactition.startingSpells = {"raiseBanner"}
         self.tactition.permanentSpells = {}
-        self.tactition.startingItems = {"teleportation"}
+        self.tactition.startingItems = {"teleportation", "restorationPotion"}
         self.tactition.ironDefense = {
             name = "Iron Defense",
             four = "A019",
@@ -983,7 +989,7 @@ function init_heroClass()
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "shiftBack", "fallingStrike", "shiftForward"}
         self.shiftMaster.startingSpells = {"felForm"}
         self.shiftMaster.permanentSpells = {"felForm", "attributeBonus", "shadeStrength", "swiftMoves"}
-        self.shiftMaster.startingItems = {"teleportation"}
+        self.shiftMaster.startingItems = {"teleportation", "restorationPotion"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
             four = "A031",
@@ -1058,7 +1064,7 @@ function init_heroClass()
         self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "frostNova", "manaOverload", "manaBurst"}
         self.manaAddict.startingSpells = {"manaShield"}
         self.manaAddict.permanentSpells = {}
-        self.manaAddict.startingItems = {"teleportation"}
+        self.manaAddict.startingItems = {"teleportation", "restorationPotion"}
         self.manaAddict.manaShield = {
             name = "Mana Shield",
             four = "A001",
@@ -1109,7 +1115,7 @@ function init_heroClass()
         self.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
         self.timeMage.startingSpells = {}
         self.timeMage.permanentSpells = {}
-        self.timeMage.startingItems = {"teleportation"}
+        self.timeMage.startingItems = {"teleportation", "restorationPotion"}
         self.timeMage.chronoAtrophy = {
             name = "Chrono Atrophy",
             four = "A04K",
@@ -1187,9 +1193,11 @@ function init_heroClass()
             local heroFour = CC2Four(GetUnitTypeId(unit))
             local heroName = self[heroFour]
             local heroLevel = GetHeroLevel(unit)
+            local heroPlayer = GetOwningPlayer(unit)
             local spells = self[heroName]
 
-
+            AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
+     
             -- Remove Ability Points
             if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
                 ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
@@ -1202,7 +1210,7 @@ function init_heroClass()
             print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
 
             -- Learn Skill if the Hero is owned by a Computer
-            if GetPlayerController(GetOwningPlayer(unit)) == MAP_CONTROL_COMPUTER then
+            if GetPlayerController(heroPlayer) == MAP_CONTROL_COMPUTER then
                 local unspentPoints = GetHeroSkillPoints(unit)
 
                 print("Unspent Abilities: " .. unspentPoints)
@@ -1423,7 +1431,7 @@ function init_spawnClass()
         self.timer = CreateTimer()
         self.cycleInterval = 5.00
         self.baseInterval = 0.4
-        self.waveInterval = 20.00
+        self.waveInterval = 28.00
 
         self.creepLevel = 1
         self.creepLevelTimer = CreateTimer()

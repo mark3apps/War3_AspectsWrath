@@ -12201,3 +12201,51 @@ STRING 4007
 Sword of Fire
 }
 
+STRING 4008
+// Doodads: D00J (rocks Ashenvale), Name (Name)
+{
+rocks Ashenvale
+}
+
+STRING 4009
+// Units: hars (Arcane Library), Name (Name)
+{
+Arcane Library
+}
+
+STRING 4010
+// Doodads: D00Z (Rocks Village), Name (Name)
+{
+Rocks Village
+}
+
+STRING 4011
+// Doodads: D010 (Fence (No Pathing)), Name (Name)
+{
+Fence (No Pathing)
+}
+
+STRING 4012
+// Items: I005 (Restoration Potion), Name (Name)
+{
+Restoration Potion
+}
+
+STRING 4013
+// Items: I005 (Restoration Potion), Ubertip (Tooltip - Extended)
+{
+|cff87ceebNon-Combat Consumable|r|nRegenerates the Hero's health by 700 and  mana by 100 over 45 seconds when used. 180 second cooldown.
+}
+
+STRING 4014
+// Items: I005 (Restoration Potion), Description (Description)
+{
+Regenerates Health and Mana over time.
+}
+
+STRING 4015
+// Abilities: A055 (Restoration Potion), Name (Name)
+{
+Restoration Potion
+}
+
