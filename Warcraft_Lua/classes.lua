@@ -107,6 +107,8 @@ function init_aiClass()
                 self[i].teamNumber = 1
             end
 
+            print("Team Number: " .. self[i].teamNumber)
+
             self[i].heroesFriend = CreateGroup()
             self[i].heroesEnemy = CreateGroup()
             self[i].lifeHistory = {0.00, 0.00, 0.00}
@@ -644,9 +646,7 @@ function init_aiClass()
         function self:ACTIONtravelToHeal(i)
             local healDistance = 100000000.00
             local healDistanceNew = 0.00
-            local unitX
-            local unitY
-            local u
+            local unitX, unitY, u
             local g = CreateGroup()
 
             GroupAddGroup(udg_UNIT_Healing[self[i].teamNumber], g)
@@ -672,19 +672,23 @@ function init_aiClass()
             unitX = GetUnitX(self[i].unitHealing)
             unitY = GetUnitY(self[i].unitHealing)
 
+            print("x:" .. unitX .. "y:" .. unitY)
+
             IssuePointOrder(self[i].unit, "move", unitX, unitY)
         end
 
         function self:ACTIONtravelToDest(i)
+            local unitX, unitY
             if self[i].lowLife == true or self[i].fleeing == true then
-                local unitX = GetUnitX(self[i].unitHealing)
-                local unitY = GetUnitY(self[i].unitHealing)
+                unitX = GetUnitX(self[i].unitHealing)
+                unitY = GetUnitY(self[i].unitHealing)
                 IssuePointOrder(self[i].unit, "move", unitX, unitY)
             else
-                local unitX = GetUnitX(self[i].unitAttacking)
-                local unitY = GetUnitY(self[i].unitAttacking)
+                unitX = GetUnitX(self[i].unitAttacking)
+                unitY = GetUnitY(self[i].unitAttacking)
                 IssuePointOrder(self[i].unit, "attack", unitX, unitY)
             end
+            print("x:" .. unitX .. "y:" .. unitY)
         end
 
         function self:ACTIONattackBase(i)
@@ -692,6 +696,10 @@ function init_aiClass()
 
             local unitX = GetUnitX(self[i].unitAttacking)
             local unitY = GetUnitY(self[i].unitAttacking)
+            print("Unit: " .. i)
+            print("TeamNumber: ".. self[i].teamNumber)
+            print("attacking " .. GetUnitName(self[i].unitAttacking))
+            print("x:" .. unitX .. "y:" .. unitY)
 
             IssuePointOrder(self[i].unit, "attack", unitX, unitY)
         end
@@ -869,6 +877,7 @@ function init_heroClass()
     hero_Class.new = function()
         local self = {}
 
+        self.players = {}
         self.items = {"teleportation", "restorationPotion"}
         self.item = {}
         self.item.teleportation = {
@@ -1235,8 +1244,10 @@ function init_heroClass()
             local playerNumber = GetConvertedPlayerId(player)
             local heroLevel = GetHeroLevel(unit)
             local spells = self[heroName]
-            local picked, u, x, y
+            local picked, u, x, y, newAlter
             local g = CreateGroup()
+
+            self.players[playerNumber] = {}
 
             -- Get home Base Location
             if playerNumber < 7 then
@@ -1287,10 +1298,14 @@ function init_heroClass()
 
                 -- Replace Unit Alter
                 ReplaceUnitBJ(u, self[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
-
+                newAlter = GetLastReplacedUnitBJ()
                 GroupRemoveUnit(g, u)
             end
             DestroyGroup(g)
+
+    
+            self.players[playerNumber].alter = newAlter
+            self.players[playerNumber].hero = unit
         end
 
         return self
@@ -1596,7 +1611,7 @@ function init_spawnClass()
             if self.creepLevel >= 12 then
                 DisableTrigger(self.Trig_upgradeCreeps)
             else
-                StartTimerBJ(self.creepLevelTimer, false, (70 + (15 * self.creepLevel)))
+                StartTimerBJ(self.creepLevelTimer, false, (50 + (10 * self.creepLevel)))
             end
 
             DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)

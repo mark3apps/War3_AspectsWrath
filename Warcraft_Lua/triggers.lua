@@ -151,36 +151,70 @@ function init_MoveToNext()
     end)
 end
 
+do
+    local real = MarkGameStarted
+    function MarkGameStarted()
+        real()
+        local trigger = CreateTrigger()
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_D, 0, true)
+        TriggerAddAction(trigger, function()
+            local player = GetTriggerPlayer()
+            local playerNumber = GetConvertedPlayerId(player)
 
+            SelectUnitForPlayerSingle(hero.players[playerNumber].alter, GetTriggerPlayer())
+        end)
+
+        local trigger = CreateTrigger()
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_F, 0, true)
+        TriggerAddAction(trigger, function()
+            local player = GetTriggerPlayer()
+            local playerNumber = GetConvertedPlayerId(player)
+
+            SelectUnitForPlayerSingle(hero.players[playerNumber].hero, GetTriggerPlayer())
+        end)
+    end
+end
 
 --
 -- Trigger Functions
 -----------------
 
-
 -- Add unit to index then order to move if unit is computer controlled and a correct unit
-    function addUnitsToIndex(unit)
+function addUnitsToIndex(unit)
 
-        if not IsUnitType(unit, UNIT_TYPE_HERO) then
-            indexer:add(unit)
-    
-            if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
-                (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
-                    IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
-                indexer:order(unit)
-            end
+    if not IsUnitType(unit, UNIT_TYPE_HERO) then
+        indexer:add(unit)
+
+        if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
+            (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
+                IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
+            indexer:order(unit)
         end
     end
+end
 
-
-    function CAST_aiHero(triggerUnit)
-        if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-            local heroName = indexer:getKey(triggerUnit, "heroName")
-            ai:castSpell(heroName)
-        end
+function CAST_aiHero(triggerUnit)
+    if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+        local heroName = indexer:getKey(triggerUnit, "heroName")
+        ai:castSpell(heroName)
     end
+end
 
-    -- Order starting units to attack
+-- Order starting units to attack
 function orderStartingUnits()
     local g = CreateGroup()
     local u

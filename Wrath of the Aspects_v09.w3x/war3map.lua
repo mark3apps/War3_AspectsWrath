@@ -861,7 +861,6 @@ end
 
 function init_Lua()
     debugprint = 2
-
     -- Define Classes
     debugfunc(function()
         init_triggers()
@@ -893,7 +892,7 @@ function init_Lua()
 
     -- Init Trigger
     debugfunc(function()
-        ExecuteFunc("gg_trg_baseAndHeals")
+        ConditionalTriggerExecute(gg_trg_baseAndHeals)
 
         init_AutoZoom()
         Init_HeroLevelsUp()
@@ -1958,6 +1957,8 @@ function init_aiClass()
                 self[i].teamNumber = 1
             end
 
+            print("Team Number: " .. self[i].teamNumber)
+
             self[i].heroesFriend = CreateGroup()
             self[i].heroesEnemy = CreateGroup()
             self[i].lifeHistory = {0.00, 0.00, 0.00}
@@ -2495,9 +2496,7 @@ function init_aiClass()
         function self:ACTIONtravelToHeal(i)
             local healDistance = 100000000.00
             local healDistanceNew = 0.00
-            local unitX
-            local unitY
-            local u
+            local unitX, unitY, u
             local g = CreateGroup()
 
             GroupAddGroup(udg_UNIT_Healing[self[i].teamNumber], g)
@@ -2523,19 +2522,23 @@ function init_aiClass()
             unitX = GetUnitX(self[i].unitHealing)
             unitY = GetUnitY(self[i].unitHealing)
 
+            print("x:" .. unitX .. "y:" .. unitY)
+
             IssuePointOrder(self[i].unit, "move", unitX, unitY)
         end
 
         function self:ACTIONtravelToDest(i)
+            local unitX, unitY
             if self[i].lowLife == true or self[i].fleeing == true then
-                local unitX = GetUnitX(self[i].unitHealing)
-                local unitY = GetUnitY(self[i].unitHealing)
+                unitX = GetUnitX(self[i].unitHealing)
+                unitY = GetUnitY(self[i].unitHealing)
                 IssuePointOrder(self[i].unit, "move", unitX, unitY)
             else
-                local unitX = GetUnitX(self[i].unitAttacking)
-                local unitY = GetUnitY(self[i].unitAttacking)
+                unitX = GetUnitX(self[i].unitAttacking)
+                unitY = GetUnitY(self[i].unitAttacking)
                 IssuePointOrder(self[i].unit, "attack", unitX, unitY)
             end
+            print("x:" .. unitX .. "y:" .. unitY)
         end
 
         function self:ACTIONattackBase(i)
@@ -2543,6 +2546,10 @@ function init_aiClass()
 
             local unitX = GetUnitX(self[i].unitAttacking)
             local unitY = GetUnitY(self[i].unitAttacking)
+            print("Unit: " .. i)
+            print("TeamNumber: ".. self[i].teamNumber)
+            print("attacking " .. GetUnitName(self[i].unitAttacking))
+            print("x:" .. unitX .. "y:" .. unitY)
 
             IssuePointOrder(self[i].unit, "attack", unitX, unitY)
         end
@@ -2720,6 +2727,7 @@ function init_heroClass()
     hero_Class.new = function()
         local self = {}
 
+        self.players = {}
         self.items = {"teleportation", "restorationPotion"}
         self.item = {}
         self.item.teleportation = {
@@ -3086,8 +3094,10 @@ function init_heroClass()
             local playerNumber = GetConvertedPlayerId(player)
             local heroLevel = GetHeroLevel(unit)
             local spells = self[heroName]
-            local picked, u, x, y
+            local picked, u, x, y, newAlter
             local g = CreateGroup()
+
+            self.players[playerNumber] = {}
 
             -- Get home Base Location
             if playerNumber < 7 then
@@ -3138,10 +3148,14 @@ function init_heroClass()
 
                 -- Replace Unit Alter
                 ReplaceUnitBJ(u, self[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
-
+                newAlter = GetLastReplacedUnitBJ()
                 GroupRemoveUnit(g, u)
             end
             DestroyGroup(g)
+
+    
+            self.players[playerNumber].alter = newAlter
+            self.players[playerNumber].hero = unit
         end
 
         return self
@@ -3447,7 +3461,7 @@ function init_spawnClass()
             if self.creepLevel >= 12 then
                 DisableTrigger(self.Trig_upgradeCreeps)
             else
-                StartTimerBJ(self.creepLevelTimer, false, (70 + (15 * self.creepLevel)))
+                StartTimerBJ(self.creepLevelTimer, false, (50 + (10 * self.creepLevel)))
             end
 
             DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)
@@ -3624,36 +3638,70 @@ function init_MoveToNext()
     end)
 end
 
+do
+    local real = MarkGameStarted
+    function MarkGameStarted()
+        real()
+        local trigger = CreateTrigger()
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_D, 0, true)
+        TriggerAddAction(trigger, function()
+            local player = GetTriggerPlayer()
+            local playerNumber = GetConvertedPlayerId(player)
 
+            SelectUnitForPlayerSingle(hero.players[playerNumber].alter, GetTriggerPlayer())
+        end)
+
+        local trigger = CreateTrigger()
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_F, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_F, 0, true)
+        TriggerAddAction(trigger, function()
+            local player = GetTriggerPlayer()
+            local playerNumber = GetConvertedPlayerId(player)
+
+            SelectUnitForPlayerSingle(hero.players[playerNumber].hero, GetTriggerPlayer())
+        end)
+    end
+end
 
 --
 -- Trigger Functions
 -----------------
 
-
 -- Add unit to index then order to move if unit is computer controlled and a correct unit
-    function addUnitsToIndex(unit)
+function addUnitsToIndex(unit)
 
-        if not IsUnitType(unit, UNIT_TYPE_HERO) then
-            indexer:add(unit)
-    
-            if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
-                (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
-                    IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
-                indexer:order(unit)
-            end
+    if not IsUnitType(unit, UNIT_TYPE_HERO) then
+        indexer:add(unit)
+
+        if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
+            (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
+                IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
+            indexer:order(unit)
         end
     end
+end
 
-
-    function CAST_aiHero(triggerUnit)
-        if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-            local heroName = indexer:getKey(triggerUnit, "heroName")
-            ai:castSpell(heroName)
-        end
+function CAST_aiHero(triggerUnit)
+    if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+        local heroName = indexer:getKey(triggerUnit, "heroName")
+        ai:castSpell(heroName)
     end
+end
 
-    -- Order starting units to attack
+-- Order starting units to attack
 function orderStartingUnits()
     local g = CreateGroup()
     local u
@@ -3693,6 +3741,7 @@ function unitKeepMoving(unit)
         indexer:order(unit, "attack")
     end
 end
+
 function InitSounds()
     gg_snd_PurgeTarget1 = CreateSound("Abilities/Spells/Orc/Purge/PurgeTarget1.flac", false, true, true, 0, 0, "SpellsEAX")
     SetSoundParamsFromLabel(gg_snd_PurgeTarget1, "Purge")
@@ -4968,6 +5017,8 @@ end
 function Trig_testing_Actions()
     SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
     AdjustPlayerStateBJ(50, Player(0), PLAYER_STATE_RESOURCE_LUMBER)
+    ConditionalTriggerExecute(gg_trg_baseAndHeals)
+    SelectUnitForPlayerSingle(GetTriggerUnit(), Player(0))
 end
 
 function InitTrig_testing()

@@ -3055,12 +3055,6 @@ STRING 1340
 rhpx
 }
 
-STRING 1492
-// Upgrades: R005 (Storm Hammers), effect1 (Effect 1)
-{
-ratx
-}
-
 STRING 1568
 // Upgrades: R006 (Storm Hammers), effect1 (Effect 1)
 {
@@ -6335,7 +6329,7 @@ The Hero strikes with such force that his damage strikes through to enemies near
 }
 
 STRING 2794
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 The Hero strikes with such force that his damage strikes through to enemies near the primary attacked unit.
 }
@@ -6743,13 +6737,13 @@ Swift Moves - Level 3
 }
 
 STRING 2862
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
 {
 Cleaving Attack - Level 4
 }
 
 STRING 2863
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
 {
 Cleaving Attack - Level 5
 }
@@ -6833,13 +6827,13 @@ Upgrade Swift Moves - Level 3
 }
 
 STRING 2877
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
 {
 Upgrade Attribute Bonus - Level 4
 }
 
 STRING 2878
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
 {
 Upgrade Attribute Bonus - Level 5
 }
@@ -6905,18 +6899,6 @@ Upgrade Attribute Bonus - Level 15
 }
 
 STRING 2889
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
-{
-The Hero strikes with such force that his damage strikes through to enemies near the primary attacked unit.
-}
-
-STRING 2890
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
-{
-The Hero strikes with such force that his damage strikes through to enemies near the primary attacked unit.
-}
-
-STRING 2891
 // Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 The Hero strikes with such force that his damage strikes through to enemies near the primary attacked unit.
@@ -7295,13 +7277,13 @@ Increases the Strength, Agility, and Inteligence of the Hero.
 }
 
 STRING 2954
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 Increases the Strength, Agility, and Inteligence of the Hero.
 }
 
 STRING 2955
-// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 Increases the Strength, Agility, and Inteligence of the Hero.
 }
@@ -7467,13 +7449,13 @@ Cleaving Attack - Level 3
 }
 
 STRING 2999
-// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
 {
 Cleaving Attack - Level 4
 }
 
 STRING 3000
-// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
 {
 Cleaving Attack - Level 5
 }
@@ -7557,13 +7539,13 @@ Upgrade Attribute Bonus - Level 3
 }
 
 STRING 3014
-// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
 {
 Upgrade Attribute Bonus - Level 4
 }
 
 STRING 3015
-// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
 {
 Upgrade Attribute Bonus - Level 5
 }
@@ -7626,12 +7608,6 @@ STRING 3025
 // Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
 {
 Upgrade Attribute Bonus - Level 15
-}
-
-STRING 3027
-// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
-{
-The Hero strikes with such force that his damage strikes through to enemies near the primary attacked unit.
 }
 
 STRING 3029
@@ -8007,13 +7983,13 @@ Increases the Strength, Agility, and Inteligence of the Hero.
 }
 
 STRING 3091
-// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 Increases the Strength, Agility, and Inteligence of the Hero.
 }
 
 STRING 3092
-// Upgrades: R004 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 Increases the Strength, Agility, and Inteligence of the Hero.
 }
@@ -8034,18 +8010,6 @@ STRING 3095
 // Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
 {
 Shade Strength - Level 3
-}
-
-STRING 3096
-// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
-{
-Cleaving Attack - Level 4
-}
-
-STRING 3097
-// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
-{
-Cleaving Attack - Level 5
 }
 
 STRING 3098
@@ -8124,18 +8088,6 @@ STRING 3110
 // Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
 {
 Upgrade Shade Strength - Level 3
-}
-
-STRING 3111
-// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
-{
-Upgrade Attribute Bonus - Level 4
-}
-
-STRING 3112
-// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
-{
-Upgrade Attribute Bonus - Level 5
 }
 
 STRING 3113
@@ -8589,13 +8541,13 @@ Increases the Strength, Agility, and Inteligence of the Hero.
 }
 
 STRING 3188
-// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 Increases the Strength, Agility, and Inteligence of the Hero.
 }
 
 STRING 3189
-// Upgrades: R00D (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 Increases the Strength, Agility, and Inteligence of the Hero.
 }
@@ -12247,5 +12199,741 @@ STRING 4015
 // Abilities: A055 (Restoration Potion), Name (Name)
 {
 Restoration Potion
+}
+
+STRING 4016
+// Abilities: A056 (TALENT - SH - Swift Attacks), Tip (Tooltip - Normal)
+{
+Swift Moves - [|cffffcc00Level 3|r]
+}
+
+STRING 4017
+// Abilities: A056 (TALENT - SH - Swift Attacks), Tip (Tooltip - Normal)
+{
+Critical Strike - [|cffffcc00Level 5|r]
+}
+
+STRING 4018
+// Abilities: A056 (TALENT - SH - Swift Attacks), Tip (Tooltip - Normal)
+{
+Critical Strike - [|cffffcc00Level 6|r]
+}
+
+STRING 4019
+// Abilities: A056 (TALENT - SH - Swift Attacks), Ubertip (Tooltip - Normal - Extended)
+{
+Gives a chance to do extra damage on an attack and a chance to evade an attack.
+}
+
+STRING 4020
+// Abilities: A056 (TALENT - SH - Swift Attacks), Ubertip (Tooltip - Normal - Extended)
+{
+10% chance to do 1.5x damage on an attack
+5% chance to evade an attack
+}
+
+STRING 4021
+// Abilities: A056 (TALENT - SH - Swift Attacks), Ubertip (Tooltip - Normal - Extended)
+{
+10% chance to do 2x damage on an attack
+10% chance to evade an attack
+}
+
+STRING 4022
+// Abilities: A056 (TALENT - SH - Swift Attacks), Ubertip (Tooltip - Normal - Extended)
+{
+10% chance to do 3x damage on an attack
+20% chance to evade an attack
+}
+
+STRING 4023
+// Abilities: A056 (TALENT - SH - Swift Attacks), Ubertip (Tooltip - Normal - Extended)
+{
+Gives a <A005,DataA5>% chance to do <A005,DataB5> times normal damage on an attack.
+}
+
+STRING 4024
+// Abilities: A056 (TALENT - SH - Swift Attacks), Ubertip (Tooltip - Normal - Extended)
+{
+Gives a <A005,DataA6>% chance to do <A005,DataB6> times normal damage on an attack.
+}
+
+STRING 4025
+// Abilities: A056 (TALENT - SH - Swift Attacks), Researchhotkey (Hotkey - Learn)
+{
+E
+}
+
+STRING 4026
+// Abilities: A056 (TALENT - SH - Swift Attacks), Researchubertip (Tooltip - Learn - Extended)
+{
+Gives a chance to do more damage on an attack.
+
+|cffffcc00Level 1|r - <A005,DataA1>% chance, <A005,DataB1>x damage.
+|cffffcc00Level 2|r - <A005,DataA2>% chance, <A005,DataB2>x damage.
+|cffffcc00Level 3|r - <A005,DataA3>% chance, <A005,DataB3>x damage.
+|cffffcc00Level 4|r - <A005,DataA4>% chance, <A005,DataB4>x damage.
+|cffffcc00Level 5|r - <A005,DataA5>% chance, <A005,DataB5>x damage.
+|cffffcc00Level 6|r - <A005,DataA6>% chance, <A005,DataB6>x damage.
+}
+
+STRING 4027
+// Abilities: A056 (TALENT - SH - Swift Attacks), Researchtip (Tooltip - Learn)
+{
+Learn Quick Step - [|cffffcc00Level %d|r]
+}
+
+STRING 4028
+// Abilities: A056 (TALENT - SH - Swift Attacks), Name (Name)
+{
+TALENT - SH - Swift Attacks
+}
+
+STRING 4029
+// Abilities: A056 (TALENT - SH - Swift Attacks), Tip (Tooltip - Normal)
+{
+Swift Moves
+}
+
+STRING 4030
+// Abilities: A056 (TALENT - SH - Swift Attacks), Tip (Tooltip - Normal)
+{
+Swift Moves - [|cffffcc00Level 1|r]
+}
+
+STRING 4031
+// Abilities: A056 (TALENT - SH - Swift Attacks), Tip (Tooltip - Normal)
+{
+Swift Moves - [|cffffcc00Level 2|r]
+}
+
+STRING 4032
+// Upgrades: R005 (Storm Hammers), effect1 (Effect 1)
+{
+ratt
+}
+
+STRING 4033
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Swift Moves - Level 4
+}
+
+STRING 4034
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Swift Moves - Level 5
+}
+
+STRING 4035
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Swift Moves - Level 4
+}
+
+STRING 4036
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Swift Moves - Level 5
+}
+
+STRING 4037
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero moves so fast that he begins to evade all attacks.
+}
+
+STRING 4038
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero moves so fast that he begins to evade all attacks.
+}
+
+STRING 4039
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero moves so fast that he begins to evade all attacks.
+}
+
+STRING 4040
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero moves so fast that he begins to evade all attacks.
+}
+
+STRING 4041
+// Upgrades: R002 (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero moves so fast that he begins to evade all attacks.
+}
+
+STRING 4042
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Swift Attacks - Level 1
+}
+
+STRING 4043
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Swift Attacks - Level 2
+}
+
+STRING 4044
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Swift Attacks - Level 3
+}
+
+STRING 4045
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Swift Attacks - Level 4
+}
+
+STRING 4046
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Swift Attacks - Level 5
+}
+
+STRING 4047
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 6
+}
+
+STRING 4048
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 7
+}
+
+STRING 4049
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 8
+}
+
+STRING 4050
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 9
+}
+
+STRING 4051
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 10
+}
+
+STRING 4052
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 11
+}
+
+STRING 4053
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 12
+}
+
+STRING 4054
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 13
+}
+
+STRING 4055
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 14
+}
+
+STRING 4056
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 15
+}
+
+STRING 4057
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Swift Attacks- Level 1
+}
+
+STRING 4058
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Swift Attacks- Level 2
+}
+
+STRING 4059
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Swift Attacks- Level 3
+}
+
+STRING 4060
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Swift Attacks- Level 4
+}
+
+STRING 4061
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Swift Attacks- Level 5
+}
+
+STRING 4062
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 6
+}
+
+STRING 4063
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 7
+}
+
+STRING 4064
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 8
+}
+
+STRING 4065
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 9
+}
+
+STRING 4066
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 10
+}
+
+STRING 4067
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 11
+}
+
+STRING 4068
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 12
+}
+
+STRING 4069
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 13
+}
+
+STRING 4070
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 14
+}
+
+STRING 4071
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 15
+}
+
+STRING 4072
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero has a chance to deal extra damage on every attack.
+}
+
+STRING 4073
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero has a chance to deal extra damage on every attack.
+}
+
+STRING 4074
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero has a chance to deal extra damage on every attack.
+}
+
+STRING 4075
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero has a chance to deal extra damage on every attack.
+}
+
+STRING 4076
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+The Hero has a chance to deal extra damage on every attack.
+}
+
+STRING 4077
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4078
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4079
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4080
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4081
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4082
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4083
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4084
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4085
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4086
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4087
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4088
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4089
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4090
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4091
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4092
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4093
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4094
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4095
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4096
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4097
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4098
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4099
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4100
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4101
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4102
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4103
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4104
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4105
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4106
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Hotkey (Hotkey)
+{
+S
+}
+
+STRING 4107
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 16
+}
+
+STRING 4108
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 17
+}
+
+STRING 4109
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 18
+}
+
+STRING 4110
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 19
+}
+
+STRING 4111
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 20
+}
+
+STRING 4112
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 21
+}
+
+STRING 4113
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 22
+}
+
+STRING 4114
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 23
+}
+
+STRING 4115
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 24
+}
+
+STRING 4116
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Name (Name)
+{
+Cleaving Attack - Level 25
+}
+
+STRING 4117
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 16
+}
+
+STRING 4118
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 17
+}
+
+STRING 4119
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 18
+}
+
+STRING 4120
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 19
+}
+
+STRING 4121
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 20
+}
+
+STRING 4122
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 21
+}
+
+STRING 4123
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 22
+}
+
+STRING 4124
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 23
+}
+
+STRING 4125
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 24
+}
+
+STRING 4126
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Tip (Tooltip)
+{
+Upgrade Attribute Bonus - Level 25
+}
+
+STRING 4127
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4128
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4129
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4130
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4131
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4132
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4133
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4134
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4135
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4136
+// Upgrades: R00F (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
+{
+Increases the Strength, Agility, and Inteligence of the Hero.
 }
 

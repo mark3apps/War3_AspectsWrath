@@ -1,6 +1,5 @@
 function init_Lua()
     debugprint = 2
-
     -- Define Classes
     debugfunc(function()
         init_triggers()
@@ -32,7 +31,7 @@ function init_Lua()
 
     -- Init Trigger
     debugfunc(function()
-        ExecuteFunc("gg_trg_baseAndHeals")
+        ConditionalTriggerExecute(gg_trg_baseAndHeals)
 
         init_AutoZoom()
         Init_HeroLevelsUp()
