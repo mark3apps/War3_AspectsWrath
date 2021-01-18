@@ -169,7 +169,6 @@ do
             local player = GetTriggerPlayer()
             local playerDetails = hero.players[GetConvertedPlayerId(player)]
             SelectUnitForPlayerSingle(playerDetails.alter, player)
-            PanCameraToForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero))
         end)
 
         local trigger = CreateTrigger()
@@ -186,14 +185,25 @@ do
             local player = GetTriggerPlayer()
             local pNumber = GetConvertedPlayerId(player)
 
-            if hero.players[pNumber].cameraLock == true then
-                StopCameraForPlayerBJ(player)
-                
-                hero.players[pNumber].cameraLock = false
-            else
-                SetCameraTargetControllerNoZForPlayer(player, playerDetails.hero, 0, 0, false)
-                hero.players[pNumber].cameraLock = true
-            end
+            debugfunc(function()
+                if hero.players[pNumber].cameraLock == true then
+                    ResetToGameCameraForPlayer(player, 0)
+
+                    local ug = CreateGroup()
+                    ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
+                    
+                    SetCameraFieldForPlayer(player, CAMERA_FIELD_TARGET_DISTANCE,
+                        (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 0.00)
+                    DestroyGroup(ug)
+
+                    hero.players[pNumber].cameraLock = false
+                    print("Camera Unlocked")
+                else
+                    SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
+                    hero.players[pNumber].cameraLock = true
+                    print("Camera Locked")
+                end
+            end, "Camera Lock")
         end)
 
         local trigger = CreateTrigger()
@@ -208,7 +218,9 @@ do
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()
-            SelectUnitForPlayerSingle(hero.players[GetConvertedPlayerId(player)].hero, player)
+            local playerDetails = hero.players[GetConvertedPlayerId(player)]
+            SelectUnitForPlayerSingle(playerDetails.hero, player)
+            PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
         end)
     end
 end

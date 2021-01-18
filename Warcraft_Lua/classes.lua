@@ -1303,7 +1303,7 @@ function init_heroClass()
             end
             DestroyGroup(g)
 
-    
+            self.players[playerNumber].cameraLock = false
             self.players[playerNumber].alter = newAlter
             self.players[playerNumber].hero = unit
         end

@@ -286,6 +286,8 @@ gg_rct_Murloc_Spawn_Left = nil
 gg_rct_Murloc_Spawn_Right = nil
 gg_rct_Left_Start_Middle = nil
 gg_rct_Right_Start_Middle = nil
+gg_rct_Region_037 = nil
+gg_rct_Region_043 = nil
 gg_cam_Castle_1 = nil
 gg_cam_Castle_2 = nil
 gg_cam_Castle_3 = nil
@@ -293,6 +295,8 @@ gg_cam_Castle_4 = nil
 gg_cam_Camera_005 = nil
 gg_cam_Camera_006 = nil
 gg_cam_Camera_007 = nil
+gg_cam_Left_Base_Hero_Cam = nil
+gg_cam_Right_Base_Hero_Cam = nil
 gg_snd_PurgeTarget1 = nil
 gg_trg_Level100 = nil
 gg_trg_fogofwar = nil
@@ -307,6 +311,8 @@ gg_trg_Open_Gate_Left_Aspect_of_Forest = nil
 gg_trg_Open_Gate_Right_Aspect_of_Forest = nil
 gg_trg_Creep_Dies_Init = nil
 gg_trg_Creep_Revive_Count = nil
+gg_trg_Armor_Hardening = nil
+gg_trg_Slam = nil
 gg_trg_Shade_Strength_Copy = nil
 gg_trg_Mana_Overload_Research = nil
 gg_trg_Frost_Attack_Research = nil
@@ -434,6 +440,7 @@ gg_unit_hvlt_0207 = nil
 gg_unit_n00B_0102 = nil
 gg_unit_hars_0355 = nil
 gg_unit_hars_0292 = nil
+gg_unit_h014_0158 = nil
 gg_unit_ngt2_0455 = nil
 gg_unit_u001_0264 = nil
 gg_unit_nmh1_0735 = nil
@@ -442,13 +449,6 @@ gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
-gg_unit_h014_0158 = nil
-gg_cam_Left_Base_Hero_Cam = nil
-gg_cam_Right_Base_Hero_Cam = nil
-gg_rct_Region_037 = nil
-gg_rct_Region_043 = nil
-gg_trg_Armor_Hardening = nil
-gg_trg_Slam = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -1088,20 +1088,16 @@ function init_AutoZoom()
         local ug = CreateGroup()
 
         while (i <= 12) do
-            ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-            SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-                (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
-            DestroyGroup(ug)
+            if GetLocalPlayer() == Player(i) then
+                ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
+                SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
+                    (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+                DestroyGroup(ug)
+            end
             i = i + 1
         end
     end)
 end
-
-
-
-
-
-
 
 
 function init_triggers()
@@ -3155,7 +3151,7 @@ function init_heroClass()
             end
             DestroyGroup(g)
 
-    
+            self.players[playerNumber].cameraLock = false
             self.players[playerNumber].alter = newAlter
             self.players[playerNumber].hero = unit
         end
@@ -3656,7 +3652,43 @@ do
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()
-            SelectUnitForPlayerSingle(hero.players[GetConvertedPlayerId(player)].alter, player)
+            local playerDetails = hero.players[GetConvertedPlayerId(player)]
+            SelectUnitForPlayerSingle(playerDetails.alter, player)
+        end)
+
+        local trigger = CreateTrigger()
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_D, 0, true)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_D, 0, true)
+        TriggerAddAction(trigger, function()
+
+            local player = GetTriggerPlayer()
+            local pNumber = GetConvertedPlayerId(player)
+
+            debugfunc(function()
+                if hero.players[pNumber].cameraLock == true then
+                    ResetToGameCameraForPlayer(player, 0)
+
+                    local ug = CreateGroup()
+                    ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
+                    
+                    SetCameraFieldForPlayer(player, CAMERA_FIELD_TARGET_DISTANCE,
+                        (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 0.00)
+                    DestroyGroup(ug)
+
+                    hero.players[pNumber].cameraLock = false
+                    print("Camera Unlocked")
+                else
+                    SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
+                    hero.players[pNumber].cameraLock = true
+                    print("Camera Locked")
+                end
+            end, "Camera Lock")
         end)
 
         local trigger = CreateTrigger()
@@ -3669,9 +3701,11 @@ do
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_F, 0, true)
         BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_F, 0, true)
         TriggerAddAction(trigger, function()
-            
+
             local player = GetTriggerPlayer()
-            SelectUnitForPlayerSingle(hero.players[GetConvertedPlayerId(player)].hero, player)
+            local playerDetails = hero.players[GetConvertedPlayerId(player)]
+            SelectUnitForPlayerSingle(playerDetails.hero, player)
+            PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
         end)
     end
 end
@@ -5019,7 +5053,7 @@ function Trig_testing_Actions()
     AdjustPlayerStateBJ(50, Player(0), PLAYER_STATE_RESOURCE_LUMBER)
     ConditionalTriggerExecute(gg_trg_baseAndHeals)
     SelectUnitForPlayerSingle(GetTriggerUnit(), Player(0))
-    StopCameraForPlayerBJ(Player(0))
+    SetCameraTargetControllerNoZForPlayer(Player(0), GetTriggerUnit(), 0, 0, false)
 end
 
 function InitTrig_testing()

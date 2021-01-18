@@ -225,18 +225,14 @@ function init_AutoZoom()
         local ug = CreateGroup()
 
         while (i <= 12) do
-            ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-            SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-                (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
-            DestroyGroup(ug)
+            if GetLocalPlayer() == Player(i) then
+                ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
+                SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
+                    (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+                DestroyGroup(ug)
+            end
             i = i + 1
         end
     end)
 end
-
-
-
-
-
-
 
