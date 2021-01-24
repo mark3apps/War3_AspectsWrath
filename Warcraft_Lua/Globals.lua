@@ -15,7 +15,7 @@ function addRegions()
     loc:add("castleLeft", gg_rct_Left_Castle)
     loc:add("castleRight", gg_rct_Right_Castle)
     loc:add("startLeft", gg_rct_Left_Start)
-    loc:add("startLeft", gg_rct_Right_Start)
+    loc:add("startRight", gg_rct_Right_Start)
     loc:add("elfLeft", gg_rct_Elf_Base_Left, "castleLeft", false)
     loc:add("elfRight", gg_rct_Elf_Base_Right, "casteRight", true)
 

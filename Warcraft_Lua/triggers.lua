@@ -187,14 +187,8 @@ do
 
             debugfunc(function()
                 if hero.players[pNumber].cameraLock == true then
-                    ResetToGameCameraForPlayer(player, 0)
-
-                    local ug = CreateGroup()
-                    ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-                    
-                    SetCameraFieldForPlayer(player, CAMERA_FIELD_TARGET_DISTANCE,
-                        (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 0.00)
-                    DestroyGroup(ug)
+                    PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
+                        GetUnitY(hero.players[pNumber].hero), 0)
 
                     hero.players[pNumber].cameraLock = false
                     print("Camera Unlocked")
@@ -220,7 +214,10 @@ do
             local player = GetTriggerPlayer()
             local playerDetails = hero.players[GetConvertedPlayerId(player)]
             SelectUnitForPlayerSingle(playerDetails.hero, player)
-            PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
+
+            if playerDetails.cameraLocked == true then
+                PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
+            end
         end)
     end
 end

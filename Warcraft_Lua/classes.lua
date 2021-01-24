@@ -226,6 +226,9 @@ function init_aiClass()
             end
         end
 
+        --Teleport Stuff
+        --UnitUseItemTarget(udg_AI_Hero[udg_AI_Loop], GetItemOfTypeFromUnitBJ(udg_AI_Hero[udg_AI_Loop], FourCC("I000")), udg_FUNC_Base_Unit)
+
         -- AI Picks Hero
         function self:pickHeroes()
             local i = 1
@@ -878,7 +881,7 @@ function init_heroClass()
         local self = {}
 
         self.players = {}
-        self.items = {"teleportation", "restorationPotion"}
+        self.items = {"teleportation", "tank"}
         self.item = {}
         self.item.teleportation = {
             name = "Staff of Teleportation",
@@ -886,10 +889,16 @@ function init_heroClass()
             id = FourCC("I000"),
             order = ""
         }
-        self.item.restorationPotion = {
-            name = "Restoration Potion",
+        self.item.tank = {
+            name = "Tank",
             four = "I005",
             id = FourCC("I005"),
+            order = ""
+        }
+        self.item.mage = {
+            name = "Mage",
+            four = "I006",
+            id = FourCC("I006"),
             order = ""
         }
 
@@ -904,7 +913,7 @@ function init_heroClass()
         self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
         self.brawler.startingSpells = {}
         self.brawler.permanentSpells = {}
-        self.brawler.startingItems = {"teleportation", "restorationPotion"}
+        self.brawler.startingItems = {"teleportation", "tank"}
         self.brawler.drain = {
             name = "Drain",
             four = "A01Y",
@@ -947,7 +956,7 @@ function init_heroClass()
         self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
         self.tactition.startingSpells = {"raiseBanner"}
         self.tactition.permanentSpells = {}
-        self.tactition.startingItems = {"teleportation", "restorationPotion"}
+        self.tactition.startingItems = {"teleportation", "tank"}
         self.tactition.ironDefense = {
             name = "Iron Defense",
             four = "A019",
@@ -998,7 +1007,7 @@ function init_heroClass()
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "shiftBack", "fallingStrike", "shiftForward"}
         self.shiftMaster.startingSpells = {"felForm"}
         self.shiftMaster.permanentSpells = {"felForm", "attributeBonus", "shadeStrength", "swiftMoves"}
-        self.shiftMaster.startingItems = {"teleportation", "restorationPotion"}
+        self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
             four = "A031",
@@ -1041,10 +1050,10 @@ function init_heroClass()
         }
         self.shiftMaster.fallingStrike = {
             name = "Falling Strike",
-            four = "A03T",
-            id = FourCC("A03T"),
+            four = "A05A",
+            id = FourCC("A05A"),
             buff = 0,
-            order = "clusterrockets",
+            order = "thunderbolt",
             ult = false
         }
         self.shiftMaster.shiftStorm = {
@@ -1073,7 +1082,7 @@ function init_heroClass()
         self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "frostNova", "manaOverload", "manaBurst"}
         self.manaAddict.startingSpells = {"manaShield"}
         self.manaAddict.permanentSpells = {}
-        self.manaAddict.startingItems = {"teleportation", "restorationPotion"}
+        self.manaAddict.startingItems = {"teleportation", "mage"}
         self.manaAddict.manaShield = {
             name = "Mana Shield",
             four = "A001",
@@ -1124,7 +1133,7 @@ function init_heroClass()
         self.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
         self.timeMage.startingSpells = {}
         self.timeMage.permanentSpells = {}
-        self.timeMage.startingItems = {"teleportation", "restorationPotion"}
+        self.timeMage.startingItems = {"teleportation", "mage"}
         self.timeMage.chronoAtrophy = {
             name = "Chrono Atrophy",
             four = "A04K",
