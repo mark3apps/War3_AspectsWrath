@@ -1050,8 +1050,8 @@ function init_heroClass()
         }
         self.shiftMaster.fallingStrike = {
             name = "Falling Strike",
-            four = "A05A",
-            id = FourCC("A05A"),
+            four = "A059",
+            id = FourCC("A059"),
             buff = 0,
             order = "thunderbolt",
             ult = false

@@ -1117,7 +1117,7 @@ function addRegions()
     loc:add("castleLeft", gg_rct_Left_Castle)
     loc:add("castleRight", gg_rct_Right_Castle)
     loc:add("startLeft", gg_rct_Left_Start)
-    loc:add("startLeft", gg_rct_Right_Start)
+    loc:add("startRight", gg_rct_Right_Start)
     loc:add("elfLeft", gg_rct_Elf_Base_Left, "castleLeft", false)
     loc:add("elfRight", gg_rct_Elf_Base_Right, "casteRight", true)
 
@@ -2074,6 +2074,9 @@ function init_aiClass()
             end
         end
 
+        --Teleport Stuff
+        --UnitUseItemTarget(udg_AI_Hero[udg_AI_Loop], GetItemOfTypeFromUnitBJ(udg_AI_Hero[udg_AI_Loop], FourCC("I000")), udg_FUNC_Base_Unit)
+
         -- AI Picks Hero
         function self:pickHeroes()
             local i = 1
@@ -2726,7 +2729,7 @@ function init_heroClass()
         local self = {}
 
         self.players = {}
-        self.items = {"teleportation", "restorationPotion"}
+        self.items = {"teleportation", "tank"}
         self.item = {}
         self.item.teleportation = {
             name = "Staff of Teleportation",
@@ -2734,10 +2737,16 @@ function init_heroClass()
             id = FourCC("I000"),
             order = ""
         }
-        self.item.restorationPotion = {
-            name = "Restoration Potion",
+        self.item.tank = {
+            name = "Tank",
             four = "I005",
             id = FourCC("I005"),
+            order = ""
+        }
+        self.item.mage = {
+            name = "Mage",
+            four = "I006",
+            id = FourCC("I006"),
             order = ""
         }
 
@@ -2752,7 +2761,7 @@ function init_heroClass()
         self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
         self.brawler.startingSpells = {}
         self.brawler.permanentSpells = {}
-        self.brawler.startingItems = {"teleportation", "restorationPotion"}
+        self.brawler.startingItems = {"teleportation", "tank"}
         self.brawler.drain = {
             name = "Drain",
             four = "A01Y",
@@ -2795,7 +2804,7 @@ function init_heroClass()
         self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
         self.tactition.startingSpells = {"raiseBanner"}
         self.tactition.permanentSpells = {}
-        self.tactition.startingItems = {"teleportation", "restorationPotion"}
+        self.tactition.startingItems = {"teleportation", "tank"}
         self.tactition.ironDefense = {
             name = "Iron Defense",
             four = "A019",
@@ -2846,7 +2855,7 @@ function init_heroClass()
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "shiftBack", "fallingStrike", "shiftForward"}
         self.shiftMaster.startingSpells = {"felForm"}
         self.shiftMaster.permanentSpells = {"felForm", "attributeBonus", "shadeStrength", "swiftMoves"}
-        self.shiftMaster.startingItems = {"teleportation", "restorationPotion"}
+        self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
             four = "A031",
@@ -2889,10 +2898,10 @@ function init_heroClass()
         }
         self.shiftMaster.fallingStrike = {
             name = "Falling Strike",
-            four = "A03T",
-            id = FourCC("A03T"),
+            four = "A059",
+            id = FourCC("A059"),
             buff = 0,
-            order = "clusterrockets",
+            order = "thunderbolt",
             ult = false
         }
         self.shiftMaster.shiftStorm = {
@@ -2921,7 +2930,7 @@ function init_heroClass()
         self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "frostNova", "manaOverload", "manaBurst"}
         self.manaAddict.startingSpells = {"manaShield"}
         self.manaAddict.permanentSpells = {}
-        self.manaAddict.startingItems = {"teleportation", "restorationPotion"}
+        self.manaAddict.startingItems = {"teleportation", "mage"}
         self.manaAddict.manaShield = {
             name = "Mana Shield",
             four = "A001",
@@ -2972,7 +2981,7 @@ function init_heroClass()
         self.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
         self.timeMage.startingSpells = {}
         self.timeMage.permanentSpells = {}
-        self.timeMage.startingItems = {"teleportation", "restorationPotion"}
+        self.timeMage.startingItems = {"teleportation", "mage"}
         self.timeMage.chronoAtrophy = {
             name = "Chrono Atrophy",
             four = "A04K",
@@ -3672,14 +3681,8 @@ do
 
             debugfunc(function()
                 if hero.players[pNumber].cameraLock == true then
-                    ResetToGameCameraForPlayer(player, 0)
-
-                    local ug = CreateGroup()
-                    ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-                    
-                    SetCameraFieldForPlayer(player, CAMERA_FIELD_TARGET_DISTANCE,
-                        (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 0.00)
-                    DestroyGroup(ug)
+                    PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
+                        GetUnitY(hero.players[pNumber].hero), 0)
 
                     hero.players[pNumber].cameraLock = false
                     print("Camera Unlocked")
@@ -3705,7 +3708,10 @@ do
             local player = GetTriggerPlayer()
             local playerDetails = hero.players[GetConvertedPlayerId(player)]
             SelectUnitForPlayerSingle(playerDetails.hero, player)
-            PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
+
+            if playerDetails.cameraLocked == true then
+                PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
+            end
         end)
     end
 end
@@ -7891,7 +7897,7 @@ function InitTrig_Unleash_Rage()
 end
 
 function Trig_Falling_Strike_CAST_Conditions()
-    if (not (GetSpellAbilityId() == FourCC("A03T"))) then
+    if (not (GetSpellAbilityId() == FourCC("A059"))) then
         return false
     end
     return true

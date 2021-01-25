@@ -4871,7 +4871,7 @@ E
 }
 
 STRING 2463
-// Abilities: A03T (Falling Strike), Researchhotkey (Hotkey - Learn)
+// Abilities: A04P (TM - Time Travel), Hotkey (Hotkey - Normal)
 {
 E
 }
@@ -4985,7 +4985,7 @@ C
 }
 
 STRING 2499
-// Abilities: A03T (Falling Strike), Name (Name)
+// Abilities: A059 (Falling Strike), Name (Name)
 {
 Falling Strike
 }
@@ -5237,37 +5237,37 @@ Altar of Kings (Shifter)
 }
 
 STRING 2633
-// Abilities: A03T (Falling Strike), Tip (Tooltip - Normal)
+// Abilities: A059 (Falling Strike), Tip (Tooltip - Normal)
 {
 Falling Strike - [|cffffcc00Level 1|r]
 }
 
 STRING 2634
-// Abilities: A03T (Falling Strike), Tip (Tooltip - Normal)
+// Abilities: A059 (Falling Strike), Tip (Tooltip - Normal)
 {
 Falling Strike - [|cffffcc00Level 2|r]
 }
 
 STRING 2635
-// Abilities: A03T (Falling Strike), Tip (Tooltip - Normal)
+// Abilities: A059 (Falling Strike), Tip (Tooltip - Normal)
 {
 Falling Strike - [|cffffcc00Level 3|r]
 }
 
 STRING 2636
-// Abilities: A03T (Falling Strike), Tip (Tooltip - Normal)
+// Abilities: A059 (Falling Strike), Tip (Tooltip - Normal)
 {
 Falling Strike - [|cffffcc00Level 4|r]
 }
 
 STRING 2637
-// Abilities: A03T (Falling Strike), Tip (Tooltip - Normal)
+// Abilities: A059 (Falling Strike), Tip (Tooltip - Normal)
 {
 Falling Strike - [|cffffcc00Level 5|r]
 }
 
 STRING 2638
-// Abilities: A03T (Falling Strike), Tip (Tooltip - Normal)
+// Abilities: A059 (Falling Strike), Tip (Tooltip - Normal)
 {
 Falling Strike - [|cffffcc00Level 6|r]
 }
@@ -7082,7 +7082,7 @@ Gives a <A005,DataA6>% chance to do <A005,DataB6> times normal damage on an atta
 }
 
 STRING 2973
-// Abilities: A03T (Falling Strike), Hotkey (Hotkey - Normal)
+// Abilities: A04P (TM - Time Travel), Researchhotkey (Hotkey - Learn)
 {
 E
 }
@@ -9465,51 +9465,15 @@ Transforms into a powerful Demon with Chaos Damage, increased Life Regen, Attack
 }
 
 STRING 3473
-// Abilities: A03T (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target location damaging and slowing units in close proximity for a short time.
-}
-
-STRING 3474
-// Abilities: A03T (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target location damaging and slowing units in close proximity for a short time.
-}
-
-STRING 3475
-// Abilities: A03T (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target location damaging and slowing units in close proximity for a short time.
-}
-
-STRING 3476
-// Abilities: A03T (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target location damaging and slowing units in close proximity for a short time.
-}
-
-STRING 3477
-// Abilities: A03T (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target location damaging and slowing units in close proximity for a short time.
-}
-
-STRING 3478
-// Abilities: A03T (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A059 (Falling Strike), Researchubertip (Tooltip - Learn - Extended)
 {
 The Shifter jumps to the target location damaging and slowing units in close proximity for a short time.
 }
 
 STRING 3479
-// Abilities: A03T (Falling Strike), Researchtip (Tooltip - Learn)
+// Abilities: A059 (Falling Strike), Researchtip (Tooltip - Learn)
 {
 Learn Falling Strike - [|cffffcc00Level %d|r]
-}
-
-STRING 3480
-// Abilities: A03T (Falling Strike), Researchubertip (Tooltip - Learn - Extended)
-{
-The Shifter jumps to the target location damaging and slowing units in close proximity for a short time.
 }
 
 STRING 3500
@@ -10979,13 +10943,13 @@ Time Travel - [|cffffcc00Level 6|r]
 }
 
 STRING 3789
-// Abilities: A04P (TM - Time Travel), Hotkey (Hotkey - Normal)
+// Abilities: A056 (TALENT - SH - Swift Attacks), Researchhotkey (Hotkey - Learn)
 {
 E
 }
 
 STRING 3790
-// Abilities: A04P (TM - Time Travel), Researchhotkey (Hotkey - Learn)
+// Abilities: A059 (Falling Strike), Hotkey (Hotkey - Normal)
 {
 E
 }
@@ -11941,7 +11905,7 @@ Gives a <A005,DataA6>% chance to do <A005,DataB6> times normal damage on an atta
 }
 
 STRING 4025
-// Abilities: A056 (TALENT - SH - Swift Attacks), Researchhotkey (Hotkey - Learn)
+// Abilities: A059 (Falling Strike), Researchhotkey (Hotkey - Learn)
 {
 E
 }
@@ -14255,5 +14219,65 @@ STRING 4410
 // Upgrades: R00H (Iron Forged Swords,Steel Forged Swords,Mithril Forged Swords), Ubertip (Tooltip - Extended)
 {
 Increases the Strength, Agility, and Inteligence of the Hero.
+}
+
+STRING 4411
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+<A059,Dur1> Damage
+<A059,HeroDur1> Slow Duration
+<A059,Rng1> Jump Range
+}
+
+STRING 4412
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+<A059,Dur2> Damage
+<A059,HeroDur2> Slow Duration
+<A059,Rng2> Jump Range
+}
+
+STRING 4413
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+<A059,Dur3> Damage
+<A059,HeroDur3> Slow Duration
+<A059,Rng3> Jump Range
+}
+
+STRING 4414
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+<A059,Dur4> Damage
+<A059,HeroDur4> Slow Duration
+<A059,Rng4> Jump Range
+}
+
+STRING 4415
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+<A059,Dur5> Damage
+<A059,HeroDur5> Slow Duration
+<A059,Rng5> Jump Range
+}
+
+STRING 4416
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+<A059,Dur6> Damage
+<A059,HeroDur6> Slow Duration
+<A059,Rng6> Jump Range
 }
 
