@@ -44,6 +44,9 @@ function init_Lua()
         Init_IssuedOrder()
         Init_UnitDies()
         init_MoveToNext()
+
+        -- Abilities
+        ABTY_ShifterSwitch()
     end, "Init Triggers")
 
     dprint("Triggers Initialized", 2)

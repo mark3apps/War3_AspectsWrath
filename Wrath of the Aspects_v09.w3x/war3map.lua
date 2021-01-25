@@ -907,6 +907,9 @@ function init_Lua()
         Init_IssuedOrder()
         Init_UnitDies()
         init_MoveToNext()
+
+        -- Abilities
+        ABTY_ShifterSwitch()
     end, "Init Triggers")
 
     dprint("Triggers Initialized", 2)
@@ -2635,16 +2638,8 @@ function init_aiClass()
                 end
                 DestroyGroup(g)
 
-                -- Shift Back
-                local curSpell = hero:spell(self[i], "shiftBack")
-                if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
-                    print(curSpell.name)
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i)
-                end
-
                 -- Shift Forward
-                curSpell = hero:spell(self[i], "shiftForward")
+                curSpell = hero:spell(self[i], "shift")
                 if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
                     print(curSpell.name)
                     IssueImmediateOrder(self[i].unit, curSpell.order)
@@ -2852,9 +2847,9 @@ function init_heroClass()
         self.shiftMaster.fourAlter = "h00Q"
         self.shiftMaster.id = FourCC(self.shiftMaster.four)
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
-        self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "shiftBack", "fallingStrike", "shiftForward"}
-        self.shiftMaster.startingSpells = {"felForm"}
-        self.shiftMaster.permanentSpells = {"felForm", "attributeBonus", "shadeStrength", "swiftMoves"}
+        self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
+        self.shiftMaster.startingSpells = {"shift"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
@@ -2880,15 +2875,15 @@ function init_heroClass()
             order = "",
             ult = false
         }
-        self.shiftMaster.shiftBack = {
-            name = "Shift Back",
-            four = "A03U",
-            id = FourCC("A03U"),
+        self.shiftMaster.switch = {
+            name = "Switch",
+            four = "A03T",
+            id = FourCC("A03T"),
             buff = 0,
             order = "stomp",
             ult = false
         }
-        self.shiftMaster.shiftForward = {
+        self.shiftMaster.shift = {
             name = "Shift Forward",
             four = "A030",
             id = FourCC("A030"),
@@ -3782,6 +3777,90 @@ function unitKeepMoving(unit)
     end
 end
 
+
+--
+--  Ability Triggers
+--
+
+-- Shifter Switch
+
+function ABTY_ShifterSwitch()
+    local t = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
+    TriggerAddAction(t, function()
+    
+    if GetSpellAbilityId() == hero.shiftMaster.switch.id then
+
+        local g = CreateGroup()
+        local gGood = CreateGroup()
+        local p = GetSpellTargetLoc()
+        local u
+        local castingUnit = GetTriggerUnit()
+        local castingPlayer = GetOwningPlayer(castingUnit)
+
+        local xOrig = GetUnitX(castingUnit)
+        local yOrig = GetUnitY(castingUnit)
+        local pOrig = Location(xOrig, yOrig)
+        local rOrig = GetUnitFacing(castingUnit)
+
+        g = GetUnitsInRangeOfLocAll(200, p)
+        RemoveLocation(p)
+
+
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then break end
+
+            if IsUnitIllusion(u) then
+                GroupAddUnit(gGood, u)
+            end
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+
+        if CountUnitsInGroup(gGood) > 0 then
+            print("Switching")
+            u = GroupPickRandomUnit(gGood)
+            local xIll = GetUnitX(u)
+            local yIll = GetUnitY(u)
+            local pIll = Location(xIll, yIll)
+            local rIll = GetUnitFacing(u)
+
+            ShowUnitHide(u)
+            SetUnitInvulnerable(castingUnit, true)
+            PauseUnit(castingUnit, true)
+
+            AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pIll)
+            DestroyEffect(GetLastCreatedEffectBJ())
+            AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pOrig)
+            DestroyEffect(GetLastCreatedEffectBJ())
+            
+            PolledWait(0.1)
+
+            SetUnitPosition(u, xOrig, yOrig)
+            SetUnitFacingTimed(u, rOrig, 0)
+
+            SetUnitPosition(castingUnit, xIll, yIll)
+            SetUnitFacingTimed(castingUnit, rIll, 0)
+            PauseUnit(castingUnit, false)
+            SetUnitInvulnerable(castingUnit, false)
+
+            ShowUnitShow(u)
+            IssueImmediateOrder(u, "stop")
+
+
+            SelectUnitForPlayerSingle(castingUnit, castingPlayer)
+            
+        else
+
+            print("nothing")
+        end
+
+
+    end
+    end)
+end
 function InitSounds()
     gg_snd_PurgeTarget1 = CreateSound("Abilities/Spells/Orc/Purge/PurgeTarget1.flac", false, true, true, 0, 0, "SpellsEAX")
     SetSoundParamsFromLabel(gg_snd_PurgeTarget1, "Purge")
@@ -5057,6 +5136,7 @@ end
 function Trig_testing_Actions()
     SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
     AdjustPlayerStateBJ(50, Player(0), PLAYER_STATE_RESOURCE_LUMBER)
+    SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
     ConditionalTriggerExecute(gg_trg_baseAndHeals)
     SelectUnitForPlayerSingle(GetTriggerUnit(), Player(0))
     SetCameraTargetControllerNoZForPlayer(Player(0), GetTriggerUnit(), 0, 0, false)
@@ -8039,14 +8119,14 @@ function Trig_Jump_System_2_Actions()
             else
                 QueueUnitAnimationBJ(udg_JD_Unit[udg_JD_Integers[3]], "stand")
                 udg_TEMP_Pos2 = GetUnitLoc(udg_JD_Unit[udg_JD_Integers[3]])
+                AddSpecialEffectLocBJ(udg_TEMP_Pos2, "Abilities\\Spells\\Orc\\WarStomp\\WarStompCaster.mdl")
+                DestroyEffectBJ(GetLastCreatedEffectBJ())
                 CreateNUnitsAtLoc(1, FourCC("h000"), GetOwningPlayer(udg_JD_Unit[udg_JD_Integers[3]]), udg_TEMP_Pos2, bj_UNIT_FACING)
                 UnitApplyTimedLifeBJ(2.00, FourCC("BTLF"), GetLastCreatedUnit())
                                 RemoveLocation (udg_TEMP_Pos2)
                 UnitAddAbilityBJ(FourCC("A00F"), GetLastCreatedUnit())
                 SetUnitAbilityLevelSwapped(FourCC("A00F"), GetLastCreatedUnit(), GetUnitAbilityLevelSwapped(FourCC("A027"), udg_JD_Unit[udg_JD_Integers[3]]))
                 IssueImmediateOrderBJ(GetLastCreatedUnit(), "creepthunderclap")
-                AddSpecialEffectLocBJ(udg_TEMP_Pos2, "Abilities\\Spells\\Orc\\WarStomp\\WarStompCaster.mdl")
-                DestroyEffectBJ(GetLastCreatedEffectBJ())
                 SetUnitPathing(udg_JD_Unit[udg_JD_Integers[3]], true)
                 GroupRemoveUnitSimple(udg_JD_Unit[udg_JD_Integers[3]], udg_JD_Group)
                 SetUnitTimeScalePercent(udg_JD_Unit[udg_JD_Integers[3]], 100.00)
@@ -8073,9 +8153,6 @@ function InitTrig_Jump_System_2()
 end
 
 function Trig_FA_Start_Func001C()
-    if (GetSpellAbilityId() == FourCC("A03U")) then
-        return true
-    end
     if (GetSpellAbilityId() == FourCC("A030")) then
         return true
     end
@@ -8089,42 +8166,35 @@ function Trig_FA_Start_Conditions()
     return true
 end
 
-function Trig_FA_Start_Func006C()
-    if (not (GetSpellAbilityId() == FourCC("A03U"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_FA_Start_Func016C()
+function Trig_FA_Start_Func018C()
     if (not (GetUnitAbilityLevelSwapped(FourCC("A037"), udg_FA_Caster[udg_FA_Index]) == 1)) then
         return false
     end
     return true
 end
 
-function Trig_FA_Start_Func017C()
+function Trig_FA_Start_Func019C()
     if (not (GetUnitAbilityLevelSwapped(FourCC("A037"), udg_FA_Caster[udg_FA_Index]) == 2)) then
         return false
     end
     return true
 end
 
-function Trig_FA_Start_Func018C()
+function Trig_FA_Start_Func020C()
     if (not (GetUnitAbilityLevelSwapped(FourCC("A037"), udg_FA_Caster[udg_FA_Index]) == 3)) then
         return false
     end
     return true
 end
 
-function Trig_FA_Start_Func019C()
+function Trig_FA_Start_Func021C()
     if (not (GetUnitAbilityLevelSwapped(FourCC("A037"), udg_FA_Caster[udg_FA_Index]) == 4)) then
         return false
     end
     return true
 end
 
-function Trig_FA_Start_Func021C()
+function Trig_FA_Start_Func023C()
     if (not (udg_FA_Index == 1)) then
         return false
     end
@@ -8136,15 +8206,9 @@ function Trig_FA_Start_Actions()
     udg_FA_Caster[udg_FA_Index] = GetSpellAbilityUnit()
     udg_FA_Counter[udg_FA_Index] = 0.00
     udg_FA_StartPoint[udg_FA_Index] = GetUnitLoc(udg_FA_Caster[udg_FA_Index])
-    if (Trig_FA_Start_Func006C()) then
-        udg_FA_Facing[udg_FA_Index] = (160.00 + GetUnitFacing(udg_FA_Caster[udg_FA_Index]))
-        udg_FA_Level = GetUnitAbilityLevelSwapped(FourCC("A03U"), udg_FA_Caster[udg_FA_Index])
-        udg_FA_Distance[udg_FA_Index] = (400.00 + (50.00 * I2R(udg_FA_Level)))
-    else
-        udg_FA_Facing[udg_FA_Index] = (0.00 + GetUnitFacing(udg_FA_Caster[udg_FA_Index]))
-        udg_FA_Level = GetUnitAbilityLevelSwapped(FourCC("A030"), udg_FA_Caster[udg_FA_Index])
-        udg_FA_Distance[udg_FA_Index] = (400.00 + (50.00 * I2R(udg_FA_Level)))
-    end
+    udg_FA_Facing[udg_FA_Index] = (0.00 + GetUnitFacing(udg_FA_Caster[udg_FA_Index]))
+    udg_FA_Level = GetUnitAbilityLevelSwapped(FourCC("A030"), udg_FA_Caster[udg_FA_Index])
+    udg_FA_Distance[udg_FA_Index] = (325.00 + (125.00 * I2R(udg_FA_Level)))
     udg_FA_Duration[udg_FA_Index] = 0.40
     SetUnitPathing(udg_FA_Caster[udg_FA_Index], false)
     UnitAddAbilityBJ(FourCC("Agho"), udg_FA_Caster[udg_FA_Index])
@@ -8154,28 +8218,28 @@ function Trig_FA_Start_Actions()
     DestroyEffectBJ(GetLastCreatedEffectBJ())
     CreateNUnitsAtLoc(1, FourCC("h000"), GetOwningPlayer(udg_FA_Caster[udg_FA_Index]), udg_FA_StartPoint[udg_FA_Index], bj_UNIT_FACING)
     UnitApplyTimedLifeBJ(1.00, FourCC("BTLF"), GetLastCreatedUnit())
-    if (Trig_FA_Start_Func016C()) then
+    if (Trig_FA_Start_Func018C()) then
         UnitAddAbilityBJ(FourCC("AIil"), GetLastCreatedUnit())
         SetUnitAbilityLevelSwapped(FourCC("AIil"), GetLastCreatedUnit(), udg_FA_Level)
     else
     end
-    if (Trig_FA_Start_Func017C()) then
+    if (Trig_FA_Start_Func019C()) then
         UnitAddAbilityBJ(FourCC("A039"), GetLastCreatedUnit())
         SetUnitAbilityLevelSwapped(FourCC("A039"), GetLastCreatedUnit(), udg_FA_Level)
     else
     end
-    if (Trig_FA_Start_Func018C()) then
+    if (Trig_FA_Start_Func020C()) then
         UnitAddAbilityBJ(FourCC("A03B"), GetLastCreatedUnit())
         SetUnitAbilityLevelSwapped(FourCC("A03B"), GetLastCreatedUnit(), udg_FA_Level)
     else
     end
-    if (Trig_FA_Start_Func019C()) then
+    if (Trig_FA_Start_Func021C()) then
         UnitAddAbilityBJ(FourCC("A03A"), GetLastCreatedUnit())
         SetUnitAbilityLevelSwapped(FourCC("A03A"), GetLastCreatedUnit(), udg_FA_Level)
     else
     end
         IssueTargetOrderById( bj_lastCreatedUnit, 852274, udg_FA_Caster[ udg_FA_Index ] )
-    if (Trig_FA_Start_Func021C()) then
+    if (Trig_FA_Start_Func023C()) then
         EnableTrigger(gg_trg_FA_Loop)
     else
     end

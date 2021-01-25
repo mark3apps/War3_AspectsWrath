@@ -787,16 +787,8 @@ function init_aiClass()
                 end
                 DestroyGroup(g)
 
-                -- Shift Back
-                local curSpell = hero:spell(self[i], "shiftBack")
-                if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
-                    print(curSpell.name)
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i)
-                end
-
                 -- Shift Forward
-                curSpell = hero:spell(self[i], "shiftForward")
+                curSpell = hero:spell(self[i], "shift")
                 if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
                     print(curSpell.name)
                     IssueImmediateOrder(self[i].unit, curSpell.order)
@@ -1004,9 +996,9 @@ function init_heroClass()
         self.shiftMaster.fourAlter = "h00Q"
         self.shiftMaster.id = FourCC(self.shiftMaster.four)
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
-        self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "shiftBack", "fallingStrike", "shiftForward"}
-        self.shiftMaster.startingSpells = {"felForm"}
-        self.shiftMaster.permanentSpells = {"felForm", "attributeBonus", "shadeStrength", "swiftMoves"}
+        self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
+        self.shiftMaster.startingSpells = {"shift"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
@@ -1032,15 +1024,15 @@ function init_heroClass()
             order = "",
             ult = false
         }
-        self.shiftMaster.shiftBack = {
-            name = "Shift Back",
-            four = "A03U",
-            id = FourCC("A03U"),
+        self.shiftMaster.switch = {
+            name = "Switch",
+            four = "A03T",
+            id = FourCC("A03T"),
             buff = 0,
             order = "stomp",
             ult = false
         }
-        self.shiftMaster.shiftForward = {
+        self.shiftMaster.shift = {
             name = "Shift Forward",
             four = "A030",
             id = FourCC("A030"),

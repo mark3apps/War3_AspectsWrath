@@ -287,3 +287,88 @@ function unitKeepMoving(unit)
         indexer:order(unit, "attack")
     end
 end
+
+
+--
+--  Ability Triggers
+--
+
+-- Shifter Switch
+
+function ABTY_ShifterSwitch()
+    local t = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
+    TriggerAddAction(t, function()
+    
+    if GetSpellAbilityId() == hero.shiftMaster.switch.id then
+
+        local g = CreateGroup()
+        local gGood = CreateGroup()
+        local p = GetSpellTargetLoc()
+        local u
+        local castingUnit = GetTriggerUnit()
+        local castingPlayer = GetOwningPlayer(castingUnit)
+
+        local xOrig = GetUnitX(castingUnit)
+        local yOrig = GetUnitY(castingUnit)
+        local pOrig = Location(xOrig, yOrig)
+        local rOrig = GetUnitFacing(castingUnit)
+
+        g = GetUnitsInRangeOfLocAll(200, p)
+        RemoveLocation(p)
+
+
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then break end
+
+            if IsUnitIllusion(u) then
+                GroupAddUnit(gGood, u)
+            end
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+
+        if CountUnitsInGroup(gGood) > 0 then
+            print("Switching")
+            u = GroupPickRandomUnit(gGood)
+            local xIll = GetUnitX(u)
+            local yIll = GetUnitY(u)
+            local pIll = Location(xIll, yIll)
+            local rIll = GetUnitFacing(u)
+
+            ShowUnitHide(u)
+            SetUnitInvulnerable(castingUnit, true)
+            PauseUnit(castingUnit, true)
+
+            AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pIll)
+            DestroyEffect(GetLastCreatedEffectBJ())
+            AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pOrig)
+            DestroyEffect(GetLastCreatedEffectBJ())
+            
+            PolledWait(0.1)
+
+            SetUnitPosition(u, xOrig, yOrig)
+            SetUnitFacingTimed(u, rOrig, 0)
+
+            SetUnitPosition(castingUnit, xIll, yIll)
+            SetUnitFacingTimed(castingUnit, rIll, 0)
+            PauseUnit(castingUnit, false)
+            SetUnitInvulnerable(castingUnit, false)
+
+            ShowUnitShow(u)
+            IssueImmediateOrder(u, "stop")
+
+
+            SelectUnitForPlayerSingle(castingUnit, castingPlayer)
+            
+        else
+
+            print("nothing")
+        end
+
+
+    end
+    end)
+end
