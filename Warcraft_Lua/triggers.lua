@@ -322,7 +322,7 @@ function ABTY_ShifterSwitch()
             u = FirstOfGroup(g)
             if u == nil then break end
 
-            if IsUnitIllusion(u) then
+            if IsUnitIllusion(u) and GetOwningPlayer(u) == castingPlayer then
                 GroupAddUnit(gGood, u)
             end
 
@@ -339,8 +339,10 @@ function ABTY_ShifterSwitch()
             local rIll = GetUnitFacing(u)
 
             ShowUnitHide(u)
-            SetUnitInvulnerable(castingUnit, true)
+            ShowUnitHide(castingUnit)
+
             PauseUnit(castingUnit, true)
+            PauseUnit(u, true)
 
             AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pIll)
             DestroyEffect(GetLastCreatedEffectBJ())
@@ -349,23 +351,28 @@ function ABTY_ShifterSwitch()
             
             PolledWait(0.1)
 
-            SetUnitPosition(u, xOrig, yOrig)
-            SetUnitFacingTimed(u, rOrig, 0)
+            SetUnitX(castingUnit, xIll)
+            SetUnitY(castingUnit, yIll)
+            SetUnitX(u, xOrig)
+            SetUnitY(u, yOrig)
 
-            SetUnitPosition(castingUnit, xIll, yIll)
-            SetUnitFacingTimed(castingUnit, rIll, 0)
             PauseUnit(castingUnit, false)
+            PauseUnit(u, false)
             SetUnitInvulnerable(castingUnit, false)
-
+            SetUnitInvulnerable(u, false)
+            ShowUnitShow(castingUnit)
             ShowUnitShow(u)
-            IssueImmediateOrder(u, "stop")
-
 
             SelectUnitForPlayerSingle(castingUnit, castingPlayer)
-            
-        else
 
-            print("nothing")
+            RemoveLocation(pIll)
+            RemoveLocation(pOrig)
+        else
+            
+            BlzEndUnitAbilityCooldown(castingUnit, hero.shiftMaster.switch.id)
+            local abilitymana = BlzGetAbilityManaCost(hero.shiftMaster.switch.id, GetUnitAbilityLevel(castingUnit, hero.shiftMaster.switch.id))
+            SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana )
+            print("added ability and mana back")
         end
 
 

@@ -998,7 +998,7 @@ function init_heroClass()
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
         self.shiftMaster.startingSpells = {"shift"}
-        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves", "swiftAttacks"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
@@ -1018,26 +1018,34 @@ function init_heroClass()
         }
         self.shiftMaster.swiftMoves = {
             name = "Swift Moves",
-            four = "A005",
-            id = FourCC("A005"),
+            four = "A056",
+            id = FourCC("A056"),
+            buff = 0,
+            order = "",
+            ult = false
+        }
+        self.shiftMaster.swiftAttacks = {
+            name = "Swift Attacks",
+            four = "A030",
+            id = FourCC("A030"),
             buff = 0,
             order = "",
             ult = false
         }
         self.shiftMaster.switch = {
             name = "Switch",
-            four = "A03T",
-            id = FourCC("A03T"),
+            four = "A03U",
+            id = FourCC("A03U"),
             buff = 0,
-            order = "stomp",
+            order = "reveal",
             ult = false
         }
         self.shiftMaster.shift = {
-            name = "Shift Forward",
-            four = "A030",
-            id = FourCC("A030"),
+            name = "Shift",
+            four = "A03T",
+            id = FourCC("A03T"),
             buff = 0,
-            order = "thunderclap",
+            order = "berserk",
             ult = false
         }
         self.shiftMaster.fallingStrike = {

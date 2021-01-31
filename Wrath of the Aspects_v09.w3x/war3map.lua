@@ -449,6 +449,7 @@ gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
+gg_trg_Swift_Attacks = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -2849,7 +2850,7 @@ function init_heroClass()
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
         self.shiftMaster.startingSpells = {"shift"}
-        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves", "swiftAttacks"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
@@ -2869,26 +2870,34 @@ function init_heroClass()
         }
         self.shiftMaster.swiftMoves = {
             name = "Swift Moves",
-            four = "A005",
-            id = FourCC("A005"),
+            four = "A056",
+            id = FourCC("A056"),
+            buff = 0,
+            order = "",
+            ult = false
+        }
+        self.shiftMaster.swiftAttacks = {
+            name = "Swift Attacks",
+            four = "A030",
+            id = FourCC("A030"),
             buff = 0,
             order = "",
             ult = false
         }
         self.shiftMaster.switch = {
             name = "Switch",
-            four = "A03T",
-            id = FourCC("A03T"),
+            four = "A03U",
+            id = FourCC("A03U"),
             buff = 0,
-            order = "stomp",
+            order = "reveal",
             ult = false
         }
         self.shiftMaster.shift = {
-            name = "Shift Forward",
-            four = "A030",
-            id = FourCC("A030"),
+            name = "Shift",
+            four = "A03T",
+            id = FourCC("A03T"),
             buff = 0,
-            order = "thunderclap",
+            order = "berserk",
             ult = false
         }
         self.shiftMaster.fallingStrike = {
@@ -3828,8 +3837,10 @@ function ABTY_ShifterSwitch()
             local rIll = GetUnitFacing(u)
 
             ShowUnitHide(u)
-            SetUnitInvulnerable(castingUnit, true)
+            ShowUnitHide(castingUnit)
+
             PauseUnit(castingUnit, true)
+            PauseUnit(u, true)
 
             AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pIll)
             DestroyEffect(GetLastCreatedEffectBJ())
@@ -3838,23 +3849,28 @@ function ABTY_ShifterSwitch()
             
             PolledWait(0.1)
 
-            SetUnitPosition(u, xOrig, yOrig)
-            SetUnitFacingTimed(u, rOrig, 0)
+            SetUnitX(castingUnit, xIll)
+            SetUnitY(castingUnit, yIll)
+            SetUnitX(u, xOrig)
+            SetUnitY(u, yOrig)
 
-            SetUnitPosition(castingUnit, xIll, yIll)
-            SetUnitFacingTimed(castingUnit, rIll, 0)
             PauseUnit(castingUnit, false)
+            PauseUnit(u, false)
             SetUnitInvulnerable(castingUnit, false)
-
+            SetUnitInvulnerable(u, false)
+            ShowUnitShow(castingUnit)
             ShowUnitShow(u)
-            IssueImmediateOrder(u, "stop")
-
 
             SelectUnitForPlayerSingle(castingUnit, castingPlayer)
-            
-        else
 
-            print("nothing")
+            RemoveLocation(pIll)
+            RemoveLocation(pOrig)
+        else
+            
+            BlzEndUnitAbilityCooldown(castingUnit, hero.shiftMaster.switch.id)
+            local abilitymana = BlzGetAbilityManaCost(hero.shiftMaster.switch.id, GetUnitAbilityLevel(castingUnit, hero.shiftMaster.switch.id))
+            SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana )
+            print("added ability and mana back")
         end
 
 
@@ -4018,12 +4034,11 @@ function CreateBuildingsForPlayer20()
     gg_unit_o001_0075 = BlzCreateUnitWithSkin(p, FourCC("o001"), -15232.0, -1216.0, 270.000, FourCC("o001"))
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -13376.0, -1664.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("hbla"), -24704.0, -6656.0, 270.000, FourCC("hbla"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19648.0, -6016.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -16736.0, 736.0, 270.000, FourCC("ngnh"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -24256.0, -12160.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("o005"), -15168.0, -1664.0, 270.000, FourCC("o005"))
     gg_unit_n00B_0102 = BlzCreateUnitWithSkin(p, FourCC("n00B"), -20352.0, -6912.0, 270.000, FourCC("n00B"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20672.0, -5632.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20160.0, -4992.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -19136.0, -10880.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20352.0, -7360.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17280.0, -5312.0, 270.000, FourCC("h00X"))
@@ -4031,7 +4046,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11040.0, -10976.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -16736.0, -8544.0, 270.000, FourCC("ncb3"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20288.0, -5632.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23168.0, -4864.0, 270.000, FourCC("n000"))
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -16320.0, 384.0, 270.000, FourCC("o000"))
     gg_unit_eshy_0120 = BlzCreateUnitWithSkin(p, FourCC("eshy"), -21792.0, -96.0, 270.000, FourCC("eshy"))
@@ -4132,7 +4146,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10272.0, -12256.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -19360.0, 3424.0, 270.000, FourCC("n00Z"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20160.0, -4928.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20160.0, -4544.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -21312.0, -11200.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18272.0, -4960.0, 270.000, FourCC("ncb4"))
@@ -4143,18 +4156,17 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -21632.0, -6720.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -22144.0, -9472.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -21632.0, -6272.0, 270.000, FourCC("hgtw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19392.0, -6592.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18272.0, -5152.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -25216.0, 896.0, 270.000, FourCC("negt"))
     gg_unit_n00B_0364 = BlzCreateUnitWithSkin(p, FourCC("n00B"), -18816.0, -5120.0, 270.000, FourCC("n00B"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19904.0, -6912.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18272.0, -5344.0, 270.000, FourCC("ncb4"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20480.0, -4864.0, 270.000, FourCC("h004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20416.0, -5440.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18912.0, -6560.0, 90.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -13376.0, -2112.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("hvlt"), -23488.0, -15808.0, 270.000, FourCC("hvlt"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -15104.0, -1792.0, 270.000, FourCC("otrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -17920.0, -6400.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -17984.0, -6464.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -18944.0, -6144.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef6"), -23328.0, 1504.0, 270.000, FourCC("nef6"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -13248.0, -1600.0, 270.000, FourCC("otrb"))
@@ -4264,7 +4276,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -15648.0, -7392.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -16736.0, -8160.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -16736.0, -8352.0, 270.000, FourCC("ncb3"))
-    gg_unit_n00K_0802 = BlzCreateUnitWithSkin(p, FourCC("n00K"), -23168.0, -6720.0, 270.000, FourCC("n00K"))
+    gg_unit_n00K_0802 = BlzCreateUnitWithSkin(p, FourCC("n00K"), -23104.0, -6720.0, 270.000, FourCC("n00K"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -16480.0, -288.0, 270.000, FourCC("ngnh"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngwr"), -16736.0, -9248.0, 270.000, FourCC("ngwr"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13408.0, -8032.0, 270.000, FourCC("ncb9"))
@@ -5146,6 +5158,8 @@ function Trig_testing_Actions()
     SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
     ConditionalTriggerExecute(gg_trg_baseAndHeals)
     SelectUnitForPlayerSingle(GetTriggerUnit(), Player(0))
+    SetUnitPositionLocFacingBJ(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()), 0.00)
+    BlzEndUnitAbilityCooldown(GetEnumUnit(), FourCC("AHav"))
     SetCameraTargetControllerNoZForPlayer(Player(0), GetTriggerUnit(), 0, 0, false)
 end
 
@@ -5859,7 +5873,7 @@ function Trig_Swift_Moves_Func001002002()
 end
 
 function Trig_Swift_Moves_Func002A()
-    SetUnitAbilityLevelSwapped(FourCC("A005"), GetEnumUnit(), (GetPlayerTechCountSimple(FourCC("R002"), GetOwningPlayer(GetResearchingUnit())) + 1))
+    SetUnitAbilityLevelSwapped(FourCC("A056"), GetEnumUnit(), (GetPlayerTechCountSimple(FourCC("R002"), GetOwningPlayer(GetResearchingUnit())) + 1))
 end
 
 function Trig_Swift_Moves_Actions()
@@ -5873,6 +5887,42 @@ function InitTrig_Swift_Moves()
     TriggerRegisterAnyUnitEventBJ(gg_trg_Swift_Moves, EVENT_PLAYER_UNIT_RESEARCH_FINISH)
     TriggerAddCondition(gg_trg_Swift_Moves, Condition(Trig_Swift_Moves_Conditions))
     TriggerAddAction(gg_trg_Swift_Moves, Trig_Swift_Moves_Actions)
+end
+
+function Trig_Swift_Attacks_Conditions()
+    if (not (GetResearched() == FourCC("R00F"))) then
+        return false
+    end
+    return true
+end
+
+function Trig_Swift_Attacks_Func001002002001()
+    return (GetOwningPlayer(GetFilterUnit()) == GetOwningPlayer(GetResearchingUnit()))
+end
+
+function Trig_Swift_Attacks_Func001002002002()
+    return (IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO) == true)
+end
+
+function Trig_Swift_Attacks_Func001002002()
+    return GetBooleanAnd(Trig_Swift_Attacks_Func001002002001(), Trig_Swift_Attacks_Func001002002002())
+end
+
+function Trig_Swift_Attacks_Func002A()
+    SetUnitAbilityLevelSwapped(FourCC("A030"), GetEnumUnit(), (GetPlayerTechCountSimple(FourCC("R002"), GetOwningPlayer(GetResearchingUnit())) + 1))
+end
+
+function Trig_Swift_Attacks_Actions()
+    udg_TEMP_UnitGroup = GetUnitsInRectMatching(GetPlayableMapRect(), Condition(Trig_Swift_Attacks_Func001002002))
+    ForGroupBJ(udg_TEMP_UnitGroup, Trig_Swift_Attacks_Func002A)
+        DestroyGroup ( udg_TEMP_UnitGroup )
+end
+
+function InitTrig_Swift_Attacks()
+    gg_trg_Swift_Attacks = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(gg_trg_Swift_Attacks, EVENT_PLAYER_UNIT_RESEARCH_FINISH)
+    TriggerAddCondition(gg_trg_Swift_Attacks, Condition(Trig_Swift_Attacks_Conditions))
+    TriggerAddAction(gg_trg_Swift_Attacks, Trig_Swift_Attacks_Actions)
 end
 
 function Trig_Attribute_Upgrade_Conditions()
@@ -8160,7 +8210,7 @@ function InitTrig_Jump_System_2()
 end
 
 function Trig_FA_Start_Func001C()
-    if (GetSpellAbilityId() == FourCC("A030")) then
+    if (GetSpellAbilityId() == FourCC("A03T")) then
         return true
     end
     return false
@@ -8214,7 +8264,7 @@ function Trig_FA_Start_Actions()
     udg_FA_Counter[udg_FA_Index] = 0.00
     udg_FA_StartPoint[udg_FA_Index] = GetUnitLoc(udg_FA_Caster[udg_FA_Index])
     udg_FA_Facing[udg_FA_Index] = (0.00 + GetUnitFacing(udg_FA_Caster[udg_FA_Index]))
-    udg_FA_Level = GetUnitAbilityLevelSwapped(FourCC("A030"), udg_FA_Caster[udg_FA_Index])
+    udg_FA_Level = GetUnitAbilityLevelSwapped(FourCC("A03T"), udg_FA_Caster[udg_FA_Index])
     udg_FA_Distance[udg_FA_Index] = (325.00 + (125.00 * I2R(udg_FA_Level)))
     udg_FA_Duration[udg_FA_Index] = 0.40
     SetUnitPathing(udg_FA_Caster[udg_FA_Index], false)
@@ -8266,7 +8316,7 @@ function Trig_FA_Loop_Func001Func003C()
     return true
 end
 
-function Trig_FA_Loop_Func001Func006Func013C()
+function Trig_FA_Loop_Func001Func006Func012C()
     if (not (udg_FA_Index == 0)) then
         return false
     end
@@ -8287,7 +8337,8 @@ function Trig_FA_Loop_Actions()
         udg_TEMP_Pos2 = PolarProjectionBJ(udg_FA_StartPoint[udg_FA_Loop], (udg_FA_Distance[udg_FA_Loop] * (udg_FA_Counter[udg_FA_Loop] / udg_FA_Duration[udg_FA_Loop])), udg_FA_Facing[udg_FA_Loop])
         udg_TEMP_Pos_Spell = PolarProjectionBJ(udg_FA_StartPoint[udg_FA_Loop], (udg_FA_Distance[udg_FA_Loop] * ((udg_FA_Counter[udg_FA_Loop] + 0.00) / udg_FA_Duration[udg_FA_Loop])), udg_FA_Facing[udg_FA_Loop])
         if (Trig_FA_Loop_Func001Func003C()) then
-            SetUnitPositionLoc(udg_FA_Caster[udg_FA_Loop], udg_TEMP_Pos_Spell)
+                        SetUnitX(udg_FA_Caster[udg_FA_Loop], GetLocationX(udg_TEMP_Pos_Spell))
+                        SetUnitY(udg_FA_Caster[udg_FA_Loop], GetLocationY(udg_TEMP_Pos_Spell))
             udg_FA_Counter[udg_FA_Loop] = (udg_FA_Counter[udg_FA_Loop] + 0.02)
         else
             udg_FA_Counter[udg_FA_Loop] = udg_FA_Duration[udg_FA_Loop]
@@ -8297,7 +8348,6 @@ function Trig_FA_Loop_Actions()
         if (Trig_FA_Loop_Func001Func006C()) then
             UnitRemoveAbilityBJ(FourCC("Agho"), udg_FA_Caster[udg_FA_Loop])
             SetUnitPathing(udg_FA_Caster[udg_FA_Loop], true)
-            PauseUnitBJ(false, udg_FA_Caster[udg_FA_Loop])
                         RemoveLocation ( udg_FA_StartPoint [ udg_FA_Loop ]  )
             udg_FA_Caster[udg_FA_Loop] = udg_FA_Caster[udg_FA_Index]
             udg_FA_Counter[udg_FA_Loop] = udg_FA_Counter[udg_FA_Index]
@@ -8307,7 +8357,7 @@ function Trig_FA_Loop_Actions()
             udg_FA_Facing[udg_FA_Loop] = udg_FA_Facing[udg_FA_Index]
             udg_FA_Index = (udg_FA_Index - 1)
             udg_FA_Loop = (udg_FA_Loop - 1)
-            if (Trig_FA_Loop_Func001Func006Func013C()) then
+            if (Trig_FA_Loop_Func001Func006Func012C()) then
                 DisableTrigger(GetTriggeringTrigger())
             else
             end
@@ -8348,85 +8398,21 @@ function Trig_Shifter_Bladestorm_START_Func006A()
     AddSpecialEffectLocBJ(udg_TEMP_Pos2, "Abilities\\Spells\\Undead\\DarkRitual\\DarkRitualTarget.mdl")
     DestroyEffectBJ(GetLastCreatedEffectBJ())
     RemoveUnit(GetEnumUnit())
+    CreateNUnitsAtLoc(1, FourCC("o006"), GetOwningPlayer(udg_SB_Caster), udg_TEMP_Pos2, GetRandomDirectionDeg())
+    SetUnitAbilityLevelSwapped(FourCC("A03O"), GetLastCreatedUnit(), udg_TEMP_Int)
+    UnitApplyTimedLifeBJ(14.00, FourCC("BTLF"), GetLastCreatedUnit())
+    IssueImmediateOrderBJ(GetLastCreatedUnit(), "whirlwind")
         RemoveLocation ( udg_TEMP_Pos2 )
-end
-
-function Trig_Shifter_Bladestorm_START_Func008Func007Func001Func002C()
-    if (RectContainsUnit(gg_rct_Big_Middle_Left, GetLastCreatedUnit()) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Left_Center, GetLastCreatedUnit()) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Right_Center, GetLastCreatedUnit()) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Right, GetLastCreatedUnit()) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_Shifter_Bladestorm_START_Func008Func007Func001C()
-    if (not Trig_Shifter_Bladestorm_START_Func008Func007Func001Func002C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_Shifter_Bladestorm_START_Func008Func007Func002C()
-    if (RectContainsUnit(gg_rct_Big_Top_Left, GetLastCreatedUnit()) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Left_Center, GetLastCreatedUnit()) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Right_Center, GetLastCreatedUnit()) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Right, GetLastCreatedUnit()) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_Shifter_Bladestorm_START_Func008Func007C()
-    if (not Trig_Shifter_Bladestorm_START_Func008Func007Func002C()) then
-        return false
-    end
-    return true
 end
 
 function Trig_Shifter_Bladestorm_START_Actions()
     udg_SB_Caster = GetSpellAbilityUnit()
     udg_TEMP_Pos_Hero = GetUnitLoc(udg_SB_Caster)
     udg_TEMP_Int = GetUnitAbilityLevelSwapped(FourCC("A03C"), udg_SB_Caster)
-    udg_TEMP_UnitGroup = GetUnitsInRangeOfLocMatching((500.00 + (100.00 * I2R(udg_TEMP_Int))), udg_TEMP_Pos_Hero, Condition(Trig_Shifter_Bladestorm_START_Func004002003))
+    udg_TEMP_UnitGroup = GetUnitsInRangeOfLocMatching(900.00, udg_TEMP_Pos_Hero, Condition(Trig_Shifter_Bladestorm_START_Func004002003))
     udg_TEMP_Int2 = CountUnitsInGroup(udg_TEMP_UnitGroup)
     ForGroupBJ(udg_TEMP_UnitGroup, Trig_Shifter_Bladestorm_START_Func006A)
         DestroyGroup ( udg_TEMP_UnitGroup )
-    udg_TEMP_IntLoop1 = 1
-    while (true) do
-        if (udg_TEMP_IntLoop1 > udg_TEMP_Int2) then break end
-        udg_TEMP_Pos2 = PolarProjectionBJ(udg_TEMP_Pos_Hero, 150.00, GetRandomDirectionDeg())
-        CreateNUnitsAtLoc(1, FourCC("o006"), GetOwningPlayer(udg_SB_Caster), udg_TEMP_Pos2, GetRandomDirectionDeg())
-                RemoveLocation ( udg_TEMP_Pos2 )
-        SetUnitAbilityLevelSwapped(FourCC("A03O"), GetLastCreatedUnit(), udg_TEMP_Int)
-        UnitApplyTimedLifeBJ(14.00, FourCC("BTLF"), GetLastCreatedUnit())
-        IssueImmediateOrderBJ(GetLastCreatedUnit(), "whirlwind")
-        if (Trig_Shifter_Bladestorm_START_Func008Func007C()) then
-            SetUnitUserData(GetLastCreatedUnit(), 1)
-        else
-            if (Trig_Shifter_Bladestorm_START_Func008Func007Func001C()) then
-                SetUnitUserData(GetLastCreatedUnit(), 2)
-            else
-                SetUnitUserData(GetLastCreatedUnit(), 3)
-            end
-        end
-        udg_TEMP_Unit = GetLastCreatedUnit()
-        ConditionalTriggerExecute(gg_trg_FUNC_Move_Creeps)
-        udg_TEMP_IntLoop1 = udg_TEMP_IntLoop1 + 1
-    end
         RemoveLocation ( udg_TEMP_Pos_Hero )
 end
 
@@ -10204,6 +10190,7 @@ function InitCustomTriggers()
     InitTrig_Feedback()
     InitTrig_Shade_Strength()
     InitTrig_Swift_Moves()
+    InitTrig_Swift_Attacks()
     InitTrig_Attribute_Upgrade()
     InitTrig_INIT_Gates()
     InitTrig_Toggle_Gate()
