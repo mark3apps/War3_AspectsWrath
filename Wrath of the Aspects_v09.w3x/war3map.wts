@@ -10931,12 +10931,6 @@ STRING 3896
 TC - Attack! Damage
 }
 
-STRING 3897
-// Doodads: D00L (Dwarf Gate), Name (Name)
-{
-Dwarf Gate
-}
-
 STRING 3899
 // Units: nwnr (Elder Ent), Name (Name)
 {
@@ -13791,5 +13785,17 @@ STRING 4531
 // Abilities: A056 (TALENT - SH - Swift Moves), Ubertip (Tooltip - Normal - Extended)
 {
 Gives a <A056,DataA6,%>% chance to avoid an attack.
+}
+
+STRING 4532
+// Doodads: D00L (Broken Wall), Name (Name)
+{
+Broken Wall
+}
+
+STRING 4533
+// Doodads: D011 (Foundation), Name (Name)
+{
+Foundation
 }
 
