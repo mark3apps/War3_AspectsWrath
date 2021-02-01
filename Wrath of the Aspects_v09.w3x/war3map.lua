@@ -413,7 +413,6 @@ gg_trg_Select_Tavern = nil
 gg_trg_baseAndHeals = nil
 gg_unit_h003_0015 = nil
 gg_unit_e003_0058 = nil
-gg_unit_n00C_0082 = nil
 gg_unit_h00F_0029 = nil
 gg_unit_n001_0048 = nil
 gg_unit_n001_0049 = nil
@@ -1141,7 +1140,7 @@ function HeroSelector.unitCreated(player, unit, isRandom)
     if (GetPlayerController(player) == MAP_CONTROL_COMPUTER) then
         ai:initHero(unit)
     end
-
+    ShowUnitHide(unit)
     HeroSelector.enablePick(false, player) --only one pick for this player
     --print(GetPlayerName(player),"picks",GetUnitName(unit))
 end
@@ -2095,7 +2094,7 @@ TeamViewer.BackupRepick = HeroSelector.repick
 TeamViewer.BackupDestroy = HeroSelector.destroy
 
 function TeamViewer.AllowPlayer(player)
-    return GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll)
+    return IsPlayerInForce(player, udg_playersAll)
 end
 
 function oppositeFramePoint(framepoint)
@@ -2426,7 +2425,6 @@ function init_Lua()
         init_AutoZoom()
         Init_HeroLevelsUp()
         Init_UnitCastsSpell()
-        Init_PlayerBuysUnit()
         init_spawnTimers()
         Init_UnitEntersMap()
         Init_stopCasting()
@@ -2463,21 +2461,21 @@ function init_Delayed_1()
     TriggerRegisterTimerEventSingle(t, 1)
     TriggerAddAction(t, function()
         debugfunc(function()
-            
+
             startHeroPicker()
-            
-            init_aiLoopStates()
-            dprint("AI Started", 2)
-
-            orderStartingUnits()
-            spawn:startSpawn()
-
-            
-
-            dprint("Spawn Started", 2)
         end, "Start Delayed Triggers")
+        dprint("AI Started", 2)
+
+        orderStartingUnits()
+        spawn:startSpawn()
+
+        dprint("Spawn Started", 2)
+
     end)
 end
+
+
+
 
 -- Init Delayed Functions 10 second after Map Init
 function init_Delayed_10()
@@ -2526,9 +2524,11 @@ function Init_Map()
     ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
 
     for i = 0, 11 do
-        ForceAddPlayer(udg_playersAll, Player(i))
+        if GetPlayerSlotState(Player(i)) == PLAYER_SLOT_STATE_PLAYING then
+            ForceAddPlayer(udg_playersAll, Player(i))
+        end
     end
-    
+
     -- Create the Allied Users
     ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
     ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
@@ -2570,7 +2570,7 @@ end
 function init_aiLoopStates()
     if (ai.count > 0) then
         local t = CreateTrigger()
-        TriggerRegisterTimerEventPeriodic(t, 2)
+        TriggerRegisterTimerEventPeriodic(t, ai.tick)
         TriggerAddAction(t, function()
             print(" -- ")
             if ai.loop >= ai.count then
@@ -3619,9 +3619,53 @@ function init_aiClass()
             end
         end
 
-        --Teleport Stuff
-        --UnitUseItemTarget(udg_AI_Hero[udg_AI_Loop], GetItemOfTypeFromUnitBJ(udg_AI_Hero[udg_AI_Loop], FourCC("I000")), udg_FUNC_Base_Unit)
+        -- Teleport Stuff
 
+        function self:teleportCheck(i)
+            local distance = 100000000.00
+            local distanceNew = 0.00
+            local unitX, unitY, u
+            local teleportUnit
+            local g = CreateGroup()
+
+            local destX = getUnitX(self[i].unitHealing)
+            local destY = getUnitY(self[i].unitHealing)
+            local distanceOrig = distance(getUnitX(self[i].unit), getUnitY(self[i].unit), destX, destY)
+
+            GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                unitX = GetUnitX(u)
+                unitY = GetUnitY(u)
+                distanceNew = distance(destX, destY, unitX, unitY)
+
+                if distanceNew < healDistance then
+                    distance = distanceNew
+                    teleportUnit = u
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            if distanceOrig + 500 > distanceNew then
+                local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit, hero.item.teleportation.id)
+
+                if teleportCooldown == 0 then
+                    UnitUseItemTarget(self[i].unit, GetItemOfTypeFromUnitBJ(self[i].unit, hero.item.teleportation.id),
+                        teleportUnit)
+                    self:castSpell(i, 15)
+                end
+
+                return true
+            else
+                return false
+            end
+        end
 
         -- Update Intel
         function self:updateIntel(i)
@@ -4064,14 +4108,16 @@ function init_aiClass()
         function self:ACTIONattackBase(i)
             self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
 
-            local unitX = GetUnitX(self[i].unitAttacking)
-            local unitY = GetUnitY(self[i].unitAttacking)
-            print("Unit: " .. i)
-            print("TeamNumber: ".. self[i].teamNumber)
-            print("attacking " .. GetUnitName(self[i].unitAttacking))
-            print("x:" .. unitX .. "y:" .. unitY)
+            if not self:teleportCheck(i) then
+                local unitX = GetUnitX(self[i].unitAttacking)
+                local unitY = GetUnitY(self[i].unitAttacking)
+                print("Unit: " .. i)
+                print("TeamNumber: " .. self[i].teamNumber)
+                print("attacking " .. GetUnitName(self[i].unitAttacking))
+                print("x:" .. unitX .. "y:" .. unitY)
 
-            IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+            end
         end
 
         function self:getHeroData(unit)
@@ -4132,29 +4178,70 @@ function init_aiClass()
         function self:shiftMasterAI(i)
             local curSpell
 
+            -- Custom Intel
+            local g = CreateGroup()
+            local gIllusions = CreateGroup()
+            local u, uTemp, unitsNearby
+            local illusionsNearby = 0
+
+            -- Find all Nearby Illusions
+            GroupEnumUnitsInRange(g, self[i].x, self[i].y, 600.00, nil)
+            GroupAddGroup(g, gIllusions)
+            while true do
+                u = FirstOfGroup(g)
+                if (u == nil) then
+                    break
+                end
+
+                if IsUnitIllusion(u) then
+                    illusionsNearby = illusionsNearby + 1
+                end
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            if self[i].fleeing or self[i].lowLife then
+
+                -- Check if there are illusions Nearby
+                if illusionsNearby > 0 then
+                    curSpell = hero:spell(self[i], "switch")
+                    if curSpell.castable and curSpell.manaLeft > 0 and not self[i].casting then
+                        print(curSpell.name)
+
+                        u = GroupPickRandomUnit(gIllusions)
+                        GroupEnumUnitsInRange(g, getUnitX(u), getUnitY(u), 350, nil)
+                        while true do
+                            uTemp = FirstOfGroup(g)
+                            if (u == nil) then
+                                break
+                            end
+
+                            if IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
+                                unitsNearby = unitsNearby + 1
+                            end
+
+                            GroupRemoveUnit(g, uTemp)
+                        end
+                        DestroyGroup(g)
+
+                        if unitsNearby < self[i].countUnitEnemyClose then
+                            IssuePointOrder(self[i].unit, curspell.order, GetUnitX(u), GetUnitY(u))
+                        end
+                    end
+                end
+
+                curSpell = hero:spell(self[i], "shift")
+                if curSpell.castable == true and curSpell.manaLeft > 0 then
+                    print(curSpell.name)
+                    IssueImmediateOrder(self[i].unit, curSpell.order)
+                    self:castSpell(i)
+                end
+            end
+
             -- Normal Cast Spells
             if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
-                -- Custom Intel
-                local g = CreateGroup()
-                local u = nil
-                local illusionsNearby = 0
 
-                -- Find all Nearby Illusions
-                GroupEnumUnitsInRange(g, self[i].x, self[i].y, 600.00, nil)
-                while true do
-                    u = FirstOfGroup(g)
-                    if (u == nil) then
-                        break
-                    end
-
-                    if IsUnitIllusion(u) then
-                        illusionsNearby = illusionsNearby + 1
-                    end
-                    GroupRemoveUnit(g, u)
-                end
-                DestroyGroup(g)
-
-                -- Shift Forward
+                -- Shift
                 curSpell = hero:spell(self[i], "shift")
                 if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
                     print(curSpell.name)
@@ -4187,33 +4274,42 @@ function init_aiClass()
                     self:castSpell(i)
                 end
             end
+
+            -- Clean up custom Intel
+            DestroyGroup(gIllusions)
         end
 
         function self:tactitionAI(i)
-            if self[i].casting == false then
-                -- Iron Defense
-                if BlzGetUnitAbilityCooldownRemaining(self[i].unit, ironDefense.spell) == 0.00 and (self[i].mana) >
-                    I2R(BlzGetAbilityManaCost(ironDefense.spell, ironDefense.level)) and ironDefense.level > 0 and
-                    self[i].lifePercent < 85 then
-                    -- Bolster
-                    IssueImmediateOrder(self[i].unit, ironDefense.id)
+            local curSpell, u
+
+            -- Iron Defense
+            curSpell = hero:spell(self[i], "ironDefense")
+            if self[i].countUnitEnemy >= 2 and curSpell.castable == true and curSpell.manaLeft > 20 and
+                self[i].lifePercent < 80 and not self[i].casting then
+                print(curSpell.name)
+                IssueImmediateOrder(self[i].unit, curSpell.order)
+                self:castSpell(i)
+            end
+
+            if not self[i].fleeing and not self[i].lowLife then
+                -- Bolster
+                curSpell = hero:spell(self[i], "bolster")
+                if self[i].countUnitFriendClose >= 1 and curSpell.castable == true and curSpell.manaLeft > 50 and
+                    not self[i].casting then
+                    print(curSpell.name)
+                    IssueImmediateOrder(self[i].unit, curSpell.order)
                     self:castSpell(i)
-                elseif BlzGetUnitAbilityCooldownRemaining(self[i].unit, bolster.spell) == 0.00 and (self[i].mana + 20) >
-                    I2R(BlzGetAbilityManaCost(bolster.spell, bolster.level)) and bolster.level > 0 and
-                    self[i].countUnitFriend > 2 and self[i].countUnitEnemy > 2 then
-                    -- Attack
-                    IssueImmediateOrder(self[i].unit, bolster.id)
-                    self:castSpell(i, 2)
-                elseif BlzGetUnitAbilityCooldownRemaining(self[i].unit, attack.spell) == 0.00 and (self[i].mana) >
-                    I2R(BlzGetAbilityManaCost(attack.spell, attack.level)) and attack.level > 0 and
-                    self[i].clumpEnemyPower > 250 then
-                    -- Inspire
-                    IssueTargetOrder(self[i].unit, attack.string, self[i].unitPowerEnemy)
-                    self:castSpell(i)
-                elseif BlzGetUnitAbilityCooldownRemaining(self[i].unit, inspire.spell) == 0.00 and (self[i].mana) >
-                    I2R(BlzGetAbilityManaCost(inspire.spell, inspire.level)) and inspire.level > 0 and
-                    self[i].countUnitFriend > 5 and self[i].countUnitEnemy > 5 then
-                    IssueImmediateOrder(self[i].unit, inspire.string)
+                end
+
+                -- Attack!
+                curSpell = hero:spell(self[i], "attack")
+                if CountUnitsInGroup(self[i].heroesEnemy) > 0 and curSpell.castable == true and curSpell.manaLeft > 40 and
+                    not self[i].casting then
+
+                    print(curSpell.name)
+                    u = GroupPickRandomUnit(self[i].heroesEnemy)
+                    IssuePointOrder(self[i].unit, curSpell.order, getUnitX(u), getUnitY(u))
+                    IssueImmediateOrder(self[i].unit, curSpell.order)
                     self:castSpell(i)
                 end
             end
@@ -4365,7 +4461,8 @@ function init_heroClass()
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
         self.shiftMaster.startingSpells = {"shift"}
-        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves", "swiftAttacks"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves",
+                                            "swiftAttacks"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
@@ -4582,7 +4679,7 @@ function init_heroClass()
             local spells = self[heroName]
 
             AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
-     
+
             -- Remove Ability Points
             if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
                 ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
@@ -5773,7 +5870,7 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -15736.2, -1126.7, 245.453, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -24729.3, -7565.4, 58.328, FourCC("hpea"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -15785.7, -7885.1, 103.395, FourCC("h007"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -10560.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -10560.0, 90.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -11840.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -24568.9, -7426.3, 273.909, FourCC("hpea"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -15217.8, -1994.0, 245.596, FourCC("o002"))
@@ -5790,7 +5887,7 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -19643.0, -5799.6, 95.463, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -19186.9, -4280.1, 50.407, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -23440.9, -345.3, 98.034, FourCC("nhea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -16192.0, -10560.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -16192.0, -10560.0, 90.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -23741.0, -7469.5, 178.259, FourCC("hhdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -23866.0, -7581.6, 195.002, FourCC("hhdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -23970.3, -7507.7, 246.892, FourCC("hhdl"))
@@ -5810,9 +5907,9 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11111.9, -11841.4, 168.659, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11408.3, -10740.1, 221.593, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10695.9, -11972.9, 167.084, FourCC("n002"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15808.0, -11200.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15808.0, -11200.0, 0.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -16192.0, -11840.0, 270.000, FourCC("n006"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15104.0, -11200.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15104.0, -11200.0, 0.000, FourCC("n006"))
 end
 
 function CreateBuildingsForPlayer23()
@@ -6112,7 +6209,7 @@ function CreateUnitsForPlayer23()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -6912.0, 2816.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -6912.0, 2816.0, 90.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), 272.9, -8742.7, 278.034, FourCC("nhea"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10786.8, 3718.8, 271.671, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10297.2, 2207.8, 144.658, FourCC("n002"))
@@ -6131,10 +6228,10 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12056.1, 2753.4, 348.659, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10575.5, 2436.1, 150.197, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11759.7, 1652.1, 41.593, FourCC("n002"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7360.0, 2112.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7360.0, 2112.0, 180.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -6912.0, 1344.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7552.0, 1536.0, 270.000, FourCC("n006"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7552.0, 2688.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -7552.0, 2688.0, 90.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -8411.1, -8005.3, 27.406, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -7431.8, -7961.3, 65.453, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -8365.7, -7289.7, 0.632, FourCC("o002"))
@@ -6153,7 +6250,7 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -3981.1, -4807.9, 230.407, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -6932.2, -864.0, 261.631, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -3024.7, -11838.2, 50.140, FourCC("nmyr"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -8064.0, 2112.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n006"), -8064.0, 2112.0, 180.000, FourCC("n006"))
 end
 
 function CreateNeutralHostile()
@@ -6339,16 +6436,6 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), 4396.5, -2325.9, 152.786, FourCC("nzom"))
 end
 
-function CreateNeutralPassiveBuildings()
-    local p = Player(PLAYER_NEUTRAL_PASSIVE)
-    local u
-    local unitID
-    local t
-    local life
-    u = BlzCreateUnitWithSkin(p, FourCC("n00C"), -9088.0, -15488.0, 270.000, FourCC("n00C"))
-    SetUnitColor(u, ConvertPlayerColor(0))
-end
-
 function CreateNeutralPassive()
     local p = Player(PLAYER_NEUTRAL_PASSIVE)
     local u
@@ -6391,7 +6478,6 @@ function CreatePlayerUnits()
 end
 
 function CreateAllUnits()
-    CreateNeutralPassiveBuildings()
     CreatePlayerBuildings()
     CreateNeutralHostile()
     CreateNeutralPassive()
@@ -6635,7 +6721,7 @@ function Trig_Picking_Phase_Func005Func002Func001Func003C()
     return true
 end
 
-function Trig_Picking_Phase_Func005Func002Func001Func004C()
+function Trig_Picking_Phase_Func005Func002Func001Func005C()
     if (GetPlayerController(GetEnumPlayer()) == MAP_CONTROL_USER) then
         return true
     end
@@ -6646,7 +6732,7 @@ function Trig_Picking_Phase_Func005Func002Func001Func004C()
 end
 
 function Trig_Picking_Phase_Func005Func002Func001C()
-    if (not Trig_Picking_Phase_Func005Func002Func001Func004C()) then
+    if (not Trig_Picking_Phase_Func005Func002Func001Func005C()) then
         return false
     end
     return true
@@ -6659,6 +6745,7 @@ function Trig_Picking_Phase_Func005Func002A()
                         HeroSelector.forcePick(GetEnumPlayer())
         else
         end
+                ShowUnitShow(hero.players[GetConvertedPlayerId(GetEnumPlayer())].hero)
     else
     end
 end
@@ -6678,9 +6765,10 @@ function Trig_Picking_Phase_Actions()
     else
     end
     if (Trig_Picking_Phase_Func005C()) then
-        ForForce(udg_UserPlayers, Trig_Picking_Phase_Func005Func002A)
+        ForForce(udg_playersAll, Trig_Picking_Phase_Func005Func002A)
         DisableTrigger(GetTriggeringTrigger())
                 HeroSelector.destroy()
+                init_aiLoopStates()
     else
     end
 end
@@ -8214,21 +8302,21 @@ function Trig_Base_Heal_Spell_Func001Func001Func003Func003002003()
     return GetBooleanAnd(Trig_Base_Heal_Spell_Func001Func001Func003Func003002003001(), Trig_Base_Heal_Spell_Func001Func001Func003Func003002003002())
 end
 
-function Trig_Base_Heal_Spell_Func001Func001Func003Func007Func003C()
-    if (GetUnitLifePercent(udg_TEMP_Unit) <= 90.00) then
+function Trig_Base_Heal_Spell_Func001Func001Func003Func008Func003C()
+    if (GetUnitLifePercent(udg_TEMP_Unit) <= 95.00) then
         return true
     end
-    if (GetUnitManaPercent(udg_TEMP_Unit) <= 90.00) then
+    if (GetUnitManaPercent(udg_TEMP_Unit) <= 95.00) then
         return true
     end
     return false
 end
 
-function Trig_Base_Heal_Spell_Func001Func001Func003Func007C()
+function Trig_Base_Heal_Spell_Func001Func001Func003Func008C()
     if (not (UnitHasBuffBJ(udg_TEMP_Unit, FourCC("Brej")) == false)) then
         return false
     end
-    if (not Trig_Base_Heal_Spell_Func001Func001Func003Func007Func003C()) then
+    if (not Trig_Base_Heal_Spell_Func001Func001Func003Func008Func003C()) then
         return false
     end
     return true
@@ -8251,8 +8339,8 @@ function Trig_Base_Heal_Spell_Func001Func001A()
         udg_TEMP_UnitGroup = GetUnitsInRangeOfLocMatching(500.00, udg_TEMP_Pos2, Condition(Trig_Base_Heal_Spell_Func001Func001Func003Func003002003))
         udg_TEMP_Unit = GroupPickRandomUnit(udg_TEMP_UnitGroup)
                 DestroyGroup ( udg_TEMP_UnitGroup )
-        SetUnitAbilityLevelSwapped(FourCC("A027"), GetEnumUnit(), udg_INTcreepLevel)
-        if (Trig_Base_Heal_Spell_Func001Func001Func003Func007C()) then
+                SetUnitAbilityLevel(GetEnumUnit(), FourCC("A027"), spawn.creepLevel)
+        if (Trig_Base_Heal_Spell_Func001Func001Func003Func008C()) then
             IssueTargetOrderBJ(GetEnumUnit(), "rejuvination", udg_TEMP_Unit)
         else
         end
@@ -11849,53 +11937,53 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(2), ConvertPlayerColor(2))
     SetPlayerRacePreference(Player(2), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(2), false)
-    SetPlayerController(Player(2), MAP_CONTROL_USER)
+    SetPlayerController(Player(2), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(3), 3)
     ForcePlayerStartLocation(Player(3), 3)
     SetPlayerColor(Player(3), ConvertPlayerColor(3))
     SetPlayerRacePreference(Player(3), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(3), false)
-    SetPlayerController(Player(3), MAP_CONTROL_USER)
+    SetPlayerController(Player(3), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(4), 4)
     SetPlayerColor(Player(4), ConvertPlayerColor(4))
     SetPlayerRacePreference(Player(4), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(4), false)
-    SetPlayerController(Player(4), MAP_CONTROL_USER)
+    SetPlayerController(Player(4), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(5), 5)
     SetPlayerColor(Player(5), ConvertPlayerColor(5))
     SetPlayerRacePreference(Player(5), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(5), false)
-    SetPlayerController(Player(5), MAP_CONTROL_USER)
+    SetPlayerController(Player(5), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(6), 6)
     SetPlayerColor(Player(6), ConvertPlayerColor(6))
     SetPlayerRacePreference(Player(6), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(6), false)
-    SetPlayerController(Player(6), MAP_CONTROL_USER)
+    SetPlayerController(Player(6), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(7), 7)
     SetPlayerColor(Player(7), ConvertPlayerColor(7))
     SetPlayerRacePreference(Player(7), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(7), false)
-    SetPlayerController(Player(7), MAP_CONTROL_USER)
+    SetPlayerController(Player(7), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(8), 8)
     SetPlayerColor(Player(8), ConvertPlayerColor(8))
     SetPlayerRacePreference(Player(8), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(8), false)
-    SetPlayerController(Player(8), MAP_CONTROL_USER)
+    SetPlayerController(Player(8), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(9), 9)
     SetPlayerColor(Player(9), ConvertPlayerColor(9))
     SetPlayerRacePreference(Player(9), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(9), false)
-    SetPlayerController(Player(9), MAP_CONTROL_USER)
+    SetPlayerController(Player(9), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(10), 10)
     SetPlayerColor(Player(10), ConvertPlayerColor(10))
     SetPlayerRacePreference(Player(10), RACE_PREF_UNDEAD)
     SetPlayerRaceSelectable(Player(10), false)
-    SetPlayerController(Player(10), MAP_CONTROL_USER)
+    SetPlayerController(Player(10), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(11), 11)
     SetPlayerColor(Player(11), ConvertPlayerColor(11))
     SetPlayerRacePreference(Player(11), RACE_PREF_NIGHTELF)
     SetPlayerRaceSelectable(Player(11), false)
-    SetPlayerController(Player(11), MAP_CONTROL_USER)
+    SetPlayerController(Player(11), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(18), 12)
     SetPlayerColor(Player(18), ConvertPlayerColor(18))
     SetPlayerRacePreference(Player(18), RACE_PREF_HUMAN)
@@ -12256,17 +12344,6 @@ function InitCustomTeams()
 end
 
 function InitAllyPriorities()
-    SetStartLocPrioCount(0, 10)
-    SetStartLocPrio(0, 0, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 1, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 2, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 9, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(1, 11)
     SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -12483,7 +12560,7 @@ function config()
     SetMapDescription("TRIGSTR_005")
     SetPlayers(18)
     SetTeams(18)
-    SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)
+    SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
     DefineStartLocation(0, -11584.0, -4544.0)
     DefineStartLocation(1, -11584.0, -4544.0)
     DefineStartLocation(2, -11584.0, -4544.0)

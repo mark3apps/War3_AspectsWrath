@@ -271,7 +271,7 @@ function HeroSelector.unitCreated(player, unit, isRandom)
     if (GetPlayerController(player) == MAP_CONTROL_COMPUTER) then
         ai:initHero(unit)
     end
-
+    ShowUnitHide(unit)
     HeroSelector.enablePick(false, player) --only one pick for this player
     --print(GetPlayerName(player),"picks",GetUnitName(unit))
 end

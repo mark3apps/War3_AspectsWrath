@@ -36,7 +36,6 @@ function init_Lua()
         init_AutoZoom()
         Init_HeroLevelsUp()
         Init_UnitCastsSpell()
-        Init_PlayerBuysUnit()
         init_spawnTimers()
         Init_UnitEntersMap()
         Init_stopCasting()
@@ -73,21 +72,21 @@ function init_Delayed_1()
     TriggerRegisterTimerEventSingle(t, 1)
     TriggerAddAction(t, function()
         debugfunc(function()
-            
+
             startHeroPicker()
-            
-            init_aiLoopStates()
-            dprint("AI Started", 2)
-
-            orderStartingUnits()
-            spawn:startSpawn()
-
-            
-
-            dprint("Spawn Started", 2)
         end, "Start Delayed Triggers")
+        dprint("AI Started", 2)
+
+        orderStartingUnits()
+        spawn:startSpawn()
+
+        dprint("Spawn Started", 2)
+
     end)
 end
+
+
+
 
 -- Init Delayed Functions 10 second after Map Init
 function init_Delayed_10()
@@ -136,9 +135,11 @@ function Init_Map()
     ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
 
     for i = 0, 11 do
-        ForceAddPlayer(udg_playersAll, Player(i))
+        if GetPlayerSlotState(Player(i)) == PLAYER_SLOT_STATE_PLAYING then
+            ForceAddPlayer(udg_playersAll, Player(i))
+        end
     end
-    
+
     -- Create the Allied Users
     ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
     ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
@@ -180,7 +181,7 @@ end
 function init_aiLoopStates()
     if (ai.count > 0) then
         local t = CreateTrigger()
-        TriggerRegisterTimerEventPeriodic(t, 2)
+        TriggerRegisterTimerEventPeriodic(t, ai.tick)
         TriggerAddAction(t, function()
             print(" -- ")
             if ai.loop >= ai.count then

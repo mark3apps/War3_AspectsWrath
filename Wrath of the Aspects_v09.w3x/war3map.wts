@@ -13799,3 +13799,27 @@ STRING 4533
 Foundation
 }
 
+STRING 4534
+// Abilities: A027 (Tower Heal Hero - Normal), Tip (Tooltip - Normal)
+{
+Rejuvenation
+}
+
+STRING 4535
+// Abilities: A027 (Tower Heal Hero - Normal), Tip (Tooltip - Normal)
+{
+Rejuvenation
+}
+
+STRING 4536
+// Abilities: A027 (Tower Heal Hero - Normal), Ubertip (Tooltip - Normal - Extended)
+{
+Heals a target friendly unit for <Arej,DataA11> hit points over <Arej,Dur11> seconds.
+}
+
+STRING 4537
+// Abilities: A027 (Tower Heal Hero - Normal), Ubertip (Tooltip - Normal - Extended)
+{
+Heals a target friendly unit for <Arej,DataA12> hit points over <Arej,Dur12> seconds.
+}
+

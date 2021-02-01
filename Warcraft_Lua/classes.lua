@@ -226,9 +226,53 @@ function init_aiClass()
             end
         end
 
-        --Teleport Stuff
-        --UnitUseItemTarget(udg_AI_Hero[udg_AI_Loop], GetItemOfTypeFromUnitBJ(udg_AI_Hero[udg_AI_Loop], FourCC("I000")), udg_FUNC_Base_Unit)
+        -- Teleport Stuff
 
+        function self:teleportCheck(i)
+            local distance = 100000000.00
+            local distanceNew = 0.00
+            local unitX, unitY, u
+            local teleportUnit
+            local g = CreateGroup()
+
+            local destX = getUnitX(self[i].unitHealing)
+            local destY = getUnitY(self[i].unitHealing)
+            local distanceOrig = distance(getUnitX(self[i].unit), getUnitY(self[i].unit), destX, destY)
+
+            GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                unitX = GetUnitX(u)
+                unitY = GetUnitY(u)
+                distanceNew = distance(destX, destY, unitX, unitY)
+
+                if distanceNew < healDistance then
+                    distance = distanceNew
+                    teleportUnit = u
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            if distanceOrig + 500 > distanceNew then
+                local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit, hero.item.teleportation.id)
+
+                if teleportCooldown == 0 then
+                    UnitUseItemTarget(self[i].unit, GetItemOfTypeFromUnitBJ(self[i].unit, hero.item.teleportation.id),
+                        teleportUnit)
+                    self:castSpell(i, 15)
+                end
+
+                return true
+            else
+                return false
+            end
+        end
 
         -- Update Intel
         function self:updateIntel(i)
@@ -671,14 +715,16 @@ function init_aiClass()
         function self:ACTIONattackBase(i)
             self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
 
-            local unitX = GetUnitX(self[i].unitAttacking)
-            local unitY = GetUnitY(self[i].unitAttacking)
-            print("Unit: " .. i)
-            print("TeamNumber: ".. self[i].teamNumber)
-            print("attacking " .. GetUnitName(self[i].unitAttacking))
-            print("x:" .. unitX .. "y:" .. unitY)
+            if not self:teleportCheck(i) then
+                local unitX = GetUnitX(self[i].unitAttacking)
+                local unitY = GetUnitY(self[i].unitAttacking)
+                print("Unit: " .. i)
+                print("TeamNumber: " .. self[i].teamNumber)
+                print("attacking " .. GetUnitName(self[i].unitAttacking))
+                print("x:" .. unitX .. "y:" .. unitY)
 
-            IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+            end
         end
 
         function self:getHeroData(unit)
@@ -739,29 +785,70 @@ function init_aiClass()
         function self:shiftMasterAI(i)
             local curSpell
 
+            -- Custom Intel
+            local g = CreateGroup()
+            local gIllusions = CreateGroup()
+            local u, uTemp, unitsNearby
+            local illusionsNearby = 0
+
+            -- Find all Nearby Illusions
+            GroupEnumUnitsInRange(g, self[i].x, self[i].y, 600.00, nil)
+            GroupAddGroup(g, gIllusions)
+            while true do
+                u = FirstOfGroup(g)
+                if (u == nil) then
+                    break
+                end
+
+                if IsUnitIllusion(u) then
+                    illusionsNearby = illusionsNearby + 1
+                end
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            if self[i].fleeing or self[i].lowLife then
+
+                -- Check if there are illusions Nearby
+                if illusionsNearby > 0 then
+                    curSpell = hero:spell(self[i], "switch")
+                    if curSpell.castable and curSpell.manaLeft > 0 and not self[i].casting then
+                        print(curSpell.name)
+
+                        u = GroupPickRandomUnit(gIllusions)
+                        GroupEnumUnitsInRange(g, getUnitX(u), getUnitY(u), 350, nil)
+                        while true do
+                            uTemp = FirstOfGroup(g)
+                            if (u == nil) then
+                                break
+                            end
+
+                            if IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
+                                unitsNearby = unitsNearby + 1
+                            end
+
+                            GroupRemoveUnit(g, uTemp)
+                        end
+                        DestroyGroup(g)
+
+                        if unitsNearby < self[i].countUnitEnemyClose then
+                            IssuePointOrder(self[i].unit, curspell.order, GetUnitX(u), GetUnitY(u))
+                        end
+                    end
+                end
+
+                curSpell = hero:spell(self[i], "shift")
+                if curSpell.castable == true and curSpell.manaLeft > 0 then
+                    print(curSpell.name)
+                    IssueImmediateOrder(self[i].unit, curSpell.order)
+                    self:castSpell(i)
+                end
+            end
+
             -- Normal Cast Spells
             if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
-                -- Custom Intel
-                local g = CreateGroup()
-                local u = nil
-                local illusionsNearby = 0
 
-                -- Find all Nearby Illusions
-                GroupEnumUnitsInRange(g, self[i].x, self[i].y, 600.00, nil)
-                while true do
-                    u = FirstOfGroup(g)
-                    if (u == nil) then
-                        break
-                    end
-
-                    if IsUnitIllusion(u) then
-                        illusionsNearby = illusionsNearby + 1
-                    end
-                    GroupRemoveUnit(g, u)
-                end
-                DestroyGroup(g)
-
-                -- Shift Forward
+                -- Shift
                 curSpell = hero:spell(self[i], "shift")
                 if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
                     print(curSpell.name)
@@ -794,33 +881,42 @@ function init_aiClass()
                     self:castSpell(i)
                 end
             end
+
+            -- Clean up custom Intel
+            DestroyGroup(gIllusions)
         end
 
         function self:tactitionAI(i)
-            if self[i].casting == false then
-                -- Iron Defense
-                if BlzGetUnitAbilityCooldownRemaining(self[i].unit, ironDefense.spell) == 0.00 and (self[i].mana) >
-                    I2R(BlzGetAbilityManaCost(ironDefense.spell, ironDefense.level)) and ironDefense.level > 0 and
-                    self[i].lifePercent < 85 then
-                    -- Bolster
-                    IssueImmediateOrder(self[i].unit, ironDefense.id)
+            local curSpell, u
+
+            -- Iron Defense
+            curSpell = hero:spell(self[i], "ironDefense")
+            if self[i].countUnitEnemy >= 2 and curSpell.castable == true and curSpell.manaLeft > 20 and
+                self[i].lifePercent < 80 and not self[i].casting then
+                print(curSpell.name)
+                IssueImmediateOrder(self[i].unit, curSpell.order)
+                self:castSpell(i)
+            end
+
+            if not self[i].fleeing and not self[i].lowLife then
+                -- Bolster
+                curSpell = hero:spell(self[i], "bolster")
+                if self[i].countUnitFriendClose >= 1 and curSpell.castable == true and curSpell.manaLeft > 50 and
+                    not self[i].casting then
+                    print(curSpell.name)
+                    IssueImmediateOrder(self[i].unit, curSpell.order)
                     self:castSpell(i)
-                elseif BlzGetUnitAbilityCooldownRemaining(self[i].unit, bolster.spell) == 0.00 and (self[i].mana + 20) >
-                    I2R(BlzGetAbilityManaCost(bolster.spell, bolster.level)) and bolster.level > 0 and
-                    self[i].countUnitFriend > 2 and self[i].countUnitEnemy > 2 then
-                    -- Attack
-                    IssueImmediateOrder(self[i].unit, bolster.id)
-                    self:castSpell(i, 2)
-                elseif BlzGetUnitAbilityCooldownRemaining(self[i].unit, attack.spell) == 0.00 and (self[i].mana) >
-                    I2R(BlzGetAbilityManaCost(attack.spell, attack.level)) and attack.level > 0 and
-                    self[i].clumpEnemyPower > 250 then
-                    -- Inspire
-                    IssueTargetOrder(self[i].unit, attack.string, self[i].unitPowerEnemy)
-                    self:castSpell(i)
-                elseif BlzGetUnitAbilityCooldownRemaining(self[i].unit, inspire.spell) == 0.00 and (self[i].mana) >
-                    I2R(BlzGetAbilityManaCost(inspire.spell, inspire.level)) and inspire.level > 0 and
-                    self[i].countUnitFriend > 5 and self[i].countUnitEnemy > 5 then
-                    IssueImmediateOrder(self[i].unit, inspire.string)
+                end
+
+                -- Attack!
+                curSpell = hero:spell(self[i], "attack")
+                if CountUnitsInGroup(self[i].heroesEnemy) > 0 and curSpell.castable == true and curSpell.manaLeft > 40 and
+                    not self[i].casting then
+
+                    print(curSpell.name)
+                    u = GroupPickRandomUnit(self[i].heroesEnemy)
+                    IssuePointOrder(self[i].unit, curSpell.order, getUnitX(u), getUnitY(u))
+                    IssueImmediateOrder(self[i].unit, curSpell.order)
                     self:castSpell(i)
                 end
             end
@@ -972,7 +1068,8 @@ function init_heroClass()
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
         self.shiftMaster.startingSpells = {"shift"}
-        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves", "swiftAttacks"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves",
+                                            "swiftAttacks"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.shiftMaster.attributeBonus = {
             name = "Attribute Bonus",
@@ -1189,7 +1286,7 @@ function init_heroClass()
             local spells = self[heroName]
 
             AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
-     
+
             -- Remove Ability Points
             if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
                 ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
