@@ -43,6 +43,7 @@ function init_Lua()
         Init_IssuedOrder()
         Init_UnitDies()
         init_MoveToNext()
+        Init_PickingPhase()
 
         -- Abilities
         ABTY_ShifterSwitch()
@@ -84,9 +85,6 @@ function init_Delayed_1()
 
     end)
 end
-
-
-
 
 -- Init Delayed Functions 10 second after Map Init
 function init_Delayed_10()
@@ -255,3 +253,47 @@ function init_AutoZoom()
     end)
 end
 
+function Init_PickingPhase()
+    local t = CreateTrigger()
+    TriggerRegisterTimerEventPeriodic(t, 1.00)
+    TriggerAddAction(t, function()
+
+        local u, player
+        local unitHero = false
+        local g = CreateGroup()
+
+        local count = (10 - GetTriggerExecCount(GetTriggeringTrigger()))
+
+        HeroSelector.setTitleText(GetLocalizedString("DEFAULTTIMERDIALOGTEXT") .. ": " .. count)
+
+        if count <= 5 then
+            PlaySoundBJ(gg_snd_BattleNetTick)
+        end
+
+        if count <= 0 then
+
+            for i = 1, 12 do
+                player = Player(i)
+                
+                --debugfunc(function()
+                    if IsPlayerInForce(player, udg_playersAll) then
+
+                        if not hero.players[i].picked then
+                            HeroSelector.forcePick(player)
+                        end
+
+                        local heroUnit = hero.players[i].hero
+                        ShowUnitShow(heroUnit)
+                        SelectUnitForPlayerSingle(heroUnit, player)
+                        PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 0)
+                    end
+                --end, "Pick Hero")
+            end
+
+            DisableTrigger(GetTriggeringTrigger())
+            HeroSelector.destroy()
+            init_aiLoopStates()
+        end
+
+    end)
+end

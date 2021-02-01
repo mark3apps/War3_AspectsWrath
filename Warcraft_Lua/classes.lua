@@ -228,16 +228,14 @@ function init_aiClass()
 
         -- Teleport Stuff
 
-        function self:teleportCheck(i)
+        function self:teleportCheck(i, destX, destY)
             local distance = 100000000.00
             local distanceNew = 0.00
             local unitX, unitY, u
             local teleportUnit
             local g = CreateGroup()
 
-            local destX = getUnitX(self[i].unitHealing)
-            local destY = getUnitY(self[i].unitHealing)
-            local distanceOrig = distance(getUnitX(self[i].unit), getUnitY(self[i].unit), destX, destY)
+            local distanceOrig = distance(GetUnitX(self[i].unit), GetUnitY(self[i].unit), destX, destY)
 
             GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
             while true do
@@ -714,10 +712,10 @@ function init_aiClass()
 
         function self:ACTIONattackBase(i)
             self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
+            local unitX = GetUnitX(self[i].unitAttacking)
+            local unitY = GetUnitY(self[i].unitAttacking)
 
-            if not self:teleportCheck(i) then
-                local unitX = GetUnitX(self[i].unitAttacking)
-                local unitY = GetUnitY(self[i].unitAttacking)
+            if not self:teleportCheck(i, unitX, unitY) then
                 print("Unit: " .. i)
                 print("TeamNumber: " .. self[i].teamNumber)
                 print("attacking " .. GetUnitName(self[i].unitAttacking))
@@ -816,7 +814,7 @@ function init_aiClass()
                         print(curSpell.name)
 
                         u = GroupPickRandomUnit(gIllusions)
-                        GroupEnumUnitsInRange(g, getUnitX(u), getUnitY(u), 350, nil)
+                        GroupEnumUnitsInRange(g, GetUnitX(u), GetUnitY(u), 350, nil)
                         while true do
                             uTemp = FirstOfGroup(g)
                             if (u == nil) then
@@ -915,7 +913,7 @@ function init_aiClass()
 
                     print(curSpell.name)
                     u = GroupPickRandomUnit(self[i].heroesEnemy)
-                    IssuePointOrder(self[i].unit, curSpell.order, getUnitX(u), getUnitY(u))
+                    IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
                     IssueImmediateOrder(self[i].unit, curSpell.order)
                     self:castSpell(i)
                 end
@@ -923,7 +921,34 @@ function init_aiClass()
         end
 
         function self:timeMageAI(i)
-            if self[i].casting == false then
+
+            local curSpell, x, y
+
+            if not self[i].fleeing and not self[i].lowLife then
+
+                -- chrono Atrophy
+                curSpell = hero:spell(self[i], "chronoAtrophy")
+                if self[i].clumpBothPower >= 400 and curSpell.castable == true and curSpell.manaLeft > 30 and
+                    not self[i].casting then
+                    print(curSpell.name)
+
+                    x = GetUnitX(self[i].clumpBoth)
+                    y = GetUnitY(self[i].clumpBoth)
+                    IssuePointOrder(self[i].unit, curSpell.order, x, y)
+                    self:castSpell(i)
+                end
+
+                -- Decay
+                curSpell = hero:spell(self[i], "decay")
+                if CountUnitsInGroup(self[i].heroesEnemies) > 0 and curSpell.castable == true and curSpell.manaLeft > 20 and
+                    not self[i].casting then
+                    print(curSpell.name)
+
+                    x = GetUnitX(self[i].clumpBoth)
+                    y = GetUnitY(self[i].clumpBoth)
+                    IssuePointOrder(self[i].unit, curSpell.order, x, y)
+                    self:castSpell(i)
+                end
             end
         end
 
@@ -943,6 +968,10 @@ function init_heroClass()
         local self = {}
 
         self.players = {}
+        for i = 1, 11 do
+            self.players[i] = {picked = false}
+        end
+
         self.items = {"teleportation", "tank"}
         self.item = {}
         self.item.teleportation = {
@@ -1340,8 +1369,7 @@ function init_heroClass()
 
             -- Move hero to home base
             SetUnitPosition(unit, x, y)
-            SelectUnitForPlayerSingle(unit, player)
-            PanCameraToTimedForPlayer(player, x, y, 0)
+
 
             -- Give the hero the required Skill points for the spells
             ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)

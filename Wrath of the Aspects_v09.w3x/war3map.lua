@@ -2432,6 +2432,7 @@ function init_Lua()
         Init_IssuedOrder()
         Init_UnitDies()
         init_MoveToNext()
+        Init_PickingPhase()
 
         -- Abilities
         ABTY_ShifterSwitch()
@@ -2473,9 +2474,6 @@ function init_Delayed_1()
 
     end)
 end
-
-
-
 
 -- Init Delayed Functions 10 second after Map Init
 function init_Delayed_10()
@@ -2644,6 +2642,50 @@ function init_AutoZoom()
     end)
 end
 
+function Init_PickingPhase()
+    local t = CreateTrigger()
+    TriggerRegisterTimerEventPeriodic(t, 1.00)
+    TriggerAddAction(t, function()
+
+        local u, player
+        local unitHero = false
+        local g = CreateGroup()
+
+        local count = (10 - GetTriggerExecCount(GetTriggeringTrigger()))
+
+        HeroSelector.setTitleText(GetLocalizedString("DEFAULTTIMERDIALOGTEXT") .. ": " .. count)
+
+        if count <= 5 then
+            PlaySoundBJ(gg_snd_BattleNetTick)
+        end
+
+        if count <= 0 then
+
+            for i = 1, 12 do
+                player = Player(i)
+                
+                --debugfunc(function()
+                    if IsPlayerInForce(player, udg_playersAll) then
+
+                        if not hero.players[i].picked then
+                            HeroSelector.forcePick(player)
+                        end
+
+                        local heroUnit = hero.players[i].hero
+                        ShowUnitShow(heroUnit)
+                        SelectUnitForPlayerSingle(heroUnit, player)
+                        PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 0)
+                    end
+                --end, "Pick Hero")
+            end
+
+            DisableTrigger(GetTriggeringTrigger())
+            HeroSelector.destroy()
+            init_aiLoopStates()
+        end
+
+    end)
+end
 
 function init_triggers()
     Trig_moveToNext = CreateTrigger()
@@ -3621,16 +3663,14 @@ function init_aiClass()
 
         -- Teleport Stuff
 
-        function self:teleportCheck(i)
+        function self:teleportCheck(i, destX, destY)
             local distance = 100000000.00
             local distanceNew = 0.00
             local unitX, unitY, u
             local teleportUnit
             local g = CreateGroup()
 
-            local destX = getUnitX(self[i].unitHealing)
-            local destY = getUnitY(self[i].unitHealing)
-            local distanceOrig = distance(getUnitX(self[i].unit), getUnitY(self[i].unit), destX, destY)
+            local distanceOrig = distance(GetUnitX(self[i].unit), GetUnitY(self[i].unit), destX, destY)
 
             GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
             while true do
@@ -4107,10 +4147,10 @@ function init_aiClass()
 
         function self:ACTIONattackBase(i)
             self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
+            local unitX = GetUnitX(self[i].unitAttacking)
+            local unitY = GetUnitY(self[i].unitAttacking)
 
-            if not self:teleportCheck(i) then
-                local unitX = GetUnitX(self[i].unitAttacking)
-                local unitY = GetUnitY(self[i].unitAttacking)
+            if not self:teleportCheck(i, unitX, unitY) then
                 print("Unit: " .. i)
                 print("TeamNumber: " .. self[i].teamNumber)
                 print("attacking " .. GetUnitName(self[i].unitAttacking))
@@ -4209,7 +4249,7 @@ function init_aiClass()
                         print(curSpell.name)
 
                         u = GroupPickRandomUnit(gIllusions)
-                        GroupEnumUnitsInRange(g, getUnitX(u), getUnitY(u), 350, nil)
+                        GroupEnumUnitsInRange(g, GetUnitX(u), GetUnitY(u), 350, nil)
                         while true do
                             uTemp = FirstOfGroup(g)
                             if (u == nil) then
@@ -4308,7 +4348,7 @@ function init_aiClass()
 
                     print(curSpell.name)
                     u = GroupPickRandomUnit(self[i].heroesEnemy)
-                    IssuePointOrder(self[i].unit, curSpell.order, getUnitX(u), getUnitY(u))
+                    IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
                     IssueImmediateOrder(self[i].unit, curSpell.order)
                     self:castSpell(i)
                 end
@@ -4316,7 +4356,34 @@ function init_aiClass()
         end
 
         function self:timeMageAI(i)
-            if self[i].casting == false then
+
+            local curSpell, x, y
+
+            if not self[i].fleeing and not self[i].lowLife then
+
+                -- chrono Atrophy
+                curSpell = hero:spell(self[i], "chronoAtrophy")
+                if self[i].clumpBothPower >= 400 and curSpell.castable == true and curSpell.manaLeft > 30 and
+                    not self[i].casting then
+                    print(curSpell.name)
+
+                    x = GetUnitX(self[i].clumpBoth)
+                    y = GetUnitY(self[i].clumpBoth)
+                    IssuePointOrder(self[i].unit, curSpell.order, x, y)
+                    self:castSpell(i)
+                end
+
+                -- Decay
+                curSpell = hero:spell(self[i], "decay")
+                if CountUnitsInGroup(self[i].heroesEnemies) > 0 and curSpell.castable == true and curSpell.manaLeft > 20 and
+                    not self[i].casting then
+                    print(curSpell.name)
+
+                    x = GetUnitX(self[i].clumpBoth)
+                    y = GetUnitY(self[i].clumpBoth)
+                    IssuePointOrder(self[i].unit, curSpell.order, x, y)
+                    self:castSpell(i)
+                end
             end
         end
 
@@ -4336,6 +4403,10 @@ function init_heroClass()
         local self = {}
 
         self.players = {}
+        for i = 1, 11 do
+            self.players[i] = {picked = false}
+        end
+
         self.items = {"teleportation", "tank"}
         self.item = {}
         self.item.teleportation = {
@@ -4733,8 +4804,7 @@ function init_heroClass()
 
             -- Move hero to home base
             SetUnitPosition(unit, x, y)
-            SelectUnitForPlayerSingle(unit, player)
-            PanCameraToTimedForPlayer(player, x, y, 0)
+
 
             -- Give the hero the required Skill points for the spells
             ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
@@ -6701,82 +6771,6 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Right_Base_Hero_Cam, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
     CameraSetupSetDestPosition(gg_cam_Right_Base_Hero_Cam, 1052.8, -5272.7, 0.0)
-end
-
-function Trig_Picking_Phase_Func003C()
-    if (not (udg_Count <= 5)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Picking_Phase_Func005Func002Func001Func003Func003001001002()
-    return (IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO) == true)
-end
-
-function Trig_Picking_Phase_Func005Func002Func001Func003C()
-    if (not (GroupPickRandomUnit(GetUnitsOfPlayerMatching(GetEnumPlayer(), Condition(Trig_Picking_Phase_Func005Func002Func001Func003Func003001001002))) == nil)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Picking_Phase_Func005Func002Func001Func005C()
-    if (GetPlayerController(GetEnumPlayer()) == MAP_CONTROL_USER) then
-        return true
-    end
-    if (GetPlayerController(GetEnumPlayer()) == MAP_CONTROL_COMPUTER) then
-        return true
-    end
-    return false
-end
-
-function Trig_Picking_Phase_Func005Func002Func001C()
-    if (not Trig_Picking_Phase_Func005Func002Func001Func005C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_Picking_Phase_Func005Func002A()
-    if (Trig_Picking_Phase_Func005Func002Func001C()) then
-                bj_wantDestroyGroup = true
-        if (Trig_Picking_Phase_Func005Func002Func001Func003C()) then
-                        HeroSelector.forcePick(GetEnumPlayer())
-        else
-        end
-                ShowUnitShow(hero.players[GetConvertedPlayerId(GetEnumPlayer())].hero)
-    else
-    end
-end
-
-function Trig_Picking_Phase_Func005C()
-    if (not (udg_Count <= 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Picking_Phase_Actions()
-    udg_Count = (35 - GetTriggerExecCount(GetTriggeringTrigger()))
-        HeroSelector.setTitleText( GetLocalizedString("DEFAULTTIMERDIALOGTEXT")..": " .. udg_Count)
-    if (Trig_Picking_Phase_Func003C()) then
-        PlaySoundBJ(gg_snd_BattleNetTick)
-    else
-    end
-    if (Trig_Picking_Phase_Func005C()) then
-        ForForce(udg_playersAll, Trig_Picking_Phase_Func005Func002A)
-        DisableTrigger(GetTriggeringTrigger())
-                HeroSelector.destroy()
-                init_aiLoopStates()
-    else
-    end
-end
-
-function InitTrig_Picking_Phase()
-    gg_trg_Picking_Phase = CreateTrigger()
-    TriggerRegisterTimerEventPeriodic(gg_trg_Picking_Phase, 1.00)
-    TriggerAddAction(gg_trg_Picking_Phase, Trig_Picking_Phase_Actions)
 end
 
 function Trig_Level100_Func001001002001()
@@ -11803,7 +11797,6 @@ function InitTrig_baseAndHeals()
 end
 
 function InitCustomTriggers()
-    InitTrig_Picking_Phase()
     InitTrig_Level100()
     InitTrig_fogofwar()
     InitTrig_testing()
