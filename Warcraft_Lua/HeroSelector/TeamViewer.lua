@@ -42,7 +42,7 @@ TeamViewer.BackupRepick = HeroSelector.repick
 TeamViewer.BackupDestroy = HeroSelector.destroy
 
 function TeamViewer.AllowPlayer(player)
-    return GetPlayerSlotState(player) ==  PLAYER_SLOT_STATE_PLAYING
+    return GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll)
 end
 
 function oppositeFramePoint(framepoint)

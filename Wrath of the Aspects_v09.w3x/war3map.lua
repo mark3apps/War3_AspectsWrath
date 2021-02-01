@@ -200,6 +200,7 @@ udg_TEMP_A_INT = __jarray(0)
 udg_TEMP_A_UNIT = {}
 udg_EndRegionsNormal = {}
 udg_Count = 0
+udg_playersAll = nil
 gg_rct_Left_Start = nil
 gg_rct_Left_Hero = nil
 gg_rct_Left_Forward_Camp = nil
@@ -299,6 +300,8 @@ gg_cam_Camera_007 = nil
 gg_cam_Left_Base_Hero_Cam = nil
 gg_cam_Right_Base_Hero_Cam = nil
 gg_snd_PurgeTarget1 = nil
+gg_snd_BattleNetTick = nil
+gg_trg_Picking_Phase = nil
 gg_trg_Level100 = nil
 gg_trg_fogofwar = nil
 gg_trg_testing = nil
@@ -451,8 +454,6 @@ gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
-gg_snd_BattleNetTick = nil
-gg_trg_Picking_Phase = nil
 function InitGlobals()
     local i = 0
     udg_INTcreepLevel = 1
@@ -864,50 +865,9 @@ function InitGlobals()
         i = i + 1
     end
     udg_Count = 0
+    udg_playersAll = CreateForce()
 end
 
---HeroInfo 1.1a
---Plugin for HeroInfo by Tasyen
---This Creates a TextArea which displays the name and the Extended tooltip of selected units.
-
-HeroInfo = {}
---TextArea
-HeroInfo.DescHeroNamePrefix     = "|cffffcc00"   --added before the Units Name
-HeroInfo.DescHeroNameSufix      = "|r"           --added after the units Name
-HeroInfo.TextAreaSizeX          = 0.2
-HeroInfo.TextAreaSizeY          = 0.2
-HeroInfo.TextAreaOffsetX        = 0
-HeroInfo.TextAreaOffsetY        = 0
-HeroInfo.TextAreaPoint          = FRAMEPOINT_TOPLEFT --pos the Tooltip with which Point
-HeroInfo.TextAreaRelativePoint  = FRAMEPOINT_TOPRIGHT --pos the Tooltip to which Point of the Relative
-HeroInfo.TextAreaRelativeGame   = false --(false) relativ to box, (true) relativ to GameUI
-HeroInfo.BackupSelected         = HeroSelector.buttonSelected
-HeroInfo.BackupDestroy          = HeroSelector.destroy
-
-function HeroSelector.destroy()
-    BlzDestroyFrame(HeroInfo.TextArea)
-    HeroInfo.BackupDestroy()
-    HeroInfo = nil
-end
-
-function HeroInfo.Init()
-    HeroInfo.TextArea = BlzCreateFrame("HeroSelectorTextArea", HeroSelector.Box, 0, 0)    
-    BlzFrameSetSize(HeroInfo.TextArea , HeroInfo.TextAreaSizeX, HeroInfo.TextAreaSizeY)
-    if not HeroInfo.TextAreaRelativeGame then
-        BlzFrameSetPoint(HeroInfo.TextArea, HeroInfo.TextAreaPoint, HeroSelector.Box, HeroInfo.TextAreaRelativePoint, HeroInfo.TextAreaOffsetX, HeroInfo.TextAreaOffsetY)
-    else
-        BlzFrameSetPoint(HeroInfo.TextArea, HeroInfo.TextAreaPoint, BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), HeroInfo.TextAreaRelativePoint, HeroInfo.TextAreaOffsetX, HeroInfo.TextAreaOffsetY)
-    end
-end
-
-function HeroSelector.buttonSelected(player, unitCode)
-    HeroInfo.BackupSelected(player, unitCode)
-
-    if GetLocalPlayer() == player then
-        BlzFrameSetText(HeroInfo.TextArea, HeroInfo.DescHeroNamePrefix .. GetObjectName(unitCode).. HeroInfo.DescHeroNameSufix)
-        BlzFrameAddText(HeroInfo.TextArea, BlzGetAbilityExtendedTooltip(unitCode,0))
-    end
-end
 --[[
 HeroSelector V1.5b
 
@@ -1621,14 +1581,14 @@ function HeroSelector.forceRandom(who)
     --this is a wrapper for doRandom allowing different dataTypes
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 HeroSelector.doRandom(Player(index)) 
             end
         end
     elseif type(who) == "number" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if GetPlayerTeam(player) == who then
                     HeroSelector.doRandom(player)
                 end
@@ -1637,7 +1597,7 @@ function HeroSelector.forceRandom(who)
     elseif tostring(who):sub(1, 5) == "race:" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if GetPlayerRace(player) == who then
                     HeroSelector.doRandom(player) 
                 end
@@ -1654,7 +1614,7 @@ function HeroSelector.forcePick(who)
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if not HeroSelector.doPick(player) then --do picking, when that fails doRandom
                     HeroSelector.doRandom(player)
                 end
@@ -1663,7 +1623,7 @@ function HeroSelector.forcePick(who)
     elseif type(who) == "number" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if GetPlayerTeam(player) == who then
                     if not HeroSelector.doPick(player) then
                         HeroSelector.doRandom(player) 
@@ -1674,7 +1634,7 @@ function HeroSelector.forcePick(who)
     elseif tostring(who):sub(1, 5) == "race:" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if GetPlayerRace(player) == who then
                     if not HeroSelector.doPick(player) then
                         HeroSelector.doRandom(player) 
@@ -2135,7 +2095,7 @@ TeamViewer.BackupRepick = HeroSelector.repick
 TeamViewer.BackupDestroy = HeroSelector.destroy
 
 function TeamViewer.AllowPlayer(player)
-    return GetPlayerSlotState(player) ==  PLAYER_SLOT_STATE_PLAYING
+    return GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll)
 end
 
 function oppositeFramePoint(framepoint)
@@ -2386,6 +2346,48 @@ function HeroSelector.repick(unit, player)
     TeamViewer.HasPicked[player] = false
 end
 
+--HeroInfo 1.1a
+--Plugin for HeroInfo by Tasyen
+--This Creates a TextArea which displays the name and the Extended tooltip of selected units.
+
+HeroInfo = {}
+--TextArea
+HeroInfo.DescHeroNamePrefix     = "|cffffcc00"   --added before the Units Name
+HeroInfo.DescHeroNameSufix      = "|r"           --added after the units Name
+HeroInfo.TextAreaSizeX          = 0.2
+HeroInfo.TextAreaSizeY          = 0.2
+HeroInfo.TextAreaOffsetX        = 0
+HeroInfo.TextAreaOffsetY        = 0
+HeroInfo.TextAreaPoint          = FRAMEPOINT_TOPLEFT --pos the Tooltip with which Point
+HeroInfo.TextAreaRelativePoint  = FRAMEPOINT_TOPRIGHT --pos the Tooltip to which Point of the Relative
+HeroInfo.TextAreaRelativeGame   = false --(false) relativ to box, (true) relativ to GameUI
+HeroInfo.BackupSelected         = HeroSelector.buttonSelected
+HeroInfo.BackupDestroy          = HeroSelector.destroy
+
+function HeroSelector.destroy()
+    BlzDestroyFrame(HeroInfo.TextArea)
+    HeroInfo.BackupDestroy()
+    HeroInfo = nil
+end
+
+function HeroInfo.Init()
+    HeroInfo.TextArea = BlzCreateFrame("HeroSelectorTextArea", HeroSelector.Box, 0, 0)    
+    BlzFrameSetSize(HeroInfo.TextArea , HeroInfo.TextAreaSizeX, HeroInfo.TextAreaSizeY)
+    if not HeroInfo.TextAreaRelativeGame then
+        BlzFrameSetPoint(HeroInfo.TextArea, HeroInfo.TextAreaPoint, HeroSelector.Box, HeroInfo.TextAreaRelativePoint, HeroInfo.TextAreaOffsetX, HeroInfo.TextAreaOffsetY)
+    else
+        BlzFrameSetPoint(HeroInfo.TextArea, HeroInfo.TextAreaPoint, BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), HeroInfo.TextAreaRelativePoint, HeroInfo.TextAreaOffsetX, HeroInfo.TextAreaOffsetY)
+    end
+end
+
+function HeroSelector.buttonSelected(player, unitCode)
+    HeroInfo.BackupSelected(player, unitCode)
+
+    if GetLocalPlayer() == player then
+        BlzFrameSetText(HeroInfo.TextArea, HeroInfo.DescHeroNamePrefix .. GetObjectName(unitCode).. HeroInfo.DescHeroNameSufix)
+        BlzFrameAddText(HeroInfo.TextArea, BlzGetAbilityExtendedTooltip(unitCode,0))
+    end
+end
 function init_Lua()
     debugprint = 2
     -- Define Classes
@@ -2462,14 +2464,15 @@ function init_Delayed_1()
     TriggerAddAction(t, function()
         debugfunc(function()
             
-            dprint("pick Heroes Successfull", 2)
+            startHeroPicker()
+            
             init_aiLoopStates()
             dprint("AI Started", 2)
 
             orderStartingUnits()
             spawn:startSpawn()
 
-            startHeroPicker()
+            
 
             dprint("Spawn Started", 2)
         end, "Start Delayed Triggers")
@@ -2522,6 +2525,10 @@ function Init_Map()
     ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
     ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
 
+    for i = 0, 11 do
+        ForceAddPlayer(udg_playersAll, Player(i))
+    end
+    
     -- Create the Allied Users
     ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
     ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
@@ -5036,36 +5043,6 @@ function Init_UnitCastsSpell()
     end)
 end
 
--- Unit buys Unit
-function Init_PlayerBuysUnit()
-    local t = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SELL)
-    TriggerAddAction(t, function()
-        local sellingUnit = GetSellingUnit()
-        local buyingUnit = GetBuyingUnit()
-        local soldUnit = GetSoldUnit()
-        local buyingPlayer = GetOwningPlayer(buyingUnit)
-        local sellingPlayer = GetOwningPlayer(sellingUnit)
-
-        debugfunc(function()
-
-            -- Hero picked at beginning of game
-            if sellingUnit == gg_unit_n00C_0082 then
-                local g = CreateGroup()
-                g = GetUnitsOfPlayerAndTypeId(buyingPlayer, FourCC("h00H"))
-                if CountUnitsInGroup(g) == 1 then
-                    RemoveUnit(buyingUnit)
-                    hero:setupHero(soldUnit)
-                else
-                    RemoveUnit(soldUnit)
-                end
-                DestroyGroup(g)
-            end
-        end, "hero:setupHero")
-
-    end)
-end
-
 -- Unit enters the Map
 function Init_UnitEntersMap()
 
@@ -5162,14 +5139,9 @@ do
     function MarkGameStarted()
         real()
         local trigger = CreateTrigger()
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_G, 0, true)
+        for i = 0, 11 do
+            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_G, 0, true)
+        end
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()
@@ -5178,14 +5150,9 @@ do
         end)
 
         local trigger = CreateTrigger()
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_D, 0, true)
+        for i = 0, 11 do
+            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_D, 0, true)
+        end
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()
@@ -5207,14 +5174,10 @@ do
         end)
 
         local trigger = CreateTrigger()
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_F, 0, true)
+        for i = 0, 11 do
+            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_F, 0, true)
+        end
+        
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()
@@ -6661,21 +6624,41 @@ function Trig_Picking_Phase_Func003C()
     return true
 end
 
-function Trig_Picking_Phase_Func005Func002Func003Func003001001002()
+function Trig_Picking_Phase_Func005Func002Func001Func003Func003001001002()
     return (IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO) == true)
 end
 
-function Trig_Picking_Phase_Func005Func002Func003C()
-    if (not (GroupPickRandomUnit(GetUnitsOfPlayerMatching(GetEnumPlayer(), Condition(Trig_Picking_Phase_Func005Func002Func003Func003001001002))) == nil)) then
+function Trig_Picking_Phase_Func005Func002Func001Func003C()
+    if (not (GroupPickRandomUnit(GetUnitsOfPlayerMatching(GetEnumPlayer(), Condition(Trig_Picking_Phase_Func005Func002Func001Func003Func003001001002))) == nil)) then
+        return false
+    end
+    return true
+end
+
+function Trig_Picking_Phase_Func005Func002Func001Func004C()
+    if (GetPlayerController(GetEnumPlayer()) == MAP_CONTROL_USER) then
+        return true
+    end
+    if (GetPlayerController(GetEnumPlayer()) == MAP_CONTROL_COMPUTER) then
+        return true
+    end
+    return false
+end
+
+function Trig_Picking_Phase_Func005Func002Func001C()
+    if (not Trig_Picking_Phase_Func005Func002Func001Func004C()) then
         return false
     end
     return true
 end
 
 function Trig_Picking_Phase_Func005Func002A()
-        bj_wantDestroyGroup = true
-    if (Trig_Picking_Phase_Func005Func002Func003C()) then
-                HeroSelector.forcePick(GetEnumPlayer())
+    if (Trig_Picking_Phase_Func005Func002Func001C()) then
+                bj_wantDestroyGroup = true
+        if (Trig_Picking_Phase_Func005Func002Func001Func003C()) then
+                        HeroSelector.forcePick(GetEnumPlayer())
+        else
+        end
     else
     end
 end

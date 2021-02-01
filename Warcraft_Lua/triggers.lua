@@ -30,36 +30,6 @@ function Init_UnitCastsSpell()
     end)
 end
 
--- Unit buys Unit
-function Init_PlayerBuysUnit()
-    local t = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SELL)
-    TriggerAddAction(t, function()
-        local sellingUnit = GetSellingUnit()
-        local buyingUnit = GetBuyingUnit()
-        local soldUnit = GetSoldUnit()
-        local buyingPlayer = GetOwningPlayer(buyingUnit)
-        local sellingPlayer = GetOwningPlayer(sellingUnit)
-
-        debugfunc(function()
-
-            -- Hero picked at beginning of game
-            if sellingUnit == gg_unit_n00C_0082 then
-                local g = CreateGroup()
-                g = GetUnitsOfPlayerAndTypeId(buyingPlayer, FourCC("h00H"))
-                if CountUnitsInGroup(g) == 1 then
-                    RemoveUnit(buyingUnit)
-                    hero:setupHero(soldUnit)
-                else
-                    RemoveUnit(soldUnit)
-                end
-                DestroyGroup(g)
-            end
-        end, "hero:setupHero")
-
-    end)
-end
-
 -- Unit enters the Map
 function Init_UnitEntersMap()
 
@@ -156,14 +126,9 @@ do
     function MarkGameStarted()
         real()
         local trigger = CreateTrigger()
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_G, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_G, 0, true)
+        for i = 0, 11 do
+            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_G, 0, true)
+        end
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()
@@ -172,14 +137,9 @@ do
         end)
 
         local trigger = CreateTrigger()
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_D, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_D, 0, true)
+        for i = 0, 11 do
+            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_D, 0, true)
+        end
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()
@@ -201,14 +161,10 @@ do
         end)
 
         local trigger = CreateTrigger()
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(0), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(1), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(2), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(3), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(4), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(5), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(6), OSKEY_F, 0, true)
-        BlzTriggerRegisterPlayerKeyEvent(trigger, Player(7), OSKEY_F, 0, true)
+        for i = 0, 11 do
+            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_F, 0, true)
+        end
+        
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()

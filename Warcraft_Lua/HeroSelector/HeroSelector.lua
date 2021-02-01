@@ -711,14 +711,14 @@ function HeroSelector.forceRandom(who)
     --this is a wrapper for doRandom allowing different dataTypes
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 HeroSelector.doRandom(Player(index)) 
             end
         end
     elseif type(who) == "number" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if GetPlayerTeam(player) == who then
                     HeroSelector.doRandom(player)
                 end
@@ -727,7 +727,7 @@ function HeroSelector.forceRandom(who)
     elseif tostring(who):sub(1, 5) == "race:" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if GetPlayerRace(player) == who then
                     HeroSelector.doRandom(player) 
                 end
@@ -744,7 +744,7 @@ function HeroSelector.forcePick(who)
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if not HeroSelector.doPick(player) then --do picking, when that fails doRandom
                     HeroSelector.doRandom(player)
                 end
@@ -753,7 +753,7 @@ function HeroSelector.forcePick(who)
     elseif type(who) == "number" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if GetPlayerTeam(player) == who then
                     if not HeroSelector.doPick(player) then
                         HeroSelector.doRandom(player) 
@@ -764,7 +764,7 @@ function HeroSelector.forcePick(who)
     elseif tostring(who):sub(1, 5) == "race:" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
                 if GetPlayerRace(player) == who then
                     if not HeroSelector.doPick(player) then
                         HeroSelector.doRandom(player) 

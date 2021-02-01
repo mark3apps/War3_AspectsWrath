@@ -74,14 +74,15 @@ function init_Delayed_1()
     TriggerAddAction(t, function()
         debugfunc(function()
             
-            dprint("pick Heroes Successfull", 2)
+            startHeroPicker()
+            
             init_aiLoopStates()
             dprint("AI Started", 2)
 
             orderStartingUnits()
             spawn:startSpawn()
 
-            startHeroPicker()
+            
 
             dprint("Spawn Started", 2)
         end, "Start Delayed Triggers")
@@ -134,6 +135,10 @@ function Init_Map()
     ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
     ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
 
+    for i = 0, 11 do
+        ForceAddPlayer(udg_playersAll, Player(i))
+    end
+    
     -- Create the Allied Users
     ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
     ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
