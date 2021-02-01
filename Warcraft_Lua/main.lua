@@ -257,12 +257,12 @@ function Init_PickingPhase()
     local t = CreateTrigger()
     TriggerRegisterTimerEventPeriodic(t, 1.00)
     TriggerAddAction(t, function()
-
+        -- debugfunc(function()
         local u, player
         local unitHero = false
         local g = CreateGroup()
 
-        local count = (10 - GetTriggerExecCount(GetTriggeringTrigger()))
+        local count = (5 - GetTriggerExecCount(GetTriggeringTrigger()))
 
         HeroSelector.setTitleText(GetLocalizedString("DEFAULTTIMERDIALOGTEXT") .. ": " .. count)
 
@@ -272,28 +272,24 @@ function Init_PickingPhase()
 
         if count <= 0 then
 
-            for i = 1, 12 do
-                player = Player(i)
-                
-                --debugfunc(function()
-                    if IsPlayerInForce(player, udg_playersAll) then
+            ForForce(udg_playersAll, function()
+                player = GetEnumPlayer()
 
-                        if not hero.players[i].picked then
-                            HeroSelector.forcePick(player)
-                        end
+                if not hero.players[GetConvertedPlayerId(player)].picked then
+                    print("picking for player " .. GetConvertedPlayerId(player))
+                    HeroSelector.forcePick(player)
+                end
 
-                        local heroUnit = hero.players[i].hero
-                        ShowUnitShow(heroUnit)
-                        SelectUnitForPlayerSingle(heroUnit, player)
-                        PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 0)
-                    end
-                --end, "Pick Hero")
-            end
+                local heroUnit = hero.players[GetConvertedPlayerId(player)].hero
+                ShowUnitShow(heroUnit)
+                SelectUnitForPlayerSingle(heroUnit, player)
+                PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 0)
+            end)
 
             DisableTrigger(GetTriggeringTrigger())
             HeroSelector.destroy()
             init_aiLoopStates()
         end
-
+        -- end, "Pick Hero")
     end)
 end

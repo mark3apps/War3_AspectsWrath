@@ -82,7 +82,7 @@ function init_aiClass()
 
         function self:initHero(heroUnit)
             self.count = self.count + 1
-            self.tick = (1.00 + (self.count * 0.1)) / self.count
+            self.tick = (5.00 + (self.count * 0.1)) / self.count
 
             local i = self.heroOptions[self.count]
             print("Name: " .. i)
@@ -223,52 +223,6 @@ function init_aiClass()
                 self[i].clumpRange = 100.00
                 self[i].intelRange = 1100.00
                 self[i].closeRange = 400.00
-            end
-        end
-
-        -- Teleport Stuff
-
-        function self:teleportCheck(i, destX, destY)
-            local distance = 100000000.00
-            local distanceNew = 0.00
-            local unitX, unitY, u
-            local teleportUnit
-            local g = CreateGroup()
-
-            local distanceOrig = distance(GetUnitX(self[i].unit), GetUnitY(self[i].unit), destX, destY)
-
-            GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
-
-                unitX = GetUnitX(u)
-                unitY = GetUnitY(u)
-                distanceNew = distance(destX, destY, unitX, unitY)
-
-                if distanceNew < healDistance then
-                    distance = distanceNew
-                    teleportUnit = u
-                end
-
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
-
-            if distanceOrig + 500 > distanceNew then
-                local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit, hero.item.teleportation.id)
-
-                if teleportCooldown == 0 then
-                    UnitUseItemTarget(self[i].unit, GetItemOfTypeFromUnitBJ(self[i].unit, hero.item.teleportation.id),
-                        teleportUnit)
-                    self:castSpell(i, 15)
-                end
-
-                return true
-            else
-                return false
             end
         end
 
@@ -622,13 +576,14 @@ function init_aiClass()
                         self:ACTIONtravelToDest(i)
                         self[i].order = self[i].currentOrder
                     else
-                        -- print("Still Casting Spell")
+                        print("Still Casting Spell")
                     end
                 elseif self[i].castingDuration > 0.00 then
-                    -- print("Still Casting Spell")
-                    self[i].castingDuration = self[i].castingDuration - aiTick
+                    print("Still Casting Spell")
+                    print(self[i].castingDuration)
+                    self[i].castingDuration = self[i].castingDuration - (self.tick * self.count)
                 else
-                    -- print("Stopped Casting (Count)")
+                    print("Stopped Casting (Count)")
                     self[i].casting = false
                     self[i].castingDuration = -10.00
                     self[i].castingDanger = false
@@ -642,9 +597,9 @@ function init_aiClass()
         -- ACTIONS
         --
 
-        function self:castSpell(i, castDuration, danger)
+        function self:castSpell(i, duration, danger)
             danger = danger or false
-            castDuration = castDuration or -10.00
+            duration = duration or -10.00
 
             if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
                 self:ACTIONtravelToDest(i)
@@ -656,7 +611,7 @@ function init_aiClass()
                     self[i].castingDanger = true
                 end
 
-                self[i].castingDuration = castDuration
+                self[i].castingDuration = duration
                 self[i].order = OrderId2String(GetUnitCurrentOrder(self[i].unit))
                 print(self[i].order)
             end
@@ -714,11 +669,12 @@ function init_aiClass()
             self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
             local unitX = GetUnitX(self[i].unitAttacking)
             local unitY = GetUnitY(self[i].unitAttacking)
+            print("attacking " .. GetUnitName(self[i].unitAttacking))
 
             if not self:teleportCheck(i, unitX, unitY) then
                 print("Unit: " .. i)
                 print("TeamNumber: " .. self[i].teamNumber)
-                print("attacking " .. GetUnitName(self[i].unitAttacking))
+                
                 print("x:" .. unitX .. "y:" .. unitY)
 
                 IssuePointOrder(self[i].unit, "attack", unitX, unitY)
@@ -727,6 +683,64 @@ function init_aiClass()
 
         function self:getHeroData(unit)
             return self[indexer:get(unit).heroName]
+        end
+
+        -- Teleport Stuff
+
+        function self:teleportCheck(i, destX, destY)
+            local destDistance = 100000000.00
+            local destDistanceNew = 0.00
+            local unitX, unitY, u
+            local teleportUnit
+            local g = CreateGroup()
+            local heroUnit = self[i].unit
+            local heroX = GetUnitX(self[i].unit)
+            local heroY = GetUnitY(self[i].unit)
+
+            local distanceOrig = distance(heroX, heroY, destX, destY)
+
+            GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                unitX = GetUnitX(u)
+                unitY = GetUnitY(u)
+                destDistanceNew = distance(destX, destY, unitX, unitY)
+
+                if destDistanceNew < destDistance then
+                    destDistance = destDistanceNew
+                    teleportUnit = u
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            print(GetUnitName(teleportUnit))
+
+            
+            PingMinimap(GetUnitX(teleportUnit), GetUnitY(teleportUnit), 15)
+
+            if distanceOrig + 2000 > destDistanceNew then
+                local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(heroUnit, hero.item.teleportation.abilityId)
+                
+                if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
+                    print("Teleporting")
+
+                    DisableTrigger(trig_CastSpell)
+                    UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
+                        teleportUnit)
+                    EnableTrigger(trig_CastSpell)
+                    self:castSpell(i, 6)
+                end
+
+                return true
+            else
+                return false
+            end
         end
 
         -- Hero AI
@@ -968,16 +982,20 @@ function init_heroClass()
         local self = {}
 
         self.players = {}
-        for i = 1, 11 do
-            self.players[i] = {picked = false}
+        for i = 1, 12 do
+            self.players[i] = {
+                picked = false
+            }
         end
 
         self.items = {"teleportation", "tank"}
         self.item = {}
         self.item.teleportation = {
-            name = "Staff of Teleportation",
+            name = "Teleport",
             four = "I000",
             id = FourCC("I000"),
+            abilityFour = "A01M",
+            abilityId = FourCC("A01M"),
             order = ""
         }
         self.item.tank = {
@@ -1370,7 +1388,6 @@ function init_heroClass()
             -- Move hero to home base
             SetUnitPosition(unit, x, y)
 
-
             -- Give the hero the required Skill points for the spells
             ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
             for i = 1, #spells.startingSpells do
@@ -1411,6 +1428,7 @@ function init_heroClass()
             end
             DestroyGroup(g)
 
+            self.players[playerNumber].picked = true
             self.players[playerNumber].cameraLock = false
             self.players[playerNumber].alter = newAlter
             self.players[playerNumber].hero = unit

@@ -136,8 +136,8 @@ HeroSelector.IndicatorPathBan       = "war3mapImported\\HeroSelectorBan.mdl" --t
 --Grid
 HeroSelector.SpaceBetweenX          = 0.008 --space between 2 buttons in one row
 HeroSelector.SpaceBetweenY          = 0.008 --space between 2 rows
-HeroSelector.ButtonColCount         = 4 --amount of buttons in one row
-HeroSelector.ButtonRowCount         = 4 --amount of rows
+HeroSelector.ButtonColCount         = 5 --amount of buttons in one row
+HeroSelector.ButtonRowCount         = 1 --amount of rows
 HeroSelector.ChainedButtons         = true --(true) connect to the previous button/ or row, (false) have a offset to the box topLeft in this moving a button has no effect on other buttons.
 --Button
 HeroSelector.ButtonSize             = 0.036 --size of each button
@@ -271,6 +271,7 @@ function HeroSelector.unitCreated(player, unit, isRandom)
     if (GetPlayerController(player) == MAP_CONTROL_COMPUTER) then
         ai:initHero(unit)
     end
+
     ShowUnitHide(unit)
     HeroSelector.enablePick(false, player) --only one pick for this player
     --print(GetPlayerName(player),"picks",GetUnitName(unit))
@@ -711,14 +712,14 @@ function HeroSelector.forceRandom(who)
     --this is a wrapper for doRandom allowing different dataTypes
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 HeroSelector.doRandom(Player(index)) 
             end
         end
     elseif type(who) == "number" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if GetPlayerTeam(player) == who then
                     HeroSelector.doRandom(player)
                 end
@@ -727,7 +728,7 @@ function HeroSelector.forceRandom(who)
     elseif tostring(who):sub(1, 5) == "race:" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if GetPlayerRace(player) == who then
                     HeroSelector.doRandom(player) 
                 end
@@ -744,7 +745,7 @@ function HeroSelector.forcePick(who)
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if not HeroSelector.doPick(player) then --do picking, when that fails doRandom
                     HeroSelector.doRandom(player)
                 end
@@ -753,7 +754,7 @@ function HeroSelector.forcePick(who)
     elseif type(who) == "number" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if GetPlayerTeam(player) == who then
                     if not HeroSelector.doPick(player) then
                         HeroSelector.doRandom(player) 
@@ -764,7 +765,7 @@ function HeroSelector.forcePick(who)
     elseif tostring(who):sub(1, 5) == "race:" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if GetPlayerRace(player) == who then
                     if not HeroSelector.doPick(player) then
                         HeroSelector.doRandom(player) 

@@ -1380,12 +1380,6 @@ STRING 506
 Iron Defense
 }
 
-STRING 508
-// Items: I000 (Town Portal), Name (Name)
-{
-Town Portal
-}
-
 STRING 509
 // Buffs/Effects: B006 (Attack!), EditorName (Name (Editor Only))
 {
@@ -13821,5 +13815,11 @@ STRING 4537
 // Abilities: A027 (Tower Heal Hero - Normal), Ubertip (Tooltip - Normal - Extended)
 {
 Heals a target friendly unit for <Arej,DataA12> hit points over <Arej,Dur12> seconds.
+}
+
+STRING 4538
+// Items: I000 (Teleport), Name (Name)
+{
+Teleport
 }
 

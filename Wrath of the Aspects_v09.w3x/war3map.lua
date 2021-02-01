@@ -1005,8 +1005,8 @@ HeroSelector.IndicatorPathBan       = "war3mapImported\\HeroSelectorBan.mdl" --t
 --Grid
 HeroSelector.SpaceBetweenX          = 0.008 --space between 2 buttons in one row
 HeroSelector.SpaceBetweenY          = 0.008 --space between 2 rows
-HeroSelector.ButtonColCount         = 4 --amount of buttons in one row
-HeroSelector.ButtonRowCount         = 4 --amount of rows
+HeroSelector.ButtonColCount         = 5 --amount of buttons in one row
+HeroSelector.ButtonRowCount         = 1 --amount of rows
 HeroSelector.ChainedButtons         = true --(true) connect to the previous button/ or row, (false) have a offset to the box topLeft in this moving a button has no effect on other buttons.
 --Button
 HeroSelector.ButtonSize             = 0.036 --size of each button
@@ -1140,6 +1140,7 @@ function HeroSelector.unitCreated(player, unit, isRandom)
     if (GetPlayerController(player) == MAP_CONTROL_COMPUTER) then
         ai:initHero(unit)
     end
+
     ShowUnitHide(unit)
     HeroSelector.enablePick(false, player) --only one pick for this player
     --print(GetPlayerName(player),"picks",GetUnitName(unit))
@@ -1580,14 +1581,14 @@ function HeroSelector.forceRandom(who)
     --this is a wrapper for doRandom allowing different dataTypes
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 HeroSelector.doRandom(Player(index)) 
             end
         end
     elseif type(who) == "number" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if GetPlayerTeam(player) == who then
                     HeroSelector.doRandom(player)
                 end
@@ -1596,7 +1597,7 @@ function HeroSelector.forceRandom(who)
     elseif tostring(who):sub(1, 5) == "race:" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if GetPlayerRace(player) == who then
                     HeroSelector.doRandom(player) 
                 end
@@ -1613,7 +1614,7 @@ function HeroSelector.forcePick(who)
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if not HeroSelector.doPick(player) then --do picking, when that fails doRandom
                     HeroSelector.doRandom(player)
                 end
@@ -1622,7 +1623,7 @@ function HeroSelector.forcePick(who)
     elseif type(who) == "number" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if GetPlayerTeam(player) == who then
                     if not HeroSelector.doPick(player) then
                         HeroSelector.doRandom(player) 
@@ -1633,7 +1634,7 @@ function HeroSelector.forcePick(who)
     elseif tostring(who):sub(1, 5) == "race:" then
         for index= 0, GetBJMaxPlayers() - 1,1 do
             local player = Player(index)
-            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING and IsPlayerInForce(player, udg_playersAll) then
+            if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 if GetPlayerRace(player) == who then
                     if not HeroSelector.doPick(player) then
                         HeroSelector.doRandom(player) 
@@ -2646,12 +2647,12 @@ function Init_PickingPhase()
     local t = CreateTrigger()
     TriggerRegisterTimerEventPeriodic(t, 1.00)
     TriggerAddAction(t, function()
-
+        -- debugfunc(function()
         local u, player
         local unitHero = false
         local g = CreateGroup()
 
-        local count = (10 - GetTriggerExecCount(GetTriggeringTrigger()))
+        local count = (5 - GetTriggerExecCount(GetTriggeringTrigger()))
 
         HeroSelector.setTitleText(GetLocalizedString("DEFAULTTIMERDIALOGTEXT") .. ": " .. count)
 
@@ -2661,29 +2662,25 @@ function Init_PickingPhase()
 
         if count <= 0 then
 
-            for i = 1, 12 do
-                player = Player(i)
-                
-                --debugfunc(function()
-                    if IsPlayerInForce(player, udg_playersAll) then
+            ForForce(udg_playersAll, function()
+                player = GetEnumPlayer()
 
-                        if not hero.players[i].picked then
-                            HeroSelector.forcePick(player)
-                        end
+                if not hero.players[GetConvertedPlayerId(player)].picked then
+                    print("picking for player " .. GetConvertedPlayerId(player))
+                    HeroSelector.forcePick(player)
+                end
 
-                        local heroUnit = hero.players[i].hero
-                        ShowUnitShow(heroUnit)
-                        SelectUnitForPlayerSingle(heroUnit, player)
-                        PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 0)
-                    end
-                --end, "Pick Hero")
-            end
+                local heroUnit = hero.players[GetConvertedPlayerId(player)].hero
+                ShowUnitShow(heroUnit)
+                SelectUnitForPlayerSingle(heroUnit, player)
+                PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 0)
+            end)
 
             DisableTrigger(GetTriggeringTrigger())
             HeroSelector.destroy()
             init_aiLoopStates()
         end
-
+        -- end, "Pick Hero")
     end)
 end
 
@@ -3517,7 +3514,7 @@ function init_aiClass()
 
         function self:initHero(heroUnit)
             self.count = self.count + 1
-            self.tick = (1.00 + (self.count * 0.1)) / self.count
+            self.tick = (5.00 + (self.count * 0.1)) / self.count
 
             local i = self.heroOptions[self.count]
             print("Name: " .. i)
@@ -3658,52 +3655,6 @@ function init_aiClass()
                 self[i].clumpRange = 100.00
                 self[i].intelRange = 1100.00
                 self[i].closeRange = 400.00
-            end
-        end
-
-        -- Teleport Stuff
-
-        function self:teleportCheck(i, destX, destY)
-            local distance = 100000000.00
-            local distanceNew = 0.00
-            local unitX, unitY, u
-            local teleportUnit
-            local g = CreateGroup()
-
-            local distanceOrig = distance(GetUnitX(self[i].unit), GetUnitY(self[i].unit), destX, destY)
-
-            GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
-
-                unitX = GetUnitX(u)
-                unitY = GetUnitY(u)
-                distanceNew = distance(destX, destY, unitX, unitY)
-
-                if distanceNew < healDistance then
-                    distance = distanceNew
-                    teleportUnit = u
-                end
-
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
-
-            if distanceOrig + 500 > distanceNew then
-                local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit, hero.item.teleportation.id)
-
-                if teleportCooldown == 0 then
-                    UnitUseItemTarget(self[i].unit, GetItemOfTypeFromUnitBJ(self[i].unit, hero.item.teleportation.id),
-                        teleportUnit)
-                    self:castSpell(i, 15)
-                end
-
-                return true
-            else
-                return false
             end
         end
 
@@ -4057,13 +4008,14 @@ function init_aiClass()
                         self:ACTIONtravelToDest(i)
                         self[i].order = self[i].currentOrder
                     else
-                        -- print("Still Casting Spell")
+                        print("Still Casting Spell")
                     end
                 elseif self[i].castingDuration > 0.00 then
-                    -- print("Still Casting Spell")
-                    self[i].castingDuration = self[i].castingDuration - aiTick
+                    print("Still Casting Spell")
+                    print(self[i].castingDuration)
+                    self[i].castingDuration = self[i].castingDuration - (self.tick * self.count)
                 else
-                    -- print("Stopped Casting (Count)")
+                    print("Stopped Casting (Count)")
                     self[i].casting = false
                     self[i].castingDuration = -10.00
                     self[i].castingDanger = false
@@ -4077,9 +4029,9 @@ function init_aiClass()
         -- ACTIONS
         --
 
-        function self:castSpell(i, castDuration, danger)
+        function self:castSpell(i, duration, danger)
             danger = danger or false
-            castDuration = castDuration or -10.00
+            duration = duration or -10.00
 
             if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
                 self:ACTIONtravelToDest(i)
@@ -4091,7 +4043,7 @@ function init_aiClass()
                     self[i].castingDanger = true
                 end
 
-                self[i].castingDuration = castDuration
+                self[i].castingDuration = duration
                 self[i].order = OrderId2String(GetUnitCurrentOrder(self[i].unit))
                 print(self[i].order)
             end
@@ -4149,11 +4101,12 @@ function init_aiClass()
             self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
             local unitX = GetUnitX(self[i].unitAttacking)
             local unitY = GetUnitY(self[i].unitAttacking)
+            print("attacking " .. GetUnitName(self[i].unitAttacking))
 
             if not self:teleportCheck(i, unitX, unitY) then
                 print("Unit: " .. i)
                 print("TeamNumber: " .. self[i].teamNumber)
-                print("attacking " .. GetUnitName(self[i].unitAttacking))
+                
                 print("x:" .. unitX .. "y:" .. unitY)
 
                 IssuePointOrder(self[i].unit, "attack", unitX, unitY)
@@ -4162,6 +4115,64 @@ function init_aiClass()
 
         function self:getHeroData(unit)
             return self[indexer:get(unit).heroName]
+        end
+
+        -- Teleport Stuff
+
+        function self:teleportCheck(i, destX, destY)
+            local destDistance = 100000000.00
+            local destDistanceNew = 0.00
+            local unitX, unitY, u
+            local teleportUnit
+            local g = CreateGroup()
+            local heroUnit = self[i].unit
+            local heroX = GetUnitX(self[i].unit)
+            local heroY = GetUnitY(self[i].unit)
+
+            local distanceOrig = distance(heroX, heroY, destX, destY)
+
+            GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                unitX = GetUnitX(u)
+                unitY = GetUnitY(u)
+                destDistanceNew = distance(destX, destY, unitX, unitY)
+
+                if destDistanceNew < destDistance then
+                    destDistance = destDistanceNew
+                    teleportUnit = u
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            print(GetUnitName(teleportUnit))
+
+            
+            PingMinimap(GetUnitX(teleportUnit), GetUnitY(teleportUnit), 15)
+
+            if distanceOrig + 2000 > destDistanceNew then
+                local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(heroUnit, hero.item.teleportation.abilityId)
+                
+                if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
+                    print("Teleporting")
+
+                    DisableTrigger(trig_CastSpell)
+                    UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
+                        teleportUnit)
+                    EnableTrigger(trig_CastSpell)
+                    self:castSpell(i, 6)
+                end
+
+                return true
+            else
+                return false
+            end
         end
 
         -- Hero AI
@@ -4403,16 +4414,20 @@ function init_heroClass()
         local self = {}
 
         self.players = {}
-        for i = 1, 11 do
-            self.players[i] = {picked = false}
+        for i = 1, 12 do
+            self.players[i] = {
+                picked = false
+            }
         end
 
         self.items = {"teleportation", "tank"}
         self.item = {}
         self.item.teleportation = {
-            name = "Staff of Teleportation",
+            name = "Teleport",
             four = "I000",
             id = FourCC("I000"),
+            abilityFour = "A01M",
+            abilityId = FourCC("A01M"),
             order = ""
         }
         self.item.tank = {
@@ -4805,7 +4820,6 @@ function init_heroClass()
             -- Move hero to home base
             SetUnitPosition(unit, x, y)
 
-
             -- Give the hero the required Skill points for the spells
             ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
             for i = 1, #spells.startingSpells do
@@ -4846,6 +4860,7 @@ function init_heroClass()
             end
             DestroyGroup(g)
 
+            self.players[playerNumber].picked = true
             self.players[playerNumber].cameraLock = false
             self.players[playerNumber].alter = newAlter
             self.players[playerNumber].hero = unit
@@ -5198,7 +5213,7 @@ end
 
 -- Unit Casts Spell
 function Init_UnitCastsSpell()
-    local t = CreateTrigger()
+    trig_CastSpell = CreateTrigger()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
 
     TriggerAddAction(t, function()
@@ -6506,6 +6521,16 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), 4396.5, -2325.9, 152.786, FourCC("nzom"))
 end
 
+function CreateNeutralPassiveBuildings()
+    local p = Player(PLAYER_NEUTRAL_PASSIVE)
+    local u
+    local unitID
+    local t
+    local life
+    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), -24448.0, -4096.0, 270.000, FourCC("ncp3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), 1280.0, -4992.0, 270.000, FourCC("ncp3"))
+end
+
 function CreateNeutralPassive()
     local p = Player(PLAYER_NEUTRAL_PASSIVE)
     local u
@@ -6548,6 +6573,7 @@ function CreatePlayerUnits()
 end
 
 function CreateAllUnits()
+    CreateNeutralPassiveBuildings()
     CreatePlayerBuildings()
     CreateNeutralHostile()
     CreateNeutralPassive()
@@ -6819,6 +6845,7 @@ function Trig_testing_Actions()
     SetUnitPositionLocFacingBJ(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()), 0.00)
     BlzEndUnitAbilityCooldown(GetEnumUnit(), FourCC("AHav"))
     SetCameraTargetControllerNoZForPlayer(Player(0), GetTriggerUnit(), 0, 0, false)
+    UnitUseItemTarget(GetLastCreatedUnit(), GetItemOfTypeFromUnitBJ(GetEnumUnit(), FourCC("texp")), GetEnumUnit())
 end
 
 function InitTrig_testing()
@@ -11735,7 +11762,7 @@ function Trig_baseAndHeals_Actions()
     GroupAddUnitSimple(gg_unit_h014_0158, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_hars_0293, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_hars_0303, udg_UNIT_Bases[1])
-    GroupAddUnitSimple(gg_unit_u001_0262, udg_UNIT_Bases[1])
+    GroupAddUnitSimple(gg_unit_u001_0264, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_hshy_0212, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_nmh1_0783, udg_UNIT_Bases[1])
     GroupAddUnitSimple(gg_unit_o001_0075, udg_UNIT_Bases[2])
@@ -11756,11 +11783,11 @@ function Trig_baseAndHeals_Actions()
     GroupAddUnitSimple(gg_unit_h014_0017, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_hars_0355, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_hars_0292, udg_UNIT_Bases[2])
-    GroupAddUnitSimple(gg_unit_u001_0264, udg_UNIT_Bases[2])
+    GroupAddUnitSimple(gg_unit_u001_0262, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_hshy_0011, udg_UNIT_Bases[2])
     GroupAddUnitSimple(gg_unit_nmh1_0735, udg_UNIT_Bases[2])
-    GroupAddGroup(udg_UNIT_Bases[1], udg_UNIT_Bases_Teleport[1])
-    GroupAddGroup(udg_UNIT_Bases[2], udg_UNIT_Bases_Teleport[2])
+    GroupAddGroup(udg_UNIT_Bases[2], udg_UNIT_Bases_Teleport[1])
+    GroupAddGroup(udg_UNIT_Bases[1], udg_UNIT_Bases_Teleport[2])
     GroupAddUnitSimple(gg_unit_h00F_0029, udg_UNIT_Healing[1])
     GroupAddUnitSimple(gg_unit_o001_0075, udg_UNIT_Healing[1])
     GroupAddUnitSimple(gg_unit_h00E_0033, udg_UNIT_Healing[1])
@@ -11930,23 +11957,23 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(2), ConvertPlayerColor(2))
     SetPlayerRacePreference(Player(2), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(2), false)
-    SetPlayerController(Player(2), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(2), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(3), 3)
     ForcePlayerStartLocation(Player(3), 3)
     SetPlayerColor(Player(3), ConvertPlayerColor(3))
     SetPlayerRacePreference(Player(3), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(3), false)
-    SetPlayerController(Player(3), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(3), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(4), 4)
     SetPlayerColor(Player(4), ConvertPlayerColor(4))
     SetPlayerRacePreference(Player(4), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(4), false)
-    SetPlayerController(Player(4), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(4), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(5), 5)
     SetPlayerColor(Player(5), ConvertPlayerColor(5))
     SetPlayerRacePreference(Player(5), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(5), false)
-    SetPlayerController(Player(5), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(5), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(6), 6)
     SetPlayerColor(Player(6), ConvertPlayerColor(6))
     SetPlayerRacePreference(Player(6), RACE_PREF_HUMAN)
@@ -11956,27 +11983,27 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(7), ConvertPlayerColor(7))
     SetPlayerRacePreference(Player(7), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(7), false)
-    SetPlayerController(Player(7), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(7), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(8), 8)
     SetPlayerColor(Player(8), ConvertPlayerColor(8))
     SetPlayerRacePreference(Player(8), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(8), false)
-    SetPlayerController(Player(8), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(8), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(9), 9)
     SetPlayerColor(Player(9), ConvertPlayerColor(9))
     SetPlayerRacePreference(Player(9), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(9), false)
-    SetPlayerController(Player(9), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(9), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(10), 10)
     SetPlayerColor(Player(10), ConvertPlayerColor(10))
     SetPlayerRacePreference(Player(10), RACE_PREF_UNDEAD)
     SetPlayerRaceSelectable(Player(10), false)
-    SetPlayerController(Player(10), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(10), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(11), 11)
     SetPlayerColor(Player(11), ConvertPlayerColor(11))
     SetPlayerRacePreference(Player(11), RACE_PREF_NIGHTELF)
     SetPlayerRaceSelectable(Player(11), false)
-    SetPlayerController(Player(11), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(11), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(18), 12)
     SetPlayerColor(Player(18), ConvertPlayerColor(18))
     SetPlayerRacePreference(Player(18), RACE_PREF_HUMAN)
@@ -12337,6 +12364,16 @@ function InitCustomTeams()
 end
 
 function InitAllyPriorities()
+    SetStartLocPrioCount(0, 9)
+    SetStartLocPrio(0, 0, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 1, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 2, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 3, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 8, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(1, 11)
     SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -12349,50 +12386,46 @@ function InitAllyPriorities()
     SetStartLocPrio(1, 8, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 9, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(2, 10)
+    SetStartLocPrioCount(2, 9)
     SetStartLocPrio(2, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 1, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 2, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(3, 10)
+    SetStartLocPrio(2, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(3, 9)
     SetStartLocPrio(3, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 2, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(4, 10)
+    SetStartLocPrio(3, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(4, 9)
     SetStartLocPrio(4, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(5, 10)
+    SetStartLocPrio(4, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(5, 9)
     SetStartLocPrio(5, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 4, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 8, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(6, 10)
     SetStartLocPrio(6, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -12404,61 +12437,56 @@ function InitAllyPriorities()
     SetStartLocPrio(6, 7, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 8, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(7, 10)
+    SetStartLocPrioCount(7, 9)
     SetStartLocPrio(7, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(8, 10)
+    SetStartLocPrio(7, 5, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(8, 9)
     SetStartLocPrio(8, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(9, 10)
+    SetStartLocPrio(8, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 6, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(9, 9)
     SetStartLocPrio(9, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(10, 10)
+    SetStartLocPrio(9, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 7, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(10, 9)
     SetStartLocPrio(10, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(11, 10)
+    SetStartLocPrio(10, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(11, 9)
     SetStartLocPrio(11, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 5, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 6, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 7, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 8, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(12, 2)
     SetStartLocPrio(12, 0, 5, MAP_LOC_PRIO_LOW)
     SetStartLocPrio(12, 1, 17, MAP_LOC_PRIO_LOW)
@@ -12553,7 +12581,7 @@ function config()
     SetMapDescription("TRIGSTR_005")
     SetPlayers(18)
     SetTeams(18)
-    SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
+    SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)
     DefineStartLocation(0, -11584.0, -4544.0)
     DefineStartLocation(1, -11584.0, -4544.0)
     DefineStartLocation(2, -11584.0, -4544.0)

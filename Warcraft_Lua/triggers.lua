@@ -18,7 +18,7 @@ end
 
 -- Unit Casts Spell
 function Init_UnitCastsSpell()
-    local t = CreateTrigger()
+    trig_CastSpell = CreateTrigger()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
 
     TriggerAddAction(t, function()
