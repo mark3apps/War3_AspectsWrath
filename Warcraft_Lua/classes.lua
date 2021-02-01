@@ -229,32 +229,6 @@ function init_aiClass()
         --Teleport Stuff
         --UnitUseItemTarget(udg_AI_Hero[udg_AI_Loop], GetItemOfTypeFromUnitBJ(udg_AI_Hero[udg_AI_Loop], FourCC("I000")), udg_FUNC_Base_Unit)
 
-        -- AI Picks Hero
-        function self:pickHeroes()
-            local i = 1
-            local count = 12
-            local x, y, u, selPlayer, lastCreatedHero, randInt, heroName
-
-            while (i <= count) do
-                selPlayer = ConvertedPlayer(i)
-                if (GetPlayerController(selPlayer) == MAP_CONTROL_COMPUTER) then
-
-                    -- Pick random hero
-                    randInt = GetRandomInt(3, 3)
-                    heroName = hero.heroes[randInt]
-                    lastCreatedHero = CreateUnit(selPlayer, hero[heroName].id, 0, 0, 0)
-
-                    -- Add Starting Spells
-                    debugfunc(function()
-                        hero:setupHero(lastCreatedHero)
-                        self:initHero(lastCreatedHero)
-                    end, "Init Hero")
-
-                end
-
-                i = i + 1
-            end
-        end
 
         -- Update Intel
         function self:updateIntel(i)

@@ -73,13 +73,15 @@ function init_Delayed_1()
     TriggerRegisterTimerEventSingle(t, 1)
     TriggerAddAction(t, function()
         debugfunc(function()
-            ai:pickHeroes()
+            
             dprint("pick Heroes Successfull", 2)
             init_aiLoopStates()
             dprint("AI Started", 2)
 
             orderStartingUnits()
             spawn:startSpawn()
+
+            startHeroPicker()
 
             dprint("Spawn Started", 2)
         end, "Start Delayed Triggers")
@@ -160,6 +162,14 @@ function Init_Map()
         SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
     end)
 
+end
+
+function startHeroPicker()
+    HeroSelector.initHeroes()
+
+    for i = 1, 8 do
+        HeroSelector.show(true, player(i))
+    end
 end
 
 function init_aiLoopStates()
