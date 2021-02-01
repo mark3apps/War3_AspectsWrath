@@ -1128,50 +1128,21 @@ function HeroSelector.initHeroes()
     
     local categoryMelee = 1 --autodetected
     local categoryRanged = 2 --autodetected
-    local categoryStr = 4
-    local categoryAgi = 8
-    local categoryInt = 16
-    HeroSelector.addUnitCategory('Hpal', categoryStr)
-    HeroSelector.addUnitCategory('Hamg', categoryInt)
-    HeroSelector.addUnitCategory('Hblm', categoryInt)
-    HeroSelector.addUnitCategory('Hmkg', categoryStr)
-    HeroSelector.addUnitCategory('Ofar', categoryInt)
-    HeroSelector.addUnitCategory('Oshd', categoryAgi)
-    HeroSelector.addUnitCategory('Otch', categoryAgi)
-    HeroSelector.addUnitCategory('Obla', categoryAgi)
-    HeroSelector.addUnitCategory('Emoo', categoryAgi)
-    HeroSelector.addUnitCategory('Edem', categoryAgi)
-    HeroSelector.addUnitCategory('Ekee', categoryInt)
-    HeroSelector.addUnitCategory('Ewar', categoryAgi)
-    HeroSelector.addUnitCategory('Udea', categoryStr)
-    HeroSelector.addUnitCategory('Ulic', categoryInt)
-    HeroSelector.addUnitCategory('Udre', categoryStr)
-    HeroSelector.addUnitCategory('Ucrl', categoryStr)
+    local categoryTank = 4
+    local categoryAssassin = 8
+    local categoryMage = 16
+    HeroSelector.addUnitCategory(hero.brawler.four, categoryTank)
+    HeroSelector.addUnitCategory(hero.tactition.four, categoryTank)
+    HeroSelector.addUnitCategory(hero.shiftMaster.four, categoryAssassin)
+    HeroSelector.addUnitCategory(hero.manaAddict.four, categoryMage)
+    HeroSelector.addUnitCategory(hero.timeMage.four, categoryMage)
 
-    HeroSelector.setUnitCategory('Hgam', categoryInt + categoryRanged)
-    HeroSelector.setUnitCategory("Eevi", categoryAgi + categoryMelee)
+    HeroSelector.addUnit(hero.brawler.four)
+    HeroSelector.addUnit(hero.tactition.four)
+    HeroSelector.addUnit(hero.shiftMaster.four)
+    HeroSelector.addUnit(hero.manaAddict.four)
+    HeroSelector.addUnit(hero.timeMage.four)
 
-
-    HeroSelector.addUnit('Hpal') --add paladin as selectable Hero
-    HeroSelector.addUnit('Hamg')
-    HeroSelector.addUnit('Hblm')
-    HeroSelector.addUnit('Hmkg')
-    HeroSelector.addUnit("Obla", true) --this unit can only be randomed
-    HeroSelector.addUnit("Ofar")
-    HeroSelector.addUnit("Otch", 1) --this unit can only be randomed
-    HeroSelector.addUnit() --this is an empty box. It still takes a slot.
-    HeroSelector.addUnit() --this is an empty box. It still takes a slot.
-    HeroSelector.addUnit("Oshd")
-    HeroSelector.addUnit("Edem")
-    HeroSelector.addUnit() --this is an empty box. It still takes a slot.
-    HeroSelector.addUnit() --this is an empty box. It still takes a slot.
-    HeroSelector.addUnit("Ekee")
-    HeroSelector.addUnit("Emoo")
-    HeroSelector.addUnit("Ewar",true)
-    HeroSelector.addUnit("Udea")
-    HeroSelector.addUnit("Ulic")
-    HeroSelector.addUnit("Udre")
-    HeroSelector.addUnit("Ucrl",1)
 
 end
 
@@ -1204,14 +1175,13 @@ function HeroSelector.unitCreated(player, unit, isRandom)
         --picked
     end
 
-    SetUnitPosition(unit, GetPlayerStartLocationX(player), GetPlayerStartLocationY(player))
+    hero:setupHero(unit)
 
-    if player == Player(1) then
-                
+    -- Setup AI
+    if (GetPlayerController(player) == MAP_CONTROL_COMPUTER) then
+        ai:initHero(unit)
     end
 
-    PanCameraToTimedForPlayer(player, GetUnitX(unit), GetUnitY(unit),0)
-    SelectUnitForPlayerSingle(unit, player)
     HeroSelector.enablePick(false, player) --only one pick for this player
     --print(GetPlayerName(player),"picks",GetUnitName(unit))
 end
@@ -2491,13 +2461,15 @@ function init_Delayed_1()
     TriggerRegisterTimerEventSingle(t, 1)
     TriggerAddAction(t, function()
         debugfunc(function()
-            ai:pickHeroes()
+            
             dprint("pick Heroes Successfull", 2)
             init_aiLoopStates()
             dprint("AI Started", 2)
 
             orderStartingUnits()
             spawn:startSpawn()
+
+            startHeroPicker()
 
             dprint("Spawn Started", 2)
         end, "Start Delayed Triggers")
@@ -2578,6 +2550,14 @@ function Init_Map()
         SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
     end)
 
+end
+
+function startHeroPicker()
+    HeroSelector.initHeroes()
+
+    for i = 1, 8 do
+        HeroSelector.show(true, player(i))
+    end
 end
 
 function init_aiLoopStates()
@@ -3635,32 +3615,6 @@ function init_aiClass()
         --Teleport Stuff
         --UnitUseItemTarget(udg_AI_Hero[udg_AI_Loop], GetItemOfTypeFromUnitBJ(udg_AI_Hero[udg_AI_Loop], FourCC("I000")), udg_FUNC_Base_Unit)
 
-        -- AI Picks Hero
-        function self:pickHeroes()
-            local i = 1
-            local count = 12
-            local x, y, u, selPlayer, lastCreatedHero, randInt, heroName
-
-            while (i <= count) do
-                selPlayer = ConvertedPlayer(i)
-                if (GetPlayerController(selPlayer) == MAP_CONTROL_COMPUTER) then
-
-                    -- Pick random hero
-                    randInt = GetRandomInt(3, 3)
-                    heroName = hero.heroes[randInt]
-                    lastCreatedHero = CreateUnit(selPlayer, hero[heroName].id, 0, 0, 0)
-
-                    -- Add Starting Spells
-                    debugfunc(function()
-                        hero:setupHero(lastCreatedHero)
-                        self:initHero(lastCreatedHero)
-                    end, "Init Hero")
-
-                end
-
-                i = i + 1
-            end
-        end
 
         -- Update Intel
         function self:updateIntel(i)
@@ -5374,7 +5328,7 @@ function ABTY_ShifterSwitch()
             u = FirstOfGroup(g)
             if u == nil then break end
 
-            if IsUnitIllusion(u) then
+            if IsUnitIllusion(u) and GetOwningPlayer(u) == castingPlayer then
                 GroupAddUnit(gGood, u)
             end
 
