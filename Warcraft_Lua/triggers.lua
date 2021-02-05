@@ -19,13 +19,13 @@ end
 -- Unit Casts Spell
 function Init_UnitCastsSpell()
     trig_CastSpell = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_CAST)
+    TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
 
-    TriggerAddAction(t, function()
+    TriggerAddAction(trig_CastSpell, function()
         local triggerUnit = GetTriggerUnit()
-
+        local order = OrderId2String(GetIssuedOrderId())
         debugfunc(function()
-            CAST_aiHero(triggerUnit)
+            -- CAST_aiHero(triggerUnit, order)
         end, "CAST_aiHero")
     end)
 end
@@ -73,7 +73,9 @@ function Init_finishCasting()
     TriggerAddAction(t, function()
 
         local triggerUnit = GetTriggerUnit()
-        unitKeepMoving(triggerUnit)
+        if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
+            unitKeepMoving(triggerUnit)
+        end
     end)
 end
 
@@ -82,9 +84,11 @@ function Init_stopCasting()
     local t = CreateTrigger()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
     TriggerAddAction(t, function()
-
         local triggerUnit = GetTriggerUnit()
-        unitKeepMoving(triggerUnit)
+
+        if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
+            unitKeepMoving(triggerUnit)
+        end
     end)
 end
 
@@ -109,13 +113,15 @@ function init_MoveToNext()
         local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
         local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
 
-        if isAllied or isFed then
-            local region = loc:getRegion(GetTriggeringRegion())
+        if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
+            if isAllied or isFed then
+                local region = loc:getRegion(GetTriggeringRegion())
 
-            if (isAllied and region.allied) or (isFed and region.fed) then
-                local x, y = loc:getRandomXY(region.next)
-                indexer:updateEnd(triggerUnit, x, y)
-                indexer:order(triggerUnit)
+                if (isAllied and region.allied) or (isFed and region.fed) then
+                    local x, y = loc:getRandomXY(region.next)
+                    indexer:updateEnd(triggerUnit, x, y)
+                    indexer:order(triggerUnit)
+                end
             end
         end
     end)
@@ -164,7 +170,7 @@ do
         for i = 0, 11 do
             BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_F, 0, true)
         end
-        
+
         TriggerAddAction(trigger, function()
 
             local player = GetTriggerPlayer()
@@ -196,17 +202,18 @@ function addUnitsToIndex(unit)
     end
 end
 
-function CAST_aiHero(triggerUnit)
+function CAST_aiHero(triggerUnit, order)
     if IsUnitInGroup(triggerUnit, ai.heroGroup) then
         local heroName = indexer:getKey(triggerUnit, "heroName")
-        ai:castSpell(heroName)
+
+        ai:castSpell(heroName, order)
     end
 end
 
 -- Order starting units to attack
 function orderStartingUnits()
     local g = CreateGroup()
-    local u
+    local u, uId
 
     g = GetUnitsInRectAll(GetPlayableMapRect())
     while true do
@@ -218,7 +225,9 @@ function orderStartingUnits()
         debugfunc(function()
 
             indexer:add(u)
-            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and
+
+            uId = GetUnitTypeId(u)
+            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and uId ~= FourCC("hhdl") and uId ~= FourCC("hpea") and
                 (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
                     IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
 
@@ -244,7 +253,6 @@ function unitKeepMoving(unit)
     end
 end
 
-
 --
 --  Ability Triggers
 --
@@ -255,83 +263,84 @@ function ABTY_ShifterSwitch()
     local t = CreateTrigger()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
     TriggerAddAction(t, function()
-    
-    if GetSpellAbilityId() == hero.shiftMaster.switch.id then
 
-        local g = CreateGroup()
-        local gGood = CreateGroup()
-        local p = GetSpellTargetLoc()
-        local u
-        local castingUnit = GetTriggerUnit()
-        local castingPlayer = GetOwningPlayer(castingUnit)
+        if GetSpellAbilityId() == hero.shiftMaster.switch.id then
 
-        local xOrig = GetUnitX(castingUnit)
-        local yOrig = GetUnitY(castingUnit)
-        local pOrig = Location(xOrig, yOrig)
-        local rOrig = GetUnitFacing(castingUnit)
+            local g = CreateGroup()
+            local gGood = CreateGroup()
+            local p = GetSpellTargetLoc()
+            local u
+            local castingUnit = GetTriggerUnit()
+            local castingPlayer = GetOwningPlayer(castingUnit)
 
-        g = GetUnitsInRangeOfLocAll(200, p)
-        RemoveLocation(p)
+            local xOrig = GetUnitX(castingUnit)
+            local yOrig = GetUnitY(castingUnit)
+            local pOrig = Location(xOrig, yOrig)
+            local rOrig = GetUnitFacing(castingUnit)
 
+            g = GetUnitsInRangeOfLocAll(200, p)
+            RemoveLocation(p)
 
-        while true do
-            u = FirstOfGroup(g)
-            if u == nil then break end
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
 
-            if IsUnitIllusion(u) and GetOwningPlayer(u) == castingPlayer then
-                GroupAddUnit(gGood, u)
+                if IsUnitIllusion(u) and GetOwningPlayer(u) == castingPlayer then
+                    GroupAddUnit(gGood, u)
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            if CountUnitsInGroup(gGood) > 0 then
+                print("Switching")
+                u = GroupPickRandomUnit(gGood)
+                local xIll = GetUnitX(u)
+                local yIll = GetUnitY(u)
+                local pIll = Location(xIll, yIll)
+                local rIll = GetUnitFacing(u)
+
+                ShowUnitHide(u)
+                ShowUnitHide(castingUnit)
+
+                PauseUnit(castingUnit, true)
+                PauseUnit(u, true)
+
+                AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pIll)
+                DestroyEffect(GetLastCreatedEffectBJ())
+                AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pOrig)
+                DestroyEffect(GetLastCreatedEffectBJ())
+
+                PolledWait(0.1)
+
+                SetUnitX(castingUnit, xIll)
+                SetUnitY(castingUnit, yIll)
+                SetUnitX(u, xOrig)
+                SetUnitY(u, yOrig)
+
+                PauseUnit(castingUnit, false)
+                PauseUnit(u, false)
+                SetUnitInvulnerable(castingUnit, false)
+                SetUnitInvulnerable(u, false)
+                ShowUnitShow(castingUnit)
+                ShowUnitShow(u)
+
+                SelectUnitForPlayerSingle(castingUnit, castingPlayer)
+
+                RemoveLocation(pIll)
+                RemoveLocation(pOrig)
+            else
+
+                BlzEndUnitAbilityCooldown(castingUnit, hero.shiftMaster.switch.id)
+                local abilitymana = BlzGetAbilityManaCost(hero.shiftMaster.switch.id,
+                                        GetUnitAbilityLevel(castingUnit, hero.shiftMaster.switch.id))
+                SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
+                print("added ability and mana back")
             end
 
-            GroupRemoveUnit(g, u)
         end
-        DestroyGroup(g)
-
-        if CountUnitsInGroup(gGood) > 0 then
-            print("Switching")
-            u = GroupPickRandomUnit(gGood)
-            local xIll = GetUnitX(u)
-            local yIll = GetUnitY(u)
-            local pIll = Location(xIll, yIll)
-            local rIll = GetUnitFacing(u)
-
-            ShowUnitHide(u)
-            ShowUnitHide(castingUnit)
-
-            PauseUnit(castingUnit, true)
-            PauseUnit(u, true)
-
-            AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pIll)
-            DestroyEffect(GetLastCreatedEffectBJ())
-            AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pOrig)
-            DestroyEffect(GetLastCreatedEffectBJ())
-            
-            PolledWait(0.1)
-
-            SetUnitX(castingUnit, xIll)
-            SetUnitY(castingUnit, yIll)
-            SetUnitX(u, xOrig)
-            SetUnitY(u, yOrig)
-
-            PauseUnit(castingUnit, false)
-            PauseUnit(u, false)
-            SetUnitInvulnerable(castingUnit, false)
-            SetUnitInvulnerable(u, false)
-            ShowUnitShow(castingUnit)
-            ShowUnitShow(u)
-
-            SelectUnitForPlayerSingle(castingUnit, castingPlayer)
-
-            RemoveLocation(pIll)
-            RemoveLocation(pOrig)
-        else
-            
-            BlzEndUnitAbilityCooldown(castingUnit, hero.shiftMaster.switch.id)
-            local abilitymana = BlzGetAbilityManaCost(hero.shiftMaster.switch.id, GetUnitAbilityLevel(castingUnit, hero.shiftMaster.switch.id))
-            SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana )
-            print("added ability and mana back")
-        end
-
-
-    end
     end)
 end

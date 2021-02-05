@@ -82,7 +82,7 @@ function init_aiClass()
 
         function self:initHero(heroUnit)
             self.count = self.count + 1
-            self.tick = (5.00 + (self.count * 0.1)) / self.count
+            self.tick = (1.00 + (self.count * 0.1)) / self.count
 
             local i = self.heroOptions[self.count]
             print("Name: " .. i)
@@ -140,7 +140,7 @@ function init_aiClass()
 
                 self[i].lifeHighPercent = 65.00
                 self[i].lifeLowPercent = 20.00
-                self[i].lifeLowNumber = 450.00
+                self[i].lifeLowNumber = 400.00
 
                 self[i].highDamageSingle = 17.00
                 self[i].highDamageAverage = 25.00
@@ -176,7 +176,7 @@ function init_aiClass()
 
                 self[i].lifeHighPercent = 75.00
                 self[i].lifeLowPercent = 20.00
-                self[i].lifeLowNumber = 400.00
+                self[i].lifeLowNumber = 350.00
 
                 self[i].highDamageSingle = 17.00
                 self[i].highDamageAverage = 25.00
@@ -193,7 +193,7 @@ function init_aiClass()
 
                 self[i].lifeHighPercent = 85.00
                 self[i].lifeLowPercent = 25.00
-                self[i].lifeLowNumber = 400.00
+                self[i].lifeLowNumber = 350.00
 
                 self[i].highDamageSingle = 8.00
                 self[i].highDamageAverage = 17.00
@@ -255,10 +255,13 @@ function init_aiClass()
                 self[i].unitPowerEnemy = nil
 
                 self[i].clumpFriend = nil
+                self[i].clumpFriendNumber = 0
                 self[i].clumpFriendPower = 0.00
                 self[i].clumpEnemy = nil
+                self[i].clumpEnemyNumber = 0
                 self[i].clumpEnemyPower = 0.00
                 self[i].clumpBoth = nil
+                self[i].clumpBothNumber = 0
                 self[i].clumpBothPower = 0.00
 
                 GroupClear(self[i].heroesFriend)
@@ -277,8 +280,7 @@ function init_aiClass()
                 local unitPowerRangeMultiplier = 0.00
                 local u
                 local clumpUnit
-                local powerAllyTemp
-                local powerEnemyTemp
+                local powerAllyTemp, powerAllyNumTemp, powerEnemyTemp, powerEnemyNumTemp
 
                 GroupEnumUnitsInRange(g, self[i].x, self[i].y, self[i].intelRange, nil)
 
@@ -357,6 +359,8 @@ function init_aiClass()
                         if self[i].clumpCheck == true then
                             powerAllyTemp = 0
                             powerEnemyTemp = 0
+                            powerAllyNumTemp = 0
+                            powerEnemyNumTemp = 0
                             clump = CreateGroup()
 
                             GroupEnumUnitsInRange(clump, unitX, unitY, self[i].clumpRange, nil)
@@ -370,14 +374,24 @@ function init_aiClass()
                                 if IsUnitAliveBJ(clumpUnit) and IsUnitType(clumpUnit, UNIT_TYPE_STRUCTURE) == false then
                                     if IsUnitAlly(clumpUnit, self[i].player) then
                                         powerAllyTemp = powerAllyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+                                        powerAllyNumTemp = powerAllyNumTemp + 1
                                     else
                                         powerEnemyTemp = powerEnemyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+                                        powerEnemyNumTemp = powerEnemyNumTemp + 1
                                     end
                                 end
 
                                 GroupRemoveUnit(clump, clumpUnit)
                             end
                             DestroyGroup(clump)
+
+                            if powerAllyNumTemp > self[i].clumpFriendNumber then
+                                self[i].clumpFriendNumber = powerAllyNumTemp
+                            end
+
+                            if powerEnemyNumTemp > self[i].clumpEnemyNumber then
+                                self[i].clumpEnemyNumber = powerEnemyNumTemp
+                            end
 
                             if powerAllyTemp > self[i].clumpFriendPower then
                                 self[i].clumpFriendPower = powerAllyTemp
@@ -407,6 +421,7 @@ function init_aiClass()
                     table.remove(self[i].lifeHistory, 1)
                 end
 
+                self[i].clumpBothNumber = self[i].clumpFriendNumber + self[i].clumpEnemyNumber
                 self[i].percentLifeSingle = self[i].lifeHistory[#self[i].lifeHistory - 1] -
                                                 self[i].lifeHistory[#self[i].lifeHistory]
                 self[i].percentLifeAverage = self[i].lifeHistory[1] - self[i].lifeHistory[#self[i].lifeHistory]
@@ -425,8 +440,10 @@ function init_aiClass()
                 self[i].powerBase = self[i].powerBase + (0.25 * I2R(self[i].level))
                 self[i].powerHero = self[i].powerBase + (self[i].powerLevel * I2R(self[i].level))
 
+                print(self[i].currentOrder)
                 -- print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
-                -- print("Clump Both: " .. R2S(self[i].clumpBothPower))
+                --print("Clump Both: " .. R2S(self[i].clumpBothPower))
+                --print("Clump: " .. GetUnitName(self[i].clumpBoth))
                 -- print("Enemies Nearby: " .. self[i].countUnitEnemy)
                 -- print("Power Clump Enemy: " .. self[i].powerEnemy)
                 -- print("Hero Power: " .. R2S(self[i].powerHero))
@@ -576,10 +593,10 @@ function init_aiClass()
                         self:ACTIONtravelToDest(i)
                         self[i].order = self[i].currentOrder
                     else
-                        print("Still Casting Spell")
+                        print("Still Casting Spell Auto")
                     end
                 elseif self[i].castingDuration > 0.00 then
-                    print("Still Casting Spell")
+                    print("Still Casting Spell Manual")
                     print(self[i].castingDuration)
                     self[i].castingDuration = self[i].castingDuration - (self.tick * self.count)
                 else
@@ -590,6 +607,9 @@ function init_aiClass()
                     self:ACTIONtravelToDest(i)
                     self[i].order = self[i].currentOrder
                 end
+
+                print("hi")
+                print(self[i].order)
             end
         end
 
@@ -597,7 +617,7 @@ function init_aiClass()
         -- ACTIONS
         --
 
-        function self:castSpell(i, duration, danger)
+        function self:castSpell(i, order, duration, danger)
             danger = danger or false
             duration = duration or -10.00
 
@@ -612,7 +632,8 @@ function init_aiClass()
                 end
 
                 self[i].castingDuration = duration
-                self[i].order = OrderId2String(GetUnitCurrentOrder(self[i].unit))
+                self[i].order = order
+
                 print(self[i].order)
             end
         end
@@ -653,31 +674,38 @@ function init_aiClass()
 
         function self:ACTIONtravelToDest(i)
             local unitX, unitY
-            if self[i].lowLife == true or self[i].fleeing == true then
-                unitX = GetUnitX(self[i].unitHealing)
-                unitY = GetUnitY(self[i].unitHealing)
-                IssuePointOrder(self[i].unit, "move", unitX, unitY)
-            else
-                unitX = GetUnitX(self[i].unitAttacking)
-                unitY = GetUnitY(self[i].unitAttacking)
-                IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+
+            if not self[i].casting then
+                if self[i].lowLife == true or self[i].fleeing == true then
+                    unitX = GetUnitX(self[i].unitHealing)
+                    unitY = GetUnitY(self[i].unitHealing)
+                    IssuePointOrder(self[i].unit, "move", unitX, unitY)
+                else
+                    unitX = GetUnitX(self[i].unitAttacking)
+                    unitY = GetUnitY(self[i].unitAttacking)
+                    IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                end
+                print("x:" .. unitX .. "y:" .. unitY)
             end
-            print("x:" .. unitX .. "y:" .. unitY)
+
         end
 
         function self:ACTIONattackBase(i)
-            self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
-            local unitX = GetUnitX(self[i].unitAttacking)
-            local unitY = GetUnitY(self[i].unitAttacking)
-            print("attacking " .. GetUnitName(self[i].unitAttacking))
 
-            if not self:teleportCheck(i, unitX, unitY) then
-                print("Unit: " .. i)
-                print("TeamNumber: " .. self[i].teamNumber)
-                
-                print("x:" .. unitX .. "y:" .. unitY)
+            if not self[i].casting then
+                self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
+                local unitX = GetUnitX(self[i].unitAttacking)
+                local unitY = GetUnitY(self[i].unitAttacking)
+                print("attacking " .. GetUnitName(self[i].unitAttacking))
 
-                IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                if not self:teleportCheck(i, unitX, unitY) then
+                    print("Unit: " .. i)
+                    print("TeamNumber: " .. self[i].teamNumber)
+
+                    print("x:" .. unitX .. "y:" .. unitY)
+
+                    IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                end
             end
         end
 
@@ -696,48 +724,47 @@ function init_aiClass()
             local heroUnit = self[i].unit
             local heroX = GetUnitX(self[i].unit)
             local heroY = GetUnitY(self[i].unit)
-
             local distanceOrig = distance(heroX, heroY, destX, destY)
+            local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(heroUnit, hero.item.teleportation.abilityId)
 
-            GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
+            if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
+
+                GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
+                while true do
+                    u = FirstOfGroup(g)
+                    if u == nil then
+                        break
+                    end
+
+                    unitX = GetUnitX(u)
+                    unitY = GetUnitY(u)
+                    destDistanceNew = distance(destX, destY, unitX, unitY)
+
+                    if destDistanceNew < destDistance then
+                        destDistance = destDistanceNew
+                        teleportUnit = u
+                    end
+
+                    GroupRemoveUnit(g, u)
                 end
+                DestroyGroup(g)
 
-                unitX = GetUnitX(u)
-                unitY = GetUnitY(u)
-                destDistanceNew = distance(destX, destY, unitX, unitY)
+                if distanceOrig + 4000 > destDistanceNew then
 
-                if destDistanceNew < destDistance then
-                    destDistance = destDistanceNew
-                    teleportUnit = u
-                end
-
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
-
-            print(GetUnitName(teleportUnit))
-
-            
-            PingMinimap(GetUnitX(teleportUnit), GetUnitY(teleportUnit), 15)
-
-            if distanceOrig + 2000 > destDistanceNew then
-                local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(heroUnit, hero.item.teleportation.abilityId)
-                
-                if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
                     print("Teleporting")
 
                     DisableTrigger(trig_CastSpell)
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
                     EnableTrigger(trig_CastSpell)
-                    self:castSpell(i, 6)
-                end
+                    debugfunc(function()
+                        self:castSpell(i, "teleport", 6)
+                    end, "Define Classes")
 
-                return true
+                    return true
+                else
+                    return false
+                end
             else
                 return false
             end
@@ -752,11 +779,13 @@ function init_aiClass()
             -------
 
             -- Mana Shield
-            curSpell = hero:spell(self[i], "manaShield")
-            if curSpell.castable == true and curSpell.hasBuff == false then
-                print(curSpell.name)
-                IssueImmediateOrder(self[i].unit, curSpell.order)
-                self:castSpell(i)
+            if self[i].casting == false then
+                curSpell = hero:spell(self[i], "manaShield")
+                if curSpell.castable == true and curSpell.hasBuff == false then
+                    print(curSpell.name)
+                    IssueImmediateOrder(self[i].unit, curSpell.order)
+                    self:castSpell(i, curSpell.order)
+                end
             end
 
             --  Cast available all the time
@@ -767,7 +796,7 @@ function init_aiClass()
                 if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
                     print(curSpell.name)
                     IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
                 end
             end
 
@@ -781,7 +810,7 @@ function init_aiClass()
                     print(curSpell.name)
                     IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy),
                         GetUnitY(self[i].clumpEnemy))
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
                 end
             end
         end
@@ -853,7 +882,7 @@ function init_aiClass()
                 if curSpell.castable == true and curSpell.manaLeft > 0 then
                     print(curSpell.name)
                     IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
                 end
             end
 
@@ -865,7 +894,7 @@ function init_aiClass()
                 if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
                     print(curSpell.name)
                     IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
                 end
 
                 -- Falling Strike
@@ -882,7 +911,7 @@ function init_aiClass()
                             GetUnitY(self[i].clumpEnemy))
                     end
 
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
                 end
 
                 -- Shift Storm
@@ -890,7 +919,7 @@ function init_aiClass()
                 if self[i].countUnitEnemy >= 6 and curSpell.castable == true and curSpell.manaLeft > 30 then
                     print(curSpell.name)
                     IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
                 end
             end
 
@@ -907,7 +936,7 @@ function init_aiClass()
                 self[i].lifePercent < 80 and not self[i].casting then
                 print(curSpell.name)
                 IssueImmediateOrder(self[i].unit, curSpell.order)
-                self:castSpell(i)
+                self:castSpell(i, curSpell.order)
             end
 
             if not self[i].fleeing and not self[i].lowLife then
@@ -917,7 +946,7 @@ function init_aiClass()
                     not self[i].casting then
                     print(curSpell.name)
                     IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
                 end
 
                 -- Attack!
@@ -929,39 +958,51 @@ function init_aiClass()
                     u = GroupPickRandomUnit(self[i].heroesEnemy)
                     IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
                     IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
                 end
             end
         end
 
         function self:timeMageAI(i)
+            if self[i].casting then return end
 
-            local curSpell, x, y
+            local curSpell, x, y, u
 
             if not self[i].fleeing and not self[i].lowLife then
 
                 -- chrono Atrophy
                 curSpell = hero:spell(self[i], "chronoAtrophy")
-                if self[i].clumpBothPower >= 400 and curSpell.castable == true and curSpell.manaLeft > 30 and
-                    not self[i].casting then
+                if self[i].clumpBothNumber >= 7 and curSpell.castable and curSpell.manaLeft > 30 then
                     print(curSpell.name)
 
                     x = GetUnitX(self[i].clumpBoth)
                     y = GetUnitY(self[i].clumpBoth)
                     IssuePointOrder(self[i].unit, curSpell.order, x, y)
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
+                    return
                 end
 
                 -- Decay
                 curSpell = hero:spell(self[i], "decay")
-                if CountUnitsInGroup(self[i].heroesEnemies) > 0 and curSpell.castable == true and curSpell.manaLeft > 20 and
-                    not self[i].casting then
+                if CountUnitsInGroup(self[i].heroesEnemies) > 0 and curSpell.castable == true and curSpell.manaLeft > 20 then
+                    print(curSpell.name)
+
+                    u = GroupPickRandomUnit(self[i].heroesEnemies)
+                    IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
+                    self:castSpell(i, curSpell.order)
+                    return
+                end
+
+                -- Time Travel
+                curSpell = hero:spell(self[i], "timeTravel")
+                if self[i].clumpBothNumber >= 4 and curSpell.castable and curSpell.manaLeft > 30 then
                     print(curSpell.name)
 
                     x = GetUnitX(self[i].clumpBoth)
                     y = GetUnitY(self[i].clumpBoth)
                     IssuePointOrder(self[i].unit, curSpell.order, x, y)
-                    self:castSpell(i)
+                    self:castSpell(i, curSpell.order)
+                    return
                 end
             end
         end
