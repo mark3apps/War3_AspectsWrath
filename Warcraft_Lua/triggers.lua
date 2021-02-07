@@ -22,10 +22,10 @@ function Init_UnitCastsSpell()
     TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
 
     TriggerAddAction(trig_CastSpell, function()
-        local triggerUnit = GetTriggerUnit()
-        local order = OrderId2String(GetIssuedOrderId())
+        local triggerUnit = GetTriggerUnit() 
+        local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
         debugfunc(function()
-            -- CAST_aiHero(triggerUnit, order)
+            CAST_aiHero(triggerUnit, order)
         end, "CAST_aiHero")
     end)
 end

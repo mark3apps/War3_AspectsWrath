@@ -442,8 +442,8 @@ function init_aiClass()
 
                 print(self[i].currentOrder)
                 -- print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
-                --print("Clump Both: " .. R2S(self[i].clumpBothPower))
-                --print("Clump: " .. GetUnitName(self[i].clumpBoth))
+                -- print("Clump Both: " .. R2S(self[i].clumpBothPower))
+                -- print("Clump: " .. GetUnitName(self[i].clumpBoth))
                 -- print("Enemies Nearby: " .. self[i].countUnitEnemy)
                 -- print("Power Clump Enemy: " .. self[i].powerEnemy)
                 -- print("Hero Power: " .. R2S(self[i].powerHero))
@@ -618,23 +618,26 @@ function init_aiClass()
         --
 
         function self:castSpell(i, order, duration, danger)
-            danger = danger or false
-            duration = duration or -10.00
 
-            if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
-                self:ACTIONtravelToDest(i)
-            else
-                -- print("Spell Cast")
-                self[i].casting = true
+            if not self[i].casting then
+                danger = danger or false
+                duration = duration or -10.00
 
-                if danger then
-                    self[i].castingDanger = true
+                if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
+                    self:ACTIONtravelToDest(i)
+                else
+                    -- print("Spell Cast")
+                    self[i].casting = true
+
+                    if danger then
+                        self[i].castingDanger = true
+                    end
+
+                    self[i].castingDuration = duration
+                    self[i].order = order
+
+                    print(self[i].order)
                 end
-
-                self[i].castingDuration = duration
-                self[i].order = order
-
-                print(self[i].order)
             end
         end
 
@@ -749,7 +752,7 @@ function init_aiClass()
                 end
                 DestroyGroup(g)
 
-                if distanceOrig + 4000 > destDistanceNew then
+                if distanceOrig - 2000 > destDistanceNew then
 
                     print("Teleporting")
 
@@ -964,7 +967,9 @@ function init_aiClass()
         end
 
         function self:timeMageAI(i)
-            if self[i].casting then return end
+            if self[i].casting then
+                return
+            end
 
             local curSpell, x, y, u
 

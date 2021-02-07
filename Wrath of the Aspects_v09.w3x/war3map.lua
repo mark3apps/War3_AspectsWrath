@@ -1098,8 +1098,8 @@ function HeroSelector.initHeroes()
 
     --HeroSelector.addUnit(hero.brawler.four)
     --HeroSelector.addUnit(hero.tactition.four)
-    --HeroSelector.addUnit(hero.shiftMaster.four)
-    --HeroSelector.addUnit(hero.manaAddict.four)
+    HeroSelector.addUnit(hero.shiftMaster.four)
+    HeroSelector.addUnit(hero.manaAddict.four)
     HeroSelector.addUnit(hero.timeMage.four)
 
 
@@ -3874,8 +3874,8 @@ function init_aiClass()
 
                 print(self[i].currentOrder)
                 -- print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
-                --print("Clump Both: " .. R2S(self[i].clumpBothPower))
-                --print("Clump: " .. GetUnitName(self[i].clumpBoth))
+                -- print("Clump Both: " .. R2S(self[i].clumpBothPower))
+                -- print("Clump: " .. GetUnitName(self[i].clumpBoth))
                 -- print("Enemies Nearby: " .. self[i].countUnitEnemy)
                 -- print("Power Clump Enemy: " .. self[i].powerEnemy)
                 -- print("Hero Power: " .. R2S(self[i].powerHero))
@@ -4050,23 +4050,26 @@ function init_aiClass()
         --
 
         function self:castSpell(i, order, duration, danger)
-            danger = danger or false
-            duration = duration or -10.00
 
-            if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
-                self:ACTIONtravelToDest(i)
-            else
-                -- print("Spell Cast")
-                self[i].casting = true
+            if not self[i].casting then
+                danger = danger or false
+                duration = duration or -10.00
 
-                if danger then
-                    self[i].castingDanger = true
+                if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
+                    self:ACTIONtravelToDest(i)
+                else
+                    -- print("Spell Cast")
+                    self[i].casting = true
+
+                    if danger then
+                        self[i].castingDanger = true
+                    end
+
+                    self[i].castingDuration = duration
+                    self[i].order = order
+
+                    print(self[i].order)
                 end
-
-                self[i].castingDuration = duration
-                self[i].order = order
-
-                print(self[i].order)
             end
         end
 
@@ -4181,7 +4184,7 @@ function init_aiClass()
                 end
                 DestroyGroup(g)
 
-                if distanceOrig + 4000 > destDistanceNew then
+                if distanceOrig - 2000 > destDistanceNew then
 
                     print("Teleporting")
 
@@ -4396,7 +4399,9 @@ function init_aiClass()
         end
 
         function self:timeMageAI(i)
-            if self[i].casting then return end
+            if self[i].casting then
+                return
+            end
 
             local curSpell, x, y, u
 
@@ -5258,10 +5263,10 @@ function Init_UnitCastsSpell()
     TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
 
     TriggerAddAction(trig_CastSpell, function()
-        local triggerUnit = GetTriggerUnit()
-        local order = OrderId2String(GetIssuedOrderId())
+        local triggerUnit = GetTriggerUnit() 
+        local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
         debugfunc(function()
-            -- CAST_aiHero(triggerUnit, order)
+            CAST_aiHero(triggerUnit, order)
         end, "CAST_aiHero")
     end)
 end
@@ -12008,13 +12013,13 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(2), ConvertPlayerColor(2))
     SetPlayerRacePreference(Player(2), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(2), false)
-    SetPlayerController(Player(2), MAP_CONTROL_USER)
+    SetPlayerController(Player(2), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(3), 3)
     ForcePlayerStartLocation(Player(3), 3)
     SetPlayerColor(Player(3), ConvertPlayerColor(3))
     SetPlayerRacePreference(Player(3), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(3), false)
-    SetPlayerController(Player(3), MAP_CONTROL_USER)
+    SetPlayerController(Player(3), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(4), 4)
     SetPlayerColor(Player(4), ConvertPlayerColor(4))
     SetPlayerRacePreference(Player(4), RACE_PREF_HUMAN)
@@ -12034,17 +12039,17 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(7), ConvertPlayerColor(7))
     SetPlayerRacePreference(Player(7), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(7), false)
-    SetPlayerController(Player(7), MAP_CONTROL_USER)
+    SetPlayerController(Player(7), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(8), 8)
     SetPlayerColor(Player(8), ConvertPlayerColor(8))
     SetPlayerRacePreference(Player(8), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(8), false)
-    SetPlayerController(Player(8), MAP_CONTROL_USER)
+    SetPlayerController(Player(8), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(9), 9)
     SetPlayerColor(Player(9), ConvertPlayerColor(9))
     SetPlayerRacePreference(Player(9), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(9), false)
-    SetPlayerController(Player(9), MAP_CONTROL_USER)
+    SetPlayerController(Player(9), MAP_CONTROL_COMPUTER)
     SetPlayerStartLocation(Player(10), 10)
     SetPlayerColor(Player(10), ConvertPlayerColor(10))
     SetPlayerRacePreference(Player(10), RACE_PREF_UNDEAD)
@@ -12415,16 +12420,11 @@ function InitCustomTeams()
 end
 
 function InitAllyPriorities()
-    SetStartLocPrioCount(0, 9)
-    SetStartLocPrio(0, 0, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 1, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 2, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 4, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(0, 4)
+    SetStartLocPrio(0, 0, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 1, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 2, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 3, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(1, 11)
     SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -12457,26 +12457,16 @@ function InitAllyPriorities()
     SetStartLocPrio(3, 6, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 7, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(4, 9)
+    SetStartLocPrioCount(4, 4)
     SetStartLocPrio(4, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 4, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(5, 9)
+    SetStartLocPrio(4, 1, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 2, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 3, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(5, 4)
     SetStartLocPrio(5, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 4, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 5, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 6, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 7, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 8, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 1, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 2, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 3, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(6, 10)
     SetStartLocPrio(6, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -12518,26 +12508,16 @@ function InitAllyPriorities()
     SetStartLocPrio(9, 6, 8, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 7, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(10, 9)
+    SetStartLocPrioCount(10, 4)
     SetStartLocPrio(10, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 8, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(11, 9)
+    SetStartLocPrio(10, 1, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 2, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 3, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(11, 4)
     SetStartLocPrio(11, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 8, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 1, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 2, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 3, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(12, 2)
     SetStartLocPrio(12, 0, 5, MAP_LOC_PRIO_LOW)
     SetStartLocPrio(12, 1, 17, MAP_LOC_PRIO_LOW)
