@@ -585,31 +585,20 @@ function init_aiClass()
         -- AI Casting Spell
         function self:STATEcastingSpell(i)
             if self[i].casting == true then
-                if self[i].castingDuration == -10.00 then
-                    if self[i].currentOrder ~= self[i].order then
-                        self[i].casting = false
-                        self[i].castingDanger = false
-                        -- print("Stopped Casting")
-                        self:ACTIONtravelToDest(i)
-                        self[i].order = self[i].currentOrder
-                    else
-                        print("Still Casting Spell Auto")
-                    end
-                elseif self[i].castingDuration > 0.00 then
-                    print("Still Casting Spell Manual")
-                    print(self[i].castingDuration)
+
+                if self[i].castingDuration > 0.00 then
+                    print("Casting Spell: " .. self[i].castingDuration)
+                    print(self[i].spellCast.name)
+
                     self[i].castingDuration = self[i].castingDuration - (self.tick * self.count)
                 else
-                    print("Stopped Casting (Count)")
+                    print("Stopped Cast")
                     self[i].casting = false
-                    self[i].castingDuration = -10.00
+                    self[i].castingDuration = 0
+                    self[i].spellCast = {}
                     self[i].castingDanger = false
                     self:ACTIONtravelToDest(i)
-                    self[i].order = self[i].currentOrder
                 end
-
-                print("hi")
-                print(self[i].order)
             end
         end
 
@@ -617,26 +606,31 @@ function init_aiClass()
         -- ACTIONS
         --
 
-        function self:castSpell(i, order, duration, danger)
+        function self:castSpell(i, spellCast, danger)
 
             if not self[i].casting then
                 danger = danger or false
-                duration = duration or -10.00
+                if spellCast ~= nil then
+                    if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
+                        self:ACTIONtravelToDest(i)
+                    else
+                        print("Spell Cast")
+                        self[i].casting = true
 
-                if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
-                    self:ACTIONtravelToDest(i)
-                else
-                    -- print("Spell Cast")
-                    self[i].casting = true
+                        if danger then
+                            self[i].castingDanger = true
+                        end
 
-                    if danger then
-                        self[i].castingDanger = true
+                        self[i].spellCast = spellCast
+
+                        if self[i].spellCast.instant then
+                            self[i].castingDuration = 1
+                        else
+                            self[i].castingDuration = self[i].spellCast.castingTime[0]
+                        end
+
+                        print(self[i].spellCast.name)
                     end
-
-                    self[i].castingDuration = duration
-                    self[i].order = order
-
-                    print(self[i].order)
                 end
             end
         end
@@ -756,12 +750,10 @@ function init_aiClass()
 
                     print("Teleporting")
 
-                    DisableTrigger(trig_CastSpell)
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
-                    EnableTrigger(trig_CastSpell)
                     debugfunc(function()
-                        self:castSpell(i, "teleport", 6)
+                        self:castSpell(i, "I000", "teleport")
                     end, "Define Classes")
 
                     return true
@@ -771,6 +763,7 @@ function init_aiClass()
             else
                 return false
             end
+
         end
 
         -- Hero AI
@@ -782,38 +775,41 @@ function init_aiClass()
             -------
 
             -- Mana Shield
-            if self[i].casting == false then
-                curSpell = hero:spell(self[i], "manaShield")
-                if curSpell.castable == true and curSpell.hasBuff == false then
-                    print(curSpell.name)
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell.order)
-                end
+            if self[i].casting then
+                return false
+            end
+
+            curSpell = hero:spell(self[i], "manaShield")
+            if curSpell.castable == true and curSpell.hasBuff == false then
+                print(curSpell.name)
+                IssueImmediateOrder(self[i].unit, curSpell.order)
+                self:castSpell(i, curSpell)
+                return true
             end
 
             --  Cast available all the time
             -------
-            if self[i].casting == false then
-                -- Mana Drain
-                curSpell = hero:spell(self[i], "manaOverload")
-                if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
-                    print(curSpell.name)
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell.order)
-                end
+            -- Mana Drain
+            curSpell = hero:spell(self[i], "manaOverload")
+            if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
+                print(curSpell.name)
+                IssueImmediateOrder(self[i].unit, curSpell.order)
+                self:castSpell(i, curSpell)
+                return true
             end
 
             -- Normal Cast
             --------
 
-            if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
+            if self[i].lowLife == false and self[i].fleeing == false then
                 -- Frost Nova
                 curSpell = hero:spell(self[i], "frostNova")
                 if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
                     print(curSpell.name)
                     IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy),
                         GetUnitY(self[i].clumpEnemy))
-                    self:castSpell(i, curSpell.order)
+                    self:castSpell(i, curSpell)
+                    return true
                 end
             end
         end
@@ -829,105 +825,110 @@ function init_aiClass()
         function self:shiftMasterAI(i)
             local curSpell
 
-            -- Custom Intel
-            local g = CreateGroup()
-            local gIllusions = CreateGroup()
-            local u, uTemp, unitsNearby
-            local illusionsNearby = 0
+            if not self[i].casting then
 
-            -- Find all Nearby Illusions
-            GroupEnumUnitsInRange(g, self[i].x, self[i].y, 600.00, nil)
-            GroupAddGroup(g, gIllusions)
-            while true do
-                u = FirstOfGroup(g)
-                if (u == nil) then
-                    break
+                -- Custom Intel
+                local g = CreateGroup()
+                local gIllusions = CreateGroup()
+                local u, uTemp, unitsNearby
+                local illusionsNearby = 0
+
+                -- Find all Nearby Illusions
+                GroupEnumUnitsInRange(g, self[i].x, self[i].y, 600.00, nil)
+
+                GroupAddGroup(g, gIllusions)
+                while true do
+                    u = FirstOfGroup(g)
+                    if (u == nil) then
+                        break
+                    end
+
+                    if IsUnitIllusion(u) then
+                        illusionsNearby = illusionsNearby + 1
+                    end
+                    GroupRemoveUnit(g, u)
+                end
+                DestroyGroup(g)
+
+                if self[i].fleeing or self[i].lowLife then
+
+                    -- Check if there are illusions Nearby
+                    if illusionsNearby > 0 then
+                        curSpell = hero:spell(self[i], "switch")
+                        if curSpell.castable and curSpell.manaLeft > 0 and not self[i].casting then
+                            print(curSpell.name)
+
+                            u = GroupPickRandomUnit(gIllusions)
+                            GroupEnumUnitsInRange(gUnits, GetUnitX(u), GetUnitY(u), 350, nil)
+                            unitsNearby = 0
+                            while true do
+                                uTemp = FirstOfGroup(g)
+                                if (uTemp == nil) then
+                                    break
+                                end
+
+                                if IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
+                                    unitsNearby = unitsNearby + 1
+                                end
+
+                                GroupRemoveUnit(g, uTemp)
+                            end
+                            DestroyGroup(g)
+
+                            if unitsNearby < self[i].countUnitEnemyClose then
+                                IssuePointOrder(self[i].unit, curspell.order, GetUnitX(u), GetUnitY(u))
+                            end
+                        end
+                    end
+
+                    curSpell = hero:spell(self[i], "shift")
+                    if curSpell.castable == true and curSpell.manaLeft > 0 then
+                        print(curSpell.name)
+                        IssueImmediateOrder(self[i].unit, curSpell.order)
+                        self:castSpell(i, curSpell)
+                    end
                 end
 
-                if IsUnitIllusion(u) then
-                    illusionsNearby = illusionsNearby + 1
-                end
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
+                -- Normal Cast Spells
+                if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
 
-            if self[i].fleeing or self[i].lowLife then
+                    -- Shift
+                    curSpell = hero:spell(self[i], "shift")
+                    if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
+                        print(curSpell.name)
+                        IssueImmediateOrder(self[i].unit, curSpell.order)
+                        self:castSpell(i, curSpell)
+                    end
 
-                -- Check if there are illusions Nearby
-                if illusionsNearby > 0 then
-                    curSpell = hero:spell(self[i], "switch")
-                    if curSpell.castable and curSpell.manaLeft > 0 and not self[i].casting then
+                    -- Falling Strike
+                    curSpell = hero:spell(self[i], "fallingStrike")
+                    if (self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00) and curSpell.castable == true and
+                        curSpell.manaLeft > 45 then
                         print(curSpell.name)
 
-                        u = GroupPickRandomUnit(gIllusions)
-                        GroupEnumUnitsInRange(g, GetUnitX(u), GetUnitY(u), 350, nil)
-                        while true do
-                            uTemp = FirstOfGroup(g)
-                            if (u == nil) then
-                                break
-                            end
-
-                            if IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
-                                unitsNearby = unitsNearby + 1
-                            end
-
-                            GroupRemoveUnit(g, uTemp)
+                        if self[i].powerEnemy > 250.00 then
+                            IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].unitPowerEnemy),
+                                GetUnitY(self[i].unitPowerEnemy))
+                        else
+                            IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy),
+                                GetUnitY(self[i].clumpEnemy))
                         end
-                        DestroyGroup(g)
 
-                        if unitsNearby < self[i].countUnitEnemyClose then
-                            IssuePointOrder(self[i].unit, curspell.order, GetUnitX(u), GetUnitY(u))
-                        end
+                        self:castSpell(i, curSpell)
+                    end
+
+                    -- Shift Storm
+                    curSpell = hero:spell(self[i], "shiftStorm")
+                    if self[i].countUnitEnemy >= 6 and curSpell.castable == true and curSpell.manaLeft > 30 then
+                        print(curSpell.name)
+                        IssueImmediateOrder(self[i].unit, curSpell.order)
+                        self:castSpell(i, curSpell)
                     end
                 end
 
-                curSpell = hero:spell(self[i], "shift")
-                if curSpell.castable == true and curSpell.manaLeft > 0 then
-                    print(curSpell.name)
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell.order)
-                end
+                -- Clean up custom Intel
+                DestroyGroup(gIllusions)
             end
-
-            -- Normal Cast Spells
-            if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
-
-                -- Shift
-                curSpell = hero:spell(self[i], "shift")
-                if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
-                    print(curSpell.name)
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell.order)
-                end
-
-                -- Falling Strike
-                curSpell = hero:spell(self[i], "fallingStrike")
-                if (self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00) and curSpell.castable == true and
-                    curSpell.manaLeft > 45 then
-                    print(curSpell.name)
-
-                    if self[i].powerEnemy > 250.00 then
-                        IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].unitPowerEnemy),
-                            GetUnitY(self[i].unitPowerEnemy))
-                    else
-                        IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy),
-                            GetUnitY(self[i].clumpEnemy))
-                    end
-
-                    self:castSpell(i, curSpell.order)
-                end
-
-                -- Shift Storm
-                curSpell = hero:spell(self[i], "shiftStorm")
-                if self[i].countUnitEnemy >= 6 and curSpell.castable == true and curSpell.manaLeft > 30 then
-                    print(curSpell.name)
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell.order)
-                end
-            end
-
-            -- Clean up custom Intel
-            DestroyGroup(gIllusions)
         end
 
         function self:tactitionAI(i)
@@ -939,7 +940,7 @@ function init_aiClass()
                 self[i].lifePercent < 80 and not self[i].casting then
                 print(curSpell.name)
                 IssueImmediateOrder(self[i].unit, curSpell.order)
-                self:castSpell(i, curSpell.order)
+                self:castSpell(i, curSpell)
             end
 
             if not self[i].fleeing and not self[i].lowLife then
@@ -949,7 +950,7 @@ function init_aiClass()
                     not self[i].casting then
                     print(curSpell.name)
                     IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell.order)
+                    self:castSpell(i, curSpell)
                 end
 
                 -- Attack!
@@ -961,7 +962,7 @@ function init_aiClass()
                     u = GroupPickRandomUnit(self[i].heroesEnemy)
                     IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
                     IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell.order)
+                    self:castSpell(i, curSpell)
                 end
             end
         end
@@ -983,7 +984,7 @@ function init_aiClass()
                     x = GetUnitX(self[i].clumpBoth)
                     y = GetUnitY(self[i].clumpBoth)
                     IssuePointOrder(self[i].unit, curSpell.order, x, y)
-                    self:castSpell(i, curSpell.order)
+                    self:castSpell(i, curSpell)
                     return
                 end
 
@@ -994,7 +995,7 @@ function init_aiClass()
 
                     u = GroupPickRandomUnit(self[i].heroesEnemies)
                     IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
-                    self:castSpell(i, curSpell.order)
+                    self:castSpell(i, curSpell)
                     return
                 end
 
@@ -1006,7 +1007,7 @@ function init_aiClass()
                     x = GetUnitX(self[i].clumpBoth)
                     y = GetUnitY(self[i].clumpBoth)
                     IssuePointOrder(self[i].unit, curSpell.order, x, y)
-                    self:castSpell(i, curSpell.order)
+                    self:castSpell(i, curSpell)
                     return
                 end
             end
@@ -1042,19 +1043,23 @@ function init_heroClass()
             id = FourCC("I000"),
             abilityFour = "A01M",
             abilityId = FourCC("A01M"),
-            order = ""
+            order = "",
+            instant = true,
+            castTime = {6}
         }
         self.item.tank = {
             name = "Tank",
             four = "I005",
             id = FourCC("I005"),
-            order = ""
+            order = "",
+            instant = true
         }
         self.item.mage = {
             name = "Mage",
             four = "I006",
             id = FourCC("I006"),
-            order = ""
+            order = "",
+            instant = true
         }
 
         self.heroes = {"brawler", "manaAddict", "shiftMaster", "tactition", "timeMage"}
@@ -1069,38 +1074,49 @@ function init_heroClass()
         self.brawler.startingSpells = {}
         self.brawler.permanentSpells = {}
         self.brawler.startingItems = {"teleportation", "tank"}
-        self.brawler.drain = {
+        self.drain = {
             name = "Drain",
             four = "A01Y",
             id = FourCC("A01Y"),
             buff = 0,
             order = "stomp",
-            ult = false
+            ult = false,
+            instant = false,
+            castTime = {6, 6, 6, 6, 6, 6}
         }
-        self.brawler.bloodlust = {
+        self.bloodlust = {
             name = "Bloodlust",
             four = "A007",
             id = FourCC("A007"),
             buff = 0,
             order = "stomp",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.brawler.warstomp = {
+        self.warstomp = {
             name = "War Stomp",
             four = "A002",
             id = FourCC("A002"),
             buff = 0,
             order = "stomp",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.brawler.unleashRage = {
+        self.unleashRage = {
             name = "Unleassh Rage",
             four = "A029",
             id = FourCC("A029"),
             buff = 0,
             order = "stomp",
-            ult = true
+            ult = true,
+            instant = false,
+            castTime = {6, 6, 6, 6, 6, 6}
         }
+
+        self[self.drain.four] = self.drain.name
+        self[self.bloodlust.four] = self.bloodlust.name
+        self[self.warstomp.four] = self.warstomp.name
+        self[self.unleashRage.four] = self.unleashRage.name
 
         self.H009 = "tactition"
         self.tactition = {}
@@ -1112,46 +1128,57 @@ function init_heroClass()
         self.tactition.startingSpells = {"raiseBanner"}
         self.tactition.permanentSpells = {}
         self.tactition.startingItems = {"teleportation", "tank"}
-        self.tactition.ironDefense = {
+        self.ironDefense = {
             name = "Iron Defense",
             four = "A019",
             id = FourCC("A019"),
             buff = 0,
             order = "roar",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.tactition.raiseBanner = {
+        self.raiseBanner = {
             name = "Raise Banner",
             four = "A01I",
             id = FourCC("A01I"),
             buff = 0,
             order = "healingward",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.tactition.attack = {
+        self.attack = {
             name = "Attack!",
             four = "A01B",
             id = FourCC("A01B"),
             buff = 0,
             order = "fingerofdeath",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.tactition.bolster = {
+        self.bolster = {
             name = "Bolster",
             four = "A01Z",
             id = FourCC("A01Z"),
             buff = 0,
             order = "tranquility",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.tactition.inspire = {
+        self.inspire = {
             name = "Inspire",
             four = "A042",
             id = FourCC("A042"),
             buff = 0,
             order = "channel",
-            ult = true
+            ult = true,
+            instant = true
         }
+
+        self[self.ironDefense.four] = self.ironDefense.name
+        self[self.raiseBanner.four] = self.raiseBanner.name
+        self[self.attack.four] = self.attack.name
+        self[self.bolster.four] = self.bolster.name
+        self[self.inspire.four] = self.inspire.name
 
         self.E002 = "shiftMaster"
         self.shiftMaster = {}
@@ -1164,15 +1191,7 @@ function init_heroClass()
         self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves",
                                             "swiftAttacks"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
-        self.shiftMaster.attributeBonus = {
-            name = "Attribute Bonus",
-            four = "A031",
-            id = FourCC("A031"),
-            buff = 0,
-            order = "",
-            ult = false
-        }
-        self.shiftMaster.shadeStrength = {
+        self.shadeStrength = {
             name = "Shade Strength",
             four = "A037",
             id = FourCC("A037"),
@@ -1180,7 +1199,7 @@ function init_heroClass()
             order = "",
             ult = false
         }
-        self.shiftMaster.swiftMoves = {
+        self.swiftMoves = {
             name = "Swift Moves",
             four = "A056",
             id = FourCC("A056"),
@@ -1188,7 +1207,7 @@ function init_heroClass()
             order = "",
             ult = false
         }
-        self.shiftMaster.swiftAttacks = {
+        self.swiftAttacks = {
             name = "Swift Attacks",
             four = "A030",
             id = FourCC("A030"),
@@ -1196,46 +1215,63 @@ function init_heroClass()
             order = "",
             ult = false
         }
-        self.shiftMaster.switch = {
+
+        self.switch = {
             name = "Switch",
             four = "A03U",
             id = FourCC("A03U"),
             buff = 0,
             order = "reveal",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.shiftMaster.shift = {
+
+        self.shift = {
             name = "Shift",
             four = "A03T",
             id = FourCC("A03T"),
             buff = 0,
             order = "berserk",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.shiftMaster.fallingStrike = {
+
+        self.fallingStrike = {
             name = "Falling Strike",
             four = "A059",
             id = FourCC("A059"),
             buff = 0,
             order = "thunderbolt",
-            ult = false
+            ult = false,
+            instant = false,
+            castTime = {1.5, 1.5, 1.5, 1.5, 1.5, 1.5}
         }
-        self.shiftMaster.shiftStorm = {
+
+        self.shiftStorm = {
             name = "Shift Storm",
             four = "A03C",
             id = FourCC("A03C"),
             buff = 0,
             order = "channel",
-            ult = true
+            ult = true,
+            instant = true
         }
-        self.shiftMaster.felForm = {
+
+        self.felForm = {
             name = "Fel Form",
             four = "A02Y",
             id = FourCC("A02Y"),
             buff = 0,
             order = "metamorphosis",
-            ult = true
+            ult = true,
+            instant = true
         }
+
+        self[self.switch.four] = self.switch.name
+        self[self.shift.four] = self.shift.name
+        self[self.fallingStrike.four] = self.fallingStrike.name
+        self[self.shiftStorm.four] = self.shiftStorm.name
+        self[self.felForm.four] = self.felForm.name
 
         self.H00R = "manaAddict"
         self.manaAddict = {}
@@ -1247,46 +1283,59 @@ function init_heroClass()
         self.manaAddict.startingSpells = {"manaShield"}
         self.manaAddict.permanentSpells = {}
         self.manaAddict.startingItems = {"teleportation", "mage"}
-        self.manaAddict.manaShield = {
+        self.manaShield = {
             name = "Mana Shield",
             four = "A001",
             id = FourCC("A001"),
             buff = FourCC("BNms"),
             order = "manashieldon",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.manaAddict.frostNova = {
+        self.frostNova = {
             name = "Frost Nova",
             four = "A03S",
             id = FourCC("A03S"),
             buff = 0,
             order = "flamestrike",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.manaAddict.manaOverload = {
+        self.manaOverload = {
             name = "Mana Overload",
             four = "A018",
             id = FourCC("A018"),
             buff = 0,
             order = "manashield",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.manaAddict.manaBurst = {
+        self.manaBurst = {
             name = "Mana Burst",
             four = "A02B",
             id = FourCC("A02B"),
             buff = 0,
             order = "custerrockets",
-            ult = false
+            ult = false,
+            instant = false,
+            castTime = {4, 4, 4, 4, 4, 4}
         }
-        self.manaAddict.starfall = {
+        self.starfall = {
             name = "Starfall",
             four = "A015",
             id = FourCC("A015"),
             buff = 0,
             order = "starfall",
-            ult = true
+            ult = true,
+            instant = true,
+            castTime = {15, 15, 15, 15, 15, 15}
         }
+
+        self[self.manaShield.four] = self.manaShield.name
+        self[self.frostNova.four] = self.frostNova.name
+        self[self.manaOverload.four] = self.manaOverload.name
+        self[self.manaBurst.four] = self.manaBurst.name
+        self[self.starfall.four] = self.starfall.name
 
         self.H00J = "timeMage"
         self.timeMage = {}
@@ -1298,38 +1347,48 @@ function init_heroClass()
         self.timeMage.startingSpells = {}
         self.timeMage.permanentSpells = {}
         self.timeMage.startingItems = {"teleportation", "mage"}
-        self.timeMage.chronoAtrophy = {
+        self.chronoAtrophy = {
             name = "Chrono Atrophy",
             four = "A04K",
             id = FourCC("A04K"),
             buff = 0,
             order = "flamestrike",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.timeMage.decay = {
+        self.decay = {
             name = "Decay",
             four = "A032",
             id = FourCC("A032"),
             buff = 0,
             order = "shadowstrike",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.timeMage.timeTravel = {
+        self.timeTravel = {
             name = "Time Travel",
             four = "A04P",
             id = FourCC("A04P"),
             buff = 0,
             order = "clusterrockets",
-            ult = false
+            ult = false,
+            instant = true
         }
-        self.timeMage.paradox = {
+        self.paradox = {
             name = "Paradox",
             four = "A04N",
             id = FourCC("A04N"),
             buff = 0,
             order = "tranquility",
-            ult = true
+            ult = true,
+            instant = false,
+            castTime = {10, 10, 10}
         }
+
+        self[self.chronoAtrophy.four] = self.chronoAtrophy.name
+        self[self.decay.four] = self.decay.name
+        self[self.timeTravel.four] = self.timeTravel.name
+        self[self.paradox.four] = self.paradox.name
 
         function self:spell(heroUnit, spellName)
             local spellDetails = self[heroUnit.name][spellName]

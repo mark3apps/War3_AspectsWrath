@@ -24,8 +24,10 @@ function Init_UnitCastsSpell()
     TriggerAddAction(trig_CastSpell, function()
         local triggerUnit = GetTriggerUnit() 
         local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
+        local spellCast = CC2Four(GetSpellAbilityId())
+
         debugfunc(function()
-            CAST_aiHero(triggerUnit, order)
+            CAST_aiHero(triggerUnit, spellCast)
         end, "CAST_aiHero")
     end)
 end
@@ -202,11 +204,15 @@ function addUnitsToIndex(unit)
     end
 end
 
-function CAST_aiHero(triggerUnit, order)
+function CAST_aiHero(triggerUnit, spellCast)
     if IsUnitInGroup(triggerUnit, ai.heroGroup) then
         local heroName = indexer:getKey(triggerUnit, "heroName")
+        local spellCastData = hero[hero[spellCast]]
 
-        ai:castSpell(heroName, order)
+        if spellCastData ~= nil then
+            ai:castSpell(heroName, spellCastData)
+            print("MANUAL CAST")
+        end
     end
 end
 
