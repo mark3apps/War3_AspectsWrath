@@ -270,6 +270,7 @@ function HeroSelector.unitCreated(player, unit, isRandom)
     -- Setup AI
     if (GetPlayerController(player) == MAP_CONTROL_COMPUTER) then
         ai:initHero(unit)
+        hero:levelUp(unit)
     end
 
     ShowUnitHide(unit)

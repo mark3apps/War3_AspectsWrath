@@ -1183,11 +1183,6 @@ STRING 401
 Hero Picker
 }
 
-STRING 402
-{
-Already Purchased A Hero.
-}
-
 STRING 403
 // Units: h00H (dummy Hero Selector), Name (Name)
 {

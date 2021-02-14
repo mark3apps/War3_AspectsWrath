@@ -11,8 +11,8 @@ function Init_HeroLevelsUp()
         local levelingUnit = GetLevelingUnit()
 
         debugfunc(function()
-            hero.levelUp(levelingUnit)
-        end, "hero.levelUp")
+            hero:levelUp(levelingUnit)
+        end, "hero:levelUp")
     end)
 end
 
@@ -22,7 +22,7 @@ function Init_UnitCastsSpell()
     TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
 
     TriggerAddAction(trig_CastSpell, function()
-        local triggerUnit = GetTriggerUnit() 
+        local triggerUnit = GetTriggerUnit()
         local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
         local spellCast = CC2Four(GetSpellAbilityId())
 
@@ -101,6 +101,7 @@ function Init_UnitDies()
         local dieingUnit = GetTriggerUnit()
 
         if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
+            baseDies(dieingUnit)
             indexer:remove(dieingUnit)
         end
     end)
@@ -190,6 +191,41 @@ end
 -- Trigger Functions
 -----------------
 
+function baseDies(dieingUnit)
+
+    if IsUnitInGroup(dieingUnit, udg_UNIT_Bases[1]) or IsUnitInGroup(dieingUnit, udg_UNIT_Bases[2]) then
+        local baseGroup, u
+
+        PlaySound("Sound/Interface/Warning.flac")
+        
+        if IsUnitInGroup(dieingUnit, udg_UNIT_Bases[1]) then
+            baseGroup = 1
+            for i = 0, 5 do
+                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
+            end
+
+            print("ALLIED Base has Fallen!")
+            u = CreateUnit(Player(20), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
+
+        else
+            baseGroup = 2
+            for i = 6, 11 do
+                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
+            end
+            
+            print("FEDERATION Base has Fallen!")
+            u = CreateUnit(Player(23), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
+        end
+ 
+        print(GetUnitName(dieingUnit) .. " has been razed.")
+        PingMinimap(GetUnitY(dieingUnit), GetUnitY(dieingUnit), 5)
+        GroupRemoveUnit(udg_UNIT_Bases[baseGroup], dieingUnit)
+        GroupRemoveUnit(udg_UNIT_Bases_Teleport[baseGroup], dieingUnit)
+        GroupAddUnit(udg_UNIT_Bases[3-baseGroup], u)
+        GroupAddUnit(udg_UNIT_Bases_Teleport[3-baseGroup], u)
+    end
+end
+
 -- Add unit to index then order to move if unit is computer controlled and a correct unit
 function addUnitsToIndex(unit)
 
@@ -233,7 +269,8 @@ function orderStartingUnits()
             indexer:add(u)
 
             uId = GetUnitTypeId(u)
-            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and uId ~= FourCC("hhdl") and uId ~= FourCC("hpea") and
+            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and uId ~=
+                FourCC("hhdl") and uId ~= FourCC("hpea") and
                 (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
                     IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
 
@@ -270,7 +307,7 @@ function ABTY_ShifterSwitch()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
     TriggerAddAction(t, function()
 
-        if GetSpellAbilityId() == hero.shiftMaster.switch.id then
+        if GetSpellAbilityId() == hero.switch.id then
 
             local g = CreateGroup()
             local gGood = CreateGroup()
@@ -340,9 +377,9 @@ function ABTY_ShifterSwitch()
                 RemoveLocation(pOrig)
             else
 
-                BlzEndUnitAbilityCooldown(castingUnit, hero.shiftMaster.switch.id)
-                local abilitymana = BlzGetAbilityManaCost(hero.shiftMaster.switch.id,
-                                        GetUnitAbilityLevel(castingUnit, hero.shiftMaster.switch.id))
+                BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
+                local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
+                                        GetUnitAbilityLevel(castingUnit, hero.switch.id))
                 SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
                 print("added ability and mana back")
             end

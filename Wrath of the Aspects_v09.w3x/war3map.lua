@@ -1,7 +1,5 @@
-udg_INTcreepLevel = 0
 udg_PLAYERGRPallied = nil
 udg_PLAYERGRPfederation = nil
-udg_CreepUpgrade = nil
 udg_TIMERCreepSpawn = nil
 udg_TIMEWINcreepLevelUpgrade = nil
 udg_RevivableHeros = nil
@@ -301,6 +299,10 @@ gg_cam_Left_Base_Hero_Cam = nil
 gg_cam_Right_Base_Hero_Cam = nil
 gg_snd_PurgeTarget1 = nil
 gg_snd_BattleNetTick = nil
+gg_snd_CreepAggroWhat1 = nil
+gg_snd_Error = nil
+gg_snd_MapPing = nil
+gg_snd_Warning = nil
 gg_trg_Picking_Phase = nil
 gg_trg_Level100 = nil
 gg_trg_fogofwar = nil
@@ -404,12 +406,7 @@ gg_trg_Revive_Hero = nil
 gg_trg_Revive_Hero_Timer = nil
 gg_trg_End_Of_Game_Left = nil
 gg_trg_End_Of_Game_Right = nil
-gg_trg_SPAWN_Move_All = nil
 gg_trg_Melee_Initialization = nil
-gg_trg_Hero_Picked = nil
-gg_trg_Hero_Add_Starting_Abilities = nil
-gg_trg_Select_Tavern_Create_Units = nil
-gg_trg_Select_Tavern = nil
 gg_trg_baseAndHeals = nil
 gg_unit_h003_0015 = nil
 gg_unit_e003_0058 = nil
@@ -455,10 +452,8 @@ gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
 function InitGlobals()
     local i = 0
-    udg_INTcreepLevel = 1
     udg_PLAYERGRPallied = CreateForce()
     udg_PLAYERGRPfederation = CreateForce()
-    udg_CreepUpgrade = CreateTimer()
     udg_TIMERCreepSpawn = CreateTimer()
     udg_RevivableHeros = CreateGroup()
     udg_TempReal = 0.0
@@ -1139,6 +1134,7 @@ function HeroSelector.unitCreated(player, unit, isRandom)
     -- Setup AI
     if (GetPlayerController(player) == MAP_CONTROL_COMPUTER) then
         ai:initHero(unit)
+        hero:levelUp(unit)
     end
 
     ShowUnitHide(unit)
@@ -4040,6 +4036,7 @@ function init_aiClass()
 
         function self:castSpell(i, spellCast, danger)
 
+            print("TESTING " .. spellCast.name)
             if not self[i].casting then
                 danger = danger or false
                 if spellCast ~= nil then
@@ -4058,7 +4055,7 @@ function init_aiClass()
                         if self[i].spellCast.instant then
                             self[i].castingDuration = 1
                         else
-                            self[i].castingDuration = self[i].spellCast.castingTime[0]
+                            self[i].castingDuration = self[i].spellCast.castTime[1]
                         end
 
                         print(self[i].spellCast.name)
@@ -4185,7 +4182,7 @@ function init_aiClass()
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
                     debugfunc(function()
-                        self:castSpell(i, "I000", "teleport")
+                        self:castSpell(i, hero.item.teleportation)
                     end, "Define Classes")
 
                     return true
@@ -4469,30 +4466,40 @@ function init_heroClass()
 
         self.items = {"teleportation", "tank"}
         self.item = {}
+        
         self.item.teleportation = {
-            name = "Teleport",
+            name = "teleportation",
+            properName = "Teleport",
             four = "I000",
             id = FourCC("I000"),
             abilityFour = "A01M",
             abilityId = FourCC("A01M"),
             order = "",
-            instant = true,
+            instant = false,
             castTime = {6}
         }
+
         self.item.tank = {
-            name = "Tank",
+            name = "tank",
+            properName = "Tank",
             four = "I005",
             id = FourCC("I005"),
             order = "",
             instant = true
         }
+
         self.item.mage = {
-            name = "Mage",
+            name = "mage",
+            properName = "Mage",
             four = "I006",
             id = FourCC("I006"),
             order = "",
             instant = true
         }
+
+        self.item[self.item.teleportation.id] = self.item[self.item.teleportation.name]
+        self.item[self.item.tank.id] = self.item[self.item.tank.name]
+        self.item[self.item.mage.id] = self.item[self.item.mage.name]
 
         self.heroes = {"brawler", "manaAddict", "shiftMaster", "tactition", "timeMage"}
 
@@ -4507,7 +4514,8 @@ function init_heroClass()
         self.brawler.permanentSpells = {}
         self.brawler.startingItems = {"teleportation", "tank"}
         self.drain = {
-            name = "Drain",
+            name = "drain",
+            properName = "Drain",
             four = "A01Y",
             id = FourCC("A01Y"),
             buff = 0,
@@ -4517,7 +4525,8 @@ function init_heroClass()
             castTime = {6, 6, 6, 6, 6, 6}
         }
         self.bloodlust = {
-            name = "Bloodlust",
+            name = "bloodlust",
+            properName = "Bloodlust",
             four = "A007",
             id = FourCC("A007"),
             buff = 0,
@@ -4526,7 +4535,8 @@ function init_heroClass()
             instant = true
         }
         self.warstomp = {
-            name = "War Stomp",
+            name = "warstomp",
+            properName = "War Stomp",
             four = "A002",
             id = FourCC("A002"),
             buff = 0,
@@ -4535,7 +4545,8 @@ function init_heroClass()
             instant = true
         }
         self.unleashRage = {
-            name = "Unleassh Rage",
+            name = "unleashRage",
+            properName = "Unleassh Rage",
             four = "A029",
             id = FourCC("A029"),
             buff = 0,
@@ -4561,7 +4572,8 @@ function init_heroClass()
         self.tactition.permanentSpells = {}
         self.tactition.startingItems = {"teleportation", "tank"}
         self.ironDefense = {
-            name = "Iron Defense",
+            name = "ironDefense",
+            properName = "Iron Defense",
             four = "A019",
             id = FourCC("A019"),
             buff = 0,
@@ -4570,7 +4582,8 @@ function init_heroClass()
             instant = true
         }
         self.raiseBanner = {
-            name = "Raise Banner",
+            name = "raiseBanner",
+            properName = "Raise Banner",
             four = "A01I",
             id = FourCC("A01I"),
             buff = 0,
@@ -4579,7 +4592,8 @@ function init_heroClass()
             instant = true
         }
         self.attack = {
-            name = "Attack!",
+            name = "attack",
+            properName = "Attack!",
             four = "A01B",
             id = FourCC("A01B"),
             buff = 0,
@@ -4588,7 +4602,8 @@ function init_heroClass()
             instant = true
         }
         self.bolster = {
-            name = "Bolster",
+            name = "bolster",
+            properName = "Bolster",
             four = "A01Z",
             id = FourCC("A01Z"),
             buff = 0,
@@ -4597,7 +4612,8 @@ function init_heroClass()
             instant = true
         }
         self.inspire = {
-            name = "Inspire",
+            name = "inspire",
+            properName = "Inspire",
             four = "A042",
             id = FourCC("A042"),
             buff = 0,
@@ -4620,11 +4636,21 @@ function init_heroClass()
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
         self.shiftMaster.startingSpells = {"shift"}
-        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves",
-                                            "swiftAttacks"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "shadeStrength", "swiftMoves",
+                                            "swiftAttacks","attributeStiftMaster"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
+        self.attributeStiftMaster = {
+            name = "attributeStiftMaster",
+            properName = "Attribute Bonus",
+            four = "A031",
+            id = FourCC("A031"),
+            buff = 0,
+            order = "",
+            ult = false
+        }
         self.shadeStrength = {
-            name = "Shade Strength",
+            name = "shadeStrength",
+            properName = "Shade Strength",
             four = "A037",
             id = FourCC("A037"),
             buff = 0,
@@ -4632,7 +4658,8 @@ function init_heroClass()
             ult = false
         }
         self.swiftMoves = {
-            name = "Swift Moves",
+            name = "swiftMoves",
+            properName = "Swift Moves",
             four = "A056",
             id = FourCC("A056"),
             buff = 0,
@@ -4640,7 +4667,8 @@ function init_heroClass()
             ult = false
         }
         self.swiftAttacks = {
-            name = "Swift Attacks",
+            name = "swiftAttacks",
+            properName = "Swift Attacks",
             four = "A030",
             id = FourCC("A030"),
             buff = 0,
@@ -4649,7 +4677,8 @@ function init_heroClass()
         }
 
         self.switch = {
-            name = "Switch",
+            name = "switch",
+            properName = "Switch",
             four = "A03U",
             id = FourCC("A03U"),
             buff = 0,
@@ -4659,7 +4688,8 @@ function init_heroClass()
         }
 
         self.shift = {
-            name = "Shift",
+            name = "shift",
+            properName = "Shift",
             four = "A03T",
             id = FourCC("A03T"),
             buff = 0,
@@ -4669,7 +4699,8 @@ function init_heroClass()
         }
 
         self.fallingStrike = {
-            name = "Falling Strike",
+            name = "fallingStrike",
+            properName = "Falling Strike",
             four = "A059",
             id = FourCC("A059"),
             buff = 0,
@@ -4680,7 +4711,8 @@ function init_heroClass()
         }
 
         self.shiftStorm = {
-            name = "Shift Storm",
+            name = "shiftStorm",
+            properName = "Shift Storm",
             four = "A03C",
             id = FourCC("A03C"),
             buff = 0,
@@ -4690,7 +4722,8 @@ function init_heroClass()
         }
 
         self.felForm = {
-            name = "Fel Form",
+            name = "felForm",
+            properName = "Fel Form",
             four = "A02Y",
             id = FourCC("A02Y"),
             buff = 0,
@@ -4716,7 +4749,8 @@ function init_heroClass()
         self.manaAddict.permanentSpells = {}
         self.manaAddict.startingItems = {"teleportation", "mage"}
         self.manaShield = {
-            name = "Mana Shield",
+            name = "manaShield",
+            properName = "Mana Shield",
             four = "A001",
             id = FourCC("A001"),
             buff = FourCC("BNms"),
@@ -4725,7 +4759,8 @@ function init_heroClass()
             instant = true
         }
         self.frostNova = {
-            name = "Frost Nova",
+            name = "frostNova",
+            properName = "Frost Nova",
             four = "A03S",
             id = FourCC("A03S"),
             buff = 0,
@@ -4734,7 +4769,8 @@ function init_heroClass()
             instant = true
         }
         self.manaOverload = {
-            name = "Mana Overload",
+            name = "manaOverload",
+            properName = "Mana Overload",
             four = "A018",
             id = FourCC("A018"),
             buff = 0,
@@ -4743,7 +4779,8 @@ function init_heroClass()
             instant = true
         }
         self.manaBurst = {
-            name = "Mana Burst",
+            name = "manaBurst",
+            properName = "Mana Burst",
             four = "A02B",
             id = FourCC("A02B"),
             buff = 0,
@@ -4753,13 +4790,14 @@ function init_heroClass()
             castTime = {4, 4, 4, 4, 4, 4}
         }
         self.starfall = {
-            name = "Starfall",
+            name = "starfall",
+            properName = "Starfall",
             four = "A015",
             id = FourCC("A015"),
             buff = 0,
             order = "starfall",
             ult = true,
-            instant = true,
+            instant = false,
             castTime = {15, 15, 15, 15, 15, 15}
         }
 
@@ -4780,7 +4818,8 @@ function init_heroClass()
         self.timeMage.permanentSpells = {}
         self.timeMage.startingItems = {"teleportation", "mage"}
         self.chronoAtrophy = {
-            name = "Chrono Atrophy",
+            name = "chronoAtrophy",
+            properName = "Chrono Atrophy",
             four = "A04K",
             id = FourCC("A04K"),
             buff = 0,
@@ -4789,7 +4828,8 @@ function init_heroClass()
             instant = true
         }
         self.decay = {
-            name = "Decay",
+            name = "decay",
+            properName = "Decay",
             four = "A032",
             id = FourCC("A032"),
             buff = 0,
@@ -4798,7 +4838,8 @@ function init_heroClass()
             instant = true
         }
         self.timeTravel = {
-            name = "Time Travel",
+            name = "timeTravel",
+            properName = "Time Travel",
             four = "A04P",
             id = FourCC("A04P"),
             buff = 0,
@@ -4807,7 +4848,8 @@ function init_heroClass()
             instant = true
         }
         self.paradox = {
-            name = "Paradox",
+            name = "paradox",
+            properName = "Paradox",
             four = "A04N",
             id = FourCC("A04N"),
             buff = 0,
@@ -4823,7 +4865,7 @@ function init_heroClass()
         self[self.paradox.four] = self.paradox.name
 
         function self:spell(heroUnit, spellName)
-            local spellDetails = self[heroUnit.name][spellName]
+            local spellDetails = self[spellName]
             spellDetails.level = self:level(heroUnit, spellName)
             spellDetails.cooldown = self:cooldown(heroUnit, spellName)
             spellDetails.hasBuff = self:hasBuff(heroUnit, spellName)
@@ -4843,26 +4885,26 @@ function init_heroClass()
         end
 
         function self:level(heroUnit, spellName)
-            return GetUnitAbilityLevel(heroUnit.unit, self[heroUnit.name][spellName].id)
+            return GetUnitAbilityLevel(heroUnit.unit, self[spellName].id)
         end
 
         function self:cooldown(heroUnit, spellName)
-            return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, self[heroUnit.name][spellName].id)
+            return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, self[spellName].id)
         end
 
         function self:mana(heroUnit, spellName, level)
-            return BlzGetUnitAbilityManaCost(heroUnit.unit, self[heroUnit.name][spellName].id, level)
+            return BlzGetUnitAbilityManaCost(heroUnit.unit, self[spellName].id, level)
         end
 
         function self:hasBuff(heroUnit, spellName)
-            if self[heroUnit.name][spellName].buff == 0 then
+            if self[spellName].buff == 0 then
                 return false
             else
-                return UnitHasBuffBJ(heroUnit.unit, self[heroUnit.name][spellName].buff)
+                return UnitHasBuffBJ(heroUnit.unit, self[spellName].buff)
             end
         end
 
-        function self.levelUp(unit)
+        function self:levelUp(unit)
             local heroFour = CC2Four(GetUnitTypeId(unit))
             local heroName = self[heroFour]
             local heroLevel = GetHeroLevel(unit)
@@ -4890,11 +4932,10 @@ function init_heroClass()
 
                 if unspentPoints > 0 then
                     for i = 1, #spells.spellLearnOrder do
-                        print(spells.spellLearnOrder[i])
-                        SelectHeroSkill(unit, spells[spells.spellLearnOrder[i]].id)
+                        SelectHeroSkill(unit, self[spells.spellLearnOrder[i]].id)
 
                         if GetHeroSkillPoints(unit) == 0 then
-                            break
+                            return
                         end
                     end
                 end
@@ -4928,7 +4969,7 @@ function init_heroClass()
             -- Give the hero the required Skill points for the spells
             ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
             for i = 1, #spells.startingSpells do
-                picked = spells[spells.startingSpells[i]]
+                picked = self[spells.startingSpells[i]]
 
                 -- Have the hero learn the spell
                 SelectHeroSkill(unit, picked.id)
@@ -4936,7 +4977,7 @@ function init_heroClass()
 
             -- Add the Permanent Spells for the Hero
             for i = 1, #spells.permanentSpells do
-                picked = spells[spells.permanentSpells[i]]
+                picked = self[spells.permanentSpells[i]]
 
                 -- Make the Spell Permanent
                 UnitMakeAbilityPermanent(unit, true, picked.id)
@@ -5311,8 +5352,8 @@ function Init_HeroLevelsUp()
         local levelingUnit = GetLevelingUnit()
 
         debugfunc(function()
-            hero.levelUp(levelingUnit)
-        end, "hero.levelUp")
+            hero:levelUp(levelingUnit)
+        end, "hero:levelUp")
     end)
 end
 
@@ -5322,7 +5363,7 @@ function Init_UnitCastsSpell()
     TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
 
     TriggerAddAction(trig_CastSpell, function()
-        local triggerUnit = GetTriggerUnit() 
+        local triggerUnit = GetTriggerUnit()
         local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
         local spellCast = CC2Four(GetSpellAbilityId())
 
@@ -5401,6 +5442,7 @@ function Init_UnitDies()
         local dieingUnit = GetTriggerUnit()
 
         if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
+            baseDies(dieingUnit)
             indexer:remove(dieingUnit)
         end
     end)
@@ -5490,6 +5532,36 @@ end
 -- Trigger Functions
 -----------------
 
+function baseDies(dieingUnit)
+
+    if IsUnitInGroup(dieingUnit, udg_UNIT_Bases[1]) or IsUnitInGroup(dieingUnit, udg_UNIT_Bases[2]) then
+        local baseGroup, u
+
+        PlaySound("Sound/Interface/Warning.flac")
+        
+        if IsUnitInGroup(dieingUnit, udg_UNIT_Bases[1]) then
+            baseGroup = 1
+
+            print("ALLIED Base has Fallen!")
+            u = CreateUnit(Player(20), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
+
+        else
+            baseGroup = 2
+
+            print("FEDERATION Base has Fallen!")
+            u = CreateUnit(Player(23), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
+        end
+
+        print(GetUnitName(dieingUnit) .. " has been razed.")
+        PingMinimap(GetUnitY(dieingUnit), GetUnitY(dieingUnit), 5)
+        GroupRemoveUnit(udg_UNIT_Bases[baseGroup], dieingUnit)
+        GroupRemoveUnit(udg_UNIT_Bases_Teleport[baseGroup], dieingUnit)
+        GroupAddUnit(udg_UNIT_Bases[3-baseGroup], u)
+        GroupAddUnit(udg_UNIT_Bases_Teleport[3-baseGroup], u)
+    end
+
+end
+
 -- Add unit to index then order to move if unit is computer controlled and a correct unit
 function addUnitsToIndex(unit)
 
@@ -5533,7 +5605,8 @@ function orderStartingUnits()
             indexer:add(u)
 
             uId = GetUnitTypeId(u)
-            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and uId ~= FourCC("hhdl") and uId ~= FourCC("hpea") and
+            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and uId ~=
+                FourCC("hhdl") and uId ~= FourCC("hpea") and
                 (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
                     IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
 
@@ -5570,7 +5643,7 @@ function ABTY_ShifterSwitch()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
     TriggerAddAction(t, function()
 
-        if GetSpellAbilityId() == hero.shiftMaster.switch.id then
+        if GetSpellAbilityId() == hero.switch.id then
 
             local g = CreateGroup()
             local gGood = CreateGroup()
@@ -5640,9 +5713,9 @@ function ABTY_ShifterSwitch()
                 RemoveLocation(pOrig)
             else
 
-                BlzEndUnitAbilityCooldown(castingUnit, hero.shiftMaster.switch.id)
-                local abilitymana = BlzGetAbilityManaCost(hero.shiftMaster.switch.id,
-                                        GetUnitAbilityLevel(castingUnit, hero.shiftMaster.switch.id))
+                BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
+                local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
+                                        GetUnitAbilityLevel(castingUnit, hero.switch.id))
                 SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
                 print("added ability and mana back")
             end
@@ -5660,6 +5733,22 @@ function InitSounds()
     SetSoundParamsFromLabel(gg_snd_BattleNetTick, "ChatroomTimerTick")
     SetSoundDuration(gg_snd_BattleNetTick, 657)
     SetSoundVolume(gg_snd_BattleNetTick, 80)
+    gg_snd_CreepAggroWhat1 = CreateSound("Sound/Interface/CreepAggroWhat1.flac", false, false, false, 0, 0, "DefaultEAXON")
+    SetSoundParamsFromLabel(gg_snd_CreepAggroWhat1, "CreepAggro")
+    SetSoundDuration(gg_snd_CreepAggroWhat1, 1784)
+    SetSoundVolume(gg_snd_CreepAggroWhat1, 127)
+    gg_snd_Error = CreateSound("Sound/Interface/Error.flac", false, false, false, 0, 0, "DefaultEAXON")
+    SetSoundParamsFromLabel(gg_snd_Error, "InterfaceError")
+    SetSoundDuration(gg_snd_Error, 614)
+    SetSoundVolume(gg_snd_Error, 127)
+    gg_snd_MapPing = CreateSound("Sound/Interface/MapPing.flac", false, false, false, 0, 0, "DefaultEAXON")
+    SetSoundParamsFromLabel(gg_snd_MapPing, "MapPing")
+    SetSoundDuration(gg_snd_MapPing, 2845)
+    SetSoundVolume(gg_snd_MapPing, 127)
+    gg_snd_Warning = CreateSound("Sound/Interface/Warning.flac", false, false, false, 0, 0, "DefaultEAXON")
+    SetSoundParamsFromLabel(gg_snd_Warning, "Warning")
+    SetSoundDuration(gg_snd_Warning, 1903)
+    SetSoundVolume(gg_snd_Warning, 80)
 end
 
 function CreateBuildingsForPlayer0()
@@ -5998,7 +6087,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18912.0, -6752.0, 90.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -18400.0, -5728.0, 90.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20800.0, -6912.0, 270.000, FourCC("h004"))
-    u = BlzCreateUnitWithSkin(p, FourCC("oalt"), -16288.0, -1696.0, 270.000, FourCC("oalt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("oalt"), -16032.0, -1760.0, 270.000, FourCC("oalt"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbe"), -19904.0, -6560.0, 270.000, FourCC("ncbe"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -20768.0, -6624.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -20768.0, -6432.0, 270.000, FourCC("ncb5"))
@@ -6028,7 +6117,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -19360.0, -7840.0, 90.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14048.0, -8544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14240.0, -8544.0, 270.000, FourCC("ncb9"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nwc1"), -16192.0, -2432.0, 270.000, FourCC("nwc1"))
     u = BlzCreateUnitWithSkin(p, FourCC("obar"), -16768.0, -2176.0, 270.000, FourCC("obar"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -20256.0, 1632.0, 270.000, FourCC("nnad"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -21696.0, 1984.0, 270.000, FourCC("nnsg"))
@@ -6284,7 +6372,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("nfv3"), -1632.0, -3360.0, 180.000, FourCC("nfv3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -3808.0, -1248.0, 270.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -7488.0, -1280.0, 270.000, FourCC("h00X"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -7936.0, 448.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -7936.0, 384.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -2720.0, -1248.0, 270.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -2336.0, -1248.0, 270.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -2144.0, -1248.0, 270.000, FourCC("ncbb"))
@@ -6648,8 +6736,8 @@ function CreateNeutralPassiveBuildings()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), -24448.0, -4096.0, 270.000, FourCC("ncp3"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), 1280.0, -4992.0, 270.000, FourCC("ncp3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), -24512.0, -4032.0, 270.000, FourCC("ncp3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), 1344.0, -5056.0, 270.000, FourCC("ncp3"))
 end
 
 function CreateNeutralPassive()
@@ -6957,14 +7045,8 @@ function InitTrig_fogofwar()
     TriggerAddAction(gg_trg_fogofwar, Trig_fogofwar_Actions)
 end
 
-function Trig_testing_Conditions()
-    if (not (GetSpellAbilityId() == GetSpellAbilityId())) then
-        return false
-    end
-    return true
-end
-
 function Trig_testing_Actions()
+    SetPlayerHandicapXPBJ(Player(0), GetPlayerHandicapXPBJ(Player(0)))
     SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
     AdjustPlayerStateBJ(50, Player(0), PLAYER_STATE_RESOURCE_LUMBER)
     SetUnitPositionLoc(GetTriggerUnit(), GetRectCenter(GetPlayableMapRect()))
@@ -6978,8 +7060,7 @@ end
 
 function InitTrig_testing()
     gg_trg_testing = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(gg_trg_testing, EVENT_PLAYER_UNIT_SPELL_CAST)
-    TriggerAddCondition(gg_trg_testing, Condition(Trig_testing_Conditions))
+    DisableTrigger(gg_trg_testing)
     TriggerAddAction(gg_trg_testing, Trig_testing_Actions)
 end
 
@@ -11820,49 +11901,6 @@ function InitTrig_End_Of_Game_Right()
     TriggerAddAction(gg_trg_End_Of_Game_Right, Trig_End_Of_Game_Right_Actions)
 end
 
-function Trig_SPAWN_Move_All_Func002Func001Func005C()
-    if (IsPlayerInForce(GetOwningPlayer(GetEnumUnit()), udg_PLAYERGRPallied) == true) then
-        return true
-    end
-    if (IsPlayerInForce(GetOwningPlayer(GetEnumUnit()), udg_PLAYERGRPfederation) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_SPAWN_Move_All_Func002Func001C()
-    if (not (GetUnitTypeId(GetEnumUnit()) ~= FourCC("hhdl"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetEnumUnit()) ~= FourCC("hpea"))) then
-        return false
-    end
-    if (not Trig_SPAWN_Move_All_Func002Func001Func005C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_SPAWN_Move_All_Func002A()
-    if (Trig_SPAWN_Move_All_Func002Func001C()) then
-        udg_TEMP_Unit = GetEnumUnit()
-        ConditionalTriggerExecute(gg_trg_FUNC_Move_Creeps)
-    else
-    end
-end
-
-function Trig_SPAWN_Move_All_Actions()
-    udg_TEMP_UnitGroup = GetUnitsInRectAll(GetPlayableMapRect())
-    ForGroupBJ(udg_TEMP_UnitGroup, Trig_SPAWN_Move_All_Func002A)
-        RemoveGroup(udg_TEMP_Un__itGroup)
-end
-
-function InitTrig_SPAWN_Move_All()
-    gg_trg_SPAWN_Move_All = CreateTrigger()
-    TriggerRegisterTimerEventSingle(gg_trg_SPAWN_Move_All, 1.00)
-    TriggerAddAction(gg_trg_SPAWN_Move_All, Trig_SPAWN_Move_All_Actions)
-end
-
 function Trig_Melee_Initialization_Actions()
         init_Lua()
 end
@@ -12054,7 +12092,6 @@ function InitCustomTriggers()
     InitTrig_Revive_Hero_Timer()
     InitTrig_End_Of_Game_Left()
     InitTrig_End_Of_Game_Right()
-    InitTrig_SPAWN_Move_All()
     InitTrig_Melee_Initialization()
     InitTrig_baseAndHeals()
 end
@@ -12081,7 +12118,7 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(1), ConvertPlayerColor(1))
     SetPlayerRacePreference(Player(1), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(1), false)
-    SetPlayerController(Player(1), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(1), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(2), 2)
     ForcePlayerStartLocation(Player(2), 2)
     SetPlayerColor(Player(2), ConvertPlayerColor(2))
@@ -12494,17 +12531,18 @@ function InitCustomTeams()
 end
 
 function InitAllyPriorities()
-    SetStartLocPrioCount(0, 10)
-    SetStartLocPrio(0, 0, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 1, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 2, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(0, 11)
+    SetStartLocPrio(0, 0, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 1, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 10, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(1, 11)
     SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
@@ -12517,116 +12555,126 @@ function InitAllyPriorities()
     SetStartLocPrio(1, 8, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 9, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(2, 10)
+    SetStartLocPrioCount(2, 11)
     SetStartLocPrio(2, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 1, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 2, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(3, 10)
+    SetStartLocPrio(2, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 2, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(3, 11)
     SetStartLocPrio(3, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 2, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(4, 10)
+    SetStartLocPrio(3, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 3, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(4, 11)
     SetStartLocPrio(4, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 3, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(5, 10)
+    SetStartLocPrio(4, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 3, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 4, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(5, 11)
     SetStartLocPrio(5, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 4, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(6, 10)
+    SetStartLocPrio(5, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 3, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 4, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(6, 11)
     SetStartLocPrio(6, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(6, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(7, 10)
+    SetStartLocPrio(6, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 3, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 4, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 5, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(6, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(7, 11)
     SetStartLocPrio(7, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(8, 10)
+    SetStartLocPrio(7, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 3, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 4, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 5, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(8, 11)
     SetStartLocPrio(8, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(9, 10)
+    SetStartLocPrio(8, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 3, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 4, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 5, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 7, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(9, 11)
     SetStartLocPrio(9, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(10, 10)
+    SetStartLocPrio(9, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 3, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 4, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 5, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 7, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 8, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(10, 11)
     SetStartLocPrio(10, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(11, 10)
+    SetStartLocPrio(10, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 3, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 4, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 5, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 7, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 8, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 9, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(11, 11)
     SetStartLocPrio(11, 0, 0, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 1, 2, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 2, 3, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 3, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 5, 6, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 1, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 2, 2, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 3, 3, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 4, 4, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 5, 5, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 7, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 8, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 9, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 10, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(12, 2)
     SetStartLocPrio(12, 0, 5, MAP_LOC_PRIO_LOW)
     SetStartLocPrio(12, 1, 17, MAP_LOC_PRIO_LOW)

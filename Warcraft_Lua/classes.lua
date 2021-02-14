@@ -608,6 +608,7 @@ function init_aiClass()
 
         function self:castSpell(i, spellCast, danger)
 
+            print("TESTING " .. spellCast.name)
             if not self[i].casting then
                 danger = danger or false
                 if spellCast ~= nil then
@@ -626,7 +627,7 @@ function init_aiClass()
                         if self[i].spellCast.instant then
                             self[i].castingDuration = 1
                         else
-                            self[i].castingDuration = self[i].spellCast.castingTime[0]
+                            self[i].castingDuration = self[i].spellCast.castTime[1]
                         end
 
                         print(self[i].spellCast.name)
@@ -753,7 +754,7 @@ function init_aiClass()
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
                     debugfunc(function()
-                        self:castSpell(i, "I000", "teleport")
+                        self:castSpell(i, hero.item.teleportation)
                     end, "Define Classes")
 
                     return true
@@ -1037,30 +1038,40 @@ function init_heroClass()
 
         self.items = {"teleportation", "tank"}
         self.item = {}
+        
         self.item.teleportation = {
-            name = "Teleport",
+            name = "teleportation",
+            properName = "Teleport",
             four = "I000",
             id = FourCC("I000"),
             abilityFour = "A01M",
             abilityId = FourCC("A01M"),
             order = "",
-            instant = true,
+            instant = false,
             castTime = {6}
         }
+
         self.item.tank = {
-            name = "Tank",
+            name = "tank",
+            properName = "Tank",
             four = "I005",
             id = FourCC("I005"),
             order = "",
             instant = true
         }
+
         self.item.mage = {
-            name = "Mage",
+            name = "mage",
+            properName = "Mage",
             four = "I006",
             id = FourCC("I006"),
             order = "",
             instant = true
         }
+
+        self.item[self.item.teleportation.id] = self.item[self.item.teleportation.name]
+        self.item[self.item.tank.id] = self.item[self.item.tank.name]
+        self.item[self.item.mage.id] = self.item[self.item.mage.name]
 
         self.heroes = {"brawler", "manaAddict", "shiftMaster", "tactition", "timeMage"}
 
@@ -1075,7 +1086,8 @@ function init_heroClass()
         self.brawler.permanentSpells = {}
         self.brawler.startingItems = {"teleportation", "tank"}
         self.drain = {
-            name = "Drain",
+            name = "drain",
+            properName = "Drain",
             four = "A01Y",
             id = FourCC("A01Y"),
             buff = 0,
@@ -1085,7 +1097,8 @@ function init_heroClass()
             castTime = {6, 6, 6, 6, 6, 6}
         }
         self.bloodlust = {
-            name = "Bloodlust",
+            name = "bloodlust",
+            properName = "Bloodlust",
             four = "A007",
             id = FourCC("A007"),
             buff = 0,
@@ -1094,7 +1107,8 @@ function init_heroClass()
             instant = true
         }
         self.warstomp = {
-            name = "War Stomp",
+            name = "warstomp",
+            properName = "War Stomp",
             four = "A002",
             id = FourCC("A002"),
             buff = 0,
@@ -1103,7 +1117,8 @@ function init_heroClass()
             instant = true
         }
         self.unleashRage = {
-            name = "Unleassh Rage",
+            name = "unleashRage",
+            properName = "Unleassh Rage",
             four = "A029",
             id = FourCC("A029"),
             buff = 0,
@@ -1129,7 +1144,8 @@ function init_heroClass()
         self.tactition.permanentSpells = {}
         self.tactition.startingItems = {"teleportation", "tank"}
         self.ironDefense = {
-            name = "Iron Defense",
+            name = "ironDefense",
+            properName = "Iron Defense",
             four = "A019",
             id = FourCC("A019"),
             buff = 0,
@@ -1138,7 +1154,8 @@ function init_heroClass()
             instant = true
         }
         self.raiseBanner = {
-            name = "Raise Banner",
+            name = "raiseBanner",
+            properName = "Raise Banner",
             four = "A01I",
             id = FourCC("A01I"),
             buff = 0,
@@ -1147,7 +1164,8 @@ function init_heroClass()
             instant = true
         }
         self.attack = {
-            name = "Attack!",
+            name = "attack",
+            properName = "Attack!",
             four = "A01B",
             id = FourCC("A01B"),
             buff = 0,
@@ -1156,7 +1174,8 @@ function init_heroClass()
             instant = true
         }
         self.bolster = {
-            name = "Bolster",
+            name = "bolster",
+            properName = "Bolster",
             four = "A01Z",
             id = FourCC("A01Z"),
             buff = 0,
@@ -1165,7 +1184,8 @@ function init_heroClass()
             instant = true
         }
         self.inspire = {
-            name = "Inspire",
+            name = "inspire",
+            properName = "Inspire",
             four = "A042",
             id = FourCC("A042"),
             buff = 0,
@@ -1188,11 +1208,21 @@ function init_heroClass()
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
         self.shiftMaster.startingSpells = {"shift"}
-        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "attributeBonus", "shadeStrength", "swiftMoves",
-                                            "swiftAttacks"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "shadeStrength", "swiftMoves",
+                                            "swiftAttacks","attributeStiftMaster"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
+        self.attributeStiftMaster = {
+            name = "attributeStiftMaster",
+            properName = "Attribute Bonus",
+            four = "A031",
+            id = FourCC("A031"),
+            buff = 0,
+            order = "",
+            ult = false
+        }
         self.shadeStrength = {
-            name = "Shade Strength",
+            name = "shadeStrength",
+            properName = "Shade Strength",
             four = "A037",
             id = FourCC("A037"),
             buff = 0,
@@ -1200,7 +1230,8 @@ function init_heroClass()
             ult = false
         }
         self.swiftMoves = {
-            name = "Swift Moves",
+            name = "swiftMoves",
+            properName = "Swift Moves",
             four = "A056",
             id = FourCC("A056"),
             buff = 0,
@@ -1208,7 +1239,8 @@ function init_heroClass()
             ult = false
         }
         self.swiftAttacks = {
-            name = "Swift Attacks",
+            name = "swiftAttacks",
+            properName = "Swift Attacks",
             four = "A030",
             id = FourCC("A030"),
             buff = 0,
@@ -1217,7 +1249,8 @@ function init_heroClass()
         }
 
         self.switch = {
-            name = "Switch",
+            name = "switch",
+            properName = "Switch",
             four = "A03U",
             id = FourCC("A03U"),
             buff = 0,
@@ -1227,7 +1260,8 @@ function init_heroClass()
         }
 
         self.shift = {
-            name = "Shift",
+            name = "shift",
+            properName = "Shift",
             four = "A03T",
             id = FourCC("A03T"),
             buff = 0,
@@ -1237,7 +1271,8 @@ function init_heroClass()
         }
 
         self.fallingStrike = {
-            name = "Falling Strike",
+            name = "fallingStrike",
+            properName = "Falling Strike",
             four = "A059",
             id = FourCC("A059"),
             buff = 0,
@@ -1248,7 +1283,8 @@ function init_heroClass()
         }
 
         self.shiftStorm = {
-            name = "Shift Storm",
+            name = "shiftStorm",
+            properName = "Shift Storm",
             four = "A03C",
             id = FourCC("A03C"),
             buff = 0,
@@ -1258,7 +1294,8 @@ function init_heroClass()
         }
 
         self.felForm = {
-            name = "Fel Form",
+            name = "felForm",
+            properName = "Fel Form",
             four = "A02Y",
             id = FourCC("A02Y"),
             buff = 0,
@@ -1284,7 +1321,8 @@ function init_heroClass()
         self.manaAddict.permanentSpells = {}
         self.manaAddict.startingItems = {"teleportation", "mage"}
         self.manaShield = {
-            name = "Mana Shield",
+            name = "manaShield",
+            properName = "Mana Shield",
             four = "A001",
             id = FourCC("A001"),
             buff = FourCC("BNms"),
@@ -1293,7 +1331,8 @@ function init_heroClass()
             instant = true
         }
         self.frostNova = {
-            name = "Frost Nova",
+            name = "frostNova",
+            properName = "Frost Nova",
             four = "A03S",
             id = FourCC("A03S"),
             buff = 0,
@@ -1302,7 +1341,8 @@ function init_heroClass()
             instant = true
         }
         self.manaOverload = {
-            name = "Mana Overload",
+            name = "manaOverload",
+            properName = "Mana Overload",
             four = "A018",
             id = FourCC("A018"),
             buff = 0,
@@ -1311,7 +1351,8 @@ function init_heroClass()
             instant = true
         }
         self.manaBurst = {
-            name = "Mana Burst",
+            name = "manaBurst",
+            properName = "Mana Burst",
             four = "A02B",
             id = FourCC("A02B"),
             buff = 0,
@@ -1321,13 +1362,14 @@ function init_heroClass()
             castTime = {4, 4, 4, 4, 4, 4}
         }
         self.starfall = {
-            name = "Starfall",
+            name = "starfall",
+            properName = "Starfall",
             four = "A015",
             id = FourCC("A015"),
             buff = 0,
             order = "starfall",
             ult = true,
-            instant = true,
+            instant = false,
             castTime = {15, 15, 15, 15, 15, 15}
         }
 
@@ -1348,7 +1390,8 @@ function init_heroClass()
         self.timeMage.permanentSpells = {}
         self.timeMage.startingItems = {"teleportation", "mage"}
         self.chronoAtrophy = {
-            name = "Chrono Atrophy",
+            name = "chronoAtrophy",
+            properName = "Chrono Atrophy",
             four = "A04K",
             id = FourCC("A04K"),
             buff = 0,
@@ -1357,7 +1400,8 @@ function init_heroClass()
             instant = true
         }
         self.decay = {
-            name = "Decay",
+            name = "decay",
+            properName = "Decay",
             four = "A032",
             id = FourCC("A032"),
             buff = 0,
@@ -1366,7 +1410,8 @@ function init_heroClass()
             instant = true
         }
         self.timeTravel = {
-            name = "Time Travel",
+            name = "timeTravel",
+            properName = "Time Travel",
             four = "A04P",
             id = FourCC("A04P"),
             buff = 0,
@@ -1375,7 +1420,8 @@ function init_heroClass()
             instant = true
         }
         self.paradox = {
-            name = "Paradox",
+            name = "paradox",
+            properName = "Paradox",
             four = "A04N",
             id = FourCC("A04N"),
             buff = 0,
@@ -1391,7 +1437,7 @@ function init_heroClass()
         self[self.paradox.four] = self.paradox.name
 
         function self:spell(heroUnit, spellName)
-            local spellDetails = self[heroUnit.name][spellName]
+            local spellDetails = self[spellName]
             spellDetails.level = self:level(heroUnit, spellName)
             spellDetails.cooldown = self:cooldown(heroUnit, spellName)
             spellDetails.hasBuff = self:hasBuff(heroUnit, spellName)
@@ -1411,26 +1457,26 @@ function init_heroClass()
         end
 
         function self:level(heroUnit, spellName)
-            return GetUnitAbilityLevel(heroUnit.unit, self[heroUnit.name][spellName].id)
+            return GetUnitAbilityLevel(heroUnit.unit, self[spellName].id)
         end
 
         function self:cooldown(heroUnit, spellName)
-            return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, self[heroUnit.name][spellName].id)
+            return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, self[spellName].id)
         end
 
         function self:mana(heroUnit, spellName, level)
-            return BlzGetUnitAbilityManaCost(heroUnit.unit, self[heroUnit.name][spellName].id, level)
+            return BlzGetUnitAbilityManaCost(heroUnit.unit, self[spellName].id, level)
         end
 
         function self:hasBuff(heroUnit, spellName)
-            if self[heroUnit.name][spellName].buff == 0 then
+            if self[spellName].buff == 0 then
                 return false
             else
-                return UnitHasBuffBJ(heroUnit.unit, self[heroUnit.name][spellName].buff)
+                return UnitHasBuffBJ(heroUnit.unit, self[spellName].buff)
             end
         end
 
-        function self.levelUp(unit)
+        function self:levelUp(unit)
             local heroFour = CC2Four(GetUnitTypeId(unit))
             local heroName = self[heroFour]
             local heroLevel = GetHeroLevel(unit)
@@ -1458,11 +1504,10 @@ function init_heroClass()
 
                 if unspentPoints > 0 then
                     for i = 1, #spells.spellLearnOrder do
-                        print(spells.spellLearnOrder[i])
-                        SelectHeroSkill(unit, spells[spells.spellLearnOrder[i]].id)
+                        SelectHeroSkill(unit, self[spells.spellLearnOrder[i]].id)
 
                         if GetHeroSkillPoints(unit) == 0 then
-                            break
+                            return
                         end
                     end
                 end
@@ -1496,7 +1541,7 @@ function init_heroClass()
             -- Give the hero the required Skill points for the spells
             ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
             for i = 1, #spells.startingSpells do
-                picked = spells[spells.startingSpells[i]]
+                picked = self[spells.startingSpells[i]]
 
                 -- Have the hero learn the spell
                 SelectHeroSkill(unit, picked.id)
@@ -1504,7 +1549,7 @@ function init_heroClass()
 
             -- Add the Permanent Spells for the Hero
             for i = 1, #spells.permanentSpells do
-                picked = spells[spells.permanentSpells[i]]
+                picked = self[spells.permanentSpells[i]]
 
                 -- Make the Spell Permanent
                 UnitMakeAbilityPermanent(unit, true, picked.id)
