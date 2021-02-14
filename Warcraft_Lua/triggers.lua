@@ -200,25 +200,26 @@ function baseDies(dieingUnit)
         
         if IsUnitInGroup(dieingUnit, udg_UNIT_Bases[1]) then
             baseGroup = 1
-            for i = 0, 5 do
-                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
-            end
-
-            print("ALLIED Base has Fallen!")
-            u = CreateUnit(Player(20), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
-
-        else
-            baseGroup = 2
             for i = 6, 11 do
                 SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
             end
             
             print("FEDERATION Base has Fallen!")
+            u = CreateUnit(Player(20), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
+
+        else
+            baseGroup = 2
+            for i = 0, 5 do
+                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
+            end
+
+            print("ALLIED Base has Fallen!")
+           
             u = CreateUnit(Player(23), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
         end
  
         print(GetUnitName(dieingUnit) .. " has been razed.")
-        PingMinimap(GetUnitY(dieingUnit), GetUnitY(dieingUnit), 5)
+        PingMinimap(GetUnitX(dieingUnit), GetUnitY(dieingUnit), 15)
         GroupRemoveUnit(udg_UNIT_Bases[baseGroup], dieingUnit)
         GroupRemoveUnit(udg_UNIT_Bases_Teleport[baseGroup], dieingUnit)
         GroupAddUnit(udg_UNIT_Bases[3-baseGroup], u)

@@ -5541,25 +5541,31 @@ function baseDies(dieingUnit)
         
         if IsUnitInGroup(dieingUnit, udg_UNIT_Bases[1]) then
             baseGroup = 1
-
-            print("ALLIED Base has Fallen!")
+            for i = 6, 11 do
+                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
+            end
+            
+            print("FEDERATION Base has Fallen!")
             u = CreateUnit(Player(20), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
 
         else
             baseGroup = 2
+            for i = 0, 5 do
+                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
+            end
 
-            print("FEDERATION Base has Fallen!")
+            print("ALLIED Base has Fallen!")
+           
             u = CreateUnit(Player(23), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
         end
-
+ 
         print(GetUnitName(dieingUnit) .. " has been razed.")
-        PingMinimap(GetUnitY(dieingUnit), GetUnitY(dieingUnit), 5)
+        PingMinimap(GetUnitX(dieingUnit), GetUnitY(dieingUnit), 15)
         GroupRemoveUnit(udg_UNIT_Bases[baseGroup], dieingUnit)
         GroupRemoveUnit(udg_UNIT_Bases_Teleport[baseGroup], dieingUnit)
         GroupAddUnit(udg_UNIT_Bases[3-baseGroup], u)
         GroupAddUnit(udg_UNIT_Bases_Teleport[3-baseGroup], u)
     end
-
 end
 
 -- Add unit to index then order to move if unit is computer controlled and a correct unit
@@ -5898,7 +5904,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("o003"), -14688.0, -1632.0, 270.000, FourCC("o003"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20352.0, -6464.0, 270.000, FourCC("hgtw"))
     gg_unit_h006_0074 = BlzCreateUnitWithSkin(p, FourCC("h006"), -16640.0, -11200.0, 270.000, FourCC("h006"))
-    gg_unit_o001_0075 = BlzCreateUnitWithSkin(p, FourCC("o001"), -15232.0, -1216.0, 270.000, FourCC("o001"))
+    gg_unit_o001_0075 = BlzCreateUnitWithSkin(p, FourCC("o001"), -15232.0, -1280.0, 270.000, FourCC("o001"))
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -13376.0, -1664.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("hbla"), -24704.0, -6656.0, 270.000, FourCC("hbla"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -16736.0, 736.0, 270.000, FourCC("ngnh"))
@@ -6658,20 +6664,15 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -27497.0, -13272.8, 308.841, FourCC("nvdw"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -27539.3, -13001.8, 327.705, FourCC("nvdg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -27264.3, -13009.6, 199.699, FourCC("nvdw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27856.9, -11543.6, 178.286, FourCC("nvdl"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27664.1, -11506.2, 275.254, FourCC("nvdl"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -28037.9, -11508.7, 344.064, FourCC("nvdl"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -28131.5, -10921.8, 253.105, FourCC("nvdg"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -28119.6, -11427.1, 186.175, FourCC("nvdl"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -27658.8, -11314.3, 247.942, FourCC("nvdw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -27856.3, -11317.2, 302.380, FourCC("nvdw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -27658.0, -11086.1, 180.253, FourCC("nvdg"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -27955.5, -11082.6, 253.105, FourCC("nvdg"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvde"), -27927.6, -10881.8, 204.940, FourCC("nvde"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27528.5, -11379.4, 147.139, FourCC("nvdl"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -27508.1, -10829.7, 253.105, FourCC("nvdg"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -28041.4, -11290.3, 302.380, FourCC("nvdw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvde"), -27716.9, -10877.8, 204.940, FourCC("nvde"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27715.3, -11040.3, 275.254, FourCC("nvdl"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27897.1, -11047.8, 344.064, FourCC("nvdl"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -27998.8, -10576.0, 253.105, FourCC("nvdg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -28012.6, -11135.3, 186.175, FourCC("nvdl"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -27562.0, -10956.6, 247.942, FourCC("nvdw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvde"), -27769.5, -10779.8, 204.940, FourCC("nvde"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27561.7, -11153.4, 147.139, FourCC("nvdl"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -27512.4, -10600.2, 253.105, FourCC("nvdg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -28013.2, -10955.4, 302.380, FourCC("nvdw"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27668.9, -9451.8, 55.840, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27725.5, -9253.8, 261.466, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -27449.5, -9565.6, 328.364, FourCC("nvdl"))
@@ -6679,8 +6680,6 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -27497.3, -9340.2, 205.456, FourCC("nvdw"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -27570.3, -9058.8, 9.817, FourCC("nvdg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -27234.1, -9301.8, 208.082, FourCC("nvdg"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nele"), -27414.6, -8771.4, 11.311, FourCC("nele"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nele"), -27020.5, -9177.1, 285.296, FourCC("nele"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -27000.1, -473.2, 89.333, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -28008.4, 877.1, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -27155.1, 1101.3, 357.704, FourCC("e008"))

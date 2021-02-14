@@ -13818,3 +13818,117 @@ STRING 4538
 Teleport
 }
 
+STRING 4539
+// Doodads: D012 (Orc Workhouse), Name (Name)
+{
+Orc Workhouse
+}
+
+STRING 4540
+// Doodads: D013 (Orc Stone), Name (Name)
+{
+Orc Stone
+}
+
+STRING 4541
+// Doodads: D014 (Orc Horn 1), Name (Name)
+{
+Orc Horn 1
+}
+
+STRING 4542
+// Doodads: D015 (Orc Pillar), Name (Name)
+{
+Orc Pillar
+}
+
+STRING 4543
+// Doodads: D016 (Orc Fence 1), Name (Name)
+{
+Orc Fence 1
+}
+
+STRING 4544
+// Doodads: D017 (Orc Stair), Name (Name)
+{
+Orc Stair
+}
+
+STRING 4545
+// Doodads: D018 (Orc Stair Edge), Name (Name)
+{
+Orc Stair Edge
+}
+
+STRING 4546
+// Doodads: D019 (Orc Door Open), Name (Name)
+{
+Orc Door Open
+}
+
+STRING 4547
+// Doodads: D01A (Orc Pillar Fire), Name (Name)
+{
+Orc Pillar Fire
+}
+
+STRING 4548
+// Doodads: D01B (Orc Stone), Name (Name)
+{
+Orc Stone
+}
+
+STRING 4549
+// Doodads: D01C (Orc Fence 2), Name (Name)
+{
+Orc Fence 2
+}
+
+STRING 4550
+// Doodads: D01D (Orc Fence 3), Name (Name)
+{
+Orc Fence 3
+}
+
+STRING 4551
+// Doodads: D01E (Orc Spike 1), Name (Name)
+{
+Orc Spike 1
+}
+
+STRING 4552
+// Doodads: D01F (Orc Spike 2), Name (Name)
+{
+Orc Spike 2
+}
+
+STRING 4553
+// Doodads: D01G (Orc Spike 3), Name (Name)
+{
+Orc Spike 3
+}
+
+STRING 4554
+// Doodads: D01H (Orc Spike 4), Name (Name)
+{
+Orc Spike 4
+}
+
+STRING 4555
+// Doodads: D01I (Orc Pillar Tall), Name (Name)
+{
+Orc Pillar Tall
+}
+
+STRING 4556
+// Units: E002 (Shifter), Tip (Tooltip - Basic)
+{
+Choose Tojara the Shifter
+}
+
+STRING 4557
+// Units: E002 (Shifter), Ubertip (Tooltip - Extended)
+{
+Cunning Hero, adept at entering and escaping combat.
+}
+
