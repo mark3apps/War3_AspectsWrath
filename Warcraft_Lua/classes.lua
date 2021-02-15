@@ -1038,7 +1038,7 @@ function init_heroClass()
 
         self.items = {"teleportation", "tank"}
         self.item = {}
-        
+
         self.item.teleportation = {
             name = "teleportation",
             properName = "Teleport",
@@ -1208,8 +1208,8 @@ function init_heroClass()
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
         self.shiftMaster.startingSpells = {"shift"}
-        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "shadeStrength", "swiftMoves",
-                                            "swiftAttacks","attributeStiftMaster"}
+        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "shadeStrength", "swiftMoves", "swiftAttacks",
+                                            "attributeStiftMaster"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
         self.attributeStiftMaster = {
             name = "attributeStiftMaster",
@@ -1909,4 +1909,332 @@ function init_spawnClass()
 
         return self
     end
+end
+
+function Init_buildingClass()
+
+    building_class = {}
+
+    building_class.new = function()
+        local self = {}
+
+        self.all = {
+            g = CreateGroup(),
+            unitsTotal = 0,
+            unitsAlive = 0
+        }
+
+        self.allied = {
+            g = CreateGroup(),
+            unitsTotal = 0,
+            unitsAlive = 0,
+            advantage = 0,
+            gDanger = CreateGroup()
+        }
+        self.federation = {
+            g = CreateGroup(),
+            unitsTotal = 0,
+            unitsAlive = 0,
+            advantage = 0,
+            gDanger = CreateGroup()
+        }
+
+        self.top = {
+            allied = {
+                g = CreateGroup(),
+                unitsTotal = 0,
+                unitsAlive = 0,
+                advantage = 0
+            },
+            federation = {
+                g = CreateGroup(),
+                unitsTotal = 0,
+                unitsAlive = 0,
+                advantage = 0
+            }
+        }
+        self.middle = {
+            allied = {
+                g = CreateGroup(),
+                unitsTotal = 0,
+                unitsAlive = 0,
+                advantage = 0
+            },
+            federation = {
+                g = CreateGroup(),
+                unitsTotal = 0,
+                unitsAlive = 0,
+                advantage = 0
+            }
+        }
+        self.bottom = {
+            allied = {
+                g = CreateGroup(),
+                unitsTotal = 0,
+                unitsAlive = 0,
+                advantage = 0
+            },
+            federation = {
+                g = CreateGroup(),
+                unitsTotal = 0,
+                unitsAlive = 0,
+                advantage = 0
+            }
+        }
+
+        function self:add(unit, importance, mainBase, teleport)
+            teleport = teleport or true
+            mainBase = mainBase or false
+            importance = importance or 1
+
+            local teamNumber, regionName, teamName, allied, federation
+            local handleId = GetHandleId(unit)
+            local x = GetUnitX(unit)
+            local y = GetUnitY(unit)
+            local name = GetUnitName(unit)
+            local player = GetOwningPlayer(unit)
+            local lifePercent = GetUnitLifePercent(unit)
+            local mana = GetUnitState(unit, UNIT_STATE_MANA)
+
+            local idType = GetUnitTypeId(unit)
+            local fourType = CC2Four(id)
+
+            if GetConvertedPlayerId(player) <= 19 then
+                teamNumber = 1
+                teamName = "allied"
+            else
+                teamNumber = 2
+                teamName = "federation"
+            end
+
+            -- Add to Region Specific Buildings
+            if IsUnitInRegion(bottomRegion, unit) then
+                regionName = "bottom"
+            elseif IsUnitInRegion(middleRegion, unit) then
+                regionName = "middle"
+            elseif IsUnitInRegion(topRegion, unit) then
+                regionName = "top"
+            end
+
+            -- Add to ALL Unit Group
+            GroupAddUnit(self.all.g, unit)
+
+            -- Add to TELEPORT Unit Group
+            if teleport then
+                GroupAddUnit(self[teamName].g, unit)
+            end
+
+            -- Add to REGION Unit Group
+            GroupAddUnit(self[regionName][teamName].g, unit)
+
+            -- Set Importance
+            self[regionName][teamName].unitsTotal = self[regionName][teamName].unitsTotal + importance
+            self[regionName][teamName].unitsAlive = self[regionName][teamName].unitsAlive + importance
+            self[teamName].unitsTotal = self[teamName].unitsTotal + importance
+            self[teamName].unitsAlive = self[teamName].unitsAlive + importance
+            self.all.unitsTotal = self.all.unitsTotal + importance
+            self.all.unitsAlive = self.all.unitsAlive + importance
+
+            -- Get TEAM Advantage
+            allied = self.allied.unitsAlive - self.allied.unitsTotal
+            federation = self.federation.unitsAlive - self.federation.unitsTotal
+            self.allied.advantage = allied - federation
+            self.federation.advantage = federation - allied
+
+            -- Get REGION Advantage
+            allied = self[regionName].allied.unitsAlive - self[regionName].allied.unitsTotal
+            federation = self[regionName].federation.unitsAlive - self[regionName].federation.unitsTotal
+
+            self[regionName].allied.advantage = allied - federation
+            self[regionName].federation.advantage = federation - allied
+
+            -- Add Building to Table
+            self[handleId] = {
+                x = x,
+                y = y,
+                name = name,
+                unit = unit,
+                importance = importance,
+                lifePercent = lifePercent,
+                unitsFriendly = 0,
+                unitsEnemy = 0,
+                unitsCount = 0,
+                idType = idType,
+                fourType = fourType,
+                handleId = handleId,
+                mainBase = mainBase,
+                regionName = regionName,
+                teamName = teamName,
+                mana = mana
+            }
+        end
+
+        function self:update(unit)
+            local u
+            local g = CreateGroup()
+            local unitsFriendly = 0
+            local unitsEnemy = 0
+            local unitsCount = 0
+            
+
+            local handleId = GetHandleId(unit)
+            local l = Location(self[handleId].x, self[handleId].y)
+            local teamName = self[handleId].teamName
+
+            g = GetUnitsInRangeOfLocAll(900, l)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) then
+                    if IsUnitAlly(u, GetOwningPlayer(unit)) then
+                        unitsFriendly = unitsFriendly + 1
+                        if IsUnitType(u, UNIT_TYPE_HERO) then
+                            unitsFriendly = unitsFriendly + 9
+                        end
+                    else
+                        unitsEnemy = unitsEnemy + 1
+                        if IsUnitType(u, UNIT_TYPE_HERO) then
+                            unitsFriendly = unitsFriendly + 9
+                        end
+                    end
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            -- Check if Unit is in Danger
+            if IsUnitInGroup(unit, self[teamName].gDanger) then
+                if unitsEnemy == 0 then
+                    GroupRemoveUnit(self[teamName].gDanger, unit)
+                end
+
+            else
+                if unitsEnemy > 0 then
+                    GroupAddUnit(self[teamName].gDanger, unit)
+                end
+            end
+
+            -- Heal Units as needed
+            if unitsEnemy == 0 and GetUnitState(unit, UNIT_STATE_MANA) > 50 and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) == 0 then
+                local gHeroes = createGroup()
+                
+                g = GetUnitsInRangeOfLocAll(500, l)
+                while true do
+                    u = FirstOfGroup(g)
+                    if u == nil then
+                        break
+                    end
+
+                    if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
+                        GroupAddUnit(gHeroes, u)
+                    end
+
+                    GroupRemoveUnit(g, u)
+                end
+                DestroyGroup(g)
+
+                while true do
+                    u = FirstOfGroup(gHeroes)
+
+                    if u == nil then
+                        break
+                    end
+
+                    -- Cast Healing Spell on Unit and Exit Loop
+                    if not UnitHasBuffBJ(u, FourCC("Brej")) and (GetUnitLifePercent(u) < 95 or GetUnitManaPercent(u) < 95) then
+                        IssueTargetOrder(unit, "rejuvination", u)
+                        break
+                    end
+
+                    GroupRemoveUnit(gHeroes, u)
+                end
+                DestroyGroup(gHeroes)
+            end
+            RemoveLocation(l)
+
+            self[handleId].lifePercent = GetUnitLifePercent(unit)
+            self[handleId].mana = GetUnitState(unit, UNIT_STATE_MANA)
+            self[handleId].unitsFriendly = unitsFriendly
+            self[handleId].unitsEnemy = unitsEnemy
+            self[handleId].unitsCount = unitsFriendly - unitsEnemy
+        end
+
+        function self:died(unit)
+            local allied, federation, u
+            local handleId = GetHandleId(unit)
+            local regionName = self[handleId].regionName
+            local teamName = self[handleId].teamName
+            local teleport = self[handleId].teleport
+            local importance = self[handleId].importance
+            local x = self[handleId].x
+            local y = self[handleId].y
+            local name = self[handleId].name
+
+            -- Remove Unit from ALL Group
+            if IsUnitInGroup(unit, self.all.g) then
+                GroupRemoveUnit(self.all.g, unit)
+            end
+
+            -- Remove Unit from TELEPORT Group
+            if teleport and IsUnitInGroup(unit, self[teamName].g) then
+                GroupRemoveUnit(self[teamName].g, unit)
+            end
+
+            -- Remove Unit from REGION Group
+            if IsUnitInGroup(unit, self[regionName][teamName].g) then
+                GroupRemoveUnit(self[regionName][teamName].g, unit)
+            end
+
+            -- Adjust Region importance
+            self[regionName][teamName].unitsAlive = self[regionName][teamName].unitsAlive - importance
+            self[teamName].unitsAlive = self[teamName].unitsAlive - importance
+            self.all.unitsAlive = self.all.unitsAlive - importance
+
+            -- Get TEAM Advantage
+            allied = self.allied.unitsAlive - self.allied.unitsTotal
+            federation = self.federation.unitsAlive - self.federation.unitsTotal
+            self.allied.advantage = allied - federation
+            self.federation.advantage = federation - allied
+
+            -- Get REGION Advantage
+            allied = self[regionName].allied.unitsAlive - self[regionName].allied.unitsTotal
+            federation = self[regionName].federation.unitsAlive - self[regionName].federation.unitsTotal
+
+            self[regionName].allied.advantage = allied - federation
+            self[regionName].federation.advantage = federation - allied    
+
+            PlaySound("Sound/Interface/Warning.flac")
+            
+            if teamName == "allied" then
+
+                for i = 6, 11 do
+                    SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
+                end
+                
+                print("FEDERATION Base has Fallen!")
+                u = CreateUnit(Player(20), FourCC("h00W"), x, y, bj_UNIT_FACING)
+    
+            else
+                baseGroup = 2
+                for i = 0, 5 do
+                    SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
+                end
+    
+                print("ALLIED Base has Fallen!")
+               
+                u = CreateUnit(Player(23), FourCC("h00W"), x, x, bj_UNIT_FACING)
+            end
+     
+            print(name .. " has been razed.")
+            PingMinimap(x, y, 15)
+            self:add(u, 0)
+        end
+
+        return self
+    end
+
 end

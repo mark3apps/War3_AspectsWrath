@@ -7,18 +7,24 @@ function init_triggers()
     Trig_UnitDies = CreateTrigger()
     Trig_IssuedOrder = CreateTrigger()
     Trig_aiLoopStates = CreateTrigger()
+    Trig_BuildingLoop = CreateTrigger()
 end
 
+
+
 function addRegions()
+
+    -- End Rects
     loc:add("arcaneLeft", gg_rct_Left_Mage_Base, "castleLeft", false)
     loc:add("arcaneRight", gg_rct_Right_Mage_Base, "castleRight", true)
-    loc:add("castleLeft", gg_rct_Left_Castle)
-    loc:add("castleRight", gg_rct_Right_Castle)
-    loc:add("startLeft", gg_rct_Left_Start)
-    loc:add("startRight", gg_rct_Right_Start)
+    loc:add("castleLeft", gg_rct_Left_Hero)
+    loc:add("castleRight", gg_rct_Right_Hero)
+    loc:add("startLeft", gg_rct_Left_Start, "castleLeft", false)
+    loc:add("startRight", gg_rct_Right_Start, "castleRight", true)
     loc:add("elfLeft", gg_rct_Elf_Base_Left, "castleLeft", false)
     loc:add("elfRight", gg_rct_Elf_Base_Right, "casteRight", true)
 
+    -- Pathing Rects
     loc:add("everythingLeft", gg_rct_Left_Everything, "castleLeft", false)
     loc:add("everythingRight", gg_rct_Right_Everything, "castleRight", true)
     loc:add("bottomLeft", gg_rct_Left_Start_Bottom, "arcaneLeft", false)
@@ -28,6 +34,7 @@ function addRegions()
     loc:add("topLeft", gg_rct_Left_Start_Top, "elfLeft", false)
     loc:add("topRight", gg_rct_Right_Start_Top, "arcaneRight", true)
 
+    -- Spawn Rects
     loc:add("sArcaneLeft", gg_rct_Left_Arcane)
     loc:add("sArcaneRight", gg_rct_Right_Arcane)
     loc:add("sArcaneHeroLeft", gg_rct_Arcane_Hero_Left)
@@ -71,6 +78,7 @@ function addRegions()
     loc:add("sUndeadLeft", gg_rct_Undead_Left)
     loc:add("sUndeadRight", gg_rct_Undead_Right)
 
+    -- Creep Rects
     loc:add("cForestLeft", gg_rct_Aspect_of_Forest_Left, "topRight", true)
     loc:add("cForestRight", gg_rct_Aspect_of_Forest_Right, "bottomLeft", false)
     loc:add("cTidesLeft", gg_rct_Murloc_Left, "topRight", true)
@@ -79,6 +87,92 @@ function addRegions()
     loc:add("cDeathRight", gg_rct_Zombie_End_Right, "middleLeft", false)
     loc:add("cStormLeft", gg_rct_Left_Elemental_Start, "bottomRight", true)
     loc:add("cStormRight", gg_rct_Right_Elemental_Start, "topLeft", false)
+
+    -- Define Big Regions
+    bottomRegion = CreateRegion()
+    middleRegion = CreateRegion()
+    topRegion = CreateRegion()
+
+    RegionAddRect(bottomRegion, gg_rct_Big_Bottom_Left)
+    RegionAddRect(bottomRegion, gg_rct_Big_Bottom_Left_Center)
+    RegionAddRect(bottomRegion, gg_rct_Big_Bottom_Right_Center)
+    RegionAddRect(bottomRegion, gg_rct_Big_Bottom_Right)
+
+    RegionAddRect(middleRegion, gg_rct_Big_Middle_Left)
+    RegionAddRect(middleRegion, gg_rct_Big_Middle_Left_Center)
+    RegionAddRect(middleRegion, gg_rct_Big_Middle_Right_Center)
+    RegionAddRect(middleRegion, gg_rct_Big_Middle_Right)
+
+    RegionAddRect(topRegion, gg_rct_Big_Top_Left)
+    RegionAddRect(topRegion, gg_rct_Big_Top_Left_Center)
+    RegionAddRect(topRegion, gg_rct_Big_Top_Right_Center)
+    RegionAddRect(topRegion, gg_rct_Big_Top_Right)
+end
+
+function Init_buildings()
+    building:add(gg_unit_h003_0015, 3) -- Allied Arcane Main
+    building:add(gg_unit_h003_0007, 3) -- Federation Arcane Main
+    
+
+    building:add(gg_unit_h014_0017, 3) -- Allied Arcane Hero
+    building:add(gg_unit_h014_0158, 3) -- Federation
+
+    building:add(gg_unit_hars_0355, 3) -- Allied Arcane Top
+    building:add(gg_unit_hars_0293, 3) -- Federation
+    
+    building:add(gg_unit_hars_0292, 3) -- Allied Arcane Bottom
+    building:add(gg_unit_hars_0303, 3) -- Federation
+    
+    building:add(gg_unit_n00K_0802, 3) -- Allied Blacksmith
+    building:add(gg_unit_n00K_0477, 3) -- Federation
+    
+    building:add(gg_unit_h00E_0033, 3, true) -- Allied Castle
+    building:add(gg_unit_h00E_0081, 3, true) -- Federation
+    
+    building:add(gg_unit_hvlt_0207, 3) -- Allied City Elves
+    building:add(gg_unit_hvlt_0406, 3) -- Federation
+    
+    building:add(gg_unit_n00B_0364, 3) -- Allied City Front
+    building:add(gg_unit_n00B_0399, 3) -- Federation
+    
+    building:add(gg_unit_n00B_0102, 3) -- Allied City Side
+    building:add(gg_unit_n00B_0038, 3) -- Federation
+    
+    building:add(gg_unit_ngt2_0525, 3) -- Allied Kobold
+    building:add(gg_unit_ngt2_0455, 3) -- Federation
+    
+    building:add(gg_unit_nheb_0109, 3) -- Allied High Elves
+    building:add(gg_unit_nheb_0036, 3) -- Federation
+    
+    building:add(gg_unit_n001_0048, 3) -- Allied Merc Camp
+    building:add(gg_unit_n001_0049, 3) -- Federation
+        
+    building:add(gg_unit_h006_0074, 3) -- Allied Mine
+    building:add(gg_unit_h006_0055, 3) -- Federation
+        
+    building:add(gg_unit_nmh1_0735, 3) -- Allied Murloc
+    building:add(gg_unit_nmh1_0783, 3) -- Federation
+        
+    building:add(gg_unit_nntt_0135, 3) -- Allied Naga
+    building:add(gg_unit_nntt_0132, 3) -- Federation
+        
+    building:add(gg_unit_e003_0058, 3) -- Allied Night Elves
+    building:add(gg_unit_e003_0014, 3) -- Federation
+            
+    building:add(gg_unit_o001_0075, 3) -- Allied Orcs
+    building:add(gg_unit_o001_0078, 3) -- Federation
+            
+    building:add(gg_unit_eshy_0120, 3) -- Allied Night Elf Shipyard
+    building:add(gg_unit_eshy_0047, 3) -- Federation
+            
+    building:add(gg_unit_hshy_0011, 3) -- Allied Human Shipyard
+    building:add(gg_unit_hshy_0212, 3) -- Federation
+            
+    building:add(gg_unit_h00F_0029, 3) -- Allied Town
+    building:add(gg_unit_h00F_0066, 3) -- Federation
+                
+    building:add(gg_unit_u001_0262, 3) -- Allied Undead
+    building:add(gg_unit_u001_0264, 3) -- Federation
 end
 
 function Init_luaGlobals()

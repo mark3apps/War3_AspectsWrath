@@ -100,8 +100,11 @@ function Init_UnitDies()
     TriggerAddAction(Trig_UnitDies, function()
         local dieingUnit = GetTriggerUnit()
 
+        if IsUnitInGroup(dieingUnit, building.all.g) then
+            building.died(dieingUnit)
+        end
+
         if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
-            baseDies(dieingUnit)
             indexer:remove(dieingUnit)
         end
     end)
@@ -127,6 +130,29 @@ function init_MoveToNext()
                 end
             end
         end
+    end)
+end
+
+-- Update Base Buildings
+function init_Building_Loop()
+    TriggerRegisterTimerEventPeriodic(Trig_BuildingLoop, 1)
+    TriggerAddAction(Trig_BuildingLoop, function()
+        local u
+        local g = CreateGroup()
+
+        GroupAddGroup(building.all.g, g)
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then
+                break
+            end
+
+            building:update(u)
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+
     end)
 end
 
@@ -190,42 +216,6 @@ end
 --
 -- Trigger Functions
 -----------------
-
-function baseDies(dieingUnit)
-
-    if IsUnitInGroup(dieingUnit, udg_UNIT_Bases[1]) or IsUnitInGroup(dieingUnit, udg_UNIT_Bases[2]) then
-        local baseGroup, u
-
-        PlaySound("Sound/Interface/Warning.flac")
-        
-        if IsUnitInGroup(dieingUnit, udg_UNIT_Bases[1]) then
-            baseGroup = 1
-            for i = 6, 11 do
-                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
-            end
-            
-            print("FEDERATION Base has Fallen!")
-            u = CreateUnit(Player(20), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
-
-        else
-            baseGroup = 2
-            for i = 0, 5 do
-                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
-            end
-
-            print("ALLIED Base has Fallen!")
-           
-            u = CreateUnit(Player(23), FourCC("h00W"), GetUnitX(dieingUnit), GetUnitY(dieingUnit), bj_UNIT_FACING)
-        end
- 
-        print(GetUnitName(dieingUnit) .. " has been razed.")
-        PingMinimap(GetUnitX(dieingUnit), GetUnitY(dieingUnit), 15)
-        GroupRemoveUnit(udg_UNIT_Bases[baseGroup], dieingUnit)
-        GroupRemoveUnit(udg_UNIT_Bases_Teleport[baseGroup], dieingUnit)
-        GroupAddUnit(udg_UNIT_Bases[3-baseGroup], u)
-        GroupAddUnit(udg_UNIT_Bases_Teleport[3-baseGroup], u)
-    end
-end
 
 -- Add unit to index then order to move if unit is computer controlled and a correct unit
 function addUnitsToIndex(unit)

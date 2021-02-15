@@ -13932,3 +13932,33 @@ STRING 4557
 Cunning Hero, adept at entering and escaping combat.
 }
 
+STRING 4558
+// Destructibles: YTpb (Pathing Blocker (Ground + Vision)), Name (Name)
+{
+Pathing Blocker (Ground + Vision)
+}
+
+STRING 4559
+// Destructibles: YTpc (Pathing Blocker (Ground + Vision) (Large)), Name (Name)
+{
+Pathing Blocker (Ground + Vision) (Large)
+}
+
+STRING 4560
+// Units: h019 (Stables), Name (Name)
+{
+Stables
+}
+
+STRING 4561
+// Doodads: D01J (Rack Armor 2), Name (Name)
+{
+Rack Armor 2
+}
+
+STRING 4562
+// Doodads: D01K (Rack Weapon 2), Name (Name)
+{
+Rack Weapon 2
+}
+
