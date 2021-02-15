@@ -139,31 +139,40 @@ end
 
 -- Update Base Buildings
 function init_BaseLoop()
-    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 1)
+    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 1.5)
     TriggerAddAction(Trig_baseLoop, function()
 
-        debugfunc(function()
-            local u
-            local g = CreateGroup()
+        local u, id
+        local g = CreateGroup()
 
-            print(CountUnitsInGroup(base.all.g))
-            GroupAddGroup(base.all.g, g)
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
-
-                base.update(u)
-
-                GroupRemoveUnit(g, u)
+        GroupAddGroup(base.all.g, g)
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then
+                break
             end
-            DestroyGroup(g)
 
-            print("Top: " .. base.top.allied.advantage)
-            print("Middle: " .. base.middle.allied.advantage)
-            print("Bottom: " .. base.bottom.allied.advantage)
-        end, "Building Loop")
+            base.update(u)
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+
+        -- TESTING
+        GroupAddGroup(base.federation.gDanger, g)
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then
+                break
+            end
+            id = GetHandleId(u)
+            print(base[id].name .. base[i].danger)
+
+            RemoveUnit(u)
+        end
+        DestroyGroup(g)
+        -- /TESTING
+
     end)
 end
 

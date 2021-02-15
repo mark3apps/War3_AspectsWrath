@@ -33,6 +33,8 @@ function init_Lua()
     end, "Init Classes")
 
     --dprint("Classes Initialized", 2)
+    
+
 
     -- Init Trigger
     debugfunc(function()
@@ -70,7 +72,7 @@ function init_Lua()
     init_Delayed_1()
     init_Delayed_10()
 
-    --dprint("Init Finished")
+    dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -207,6 +209,8 @@ function init_aiLoopStates()
                     ai:STATEFleeing(i)
                     ai:STATEHighHealth(i)
                     ai:STATEcastingSpell(i)
+                    ai:STATEDefend(i)
+                    ai:STATEDefending(i)
                     ai:STATEAbilities(i)
                     ai:CleanUp(i)
                 else

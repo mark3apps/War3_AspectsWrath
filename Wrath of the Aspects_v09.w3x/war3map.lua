@@ -405,11 +405,11 @@ gg_unit_h014_0158 = nil
 gg_unit_ngt2_0455 = nil
 gg_unit_u001_0264 = nil
 gg_unit_nmh1_0735 = nil
-gg_unit_u001_0262 = nil
 gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
 gg_unit_hshy_0212 = nil
+gg_unit_u001_0262 = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -2355,6 +2355,8 @@ function init_Lua()
     end, "Init Classes")
 
     --dprint("Classes Initialized", 2)
+    
+
 
     -- Init Trigger
     debugfunc(function()
@@ -2392,7 +2394,7 @@ function init_Lua()
     init_Delayed_1()
     init_Delayed_10()
 
-    --dprint("Init Finished")
+    dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -2529,6 +2531,8 @@ function init_aiLoopStates()
                     ai:STATEFleeing(i)
                     ai:STATEHighHealth(i)
                     ai:STATEcastingSpell(i)
+                    ai:STATEDefend(i)
+                    ai:STATEDefending(i)
                     ai:STATEAbilities(i)
                     ai:CleanUp(i)
                 else
@@ -2794,8 +2798,10 @@ function addBases()
     base.add(gg_unit_h00F_0029, 2, false, true, true) -- Allied Town
     base.add(gg_unit_h00F_0066, 2, false, true, true) -- Federation
                 
-    base.add(gg_unit_u001_0262, 2, false, true, true) -- Allied Undead
+    --base.add(gg_unit_u001_0262, 2, false, true, true) -- Allied Undead
+    base.add(gg_unit_u001_0262, 2, false, true, true) -- Federation
     base.add(gg_unit_u001_0264, 2, false, true, true) -- Federation
+
 end
 
 function Init_luaGlobals()
@@ -3565,8 +3571,10 @@ function init_aiClass()
 
             if self[i].playerNumber > 6 then
                 self[i].teamNumber = 2
+                self[i].teamName = "federation"
             else
                 self[i].teamNumber = 1
+                self[i].teamName = "allied"
             end
 
             print("Team Number: " .. self[i].teamNumber)
@@ -3594,6 +3602,7 @@ function init_aiClass()
 
             self[i].unitHealing = nil
             self[i].unitAttacking = nil
+            self[i].unitDefending = nil
             self[i].unitChasing = nil
 
             if self[i].four == hero.brawler.four then -- Brawler
@@ -3614,6 +3623,9 @@ function init_aiClass()
                 self[i].clumpRange = 100.00
                 self[i].intelRange = 1100.00
                 self[i].closeRange = 500.00
+
+                self[i].strats = {"aggressive", "defensive", "passive"}
+
             elseif self[i].four == hero.manaAddict.four then -- Mana Addict
                 self[i].healthFactor = 1.00
                 self[i].manaFactor = 0.75
@@ -3632,6 +3644,9 @@ function init_aiClass()
                 self[i].clumpRange = 100.00
                 self[i].intelRange = 1000.00
                 self[i].closeRange = 400.00
+
+                self[i].strats = {"aggressive", "defensive", "passive"}
+
             elseif self[i].four == hero.tactition.four then -- Tactition
                 self[i].healthFactor = 1.00
                 self[i].manaFactor = 0.20
@@ -3649,6 +3664,9 @@ function init_aiClass()
                 self[i].clumpRange = 250.00
                 self[i].intelRange = 1000.00
                 self[i].closeRange = 400.00
+
+                self[i].strats = {"aggressive", "defensive", "passive", "support"}
+
             elseif self[i].four == hero.timeMage.four then -- Time Mage
                 self[i].healthFactor = 1.00
                 self[i].manaFactor = 0.10
@@ -3667,6 +3685,9 @@ function init_aiClass()
                 self[i].clumpRange = 250.00
                 self[i].intelRange = 1100.00
                 self[i].closeRange = 700.00
+
+                self[i].strats = {"aggressive", "defensive", "passive", "support"}
+
             elseif self[i].four == hero.shiftMaster.four then -- Shifter
                 self[i].healthFactor = 1.00
                 self[i].manaFactor = 0.15
@@ -3685,7 +3706,18 @@ function init_aiClass()
                 self[i].clumpRange = 100.00
                 self[i].intelRange = 1100.00
                 self[i].closeRange = 400.00
+
+                self[i].strats = {"aggressive", "defensive", "passive", "assassin"}
             end
+
+            local randI = GetRandomInt(1, #self[i].strats)
+            self[i].strat = self[i].strats[randI]
+
+            --TESTING
+            self[i].strat = "defensive"
+            --TESTING
+
+            print(self[i].strat)
         end
 
         -- Update Intel
@@ -3902,7 +3934,7 @@ function init_aiClass()
                 self[i].powerBase = self[i].powerBase + (0.25 * I2R(self[i].level))
                 self[i].powerHero = self[i].powerBase + (self[i].powerLevel * I2R(self[i].level))
 
-                print(self[i].currentOrder)
+                -- print(self[i].currentOrder)
                 -- print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
                 -- print("Clump Both: " .. R2S(self[i].clumpBothPower))
                 -- print("Clump: " .. GetUnitName(self[i].clumpBoth))
@@ -3938,6 +3970,73 @@ function init_aiClass()
                 self:tactitionAI(i)
             elseif self[i].name == "timeMage" then
                 self:timeMageAI(i)
+            end
+        end
+
+        function self:STATEDefend(i)
+            if self[i].alive and not self[i].lowLife and not self[i].fleeing and not self[i].casting and
+                not self[i].defending then
+                local baseCountDanger = CountUnitsInGroup(base[self[i].teamName].gDanger)
+                if baseCountDanger > 0 then
+                    local u, id, defend, unitCount, danger, selectedId
+                    local g = CreateGroup()
+
+                    GroupAddGroup(base[self[i].teamName].gDanger, g)
+                    local danger = 0
+                    local selectedId = nil
+                    while true do
+                        u = FirstOfGroup(g)
+                        if u == nil then
+                            break
+                        end
+
+                        id = GetHandleId(u)
+                        if base[id].danger > danger then
+                            danger = base[id].danger
+                            selectedId = id
+                        end
+
+                        GroupRemoveUnit(g, u)
+                    end
+                    DestroyGroup(g)
+
+                    id = selectedId
+
+                    if self[i].strat == "defensive" and danger > 40 then
+                        self[i].defending = true
+                    elseif self[i].strat == "passive" and danger > 120 then
+                        self[i].defending = true
+                    elseif self[i].strat == "aggressive" and danger > 400 then
+                        self[i].defending = true
+                    end
+
+                    if self[i].defending then
+                        self[i].unitDefending = base[id].unit
+                        self:ACTIONtravelToDest(i)
+                        print("Defending: ".. GetUnitName(self[i].unitDefending))
+                    end
+                end
+            end
+        end
+
+        function self:STATEDefending(i)
+            if self[i].defending then
+
+                local id = GetHandleId(self[i].unitDefending)
+                if base[id].danger <= 10 then
+                    self[i].defending = false
+                    self[i].unitDefending = nil
+                    self:ACTIONtravelToDest(i)
+                    print("Stop Defending")
+
+                else
+                    local distanceToBase = distance(self[i].x, self[i].y, base[id].x, base[id].y)
+                    local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit, hero.item.teleportation.abilityId)
+    
+                    if distanceToBase > 4000 and teleportCooldown == 0 then
+                        self:ACTIONtravelToDest(i)
+                    end
+                end
             end
         end
 
@@ -4140,10 +4239,20 @@ function init_aiClass()
                     unitX = GetUnitX(self[i].unitHealing)
                     unitY = GetUnitY(self[i].unitHealing)
                     IssuePointOrder(self[i].unit, "move", unitX, unitY)
+
+                elseif self[i].defending then
+                    unitX = GetUnitX(self[i].unitDefending)
+                    unitX = GetUnitY(self[i].unitDefending)
+                    if not self:teleportCheck(i, unitX, unitY) then
+                        IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                    end
+
                 else
                     unitX = GetUnitX(self[i].unitAttacking)
                     unitY = GetUnitY(self[i].unitAttacking)
-                    IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                    if not self:teleportCheck(i, unitX, unitY) then
+                        IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                    end
                 end
                 print("x:" .. unitX .. "y:" .. unitY)
             end
@@ -4159,11 +4268,6 @@ function init_aiClass()
                 print("attacking " .. GetUnitName(self[i].unitAttacking))
 
                 if not self:teleportCheck(i, unitX, unitY) then
-                    print("Unit: " .. i)
-                    print("TeamNumber: " .. self[i].teamNumber)
-
-                    print("x:" .. unitX .. "y:" .. unitY)
-
                     IssuePointOrder(self[i].unit, "attack", unitX, unitY)
                 end
             end
@@ -4173,8 +4277,8 @@ function init_aiClass()
             return self[indexer:get(unit).heroName]
         end
 
-        -- Teleport Stuff
 
+        -- Teleport Stuff
         function self:teleportCheck(i, destX, destY)
             local destDistance = 100000000.00
             local destDistanceNew = 0.00
@@ -4215,9 +4319,8 @@ function init_aiClass()
 
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
-                    debugfunc(function()
-                        self:castSpell(i, hero.item.teleportation)
-                    end, "Define Classes")
+
+                    self:castSpell(i, hero.item.teleportation)
 
                     return true
                 else
@@ -5451,11 +5554,10 @@ function init_baseClass()
         local player = GetOwningPlayer(unit)
         local lifePercent = GetUnitLifePercent(unit)
         local mana = GetUnitState(unit, UNIT_STATE_MANA)
-
         local idType = GetUnitTypeId(unit)
         local fourType = CC2Four(idType)
 
-        if GetConvertedPlayerId(player) <= 19 then
+        if IsPlayerInForce(player, udg_PLAYERGRPallied) then
             teamNumber = 1
             teamName = "allied"
         else
@@ -5492,14 +5594,14 @@ function init_baseClass()
         base.all.unitsAlive = base.all.unitsAlive + importance
 
         -- Get TEAM Advantage
-        allied = base.allied.unitsAlive - base.allied.unitsTotal
-        federation = base.federation.unitsAlive - base.federation.unitsTotal
+        allied = base.allied.unitsAlive / base.allied.unitsTotal
+        federation = base.federation.unitsAlive / base.federation.unitsTotal
         base.allied.advantage = allied - federation
         base.federation.advantage = federation - allied
 
         -- Get REGION Advantage
-        allied = base[regionName].allied.unitsAlive - base[regionName].allied.unitsTotal
-        federation = base[regionName].federation.unitsAlive - base[regionName].federation.unitsTotal
+        allied = (base[regionName].allied.unitsAlive / base[regionName].allied.unitsTotal) * 100
+        federation = (base[regionName].federation.unitsAlive / base[regionName].federation.unitsTotal) * 100
 
         base[regionName].allied.advantage = allied - federation
         base[regionName].federation.advantage = federation - allied
@@ -5554,12 +5656,12 @@ function init_baseClass()
                 if IsUnitAlly(u, GetOwningPlayer(unit)) then
                     unitsFriendly = unitsFriendly + 1
                     if IsUnitType(u, UNIT_TYPE_HERO) then
-                        unitsFriendly = unitsFriendly + 9
+                        unitsFriendly = unitsFriendly + 15
                     end
                 else
                     unitsEnemy = unitsEnemy + 1
                     if IsUnitType(u, UNIT_TYPE_HERO) then
-                        unitsEnemy = unitsEnemy + 9
+                        unitsEnemy = unitsEnemy + 15
                     end
                 end
             end
@@ -5577,14 +5679,16 @@ function init_baseClass()
         else
             if unitsEnemy > 0 then
                 GroupAddUnit(base[teamName].gDanger, unit)
+                print("IN DANGER!")
             end
         end
 
         -- Heal Units as needed
-        if unitsEnemy == 0 and base[handleId].mana > 50 and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) ==
-            0 then
+        if unitsEnemy == 0 and unitsFriendly > 0 and base[handleId].mana > 50 and
+            BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) == 0 then
 
             g = GetUnitsInRangeOfLocAll(500, l)
+
             while true do
                 u = FirstOfGroup(g)
                 if u == nil then
@@ -5601,6 +5705,7 @@ function init_baseClass()
 
                 GroupRemoveUnit(g, u)
             end
+
             DestroyGroup(g)
         end
         RemoveLocation(l)
@@ -5610,8 +5715,10 @@ function init_baseClass()
         base[handleId].unitsFriendly = unitsFriendly
         base[handleId].unitsEnemy = unitsEnemy
         base[handleId].unitsCount = unitsFriendly - unitsEnemy
+        base[handleId].danger = unitsCount * (((100 - base[handleId].lifePercent) / 10) + 1) *
+                                    -base[handleId].importance
 
-        --print(base[handleId].name .. " Allies:" .. base[handleId].unitsFriendly .. " Enemies: " .. base[handleId].unitsEnemy)
+        -- print(base[handleId].name .. " Allies:" .. base[handleId].unitsFriendly .. " Enemies: " .. base[handleId].unitsEnemy)
     end
 
     function base.died(unit)
@@ -5642,21 +5749,21 @@ function init_baseClass()
         base.all.unitsAlive = base.all.unitsAlive - importance
 
         -- Get TEAM Advantage
-        allied = base.allied.unitsAlive - base.allied.unitsTotal
-        federation = base.federation.unitsAlive - base.federation.unitsTotal
+        allied = (base.allied.unitsAlive / base.allied.unitsTotal) * 100
+        federation = (base.federation.unitsAlive / base.federation.unitsTotal) * 100
         base.allied.advantage = allied - federation
         base.federation.advantage = federation - allied
 
         -- Get REGION Advantage
-        allied = base[regionName].allied.unitsAlive - base[regionName].allied.unitsTotal
-        federation = base[regionName].federation.unitsAlive - base[regionName].federation.unitsTotal
+        allied = (base[regionName].allied.unitsAlive / base[regionName].allied.unitsTotal) * 100
+        federation = (base[regionName].federation.unitsAlive / base[regionName].federation.unitsTotal) * 100
 
         base[regionName].allied.advantage = allied - federation
         base[regionName].federation.advantage = federation - allied
 
         PlaySound("Sound/Interface/Warning.flac")
 
-        if teamName == "allied" then
+        if teamName == "federation" then
 
             for i = 6, 11 do
                 SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
@@ -5824,31 +5931,40 @@ end
 
 -- Update Base Buildings
 function init_BaseLoop()
-    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 1)
+    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 1.5)
     TriggerAddAction(Trig_baseLoop, function()
 
-        debugfunc(function()
-            local u
-            local g = CreateGroup()
+        local u, id
+        local g = CreateGroup()
 
-            print(CountUnitsInGroup(base.all.g))
-            GroupAddGroup(base.all.g, g)
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
-
-                base.update(u)
-
-                GroupRemoveUnit(g, u)
+        GroupAddGroup(base.all.g, g)
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then
+                break
             end
-            DestroyGroup(g)
 
-            print("Top: " .. base.top.allied.advantage)
-            print("Middle: " .. base.middle.allied.advantage)
-            print("Bottom: " .. base.bottom.allied.advantage)
-        end, "Building Loop")
+            base.update(u)
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+
+        -- TESTING
+        GroupAddGroup(base.federation.gDanger, g)
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then
+                break
+            end
+            id = GetHandleId(u)
+            print(base[id].name .. base[i].danger)
+
+            RemoveUnit(u)
+        end
+        DestroyGroup(g)
+        -- /TESTING
+
     end)
 end
 
@@ -6334,8 +6450,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("uzg1"), -13344.0, -3680.0, 270.000, FourCC("uzg1"))
     u = BlzCreateUnitWithSkin(p, FourCC("usep"), -12928.0, -4160.0, 270.000, FourCC("usep"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -14176.0, -4704.0, 270.000, FourCC("nnzg"))
-    gg_unit_u001_0262 = BlzCreateUnitWithSkin(p, FourCC("u001"), -13824.0, -3840.0, 270.000, FourCC("u001"))
-    SetUnitState(gg_unit_u001_0262, UNIT_STATE_MANA, 0)
+    gg_unit_u001_0262 = BlzCreateUnitWithSkin(p, FourCC("u001"), -13824.0, -3904.0, 270.000, FourCC("u001"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -13536.0, -5152.0, 270.000, FourCC("nnzg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -12832.0, -3616.0, 270.000, FourCC("nnzg"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23296.0, -4352.0, 270.000, FourCC("n000"))
@@ -7212,7 +7327,7 @@ function CreateRegions()
     gg_rct_Big_Top_Right_Center = Rect(-11584.0, -2464.0, -6144.0, 4992.0)
     gg_rct_Big_Top_Left_Center = Rect(-17024.0, -3200.0, -11552.0, 4992.0)
     gg_rct_Big_Middle_Right_Center = Rect(-11584.0, -5920.0, -6144.0, -2432.0)
-    gg_rct_Big_Middle_Left_Center = Rect(-14208.0, -7680.0, -8736.0, -4320.0)
+    gg_rct_Big_Middle_Left_Center = Rect(-17024.0, -6528.0, -11552.0, -3168.0)
     gg_rct_Aspect_of_Forest_Left = Rect(-27072.0, -928.0, -26528.0, -480.0)
     gg_rct_Aspect_of_Forest_Left_Gate = Rect(-25792.0, -32.0, -25472.0, 736.0)
     gg_rct_Aspect_of_Forest_Right = Rect(3360.0, -8736.0, 3904.0, -8288.0)

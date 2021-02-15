@@ -13962,3 +13962,33 @@ STRING 4562
 Rack Weapon 2
 }
 
+STRING 4563
+{
+%s the %s (level %d) has fallen.,%s the %s (level %d) has been slain.,%s the %s (level %d) has been killed.,%s the %s (level %d) has fallen.
+}
+
+STRING 4564
+{
+Fortified armor greatly reduces Piercing, Magic, Normal and Hero attacks, but takes extra damage from Siege attacks.
+}
+
+STRING 4565
+{
+Fortified armor greatly reduces Piercing, and Normal attacks, but takes extra damage from Siege.
+}
+
+STRING 4566
+{
+Fortified armor greatly reduces Piercing, Hero, Magic, and Normal attacks, but takes extra damage from Siege.
+}
+
+STRING 4567
+{
+ - Each point increase movement speed
+}
+
+STRING 4568
+{
+ - Each point increase movement speed
+}
+
