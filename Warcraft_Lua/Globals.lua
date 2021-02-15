@@ -170,7 +170,7 @@ function addBases()
     base.add(gg_unit_h00F_0029, 2, false, true, true) -- Allied Town
     base.add(gg_unit_h00F_0066, 2, false, true, true) -- Federation
                 
-    base.add(gg_unit_u001_0262, 2, false, true, true) -- Allied Undead
+    base.add(gg_unit_u001_0262, 2, false, true, true) -- Federation
     base.add(gg_unit_u001_0264, 2, false, true, true) -- Federation
 end
 
