@@ -21,8 +21,6 @@ function debugfunc(func, name) -- Turn on runtime logging
     if not passed then
         print("|cffff0000[ERROR]|r" .. name, passed, data)
     end
-    passed = nil
-    data = nil
 end
 
 function CC2Four(num) -- Convert from Handle ID to Four Char

@@ -98,15 +98,19 @@ end
 function Init_UnitDies()
     TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
     TriggerAddAction(Trig_UnitDies, function()
+
         local dieingUnit = GetTriggerUnit()
 
-        if IsUnitInGroup(dieingUnit, building.all.g) then
-            building.died(dieingUnit)
+        if IsUnitInGroup(dieingUnit, base.all.g) then
+            debugfunc(function()
+                base.died(dieingUnit)
+            end, "Building Die")
         end
 
         if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
             indexer:remove(dieingUnit)
         end
+
     end)
 end
 
@@ -134,25 +138,32 @@ function init_MoveToNext()
 end
 
 -- Update Base Buildings
-function init_Building_Loop()
-    TriggerRegisterTimerEventPeriodic(Trig_BuildingLoop, 1)
-    TriggerAddAction(Trig_BuildingLoop, function()
-        local u
-        local g = CreateGroup()
+function init_BaseLoop()
+    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 1)
+    TriggerAddAction(Trig_baseLoop, function()
 
-        GroupAddGroup(building.all.g, g)
-        while true do
-            u = FirstOfGroup(g)
-            if u == nil then
-                break
+        debugfunc(function()
+            local u
+            local g = CreateGroup()
+
+            print(CountUnitsInGroup(base.all.g))
+            GroupAddGroup(base.all.g, g)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                base.update(u)
+
+                GroupRemoveUnit(g, u)
             end
+            DestroyGroup(g)
 
-            building:update(u)
-
-            GroupRemoveUnit(g, u)
-        end
-        DestroyGroup(g)
-
+            print("Top: " .. base.top.allied.advantage)
+            print("Middle: " .. base.middle.allied.advantage)
+            print("Bottom: " .. base.bottom.allied.advantage)
+        end, "Building Loop")
     end)
 end
 

@@ -1,7 +1,5 @@
 udg_PLAYERGRPallied = nil
 udg_PLAYERGRPfederation = nil
-udg_TIMERCreepSpawn = nil
-udg_TIMEWINcreepLevelUpgrade = nil
 udg_RevivableHeros = nil
 udg_TempReal = 0.0
 udg_ReviveTimers = {}
@@ -37,26 +35,17 @@ udg_POINT_AI_PursueStart = {}
 udg_INT_AI_Player = 0
 udg_TEMP_Pos_Hero = nil
 udg_TEMP_Pos2 = nil
-udg_POINT_AI_Destination = {}
 udg_SPAWN_NumberOfUnits = __jarray(0)
 udg_SPAWN_UnitType = __jarray(0)
 udg_SPAWN_LevelStart = __jarray(0)
 udg_SPAWN_OVER_UnitTypes = __jarray(0)
 udg_SPAWN_OVER_RegionStart = {}
 udg_SPAWN_OVER_RegionEnd = {}
-udg_SPAWN_LevelEnd = __jarray(0)
-udg_SPAWN_LoopBases = 0
 udg_SPAWN_LoopPlayer = 0
 udg_SPAWN_LoopUnitTypes = 0
 udg_SPAWN_TMP_posSTART = nil
-udg_SPAWN_TMP_Player = nil
-udg_SPAWN_TMP_posEND = nil
-udg_SPAWN_LoopNumberOfUnits = 0
 udg_SPAWN_TMP_TeamNumber = 0
 udg_SPAWN_TMP_NumOfUnitsREAL = 0
-udg_SPAWN_OVER_WavesStart = __jarray(0)
-udg_SPAWN_LoopWaves = 0
-udg_SPAWN_OVER_WavesEnd = __jarray(0)
 udg_TEMP_IntLoop1 = 0
 udg_TMP_INT_SpawnRegion = 0
 udg_TMP_INT_SpawnUnitTypes = 0
@@ -97,7 +86,6 @@ udg_MO_Caster = {}
 udg_MO_UnitCount = __jarray(0.0)
 udg_MO_AbilityLevel = __jarray(0)
 udg_MO_Pushback = __jarray(0.0)
-udg_EndRegionsSpawn = {}
 udg_Mana_Overload_Researched = __jarray(0)
 udg_Frost_Attack_Researched = __jarray(false)
 udg_TEMP_Real = 0.0
@@ -157,8 +145,6 @@ udg_Spell_Distance = 0.0
 udg_Spell_Speed = 0.0
 udg_FN_Interval = 0.0
 udg_Spell_Phase = 0
-udg_Ordered_Unit_Queue = nil
-udg_Ordered_Unit_Group = nil
 udg_Attack_Hash = nil
 udg_Attack_Unit_Group = nil
 udg_Spell_Unit_Target = nil
@@ -166,7 +152,6 @@ udg_Spell_Player = nil
 udg_Attack_Interval = 0.0
 udg_Hero_Levels = __jarray(0)
 udg_FA_Level = 0
-udg_TEMP_Pos_Move = nil
 udg_Gates_Open = nil
 udg_Gates_Closed = nil
 udg_TEMP_Region = nil
@@ -189,14 +174,10 @@ udg_TimeTravel_HASH = nil
 udg_TimeTravel_GROUP = nil
 udg_TimeTravel_INTERVAL = 0.0
 udg_Spell_Damage = 0.0
-udg_FUNC_Base_Unit = nil
-udg_FUNC_Base_REAL_Distance = 0.0
-udg_FUNC_Base_Point_TEMP = nil
 udg_UNIT_Bases_Teleport = {}
 udg_TEMP_A_REAL = __jarray(0.0)
 udg_TEMP_A_INT = __jarray(0)
 udg_TEMP_A_UNIT = {}
-udg_EndRegionsNormal = {}
 udg_Count = 0
 udg_playersAll = nil
 gg_rct_Left_Start = nil
@@ -303,7 +284,6 @@ gg_snd_CreepAggroWhat1 = nil
 gg_snd_Error = nil
 gg_snd_MapPing = nil
 gg_snd_Warning = nil
-gg_trg_Picking_Phase = nil
 gg_trg_Level100 = nil
 gg_trg_fogofwar = nil
 gg_trg_testing = nil
@@ -335,37 +315,17 @@ gg_trg_Event_Count = nil
 gg_trg_DW_Ancient_Chaos = nil
 gg_trg_DW_Fire_Hounds = nil
 gg_trg_Doom_Warden_End = nil
-gg_trg_Camera_Reset = nil
 gg_trg_Footman_at_Max_Mana = nil
 gg_trg_Unit_Upgrades = nil
 gg_trg_Elder_Ent_Movement = nil
 gg_trg_Zombie_Infect = nil
-gg_trg_Base_Heal_Spell = nil
 gg_trg_Upgrade_to_Fel_Warlock = nil
 gg_trg_Elf_Boat_Dies = nil
 gg_trg_Human_Boat_Dies = nil
 gg_trg_Chain_Lightning = nil
 gg_trg_Energy_Tower = nil
 gg_trg_Watch_Tower_Mana_Shield = nil
-gg_trg_Pathing_INIT = nil
-gg_trg_Set_Creeps_to_Attack_Elf_Base_Right = nil
-gg_trg_Set_Creeps_to_Attack_Elf_Base_Left = nil
-gg_trg_Set_Creeps_to_Attack_Arcane_Base_Left = nil
-gg_trg_Set_Creeps_to_Attack_Arcane_Base_Right = nil
-gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Left = nil
-gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Right = nil
-gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Left = nil
-gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Right = nil
-gg_trg_Aspect_of_Tides_End = nil
-gg_trg_Aspect_of_Death_End = nil
-gg_trg_Aspect_of_Forest_End = nil
-gg_trg_Aspect_of_Air_End = nil
 gg_trg_Shipyard_Left_End = nil
-gg_trg_Creeps_keep_going_after_Order = nil
-gg_trg_Creeps_keep_going_after_Spell = nil
-gg_trg_Order_Units_LOOP = nil
-gg_trg_FUNC_Move_Creeps = nil
-gg_trg_FUNC_Shipyard = nil
 gg_trg_Brawler_No_Mana = nil
 gg_trg_Brawler_Rage_GUI = nil
 gg_trg_Drain_Start = nil
@@ -454,7 +414,6 @@ function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
     udg_PLAYERGRPfederation = CreateForce()
-    udg_TIMERCreepSpawn = CreateTimer()
     udg_RevivableHeros = CreateGroup()
     udg_TempReal = 0.0
     i = 0
@@ -562,31 +521,10 @@ function InitGlobals()
         udg_SPAWN_OVER_UnitTypes[i] = 0
         i = i + 1
     end
-    i = 0
-    while (true) do
-        if ((i > 1)) then break end
-        udg_SPAWN_LevelEnd[i] = 0
-        i = i + 1
-    end
-    udg_SPAWN_LoopBases = 0
     udg_SPAWN_LoopPlayer = 0
     udg_SPAWN_LoopUnitTypes = 0
-    udg_SPAWN_LoopNumberOfUnits = 0
     udg_SPAWN_TMP_TeamNumber = 0
     udg_SPAWN_TMP_NumOfUnitsREAL = 0
-    i = 0
-    while (true) do
-        if ((i > 1)) then break end
-        udg_SPAWN_OVER_WavesStart[i] = 0
-        i = i + 1
-    end
-    udg_SPAWN_LoopWaves = 1
-    i = 0
-    while (true) do
-        if ((i > 1)) then break end
-        udg_SPAWN_OVER_WavesEnd[i] = 0
-        i = i + 1
-    end
     udg_TEMP_IntLoop1 = 0
     udg_TMP_INT_SpawnRegion = 0
     udg_TMP_INT_SpawnUnitTypes = 0
@@ -812,7 +750,6 @@ function InitGlobals()
     udg_Spell_Speed = 0.0
     udg_FN_Interval = 0.0
     udg_Spell_Phase = 0
-    udg_Ordered_Unit_Group = CreateGroup()
     udg_Attack_Unit_Group = CreateGroup()
     udg_Attack_Interval = 0.10
     i = 0
@@ -839,7 +776,6 @@ function InitGlobals()
     udg_TimeTravel_GROUP = CreateGroup()
     udg_TimeTravel_INTERVAL = 0.0
     udg_Spell_Damage = 0.0
-    udg_FUNC_Base_REAL_Distance = 0.0
     i = 0
     while (true) do
         if ((i > 2)) then break end
@@ -2396,9 +2332,9 @@ function init_Lua()
         init_heroClass()
         init_spawnClass()
         init_aiClass()
-        Init_buildingClass()
+        init_baseClass()
     end, "Define Classes")
-    dprint("Classes Defined", 2)
+    --dprint("Classes Defined", 2)
 
     -- Start the Map init
     Init_Map()
@@ -2407,16 +2343,18 @@ function init_Lua()
     debugfunc(function()
         loc = loc_Class.new()
         addRegions()
+        addBases()
+
         indexer = indexer_Class.new()
-        building = building_class.new()
-        Init_buildings()
         hero = hero_Class.new()
         ai = ai_Class.new()
         spawn = spawn_Class.new()
 
+        
+
     end, "Init Classes")
 
-    dprint("Classes Initialized", 2)
+    --dprint("Classes Initialized", 2)
 
     -- Init Trigger
     debugfunc(function()
@@ -2433,12 +2371,13 @@ function init_Lua()
         Init_UnitDies()
         init_MoveToNext()
         Init_PickingPhase()
+        init_BaseLoop()
 
         -- Abilities
         ABTY_ShifterSwitch()
     end, "Init Triggers")
 
-    dprint("Triggers Initialized", 2)
+    --dprint("Triggers Initialized", 2)
 
     -- Spawn Base / Unit Setup
     -- Init Trigger
@@ -2447,13 +2386,13 @@ function init_Lua()
         spawnAddUnits()
     end, "Init Spawn")
 
-    dprint("Spawn Setup", 2)
+    --dprint("Spawn Setup", 2)
 
     -- Setup Delayed Init Triggers
     init_Delayed_1()
     init_Delayed_10()
 
-    dprint("Init Finished")
+    --dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -2465,12 +2404,12 @@ function init_Delayed_1()
 
             startHeroPicker()
         end, "Start Delayed Triggers")
-        dprint("AI Started", 2)
+        --dprint("AI Started", 2)
 
         orderStartingUnits()
         spawn:startSpawn()
 
-        dprint("Spawn Started", 2)
+        --dprint("Spawn Started", 2)
 
     end)
 end
@@ -2692,7 +2631,7 @@ function init_triggers()
     Trig_UnitDies = CreateTrigger()
     Trig_IssuedOrder = CreateTrigger()
     Trig_aiLoopStates = CreateTrigger()
-    Trig_BuildingLoop = CreateTrigger()
+    Trig_baseLoop = CreateTrigger()
 end
 
 
@@ -2794,70 +2733,69 @@ function addRegions()
     RegionAddRect(topRegion, gg_rct_Big_Top_Right)
 end
 
-function Init_buildings()
-    building:add(gg_unit_h003_0015, 3) -- Allied Arcane Main
-    building:add(gg_unit_h003_0007, 3) -- Federation Arcane Main
-    
+function addBases()
+    base.add(gg_unit_h003_0015, 3, false, true, true) -- Allied Arcane Main
+    base.add(gg_unit_h003_0007, 3, false, true, true) -- Federation Arcane Main
 
-    building:add(gg_unit_h014_0017, 3) -- Allied Arcane Hero
-    building:add(gg_unit_h014_0158, 3) -- Federation
+    base.add(gg_unit_h014_0017, 2, false, true, true) -- Allied Arcane Hero
+    base.add(gg_unit_h014_0158, 2, false, true, true) -- Federation
 
-    building:add(gg_unit_hars_0355, 3) -- Allied Arcane Top
-    building:add(gg_unit_hars_0293, 3) -- Federation
+    base.add(gg_unit_hars_0355, 1, false, true, true) -- Allied Arcane Top
+    base.add(gg_unit_hars_0293, 1, false, true, true) -- Federation
     
-    building:add(gg_unit_hars_0292, 3) -- Allied Arcane Bottom
-    building:add(gg_unit_hars_0303, 3) -- Federation
+    base.add(gg_unit_hars_0292, 1, false, true, true) -- Allied Arcane Bottom
+    base.add(gg_unit_hars_0303, 1, false, true, true) -- Federation
     
-    building:add(gg_unit_n00K_0802, 3) -- Allied Blacksmith
-    building:add(gg_unit_n00K_0477, 3) -- Federation
+    base.add(gg_unit_n00K_0802, 2, false, true, true) -- Allied Blacksmith
+    base.add(gg_unit_n00K_0477, 2, false, true, true) -- Federation
     
-    building:add(gg_unit_h00E_0033, 3, true) -- Allied Castle
-    building:add(gg_unit_h00E_0081, 3, true) -- Federation
+    base.add(gg_unit_h00E_0033, 1, true, true, true) -- Allied Castle
+    base.add(gg_unit_h00E_0081, 1, true, true, true) -- Federation
     
-    building:add(gg_unit_hvlt_0207, 3) -- Allied City Elves
-    building:add(gg_unit_hvlt_0406, 3) -- Federation
+    base.add(gg_unit_hvlt_0207, 2, false, true, true) -- Allied City Elves
+    base.add(gg_unit_hvlt_0406, 2, false, true, true) -- Federation
     
-    building:add(gg_unit_n00B_0364, 3) -- Allied City Front
-    building:add(gg_unit_n00B_0399, 3) -- Federation
+    base.add(gg_unit_n00B_0364, 1, false, true, true) -- Allied City Front
+    base.add(gg_unit_n00B_0399, 1, false, true, true) -- Federation
     
-    building:add(gg_unit_n00B_0102, 3) -- Allied City Side
-    building:add(gg_unit_n00B_0038, 3) -- Federation
+    base.add(gg_unit_n00B_0102, 1, false, true, true) -- Allied City Side
+    base.add(gg_unit_n00B_0038, 1, false, true, true) -- Federation
     
-    building:add(gg_unit_ngt2_0525, 3) -- Allied Kobold
-    building:add(gg_unit_ngt2_0455, 3) -- Federation
+    base.add(gg_unit_ngt2_0525, 1, false, true, true) -- Allied Kobold
+    base.add(gg_unit_ngt2_0455, 1, false, true, true) -- Federation
     
-    building:add(gg_unit_nheb_0109, 3) -- Allied High Elves
-    building:add(gg_unit_nheb_0036, 3) -- Federation
+    base.add(gg_unit_nheb_0109, 3, false, true, true) -- Allied High Elves
+    base.add(gg_unit_nheb_0036, 3, false, true, true) -- Federation
     
-    building:add(gg_unit_n001_0048, 3) -- Allied Merc Camp
-    building:add(gg_unit_n001_0049, 3) -- Federation
+    base.add(gg_unit_n001_0048, 2, false, true, true) -- Allied Merc Camp
+    base.add(gg_unit_n001_0049, 2, false, true, true) -- Federation
         
-    building:add(gg_unit_h006_0074, 3) -- Allied Mine
-    building:add(gg_unit_h006_0055, 3) -- Federation
+    base.add(gg_unit_h006_0074, 2, false, true, true) -- Allied Mine
+    base.add(gg_unit_h006_0055, 2, false, true, true) -- Federation
         
-    building:add(gg_unit_nmh1_0735, 3) -- Allied Murloc
-    building:add(gg_unit_nmh1_0783, 3) -- Federation
+    base.add(gg_unit_nmh1_0735, 1, false, true, true) -- Allied Murloc
+    base.add(gg_unit_nmh1_0783, 1, false, true, true) -- Federation
         
-    building:add(gg_unit_nntt_0135, 3) -- Allied Naga
-    building:add(gg_unit_nntt_0132, 3) -- Federation
+    base.add(gg_unit_nntt_0135, 2, false, true, true) -- Allied Naga
+    base.add(gg_unit_nntt_0132, 2, false, true, true) -- Federation
         
-    building:add(gg_unit_e003_0058, 3) -- Allied Night Elves
-    building:add(gg_unit_e003_0014, 3) -- Federation
+    base.add(gg_unit_e003_0058, 3, false, true, true) -- Allied Night Elves
+    base.add(gg_unit_e003_0014, 3, false, true, true) -- Federation
             
-    building:add(gg_unit_o001_0075, 3) -- Allied Orcs
-    building:add(gg_unit_o001_0078, 3) -- Federation
+    base.add(gg_unit_o001_0075, 2, false, true, true) -- Allied Orcs
+    base.add(gg_unit_o001_0078, 2, false, true, true) -- Federation
             
-    building:add(gg_unit_eshy_0120, 3) -- Allied Night Elf Shipyard
-    building:add(gg_unit_eshy_0047, 3) -- Federation
+    base.add(gg_unit_eshy_0120, 1, false, true, true) -- Allied Night Elf Shipyard
+    base.add(gg_unit_eshy_0047, 1, false, true, true) -- Federation
             
-    building:add(gg_unit_hshy_0011, 3) -- Allied Human Shipyard
-    building:add(gg_unit_hshy_0212, 3) -- Federation
+    base.add(gg_unit_hshy_0011, 1, false, true, true) -- Allied Human Shipyard
+    base.add(gg_unit_hshy_0212, 1, false, true, true) -- Federation
             
-    building:add(gg_unit_h00F_0029, 3) -- Allied Town
-    building:add(gg_unit_h00F_0066, 3) -- Federation
+    base.add(gg_unit_h00F_0029, 2, false, true, true) -- Allied Town
+    base.add(gg_unit_h00F_0066, 2, false, true, true) -- Federation
                 
-    building:add(gg_unit_u001_0262, 3) -- Allied Undead
-    building:add(gg_unit_u001_0264, 3) -- Federation
+    base.add(gg_unit_u001_0262, 2, false, true, true) -- Allied Undead
+    base.add(gg_unit_u001_0264, 2, false, true, true) -- Federation
 end
 
 function Init_luaGlobals()
@@ -5435,330 +5373,312 @@ function init_spawnClass()
     end
 end
 
-function Init_buildingClass()
+function init_baseClass()
 
-    building_class = {}
+    base = {}
 
-    building_class.new = function()
-        local self = {}
+    base.all = {
+        g = CreateGroup(),
+        unitsTotal = 0,
+        unitsAlive = 0
+    }
 
-        self.all = {
-            g = CreateGroup(),
-            unitsTotal = 0,
-            unitsAlive = 0
-        }
+    base.allied = {
+        g = CreateGroup(),
+        unitsTotal = 0,
+        unitsAlive = 0,
+        advantage = 0,
+        gDanger = CreateGroup()
+    }
+    base.federation = {
+        g = CreateGroup(),
+        unitsTotal = 0,
+        unitsAlive = 0,
+        advantage = 0,
+        gDanger = CreateGroup()
+    }
 
-        self.allied = {
+    base.top = {
+        allied = {
             g = CreateGroup(),
             unitsTotal = 0,
             unitsAlive = 0,
-            advantage = 0,
-            gDanger = CreateGroup()
-        }
-        self.federation = {
+            advantage = 0
+        },
+        federation = {
             g = CreateGroup(),
             unitsTotal = 0,
             unitsAlive = 0,
-            advantage = 0,
-            gDanger = CreateGroup()
+            advantage = 0
         }
-
-        self.top = {
-            allied = {
-                g = CreateGroup(),
-                unitsTotal = 0,
-                unitsAlive = 0,
-                advantage = 0
-            },
-            federation = {
-                g = CreateGroup(),
-                unitsTotal = 0,
-                unitsAlive = 0,
-                advantage = 0
-            }
+    }
+    base.middle = {
+        allied = {
+            g = CreateGroup(),
+            unitsTotal = 0,
+            unitsAlive = 0,
+            advantage = 0
+        },
+        federation = {
+            g = CreateGroup(),
+            unitsTotal = 0,
+            unitsAlive = 0,
+            advantage = 0
         }
-        self.middle = {
-            allied = {
-                g = CreateGroup(),
-                unitsTotal = 0,
-                unitsAlive = 0,
-                advantage = 0
-            },
-            federation = {
-                g = CreateGroup(),
-                unitsTotal = 0,
-                unitsAlive = 0,
-                advantage = 0
-            }
+    }
+    base.bottom = {
+        allied = {
+            g = CreateGroup(),
+            unitsTotal = 0,
+            unitsAlive = 0,
+            advantage = 0
+        },
+        federation = {
+            g = CreateGroup(),
+            unitsTotal = 0,
+            unitsAlive = 0,
+            advantage = 0
         }
-        self.bottom = {
-            allied = {
-                g = CreateGroup(),
-                unitsTotal = 0,
-                unitsAlive = 0,
-                advantage = 0
-            },
-            federation = {
-                g = CreateGroup(),
-                unitsTotal = 0,
-                unitsAlive = 0,
-                advantage = 0
-            }
-        }
+    }
 
-        function self:add(unit, importance, mainBase, teleport)
-            teleport = teleport or true
-            mainBase = mainBase or false
-            importance = importance or 1
+    function base.add(unit, importance, mainBase, update, teleport)
 
-            local teamNumber, regionName, teamName, allied, federation
-            local handleId = GetHandleId(unit)
-            local x = GetUnitX(unit)
-            local y = GetUnitY(unit)
-            local name = GetUnitName(unit)
-            local player = GetOwningPlayer(unit)
-            local lifePercent = GetUnitLifePercent(unit)
-            local mana = GetUnitState(unit, UNIT_STATE_MANA)
+        local teamNumber, regionName, teamName, allied, federation
+        local handleId = GetHandleId(unit)
+        local x = GetUnitX(unit)
+        local y = GetUnitY(unit)
+        local name = GetUnitName(unit)
+        local player = GetOwningPlayer(unit)
+        local lifePercent = GetUnitLifePercent(unit)
+        local mana = GetUnitState(unit, UNIT_STATE_MANA)
 
-            local idType = GetUnitTypeId(unit)
-            local fourType = CC2Four(id)
+        local idType = GetUnitTypeId(unit)
+        local fourType = CC2Four(idType)
 
-            if GetConvertedPlayerId(player) <= 19 then
-                teamNumber = 1
-                teamName = "allied"
-            else
-                teamNumber = 2
-                teamName = "federation"
-            end
-
-            -- Add to Region Specific Buildings
-            if IsUnitInRegion(bottomRegion, unit) then
-                regionName = "bottom"
-            elseif IsUnitInRegion(middleRegion, unit) then
-                regionName = "middle"
-            elseif IsUnitInRegion(topRegion, unit) then
-                regionName = "top"
-            end
-
-            -- Add to ALL Unit Group
-            GroupAddUnit(self.all.g, unit)
-
-            -- Add to TELEPORT Unit Group
-            if teleport then
-                GroupAddUnit(self[teamName].g, unit)
-            end
-
-            -- Add to REGION Unit Group
-            GroupAddUnit(self[regionName][teamName].g, unit)
-
-            -- Set Importance
-            self[regionName][teamName].unitsTotal = self[regionName][teamName].unitsTotal + importance
-            self[regionName][teamName].unitsAlive = self[regionName][teamName].unitsAlive + importance
-            self[teamName].unitsTotal = self[teamName].unitsTotal + importance
-            self[teamName].unitsAlive = self[teamName].unitsAlive + importance
-            self.all.unitsTotal = self.all.unitsTotal + importance
-            self.all.unitsAlive = self.all.unitsAlive + importance
-
-            -- Get TEAM Advantage
-            allied = self.allied.unitsAlive - self.allied.unitsTotal
-            federation = self.federation.unitsAlive - self.federation.unitsTotal
-            self.allied.advantage = allied - federation
-            self.federation.advantage = federation - allied
-
-            -- Get REGION Advantage
-            allied = self[regionName].allied.unitsAlive - self[regionName].allied.unitsTotal
-            federation = self[regionName].federation.unitsAlive - self[regionName].federation.unitsTotal
-
-            self[regionName].allied.advantage = allied - federation
-            self[regionName].federation.advantage = federation - allied
-
-            -- Add Building to Table
-            self[handleId] = {
-                x = x,
-                y = y,
-                name = name,
-                unit = unit,
-                importance = importance,
-                lifePercent = lifePercent,
-                unitsFriendly = 0,
-                unitsEnemy = 0,
-                unitsCount = 0,
-                idType = idType,
-                fourType = fourType,
-                handleId = handleId,
-                mainBase = mainBase,
-                regionName = regionName,
-                teamName = teamName,
-                mana = mana
-            }
+        if GetConvertedPlayerId(player) <= 19 then
+            teamNumber = 1
+            teamName = "allied"
+        else
+            teamNumber = 2
+            teamName = "federation"
         end
 
-        function self:update(unit)
-            local u
-            local g = CreateGroup()
-            local unitsFriendly = 0
-            local unitsEnemy = 0
-            local unitsCount = 0
-            
+        -- Add to Region Specific Buildings
+        if IsUnitInRegion(bottomRegion, unit) then
+            regionName = "bottom"
+        elseif IsUnitInRegion(middleRegion, unit) then
+            regionName = "middle"
+        elseif IsUnitInRegion(topRegion, unit) then
+            regionName = "top"
+        end
 
-            local handleId = GetHandleId(unit)
-            local l = Location(self[handleId].x, self[handleId].y)
-            local teamName = self[handleId].teamName
+        -- Add to ALL Unit Group
+        GroupAddUnit(base.all.g, unit)
 
-            g = GetUnitsInRangeOfLocAll(900, l)
+        -- Add to TELEPORT Unit Group
+        if teleport then
+            GroupAddUnit(base[teamName].g, unit)
+        end
+
+        -- Add to REGION Unit Group
+        GroupAddUnit(base[regionName][teamName].g, unit)
+
+        -- Set Importance
+        base[regionName][teamName].unitsTotal = base[regionName][teamName].unitsTotal + importance
+        base[regionName][teamName].unitsAlive = base[regionName][teamName].unitsAlive + importance
+        base[teamName].unitsTotal = base[teamName].unitsTotal + importance
+        base[teamName].unitsAlive = base[teamName].unitsAlive + importance
+        base.all.unitsTotal = base.all.unitsTotal + importance
+        base.all.unitsAlive = base.all.unitsAlive + importance
+
+        -- Get TEAM Advantage
+        allied = base.allied.unitsAlive - base.allied.unitsTotal
+        federation = base.federation.unitsAlive - base.federation.unitsTotal
+        base.allied.advantage = allied - federation
+        base.federation.advantage = federation - allied
+
+        -- Get REGION Advantage
+        allied = base[regionName].allied.unitsAlive - base[regionName].allied.unitsTotal
+        federation = base[regionName].federation.unitsAlive - base[regionName].federation.unitsTotal
+
+        base[regionName].allied.advantage = allied - federation
+        base[regionName].federation.advantage = federation - allied
+
+        -- Add Building to Table
+        base[handleId] = {
+            x = x,
+            y = y,
+            name = name,
+            unit = unit,
+            importance = importance,
+            lifePercent = lifePercent,
+            unitsFriendly = 0,
+            unitsEnemy = 0,
+            unitsCount = 0,
+            update = update,
+            idType = idType,
+            fourType = fourType,
+            handleId = handleId,
+            mainBase = mainBase,
+            regionName = regionName,
+            teamName = teamName,
+            mana = mana
+        }
+    end
+
+    function base.update(unit)
+        local u
+
+        local unitsFriendly = 0
+        local unitsEnemy = 0
+        local unitsCount = 0
+
+        local handleId = GetHandleId(unit)
+
+        if base[handleId].update == false then
+            return true
+        end
+
+        local l = Location(base[handleId].x, base[handleId].y)
+        local teamName = base[handleId].teamName
+
+        local g = CreateGroup()
+        g = GetUnitsInRangeOfLocAll(1200, l)
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then
+                break
+            end
+
+            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and IsUnitAliveBJ(u) then
+                if IsUnitAlly(u, GetOwningPlayer(unit)) then
+                    unitsFriendly = unitsFriendly + 1
+                    if IsUnitType(u, UNIT_TYPE_HERO) then
+                        unitsFriendly = unitsFriendly + 9
+                    end
+                else
+                    unitsEnemy = unitsEnemy + 1
+                    if IsUnitType(u, UNIT_TYPE_HERO) then
+                        unitsEnemy = unitsEnemy + 9
+                    end
+                end
+            end
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+
+        -- Check if Unit is in Danger
+        if IsUnitInGroup(unit, base[teamName].gDanger) then
+            if unitsEnemy == 0 then
+                GroupRemoveUnit(base[teamName].gDanger, unit)
+            end
+
+        else
+            if unitsEnemy > 0 then
+                GroupAddUnit(base[teamName].gDanger, unit)
+            end
+        end
+
+        -- Heal Units as needed
+        if unitsEnemy == 0 and base[handleId].mana > 50 and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) ==
+            0 then
+
+            g = GetUnitsInRangeOfLocAll(500, l)
             while true do
                 u = FirstOfGroup(g)
                 if u == nil then
                     break
                 end
 
-                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) then
-                    if IsUnitAlly(u, GetOwningPlayer(unit)) then
-                        unitsFriendly = unitsFriendly + 1
-                        if IsUnitType(u, UNIT_TYPE_HERO) then
-                            unitsFriendly = unitsFriendly + 9
-                        end
-                    else
-                        unitsEnemy = unitsEnemy + 1
-                        if IsUnitType(u, UNIT_TYPE_HERO) then
-                            unitsFriendly = unitsFriendly + 9
-                        end
+                if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
+                    if not UnitHasBuffBJ(u, FourCC("Brej")) and
+                        (GetUnitLifePercent(u) < 95 or GetUnitManaPercent(u) < 95) then
+                        IssueTargetOrder(unit, "rejuvination", u)
+                        break
                     end
                 end
 
                 GroupRemoveUnit(g, u)
             end
             DestroyGroup(g)
+        end
+        RemoveLocation(l)
 
-            -- Check if Unit is in Danger
-            if IsUnitInGroup(unit, self[teamName].gDanger) then
-                if unitsEnemy == 0 then
-                    GroupRemoveUnit(self[teamName].gDanger, unit)
-                end
+        base[handleId].lifePercent = GetUnitLifePercent(unit)
+        base[handleId].mana = GetUnitState(unit, UNIT_STATE_MANA)
+        base[handleId].unitsFriendly = unitsFriendly
+        base[handleId].unitsEnemy = unitsEnemy
+        base[handleId].unitsCount = unitsFriendly - unitsEnemy
 
-            else
-                if unitsEnemy > 0 then
-                    GroupAddUnit(self[teamName].gDanger, unit)
-                end
-            end
+        --print(base[handleId].name .. " Allies:" .. base[handleId].unitsFriendly .. " Enemies: " .. base[handleId].unitsEnemy)
+    end
 
-            -- Heal Units as needed
-            if unitsEnemy == 0 and GetUnitState(unit, UNIT_STATE_MANA) > 50 and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) == 0 then
-                local gHeroes = createGroup()
-                
-                g = GetUnitsInRangeOfLocAll(500, l)
-                while true do
-                    u = FirstOfGroup(g)
-                    if u == nil then
-                        break
-                    end
+    function base.died(unit)
+        local allied, federation, u
+        local handleId = GetHandleId(unit)
+        local regionName = base[handleId].regionName
+        local teamName = base[handleId].teamName
+        local teleport = base[handleId].teleport
+        local importance = base[handleId].importance
+        local x = base[handleId].x
+        local y = base[handleId].y
+        local name = base[handleId].name
 
-                    if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
-                        GroupAddUnit(gHeroes, u)
-                    end
+        -- Remove Unit from ALL Group
+        GroupRemoveUnit(base.all.g, unit)
 
-                    GroupRemoveUnit(g, u)
-                end
-                DestroyGroup(g)
+        -- Remove Unit from REGION Group
+        GroupRemoveUnit(base[regionName][teamName].g, unit)
 
-                while true do
-                    u = FirstOfGroup(gHeroes)
-
-                    if u == nil then
-                        break
-                    end
-
-                    -- Cast Healing Spell on Unit and Exit Loop
-                    if not UnitHasBuffBJ(u, FourCC("Brej")) and (GetUnitLifePercent(u) < 95 or GetUnitManaPercent(u) < 95) then
-                        IssueTargetOrder(unit, "rejuvination", u)
-                        break
-                    end
-
-                    GroupRemoveUnit(gHeroes, u)
-                end
-                DestroyGroup(gHeroes)
-            end
-            RemoveLocation(l)
-
-            self[handleId].lifePercent = GetUnitLifePercent(unit)
-            self[handleId].mana = GetUnitState(unit, UNIT_STATE_MANA)
-            self[handleId].unitsFriendly = unitsFriendly
-            self[handleId].unitsEnemy = unitsEnemy
-            self[handleId].unitsCount = unitsFriendly - unitsEnemy
+        -- Remove Unit from TELEPORT Group
+        if teleport then
+            GroupRemoveUnit(base[teamName].g, unit)
         end
 
-        function self:died(unit)
-            local allied, federation, u
-            local handleId = GetHandleId(unit)
-            local regionName = self[handleId].regionName
-            local teamName = self[handleId].teamName
-            local teleport = self[handleId].teleport
-            local importance = self[handleId].importance
-            local x = self[handleId].x
-            local y = self[handleId].y
-            local name = self[handleId].name
+        -- Adjust Region importance
+        base[regionName][teamName].unitsAlive = base[regionName][teamName].unitsAlive - importance
+        base[teamName].unitsAlive = base[teamName].unitsAlive - importance
+        base.all.unitsAlive = base.all.unitsAlive - importance
 
-            -- Remove Unit from ALL Group
-            if IsUnitInGroup(unit, self.all.g) then
-                GroupRemoveUnit(self.all.g, unit)
+        -- Get TEAM Advantage
+        allied = base.allied.unitsAlive - base.allied.unitsTotal
+        federation = base.federation.unitsAlive - base.federation.unitsTotal
+        base.allied.advantage = allied - federation
+        base.federation.advantage = federation - allied
+
+        -- Get REGION Advantage
+        allied = base[regionName].allied.unitsAlive - base[regionName].allied.unitsTotal
+        federation = base[regionName].federation.unitsAlive - base[regionName].federation.unitsTotal
+
+        base[regionName].allied.advantage = allied - federation
+        base[regionName].federation.advantage = federation - allied
+
+        PlaySound("Sound/Interface/Warning.flac")
+
+        if teamName == "allied" then
+
+            for i = 6, 11 do
+                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
             end
 
-            -- Remove Unit from TELEPORT Group
-            if teleport and IsUnitInGroup(unit, self[teamName].g) then
-                GroupRemoveUnit(self[teamName].g, unit)
+            print("FEDERATION Base has Fallen!")
+            u = CreateUnit(Player(20), FourCC("h00W"), x, y, bj_UNIT_FACING)
+
+        else
+            for i = 0, 5 do
+                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
             end
 
-            -- Remove Unit from REGION Group
-            if IsUnitInGroup(unit, self[regionName][teamName].g) then
-                GroupRemoveUnit(self[regionName][teamName].g, unit)
-            end
+            print("ALLIED Base has Fallen!")
 
-            -- Adjust Region importance
-            self[regionName][teamName].unitsAlive = self[regionName][teamName].unitsAlive - importance
-            self[teamName].unitsAlive = self[teamName].unitsAlive - importance
-            self.all.unitsAlive = self.all.unitsAlive - importance
-
-            -- Get TEAM Advantage
-            allied = self.allied.unitsAlive - self.allied.unitsTotal
-            federation = self.federation.unitsAlive - self.federation.unitsTotal
-            self.allied.advantage = allied - federation
-            self.federation.advantage = federation - allied
-
-            -- Get REGION Advantage
-            allied = self[regionName].allied.unitsAlive - self[regionName].allied.unitsTotal
-            federation = self[regionName].federation.unitsAlive - self[regionName].federation.unitsTotal
-
-            self[regionName].allied.advantage = allied - federation
-            self[regionName].federation.advantage = federation - allied    
-
-            PlaySound("Sound/Interface/Warning.flac")
-            
-            if teamName == "allied" then
-
-                for i = 6, 11 do
-                    SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
-                end
-                
-                print("FEDERATION Base has Fallen!")
-                u = CreateUnit(Player(20), FourCC("h00W"), x, y, bj_UNIT_FACING)
-    
-            else
-                baseGroup = 2
-                for i = 0, 5 do
-                    SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
-                end
-    
-                print("ALLIED Base has Fallen!")
-               
-                u = CreateUnit(Player(23), FourCC("h00W"), x, x, bj_UNIT_FACING)
-            end
-     
-            print(name .. " has been razed.")
-            PingMinimap(x, y, 15)
-            self:add(u, 0)
+            u = CreateUnit(Player(23), FourCC("h00W"), x, y, bj_UNIT_FACING)
         end
 
-        return self
+        print(name .. " has been razed.")
+        PingMinimap(x, y, 15)
+        base.add(u, 0, false, false, true)
+
     end
 
 end
@@ -5863,15 +5783,19 @@ end
 function Init_UnitDies()
     TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
     TriggerAddAction(Trig_UnitDies, function()
+
         local dieingUnit = GetTriggerUnit()
 
-        if IsUnitInGroup(dieingUnit, building.all.g) then
-            building.died(dieingUnit)
+        if IsUnitInGroup(dieingUnit, base.all.g) then
+            debugfunc(function()
+                base.died(dieingUnit)
+            end, "Building Die")
         end
 
         if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
             indexer:remove(dieingUnit)
         end
+
     end)
 end
 
@@ -5899,25 +5823,32 @@ function init_MoveToNext()
 end
 
 -- Update Base Buildings
-function init_Building_Loop()
-    TriggerRegisterTimerEventPeriodic(Trig_BuildingLoop, 1)
-    TriggerAddAction(Trig_BuildingLoop, function()
-        local u
-        local g = CreateGroup()
+function init_BaseLoop()
+    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 1)
+    TriggerAddAction(Trig_baseLoop, function()
 
-        GroupAddGroup(building.all.g, g)
-        while true do
-            u = FirstOfGroup(g)
-            if u == nil then
-                break
+        debugfunc(function()
+            local u
+            local g = CreateGroup()
+
+            print(CountUnitsInGroup(base.all.g))
+            GroupAddGroup(base.all.g, g)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                base.update(u)
+
+                GroupRemoveUnit(g, u)
             end
+            DestroyGroup(g)
 
-            building:update(u)
-
-            GroupRemoveUnit(g, u)
-        end
-        DestroyGroup(g)
-
+            print("Top: " .. base.top.allied.advantage)
+            print("Middle: " .. base.middle.allied.advantage)
+            print("Bottom: " .. base.bottom.allied.advantage)
+        end, "Building Loop")
     end)
 end
 
@@ -6294,25 +6225,17 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23680.0, -5376.0, 270.000, FourCC("n000"))
     gg_unit_h014_0017 = BlzCreateUnitWithSkin(p, FourCC("h014"), -19712.0, -11200.0, 270.000, FourCC("h014"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -14528.0, -6848.0, 270.000, FourCC("h00X"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -16064.0, -8192.0, 270.000, FourCC("h00X"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -22400.0, -11008.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22720.0, -10112.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23744.0, -4032.0, 270.000, FourCC("n000"))
     gg_unit_h00F_0029 = BlzCreateUnitWithSkin(p, FourCC("h00F"), -16064.0, -7808.0, 270.000, FourCC("h00F"))
-    life = GetUnitState(gg_unit_h00F_0029, UNIT_STATE_LIFE)
-    SetUnitState(gg_unit_h00F_0029, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(gg_unit_h00F_0029, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12064.0, -12704.0, 270.000, FourCC("n00M"))
     gg_unit_h00E_0033 = BlzCreateUnitWithSkin(p, FourCC("h00E"), -23744.0, -4800.0, 270.000, FourCC("h00E"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22400.0, -11904.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22720.0, -12288.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -15680.0, -7808.0, 270.000, FourCC("h00X"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     gg_unit_n001_0048 = BlzCreateUnitWithSkin(p, FourCC("n001"), -12736.0, -12096.0, 270.000, FourCC("n001"))
     SetUnitColor(gg_unit_n001_0048, ConvertPlayerColor(9))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -22400.0, -11392.0, 270.000, FourCC("nft2"))
@@ -6320,11 +6243,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -20544.0, -11200.0, 270.000, FourCC("h00T"))
     gg_unit_e003_0058 = BlzCreateUnitWithSkin(p, FourCC("e003"), -21056.0, -1536.0, 270.000, FourCC("e003"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -16064.0, -7424.0, 270.000, FourCC("h00X"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -16416.0, -7008.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17280.0, -4928.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -22720.0, -5824.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("o005"), -14656.0, -1152.0, 270.000, FourCC("o005"))
@@ -6357,12 +6276,8 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -22976.0, 1600.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -20544.0, 2560.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -14432.0, -4512.0, 270.000, FourCC("nnzg"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -16320.0, -64.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("utod"), -13760.0, -4672.0, 270.000, FourCC("utod"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     gg_unit_nntt_0135 = BlzCreateUnitWithSkin(p, FourCC("nntt"), -20800.0, 2048.0, 270.000, FourCC("nntt"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -20736.0, -2304.0, 270.000, FourCC("ngob"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -20992.0, 1344.0, 270.000, FourCC("nntg"))
@@ -6382,8 +6297,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -13376.0, -2240.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -20224.0, 1152.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -12768.0, -3808.0, 270.000, FourCC("nnzg"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -19840.0, 1472.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef3"), -24032.0, 416.0, 270.000, FourCC("nef3"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -14528.0, -1792.0, 270.000, FourCC("otrb"))
@@ -6404,8 +6317,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -11584.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -10816.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -16128.0, -6528.0, 270.000, FourCC("hhou"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -21632.0, -12928.0, 270.000, FourCC("h00T"))
     u = BlzCreateUnitWithSkin(p, FourCC("npgf"), -15648.0, -2080.0, 270.000, FourCC("npgf"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -21632.0, -9472.0, 270.000, FourCC("h00T"))
@@ -6420,51 +6331,26 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("npgf"), -14048.0, -2592.0, 270.000, FourCC("npgf"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -14528.0, -1088.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13728.0, -7008.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("uzg1"), -13344.0, -3680.0, 270.000, FourCC("uzg1"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("usep"), -12928.0, -4160.0, 270.000, FourCC("usep"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -14176.0, -4704.0, 270.000, FourCC("nnzg"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     gg_unit_u001_0262 = BlzCreateUnitWithSkin(p, FourCC("u001"), -13824.0, -3840.0, 270.000, FourCC("u001"))
-    life = GetUnitState(gg_unit_u001_0262, UNIT_STATE_LIFE)
-    SetUnitState(gg_unit_u001_0262, UNIT_STATE_LIFE, 0.01 * life)
+    SetUnitState(gg_unit_u001_0262, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -13536.0, -5152.0, 270.000, FourCC("nnzg"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -12832.0, -3616.0, 270.000, FourCC("nnzg"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23296.0, -4352.0, 270.000, FourCC("n000"))
     u = BlzCreateUnitWithSkin(p, FourCC("ugrv"), -14464.0, -3904.0, 270.000, FourCC("ugrv"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -13216.0, -4704.0, 270.000, FourCC("n00V"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("nef1"), -24800.0, 416.0, 270.000, FourCC("nef1"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -13280.0, -4896.0, 270.000, FourCC("n00V"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19200.0, -5440.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -13024.0, -10592.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("uzg1"), -14112.0, -4256.0, 270.000, FourCC("uzg1"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -13024.0, -9952.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef0"), -24352.0, 800.0, 270.000, FourCC("nef0"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -19264.0, -9280.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -13664.0, -3424.0, 270.000, FourCC("nnzg"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("uzg1"), -13536.0, -4256.0, 270.000, FourCC("uzg1"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -19360.0, -7136.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -23328.0, 160.0, 270.000, FourCC("nef4"))
     gg_unit_hars_0292 = BlzCreateUnitWithSkin(p, FourCC("hars"), -19584.0, -13248.0, 270.000, FourCC("hars"))
@@ -6473,8 +6359,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -21760.0, -5312.0, 270.000, FourCC("n000"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -13280.0, -10272.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -14112.0, -3488.0, 270.000, FourCC("nnzg"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -22848.0, -384.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12256.0, -9952.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
@@ -6513,13 +6397,9 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -17952.0, -6016.0, 0.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19200.0, -4800.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -15616.0, -6464.0, 270.000, FourCC("hhou"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -14528.0, -1216.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ofor"), -14944.0, -2208.0, 270.000, FourCC("ofor"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -16192.0, -6208.0, 270.000, FourCC("hhou"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -19360.0, -7328.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -15232.0, -1792.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncnt"), -16288.0, -3360.0, 270.000, FourCC("ncnt"))
@@ -6533,8 +6413,6 @@ function CreateBuildingsForPlayer20()
     gg_unit_ngt2_0525 = BlzCreateUnitWithSkin(p, FourCC("ngt2"), -16736.0, 96.0, 270.000, FourCC("ngt2"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -18880.0, -11200.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -12672.0, -7680.0, 270.000, FourCC("h00X"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncbc"), -19104.0, -5824.0, 270.000, FourCC("ncbc"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -19296.0, -4512.0, 90.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -19104.0, -4512.0, 90.000, FourCC("ncb9"))
@@ -6559,7 +6437,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -17504.0, -6176.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -18400.0, -5728.0, 90.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20800.0, -6912.0, 270.000, FourCC("h004"))
-    u = BlzCreateUnitWithSkin(p, FourCC("oalt"), -16032.0, -1760.0, 270.000, FourCC("oalt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("oalt"), -16160.0, -1696.0, 270.000, FourCC("oalt"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbe"), -19904.0, -6560.0, 270.000, FourCC("ncbe"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -20768.0, -6624.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -20768.0, -6432.0, 270.000, FourCC("ncb5"))
@@ -6589,7 +6467,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -19360.0, -7840.0, 90.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14048.0, -8544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14240.0, -8544.0, 270.000, FourCC("ncb9"))
-    u = BlzCreateUnitWithSkin(p, FourCC("obar"), -16768.0, -2176.0, 270.000, FourCC("obar"))
+    u = BlzCreateUnitWithSkin(p, FourCC("obar"), -16064.0, -2496.0, 270.000, FourCC("obar"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -20256.0, 1632.0, 270.000, FourCC("nnad"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -21696.0, 1984.0, 270.000, FourCC("nnsg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -20384.0, 3552.0, 270.000, FourCC("nmh0"))
@@ -6600,63 +6478,31 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -16032.0, 672.0, 270.000, FourCC("ngnh"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -19936.0, 4512.0, 270.000, FourCC("nmh0"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14688.0, -7392.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13536.0, -7008.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13344.0, -7008.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -15776.0, -7008.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -15584.0, -7008.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -15392.0, -7008.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -16224.0, -7008.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -15904.0, -8544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -16096.0, -8544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -16288.0, -8544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -15392.0, -8096.0, 270.000, FourCC("ncb3"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -15392.0, -8288.0, 270.000, FourCC("ncb3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -15648.0, -7392.0, 270.000, FourCC("ncb3"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -16736.0, -8160.0, 270.000, FourCC("ncb3"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -16736.0, -8352.0, 270.000, FourCC("ncb3"))
     gg_unit_n00K_0802 = BlzCreateUnitWithSkin(p, FourCC("n00K"), -23104.0, -6720.0, 270.000, FourCC("n00K"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -16480.0, -288.0, 270.000, FourCC("ngnh"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngwr"), -16736.0, -9248.0, 270.000, FourCC("ngwr"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13408.0, -8032.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -12960.0, -8096.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -13536.0, -7520.0, 270.000, FourCC("ncb3"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -13664.0, -7968.0, 270.000, FourCC("ncb3"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13792.0, -7712.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -19168.0, -1760.0, 270.000, FourCC("e007"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -18432.0, -2624.0, 270.000, FourCC("ngob"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14496.0, -7392.0, 270.000, FourCC("ncb9"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
 end
 
 function CreateUnitsForPlayer20()
@@ -6668,8 +6514,6 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -15736.2, -1126.7, 245.453, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -24729.3, -7565.4, 58.328, FourCC("hpea"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -15785.7, -7885.1, 103.395, FourCC("h007"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -10560.0, 90.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -11840.0, 270.000, FourCC("n006"))
@@ -6678,32 +6522,18 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -23692.9, -538.0, 125.753, FourCC("nhea"))
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -23116.4, -127.0, 145.090, FourCC("nhea"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -14269.8, -7675.9, 276.446, FourCC("h007"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -13811.5, -8212.8, 178.434, FourCC("h007"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -13780.4, -7410.3, 31.092, FourCC("h007"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -15229.0, -7281.9, 225.018, FourCC("h007"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -16235.8, -8224.0, 81.631, FourCC("h007"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -16166.4, -7579.3, 124.171, FourCC("h007"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -16361.5, -7312.9, 194.969, FourCC("h007"))
-    life = GetUnitState(u, UNIT_STATE_LIFE)
-    SetUnitState(u, UNIT_STATE_LIFE, 0.01 * life)
     SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -20430.2, -7654.9, 225.721, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -19643.0, -5799.6, 95.463, FourCC("h007"))
@@ -7382,7 +7212,7 @@ function CreateRegions()
     gg_rct_Big_Top_Right_Center = Rect(-11584.0, -2464.0, -6144.0, 4992.0)
     gg_rct_Big_Top_Left_Center = Rect(-17024.0, -3200.0, -11552.0, 4992.0)
     gg_rct_Big_Middle_Right_Center = Rect(-11584.0, -5920.0, -6144.0, -2432.0)
-    gg_rct_Big_Middle_Left_Center = Rect(-17024.0, -6528.0, -11552.0, -3168.0)
+    gg_rct_Big_Middle_Left_Center = Rect(-14208.0, -7680.0, -8736.0, -4320.0)
     gg_rct_Aspect_of_Forest_Left = Rect(-27072.0, -928.0, -26528.0, -480.0)
     gg_rct_Aspect_of_Forest_Left_Gate = Rect(-25792.0, -32.0, -25472.0, 736.0)
     gg_rct_Aspect_of_Forest_Right = Rect(3360.0, -8736.0, 3904.0, -8288.0)
@@ -7986,7 +7816,6 @@ function Trig_Creep_Dies_Init_Actions()
     udg_Creep_Unit[udg_Creep_Index] = GetLastCreatedUnit()
     udg_TEMP_Unit = GetLastCreatedUnit()
         RemoveLocation ( udg_TEMP_Pos2 )
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
     EnableTrigger(gg_trg_Creep_Revive_Count)
 end
 
@@ -8035,7 +7864,6 @@ function Trig_Creep_Revive_Count_Actions()
                                 RemoveLocation ( udg_TEMP_Pos2 )
                 udg_Creep_Unit[udg_TEMP_IntLoop1] = GetLastCreatedUnit()
                 udg_TEMP_Unit = GetLastCreatedUnit()
-                TriggerExecute(gg_trg_FUNC_Move_Creeps)
                 udg_Creep_Timer[udg_TEMP_IntLoop1] = 0.00
             else
             end
@@ -8804,24 +8632,6 @@ function InitTrig_Doom_Warden_End()
     TriggerAddAction(gg_trg_Doom_Warden_End, Trig_Doom_Warden_End_Actions)
 end
 
-function Trig_Camera_Reset_Actions()
-    ResetToGameCameraForPlayer(GetTriggerPlayer(), 0)
-    SetCameraFieldForPlayer(GetTriggerPlayer(), CAMERA_FIELD_ZOFFSET, S2R(SubStringBJ(GetEventPlayerChatString(), 7, StringLength(GetEventPlayerChatString()))), 0.00)
-end
-
-function InitTrig_Camera_Reset()
-    gg_trg_Camera_Reset = CreateTrigger()
-    TriggerRegisterPlayerChatEvent(gg_trg_Camera_Reset, Player(0), "-zoom", false)
-    TriggerRegisterPlayerChatEvent(gg_trg_Camera_Reset, Player(1), "-zoom", false)
-    TriggerRegisterPlayerChatEvent(gg_trg_Camera_Reset, Player(2), "-zoom", false)
-    TriggerRegisterPlayerChatEvent(gg_trg_Camera_Reset, Player(3), "-zoom", false)
-    TriggerRegisterPlayerChatEvent(gg_trg_Camera_Reset, Player(4), "-zoom", false)
-    TriggerRegisterPlayerChatEvent(gg_trg_Camera_Reset, Player(5), "-zoom", false)
-    TriggerRegisterPlayerChatEvent(gg_trg_Camera_Reset, Player(6), "-zoom", false)
-    TriggerRegisterPlayerChatEvent(gg_trg_Camera_Reset, Player(7), "-zoom", false)
-    TriggerAddAction(gg_trg_Camera_Reset, Trig_Camera_Reset_Actions)
-end
-
 function Trig_Footman_at_Max_Mana_Conditions()
     if (not (GetSpellAbilityId() == FourCC("Afzy"))) then
         return false
@@ -9041,94 +8851,6 @@ function InitTrig_Zombie_Infect()
     TriggerAddAction(gg_trg_Zombie_Infect, Trig_Zombie_Infect_Actions)
 end
 
-function Trig_Base_Heal_Spell_Func001Func001Func002002003001()
-    return (IsUnitEnemy(GetFilterUnit(), GetOwningPlayer(GetEnumUnit())) == true)
-end
-
-function Trig_Base_Heal_Spell_Func001Func001Func002002003002()
-    return (IsUnitAliveBJ(GetFilterUnit()) == true)
-end
-
-function Trig_Base_Heal_Spell_Func001Func001Func002002003()
-    return GetBooleanAnd(Trig_Base_Heal_Spell_Func001Func001Func002002003001(), Trig_Base_Heal_Spell_Func001Func001Func002002003002())
-end
-
-function Trig_Base_Heal_Spell_Func001Func001Func003Func003002003001()
-    return (IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO) == true)
-end
-
-function Trig_Base_Heal_Spell_Func001Func001Func003Func003002003002()
-    return (IsUnitAlly(GetFilterUnit(), GetOwningPlayer(GetEnumUnit())) == true)
-end
-
-function Trig_Base_Heal_Spell_Func001Func001Func003Func003002003()
-    return GetBooleanAnd(Trig_Base_Heal_Spell_Func001Func001Func003Func003002003001(), Trig_Base_Heal_Spell_Func001Func001Func003Func003002003002())
-end
-
-function Trig_Base_Heal_Spell_Func001Func001Func003Func008Func003C()
-    if (GetUnitLifePercent(udg_TEMP_Unit) <= 95.00) then
-        return true
-    end
-    if (GetUnitManaPercent(udg_TEMP_Unit) <= 95.00) then
-        return true
-    end
-    return false
-end
-
-function Trig_Base_Heal_Spell_Func001Func001Func003Func008C()
-    if (not (UnitHasBuffBJ(udg_TEMP_Unit, FourCC("Brej")) == false)) then
-        return false
-    end
-    if (not Trig_Base_Heal_Spell_Func001Func001Func003Func008Func003C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_Base_Heal_Spell_Func001Func001Func003C()
-    if (not (CountUnitsInGroup(udg_TEMP_UnitGroup2) == 0)) then
-        return false
-    end
-    if (not (BlzGetUnitAbilityCooldownRemaining(GetEnumUnit(), FourCC("A027")) == 0.00)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Base_Heal_Spell_Func001Func001A()
-    udg_TEMP_Pos2 = GetUnitLoc(GetEnumUnit())
-    udg_TEMP_UnitGroup2 = GetUnitsInRangeOfLocMatching(1200.00, udg_TEMP_Pos2, Condition(Trig_Base_Heal_Spell_Func001Func001Func002002003))
-    if (Trig_Base_Heal_Spell_Func001Func001Func003C()) then
-        udg_TEMP_UnitGroup = GetUnitsInRangeOfLocMatching(500.00, udg_TEMP_Pos2, Condition(Trig_Base_Heal_Spell_Func001Func001Func003Func003002003))
-        udg_TEMP_Unit = GroupPickRandomUnit(udg_TEMP_UnitGroup)
-                DestroyGroup ( udg_TEMP_UnitGroup )
-                SetUnitAbilityLevel(GetEnumUnit(), FourCC("A027"), spawn.creepLevel)
-        if (Trig_Base_Heal_Spell_Func001Func001Func003Func008C()) then
-            IssueTargetOrderBJ(GetEnumUnit(), "rejuvination", udg_TEMP_Unit)
-        else
-        end
-    else
-    end
-        RemoveLocation ( udg_TEMP_Pos2 )
-        DestroyGroup ( udg_TEMP_UnitGroup2 )
-end
-
-function Trig_Base_Heal_Spell_Actions()
-    udg_TEMP_IntLoop1 = 1
-    while (true) do
-        if (udg_TEMP_IntLoop1 > 2) then break end
-        ForGroupBJ(udg_UNIT_Healing[udg_TEMP_IntLoop1], Trig_Base_Heal_Spell_Func001Func001A)
-        udg_TEMP_IntLoop1 = udg_TEMP_IntLoop1 + 1
-    end
-end
-
-function InitTrig_Base_Heal_Spell()
-    gg_trg_Base_Heal_Spell = CreateTrigger()
-    DisableTrigger(gg_trg_Base_Heal_Spell)
-    TriggerRegisterTimerEventPeriodic(gg_trg_Base_Heal_Spell, 1.00)
-    TriggerAddAction(gg_trg_Base_Heal_Spell, Trig_Base_Heal_Spell_Actions)
-end
-
 function Trig_Upgrade_to_Fel_Warlock_Conditions()
     if (not (GetUnitTypeId(GetTriggerUnit()) == FourCC("nw2w"))) then
         return false
@@ -9303,318 +9025,7 @@ function InitTrig_Watch_Tower_Mana_Shield()
     TriggerAddAction(gg_trg_Watch_Tower_Mana_Shield, Trig_Watch_Tower_Mana_Shield_Actions)
 end
 
-function Trig_Pathing_INIT_Actions()
-    InitHashtableBJ()
-    udg_Ordered_Unit_Queue = GetLastCreatedHashtableBJ()
-end
-
-function InitTrig_Pathing_INIT()
-    gg_trg_Pathing_INIT = CreateTrigger()
-    DisableTrigger(gg_trg_Pathing_INIT)
-    TriggerAddAction(gg_trg_Pathing_INIT, Trig_Pathing_INIT_Actions)
-end
-
-function Trig_Set_Creeps_to_Attack_Elf_Base_Right_Conditions()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetEnteringUnit()), udg_PLAYERGRPallied) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Elf_Base_Right_Func001C()
-    if (not (IsUnitAliveBJ(gg_unit_nheb_0036) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Elf_Base_Right_Actions()
-    if (Trig_Set_Creeps_to_Attack_Elf_Base_Right_Func001C()) then
-        SetUnitUserData(GetEnteringUnit(), 11)
-    else
-        SetUnitUserData(GetEnteringUnit(), 4)
-    end
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Set_Creeps_to_Attack_Elf_Base_Right()
-    gg_trg_Set_Creeps_to_Attack_Elf_Base_Right = CreateTrigger()
-    DisableTrigger(gg_trg_Set_Creeps_to_Attack_Elf_Base_Right)
-    TriggerRegisterEnterRectSimple(gg_trg_Set_Creeps_to_Attack_Elf_Base_Right, gg_rct_Right_Start_Bottom)
-    TriggerAddCondition(gg_trg_Set_Creeps_to_Attack_Elf_Base_Right, Condition(Trig_Set_Creeps_to_Attack_Elf_Base_Right_Conditions))
-    TriggerAddAction(gg_trg_Set_Creeps_to_Attack_Elf_Base_Right, Trig_Set_Creeps_to_Attack_Elf_Base_Right_Actions)
-end
-
-function Trig_Set_Creeps_to_Attack_Elf_Base_Left_Conditions()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetEnteringUnit()), udg_PLAYERGRPfederation) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Elf_Base_Left_Func001C()
-    if (not (IsUnitAliveBJ(gg_unit_nheb_0109) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Elf_Base_Left_Actions()
-    if (Trig_Set_Creeps_to_Attack_Elf_Base_Left_Func001C()) then
-        SetUnitUserData(GetEnteringUnit(), 11)
-    else
-        SetUnitUserData(GetEnteringUnit(), 4)
-    end
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Set_Creeps_to_Attack_Elf_Base_Left()
-    gg_trg_Set_Creeps_to_Attack_Elf_Base_Left = CreateTrigger()
-    DisableTrigger(gg_trg_Set_Creeps_to_Attack_Elf_Base_Left)
-    TriggerRegisterEnterRectSimple(gg_trg_Set_Creeps_to_Attack_Elf_Base_Left, gg_rct_Left_Start_Top)
-    TriggerAddCondition(gg_trg_Set_Creeps_to_Attack_Elf_Base_Left, Condition(Trig_Set_Creeps_to_Attack_Elf_Base_Left_Conditions))
-    TriggerAddAction(gg_trg_Set_Creeps_to_Attack_Elf_Base_Left, Trig_Set_Creeps_to_Attack_Elf_Base_Left_Actions)
-end
-
-function Trig_Set_Creeps_to_Attack_Arcane_Base_Left_Conditions()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetEnteringUnit()), udg_PLAYERGRPfederation) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Arcane_Base_Left_Func001C()
-    if (not (IsUnitAliveBJ(gg_unit_h003_0015) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Arcane_Base_Left_Actions()
-    if (Trig_Set_Creeps_to_Attack_Arcane_Base_Left_Func001C()) then
-        SetUnitUserData(GetEnteringUnit(), 12)
-    else
-        SetUnitUserData(GetEnteringUnit(), 12)
-    end
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Set_Creeps_to_Attack_Arcane_Base_Left()
-    gg_trg_Set_Creeps_to_Attack_Arcane_Base_Left = CreateTrigger()
-    DisableTrigger(gg_trg_Set_Creeps_to_Attack_Arcane_Base_Left)
-    TriggerRegisterEnterRectSimple(gg_trg_Set_Creeps_to_Attack_Arcane_Base_Left, gg_rct_Left_Start_Bottom)
-    TriggerAddCondition(gg_trg_Set_Creeps_to_Attack_Arcane_Base_Left, Condition(Trig_Set_Creeps_to_Attack_Arcane_Base_Left_Conditions))
-    TriggerAddAction(gg_trg_Set_Creeps_to_Attack_Arcane_Base_Left, Trig_Set_Creeps_to_Attack_Arcane_Base_Left_Actions)
-end
-
-function Trig_Set_Creeps_to_Attack_Arcane_Base_Right_Conditions()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetEnteringUnit()), udg_PLAYERGRPallied) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Arcane_Base_Right_Func001C()
-    if (not (IsUnitAliveBJ(gg_unit_h003_0007) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Arcane_Base_Right_Actions()
-    if (Trig_Set_Creeps_to_Attack_Arcane_Base_Right_Func001C()) then
-        SetUnitUserData(GetEnteringUnit(), 12)
-    else
-        SetUnitUserData(GetEnteringUnit(), 12)
-    end
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Set_Creeps_to_Attack_Arcane_Base_Right()
-    gg_trg_Set_Creeps_to_Attack_Arcane_Base_Right = CreateTrigger()
-    DisableTrigger(gg_trg_Set_Creeps_to_Attack_Arcane_Base_Right)
-    TriggerRegisterEnterRectSimple(gg_trg_Set_Creeps_to_Attack_Arcane_Base_Right, gg_rct_Right_Start_Top)
-    TriggerAddCondition(gg_trg_Set_Creeps_to_Attack_Arcane_Base_Right, Condition(Trig_Set_Creeps_to_Attack_Arcane_Base_Right_Conditions))
-    TriggerAddAction(gg_trg_Set_Creeps_to_Attack_Arcane_Base_Right, Trig_Set_Creeps_to_Attack_Arcane_Base_Right_Actions)
-end
-
-function Trig_Set_Creeps_to_Attack_Castle_from_Arcane_Left_Conditions()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetEnteringUnit()), udg_PLAYERGRPfederation) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Castle_from_Arcane_Left_Actions()
-    SetUnitUserData(GetEnteringUnit(), 4)
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Set_Creeps_to_Attack_Castle_from_Arcane_Left()
-    gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Left = CreateTrigger()
-    DisableTrigger(gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Left)
-    TriggerRegisterEnterRectSimple(gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Left, gg_rct_Left_Mage_Base)
-    TriggerAddCondition(gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Left, Condition(Trig_Set_Creeps_to_Attack_Castle_from_Arcane_Left_Conditions))
-    TriggerAddAction(gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Left, Trig_Set_Creeps_to_Attack_Castle_from_Arcane_Left_Actions)
-end
-
-function Trig_Set_Creeps_to_Attack_Castle_from_Arcane_Right_Conditions()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetEnteringUnit()), udg_PLAYERGRPallied) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Castle_from_Arcane_Right_Actions()
-    SetUnitUserData(GetEnteringUnit(), 4)
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Set_Creeps_to_Attack_Castle_from_Arcane_Right()
-    gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Right = CreateTrigger()
-    DisableTrigger(gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Right)
-    TriggerRegisterEnterRectSimple(gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Right, gg_rct_Right_Mage_Base)
-    TriggerAddCondition(gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Right, Condition(Trig_Set_Creeps_to_Attack_Castle_from_Arcane_Right_Conditions))
-    TriggerAddAction(gg_trg_Set_Creeps_to_Attack_Castle_from_Arcane_Right, Trig_Set_Creeps_to_Attack_Castle_from_Arcane_Right_Actions)
-end
-
-function Trig_Set_Creeps_to_Attack_Castle_from_Elf_Left_Conditions()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetEnteringUnit()), udg_PLAYERGRPfederation) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Castle_from_Elf_Left_Actions()
-    SetUnitUserData(GetEnteringUnit(), 4)
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Set_Creeps_to_Attack_Castle_from_Elf_Left()
-    gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Left = CreateTrigger()
-    DisableTrigger(gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Left)
-    TriggerRegisterEnterRectSimple(gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Left, gg_rct_Elf_Base_Left)
-    TriggerAddCondition(gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Left, Condition(Trig_Set_Creeps_to_Attack_Castle_from_Elf_Left_Conditions))
-    TriggerAddAction(gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Left, Trig_Set_Creeps_to_Attack_Castle_from_Elf_Left_Actions)
-end
-
-function Trig_Set_Creeps_to_Attack_Castle_from_Elf_Right_Conditions()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetEnteringUnit()), udg_PLAYERGRPallied) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Set_Creeps_to_Attack_Castle_from_Elf_Right_Actions()
-    SetUnitUserData(GetEnteringUnit(), 4)
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Set_Creeps_to_Attack_Castle_from_Elf_Right()
-    gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Right = CreateTrigger()
-    DisableTrigger(gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Right)
-    TriggerRegisterEnterRectSimple(gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Right, gg_rct_Elf_Base_Right)
-    TriggerAddCondition(gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Right, Condition(Trig_Set_Creeps_to_Attack_Castle_from_Elf_Right_Conditions))
-    TriggerAddAction(gg_trg_Set_Creeps_to_Attack_Castle_from_Elf_Right, Trig_Set_Creeps_to_Attack_Castle_from_Elf_Right_Actions)
-end
-
-function Trig_Aspect_of_Tides_End_Conditions()
-    if (not (GetUnitUserData(GetEnteringUnit()) == 8)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Aspect_of_Tides_End_Actions()
-    SetUnitUserData(GetEnteringUnit(), 1)
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Aspect_of_Tides_End()
-    gg_trg_Aspect_of_Tides_End = CreateTrigger()
-    DisableTrigger(gg_trg_Aspect_of_Tides_End)
-    TriggerRegisterEnterRectSimple(gg_trg_Aspect_of_Tides_End, gg_rct_Murloc_Left)
-    TriggerRegisterEnterRectSimple(gg_trg_Aspect_of_Tides_End, gg_rct_Murloc_Right)
-    TriggerAddCondition(gg_trg_Aspect_of_Tides_End, Condition(Trig_Aspect_of_Tides_End_Conditions))
-    TriggerAddAction(gg_trg_Aspect_of_Tides_End, Trig_Aspect_of_Tides_End_Actions)
-end
-
-function Trig_Aspect_of_Death_End_Conditions()
-    if (not (GetUnitUserData(GetEnteringUnit()) == 10)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Aspect_of_Death_End_Actions()
-    SetUnitUserData(GetEnteringUnit(), 2)
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Aspect_of_Death_End()
-    gg_trg_Aspect_of_Death_End = CreateTrigger()
-    DisableTrigger(gg_trg_Aspect_of_Death_End)
-    TriggerRegisterEnterRectSimple(gg_trg_Aspect_of_Death_End, gg_rct_Zombie_End_Left)
-    TriggerRegisterEnterRectSimple(gg_trg_Aspect_of_Death_End, gg_rct_Zombie_End_Right)
-    TriggerAddCondition(gg_trg_Aspect_of_Death_End, Condition(Trig_Aspect_of_Death_End_Conditions))
-    TriggerAddAction(gg_trg_Aspect_of_Death_End, Trig_Aspect_of_Death_End_Actions)
-end
-
-function Trig_Aspect_of_Forest_End_Conditions()
-    if (not (GetUnitUserData(GetEnteringUnit()) == 9)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Aspect_of_Forest_End_Actions()
-    SetUnitUserData(GetEnteringUnit(), 1)
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Aspect_of_Forest_End()
-    gg_trg_Aspect_of_Forest_End = CreateTrigger()
-    DisableTrigger(gg_trg_Aspect_of_Forest_End)
-    TriggerRegisterEnterRectSimple(gg_trg_Aspect_of_Forest_End, gg_rct_Aspect_of_Forest_Left)
-    TriggerRegisterEnterRectSimple(gg_trg_Aspect_of_Forest_End, gg_rct_Aspect_of_Forest_Right)
-    TriggerAddCondition(gg_trg_Aspect_of_Forest_End, Condition(Trig_Aspect_of_Forest_End_Conditions))
-    TriggerAddAction(gg_trg_Aspect_of_Forest_End, Trig_Aspect_of_Forest_End_Actions)
-end
-
-function Trig_Aspect_of_Air_End_Conditions()
-    if (not (GetUnitUserData(GetEnteringUnit()) == 7)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Aspect_of_Air_End_Actions()
-    SetUnitUserData(GetEnteringUnit(), 3)
-    udg_TEMP_Unit = GetEnteringUnit()
-    TriggerExecute(gg_trg_FUNC_Move_Creeps)
-end
-
-function InitTrig_Aspect_of_Air_End()
-    gg_trg_Aspect_of_Air_End = CreateTrigger()
-    DisableTrigger(gg_trg_Aspect_of_Air_End)
-    TriggerRegisterEnterRectSimple(gg_trg_Aspect_of_Air_End, gg_rct_Left_Elemental_Start)
-    TriggerRegisterEnterRectSimple(gg_trg_Aspect_of_Air_End, gg_rct_Right_Elemental_Start)
-    TriggerAddCondition(gg_trg_Aspect_of_Air_End, Condition(Trig_Aspect_of_Air_End_Conditions))
-    TriggerAddAction(gg_trg_Aspect_of_Air_End, Trig_Aspect_of_Air_End_Actions)
-end
-
-function Trig_Shipyard_Left_End_Func001C()
+function Trig_Shipyard_Left_End_Func009C()
     if (GetUnitTypeId(GetEnteringUnit()) == FourCC("edes")) then
         return true
     end
@@ -9625,573 +9036,13 @@ function Trig_Shipyard_Left_End_Func001C()
 end
 
 function Trig_Shipyard_Left_End_Conditions()
-    if (not Trig_Shipyard_Left_End_Func001C()) then
+    if (not Trig_Shipyard_Left_End_Func009C()) then
         return false
     end
     return true
 end
 
 function Trig_Shipyard_Left_End_Actions()
-    ConditionalTriggerExecute(gg_trg_FUNC_Shipyard)
-end
-
-function InitTrig_Shipyard_Left_End()
-    gg_trg_Shipyard_Left_End = CreateTrigger()
-    TriggerRegisterEnterRectSimple(gg_trg_Shipyard_Left_End, gg_rct_Human_Shipyard_Right)
-    TriggerRegisterEnterRectSimple(gg_trg_Shipyard_Left_End, gg_rct_Human_Shipyard_Left)
-    TriggerAddCondition(gg_trg_Shipyard_Left_End, Condition(Trig_Shipyard_Left_End_Conditions))
-    TriggerAddAction(gg_trg_Shipyard_Left_End, Trig_Shipyard_Left_End_Actions)
-end
-
-function Trig_Creeps_keep_going_after_Order_Conditions()
-    if (not (IsUnitType(GetTriggerUnit(), UNIT_TYPE_STRUCTURE) == false)) then
-        return false
-    end
-    if (not (IsUnitType(GetTriggerUnit(), UNIT_TYPE_HERO) == false)) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("uloc"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("h000"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("h00V"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("h00N"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("h00O"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("h00M"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("n00R"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("n00S"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("n00Q"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("n00P"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("n00O"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetTriggerUnit()) ~= FourCC("o006"))) then
-        return false
-    end
-    if (not (GetOwningPlayer(GetTriggerUnit()) ~= Player(17))) then
-        return false
-    end
-    if (not (GetOwningPlayer(GetTriggerUnit()) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE))) then
-        return false
-    end
-    if (not (UnitHasBuffBJ(GetTriggerUnit(), FourCC("B006")) == false)) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("waterelemental"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("resurrection"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("forkedlightning"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("frostarmor"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("stomp"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("disenchant"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("faeriefire"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("purge"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("rainoffire"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("attack"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("stop"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("grabtree"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("rejuvination"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("bloodlust"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("heal"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("defend"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("undefend"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("lightningshield"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("spellsteal"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("roar"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("slow"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("dispel"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("bearform"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("unbearform"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("polymorph"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("breathoffrost"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("curse"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("parasite"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("innerfire"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("recharge"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("carrionswarm"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("thunderclap"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("submerge"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("holybolt"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("shockwave"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("thunderbolt"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("berserk"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("spiritlink"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("ancestralspirit"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("magicleash"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("locustswarm"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("chainlightning"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("coldarrows"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("ensnare"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("darkportal"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("magicdefense"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("magicundefense"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("devourmagic"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("summonwareagle"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("wateryminion"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("raisedead"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("tranquility"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("summongrizzly"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("whirlwind"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("monsoon"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("flamingarrows"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("parasiteon"))) then
-        return false
-    end
-    if (not (GetIssuedOrderIdBJ() ~= String2OrderIdBJ("metamorphosis"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Creeps_keep_going_after_Order_Actions()
-    GroupAddUnitSimple(GetTriggerUnit(), udg_Ordered_Unit_Group)
-    SaveRealBJ(0.00, 0, GetHandleIdBJ(GetTriggerUnit()), udg_Ordered_Unit_Queue)
-end
-
-function InitTrig_Creeps_keep_going_after_Order()
-    gg_trg_Creeps_keep_going_after_Order = CreateTrigger()
-    DisableTrigger(gg_trg_Creeps_keep_going_after_Order)
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Creeps_keep_going_after_Order, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Creeps_keep_going_after_Order, EVENT_PLAYER_UNIT_ISSUED_ORDER)
-    TriggerAddCondition(gg_trg_Creeps_keep_going_after_Order, Condition(Trig_Creeps_keep_going_after_Order_Conditions))
-    TriggerAddAction(gg_trg_Creeps_keep_going_after_Order, Trig_Creeps_keep_going_after_Order_Actions)
-end
-
-function Trig_Creeps_keep_going_after_Spell_Func011C()
-    if (IsPlayerInForce(GetOwningPlayer(GetSpellAbilityUnit()), udg_PLAYERGRPallied) == true) then
-        return true
-    end
-    if (IsPlayerInForce(GetOwningPlayer(GetSpellAbilityUnit()), udg_PLAYERGRPfederation) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_Creeps_keep_going_after_Spell_Conditions()
-    if (not (GetOwningPlayer(GetTriggerUnit()) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE))) then
-        return false
-    end
-    if (not (UnitHasBuffBJ(GetSpellAbilityUnit(), FourCC("B006")) == false)) then
-        return false
-    end
-    if (not (IsUnitType(GetSpellAbilityUnit(), UNIT_TYPE_HERO) == false)) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetSpellAbilityUnit()) ~= FourCC("h00N"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetSpellAbilityUnit()) ~= FourCC("h00O"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetSpellAbilityUnit()) ~= FourCC("h00M"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetOrderedUnit()) ~= FourCC("h000"))) then
-        return false
-    end
-    if (not (GetUnitTypeId(GetOrderedUnit()) ~= FourCC("h00V"))) then
-        return false
-    end
-    if (not Trig_Creeps_keep_going_after_Spell_Func011C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_Creeps_keep_going_after_Spell_Actions()
-    GroupAddUnitSimple(GetTriggerUnit(), udg_Ordered_Unit_Group)
-    SaveRealBJ(0.00, 0, GetHandleIdBJ(GetTriggerUnit()), udg_Ordered_Unit_Queue)
-end
-
-function InitTrig_Creeps_keep_going_after_Spell()
-    gg_trg_Creeps_keep_going_after_Spell = CreateTrigger()
-    DisableTrigger(gg_trg_Creeps_keep_going_after_Spell)
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Creeps_keep_going_after_Spell, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Creeps_keep_going_after_Spell, EVENT_PLAYER_UNIT_SPELL_FINISH)
-    TriggerAddCondition(gg_trg_Creeps_keep_going_after_Spell, Condition(Trig_Creeps_keep_going_after_Spell_Conditions))
-    TriggerAddAction(gg_trg_Creeps_keep_going_after_Spell, Trig_Creeps_keep_going_after_Spell_Actions)
-end
-
-function Trig_Order_Units_LOOP_Func001Func002Func002C()
-    if (not (UnitHasBuffBJ(GetOrderedUnit(), FourCC("BSTN")) == false)) then
-        return false
-    end
-    if (not (UnitHasBuffBJ(GetOrderedUnit(), FourCC("BPSE")) == false)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Order_Units_LOOP_Func001Func002C()
-    if (not (udg_TEMP_Real >= 1.00)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Order_Units_LOOP_Func001A()
-    udg_TEMP_Real = LoadRealBJ(0, GetHandleIdBJ(GetEnumUnit()), udg_Ordered_Unit_Queue)
-    if (Trig_Order_Units_LOOP_Func001Func002C()) then
-        if (Trig_Order_Units_LOOP_Func001Func002Func002C()) then
-            udg_TEMP_Unit = GetEnumUnit()
-            TriggerExecute(gg_trg_FUNC_Move_Creeps)
-            FlushChildHashtableBJ(GetHandleIdBJ(GetEnumUnit()), udg_Ordered_Unit_Queue)
-            GroupRemoveUnitSimple(GetEnumUnit(), udg_Ordered_Unit_Group)
-        else
-        end
-    else
-        SaveRealBJ((udg_TEMP_Real + 1), 0, GetHandleIdBJ(GetEnumUnit()), udg_Ordered_Unit_Queue)
-    end
-end
-
-function Trig_Order_Units_LOOP_Actions()
-    ForGroupBJ(udg_Ordered_Unit_Group, Trig_Order_Units_LOOP_Func001A)
-end
-
-function InitTrig_Order_Units_LOOP()
-    gg_trg_Order_Units_LOOP = CreateTrigger()
-    DisableTrigger(gg_trg_Order_Units_LOOP)
-    TriggerRegisterTimerEventPeriodic(gg_trg_Order_Units_LOOP, 1.00)
-    TriggerAddAction(gg_trg_Order_Units_LOOP, Trig_Order_Units_LOOP_Actions)
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func002Func001C()
-    if (RectContainsUnit(gg_rct_Big_Top_Left, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Left_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Right_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Right, udg_TEMP_Unit) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func002Func002Func001C()
-    if (RectContainsUnit(gg_rct_Big_Middle_Left, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Left_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Right_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Right, udg_TEMP_Unit) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func002Func002Func002Func001C()
-    if (RectContainsUnit(gg_rct_Big_Bottom_Left, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Bottom_Left_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Bottom_Right_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Bottom_Right, udg_TEMP_Unit) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func002Func002Func002C()
-    if (not Trig_FUNC_Move_Creeps_Func002Func001Func002Func002Func002Func001C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func002Func002C()
-    if (not Trig_FUNC_Move_Creeps_Func002Func001Func002Func002Func001C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func002C()
-    if (not Trig_FUNC_Move_Creeps_Func002Func001Func002Func001C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func003Func001C()
-    if (RectContainsUnit(gg_rct_Big_Top_Left, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Left_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Right_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Top_Right, udg_TEMP_Unit) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func003Func002Func001C()
-    if (RectContainsUnit(gg_rct_Big_Middle_Left, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Left_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Right_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Middle_Right, udg_TEMP_Unit) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func003Func002Func002Func001C()
-    if (RectContainsUnit(gg_rct_Big_Bottom_Left, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Bottom_Left_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Bottom_Right_Center, udg_TEMP_Unit) == true) then
-        return true
-    end
-    if (RectContainsUnit(gg_rct_Big_Bottom_Right, udg_TEMP_Unit) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func003Func002Func002C()
-    if (not Trig_FUNC_Move_Creeps_Func002Func001Func003Func002Func002Func001C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func003Func002C()
-    if (not Trig_FUNC_Move_Creeps_Func002Func001Func003Func002Func001C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001Func003C()
-    if (not Trig_FUNC_Move_Creeps_Func002Func001Func003Func001C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Func002Func001C()
-    if (not (IsUnitAlly(udg_TEMP_Unit, ForcePickRandomPlayer(udg_PLAYERGRPallied)) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Func002C()
-    if (not (GetUnitUserData(udg_TEMP_Unit) == 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Func004C()
-    if (not (IsUnitAlly(udg_TEMP_Unit, ForcePickRandomPlayer(udg_PLAYERGRPallied)) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_FUNC_Move_Creeps_Actions()
-    if (Trig_FUNC_Move_Creeps_Func002C()) then
-        if (Trig_FUNC_Move_Creeps_Func002Func001C()) then
-            if (Trig_FUNC_Move_Creeps_Func002Func001Func003C()) then
-                SetUnitUserData(udg_TEMP_Unit, 1)
-            else
-                if (Trig_FUNC_Move_Creeps_Func002Func001Func003Func002C()) then
-                    SetUnitUserData(udg_TEMP_Unit, 2)
-                else
-                    if (Trig_FUNC_Move_Creeps_Func002Func001Func003Func002Func002C()) then
-                        SetUnitUserData(udg_TEMP_Unit, 3)
-                    else
-                    end
-                end
-            end
-        else
-            if (Trig_FUNC_Move_Creeps_Func002Func001Func002C()) then
-                SetUnitUserData(udg_TEMP_Unit, 3)
-            else
-                if (Trig_FUNC_Move_Creeps_Func002Func001Func002Func002C()) then
-                    SetUnitUserData(udg_TEMP_Unit, 2)
-                else
-                    if (Trig_FUNC_Move_Creeps_Func002Func001Func002Func002Func002C()) then
-                        SetUnitUserData(udg_TEMP_Unit, 1)
-                    else
-                    end
-                end
-            end
-        end
-    else
-    end
-    if (Trig_FUNC_Move_Creeps_Func004C()) then
-        udg_TEMP_Pos_Move = GetRandomLocInRect(udg_EndRegionsSpawn[GetUnitUserData(udg_TEMP_Unit)])
-    else
-        udg_TEMP_Pos_Move = GetRandomLocInRect(udg_EndRegionsSpawn[(GetUnitUserData(udg_TEMP_Unit) + 20)])
-    end
-    DisableTrigger(gg_trg_Creeps_keep_going_after_Order)
-    IssuePointOrderLocBJ(udg_TEMP_Unit, "attack", udg_TEMP_Pos_Move)
-    EnableTrigger(gg_trg_Creeps_keep_going_after_Order)
-        RemoveLocation (udg_TEMP_Pos_Move)
-end
-
-function InitTrig_FUNC_Move_Creeps()
-    gg_trg_FUNC_Move_Creeps = CreateTrigger()
-    DisableTrigger(gg_trg_FUNC_Move_Creeps)
-    TriggerAddAction(gg_trg_FUNC_Move_Creeps, Trig_FUNC_Move_Creeps_Actions)
-end
-
-function Trig_FUNC_Shipyard_Actions()
     udg_TEMP_Player = GetOwningPlayer(GetEnteringUnit())
     udg_TEMP_Pos2 = GetUnitLoc(GetEnteringUnit())
     CreateNUnitsAtLoc(1, FourCC("hhes"), udg_TEMP_Player, udg_TEMP_Pos2, bj_UNIT_FACING)
@@ -10202,9 +9053,12 @@ function Trig_FUNC_Shipyard_Actions()
         RemoveLocation ( udg_TEMP_Pos2 )
 end
 
-function InitTrig_FUNC_Shipyard()
-    gg_trg_FUNC_Shipyard = CreateTrigger()
-    TriggerAddAction(gg_trg_FUNC_Shipyard, Trig_FUNC_Shipyard_Actions)
+function InitTrig_Shipyard_Left_End()
+    gg_trg_Shipyard_Left_End = CreateTrigger()
+    TriggerRegisterEnterRectSimple(gg_trg_Shipyard_Left_End, gg_rct_Human_Shipyard_Right)
+    TriggerRegisterEnterRectSimple(gg_trg_Shipyard_Left_End, gg_rct_Human_Shipyard_Left)
+    TriggerAddCondition(gg_trg_Shipyard_Left_End, Condition(Trig_Shipyard_Left_End_Conditions))
+    TriggerAddAction(gg_trg_Shipyard_Left_End, Trig_Shipyard_Left_End_Actions)
 end
 
 function Trig_Brawler_No_Mana_Func001Func001C()
@@ -11839,7 +10693,6 @@ function Trig_Attack_LOOP_Func001A()
         UnitRemoveAbilityBJ(FourCC("A04L"), GetEnumUnit())
         SetUnitOwner(GetEnumUnit(), udg_Spell_Player, true)
         udg_TEMP_Unit = GetEnumUnit()
-        ConditionalTriggerExecute(gg_trg_FUNC_Move_Creeps)
         GroupRemoveUnitSimple(GetEnumUnit(), udg_Attack_Unit_Group)
         FlushChildHashtableBJ(GetHandleIdBJ(GetEnumUnit()), udg_Attack_Hash)
         if (Trig_Attack_LOOP_Func001Func003Func010C()) then
@@ -12162,7 +11015,6 @@ function Trig_Bolster_Actions()
         CreateNUnitsAtLoc(1, GetUnitTypeId(GroupPickRandomUnit(udg_TEMP_UnitGroup)), GetOwningPlayer(GetSpellAbilityUnit()), udg_TEMP_Pos2, bj_UNIT_FACING)
         UnitApplyTimedLifeBJ(90.00, FourCC("BHwe"), GetLastCreatedUnit())
         udg_TEMP_Unit = GetLastCreatedUnit()
-        ConditionalTriggerExecute(gg_trg_FUNC_Move_Creeps)
         AddSpecialEffectTargetUnitBJ("origin", GetLastCreatedUnit(), "Abilities\\Spells\\Other\\Charm\\CharmTarget.mdl")
         DestroyEffectBJ(GetLastCreatedEffectBJ())
                 RemoveLocation ( udg_TEMP_Pos2 )
@@ -12555,37 +11407,17 @@ function InitCustomTriggers()
     InitTrig_DW_Ancient_Chaos()
     InitTrig_DW_Fire_Hounds()
     InitTrig_Doom_Warden_End()
-    InitTrig_Camera_Reset()
     InitTrig_Footman_at_Max_Mana()
     InitTrig_Unit_Upgrades()
     InitTrig_Elder_Ent_Movement()
     InitTrig_Zombie_Infect()
-    InitTrig_Base_Heal_Spell()
     InitTrig_Upgrade_to_Fel_Warlock()
     InitTrig_Elf_Boat_Dies()
     InitTrig_Human_Boat_Dies()
     InitTrig_Chain_Lightning()
     InitTrig_Energy_Tower()
     InitTrig_Watch_Tower_Mana_Shield()
-    InitTrig_Pathing_INIT()
-    InitTrig_Set_Creeps_to_Attack_Elf_Base_Right()
-    InitTrig_Set_Creeps_to_Attack_Elf_Base_Left()
-    InitTrig_Set_Creeps_to_Attack_Arcane_Base_Left()
-    InitTrig_Set_Creeps_to_Attack_Arcane_Base_Right()
-    InitTrig_Set_Creeps_to_Attack_Castle_from_Arcane_Left()
-    InitTrig_Set_Creeps_to_Attack_Castle_from_Arcane_Right()
-    InitTrig_Set_Creeps_to_Attack_Castle_from_Elf_Left()
-    InitTrig_Set_Creeps_to_Attack_Castle_from_Elf_Right()
-    InitTrig_Aspect_of_Tides_End()
-    InitTrig_Aspect_of_Death_End()
-    InitTrig_Aspect_of_Forest_End()
-    InitTrig_Aspect_of_Air_End()
     InitTrig_Shipyard_Left_End()
-    InitTrig_Creeps_keep_going_after_Order()
-    InitTrig_Creeps_keep_going_after_Spell()
-    InitTrig_Order_Units_LOOP()
-    InitTrig_FUNC_Move_Creeps()
-    InitTrig_FUNC_Shipyard()
     InitTrig_Brawler_No_Mana()
     InitTrig_Brawler_Rage_GUI()
     InitTrig_Drain_Start()

@@ -10,9 +10,9 @@ function init_Lua()
         init_heroClass()
         init_spawnClass()
         init_aiClass()
-        Init_buildingClass()
+        init_baseClass()
     end, "Define Classes")
-    dprint("Classes Defined", 2)
+    --dprint("Classes Defined", 2)
 
     -- Start the Map init
     Init_Map()
@@ -21,16 +21,18 @@ function init_Lua()
     debugfunc(function()
         loc = loc_Class.new()
         addRegions()
+        addBases()
+
         indexer = indexer_Class.new()
-        building = building_class.new()
-        Init_buildings()
         hero = hero_Class.new()
         ai = ai_Class.new()
         spawn = spawn_Class.new()
 
+        
+
     end, "Init Classes")
 
-    dprint("Classes Initialized", 2)
+    --dprint("Classes Initialized", 2)
 
     -- Init Trigger
     debugfunc(function()
@@ -47,12 +49,13 @@ function init_Lua()
         Init_UnitDies()
         init_MoveToNext()
         Init_PickingPhase()
+        init_BaseLoop()
 
         -- Abilities
         ABTY_ShifterSwitch()
     end, "Init Triggers")
 
-    dprint("Triggers Initialized", 2)
+    --dprint("Triggers Initialized", 2)
 
     -- Spawn Base / Unit Setup
     -- Init Trigger
@@ -61,13 +64,13 @@ function init_Lua()
         spawnAddUnits()
     end, "Init Spawn")
 
-    dprint("Spawn Setup", 2)
+    --dprint("Spawn Setup", 2)
 
     -- Setup Delayed Init Triggers
     init_Delayed_1()
     init_Delayed_10()
 
-    dprint("Init Finished")
+    --dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -79,12 +82,12 @@ function init_Delayed_1()
 
             startHeroPicker()
         end, "Start Delayed Triggers")
-        dprint("AI Started", 2)
+        --dprint("AI Started", 2)
 
         orderStartingUnits()
         spawn:startSpawn()
 
-        dprint("Spawn Started", 2)
+        --dprint("Spawn Started", 2)
 
     end)
 end
