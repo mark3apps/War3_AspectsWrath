@@ -13992,3 +13992,9 @@ STRING 4568
  - Each point increase movement speed
 }
 
+STRING 4569
+// Destructibles: B002 (Pathing Blocker (Ground) (Small)), Name (Name)
+{
+Pathing Blocker (Ground) (Small)
+}
+

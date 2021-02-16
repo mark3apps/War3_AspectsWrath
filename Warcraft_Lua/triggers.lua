@@ -145,6 +145,7 @@ function init_BaseLoop()
         local u, id
         local g = CreateGroup()
 
+
         GroupAddGroup(base.all.g, g)
         while true do
             u = FirstOfGroup(g)
@@ -154,25 +155,16 @@ function init_BaseLoop()
 
             base.update(u)
 
+            --TESTING
+            if IsUnitInGroup(u, base.federation.gDanger) then
+                id = GetHandleId(u)
+                print(base[id].name .. " - Danger: " .. base[id].danger .. " Enemies: " .. base[id].unitsEnemy)
+            end
+            --TESTING
+
             GroupRemoveUnit(g, u)
         end
         DestroyGroup(g)
-
-        -- TESTING
-        GroupAddGroup(base.federation.gDanger, g)
-        while true do
-            u = FirstOfGroup(g)
-            if u == nil then
-                break
-            end
-            id = GetHandleId(u)
-            print(base[id].name .. base[i].danger)
-
-            RemoveUnit(u)
-        end
-        DestroyGroup(g)
-        -- /TESTING
-
     end)
 end
 
