@@ -128,6 +128,7 @@ function init_aiClass()
             self[i].castingUlt = false
             self[i].chasing = false
             self[i].defending = false
+            self[i].defendingFast = false
             self[i].lowLife = false
             self[i].highDamage = false
             self[i].updateDest = false
@@ -510,7 +511,7 @@ function init_aiClass()
                 not self[i].defending then
                 local baseCountDanger = CountUnitsInGroup(base[self[i].teamName].gDanger)
                 if baseCountDanger > 0 then
-                    local u, id, defend, unitCount, danger, selectedId
+                    local u, id, defend, unitCount, danger, selectedId, distanceToBase
                     local g = CreateGroup()
 
                     GroupAddGroup(base[self[i].teamName].gDanger, g)
@@ -544,6 +545,12 @@ function init_aiClass()
 
                     if self[i].defending then
                         self[i].unitDefending = base[id].unit
+                        distanceToBase = distance(self[i].x, self[i].y, base[id].x, base[id].y)
+
+                        if distanceToBase > 2200 then
+                            self[i].defendingFast = true
+                        end
+
                         self:ACTIONtravelToDest(i)
                         print("Defending: ".. GetUnitName(self[i].unitDefending))
                     end
@@ -555,8 +562,9 @@ function init_aiClass()
             if self[i].defending then
 
                 local id = GetHandleId(self[i].unitDefending)
-                if base[id].danger <= 10 then
+                if base[id].danger <= 0 then
                     self[i].defending = false
+                    self[i].defendingFast = false
                     self[i].unitDefending = nil
                     self:ACTIONtravelToDest(i)
                     print("Stop Defending")
@@ -564,8 +572,12 @@ function init_aiClass()
                 else
                     local distanceToBase = distance(self[i].x, self[i].y, base[id].x, base[id].y)
                     local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit, hero.item.teleportation.abilityId)
-    
-                    if distanceToBase > 4000 and teleportCooldown == 0 then
+                    
+                    if distanceToBase < 1200 and self[i].defendingFast then
+                        self[i].defendingFast = false
+                        self:ACTIONtravelToDest(i)
+                    
+                    elseif distanceToBase > 4000 and teleportCooldown == 0 then
                         self:ACTIONtravelToDest(i)
                     end
                 end
@@ -767,16 +779,21 @@ function init_aiClass()
             local unitX, unitY
 
             if not self[i].casting then
-                if self[i].lowLife == true or self[i].fleeing == true then
+                if self[i].lowLife == true or self[i].fleeing == true  then
                     unitX = GetUnitX(self[i].unitHealing)
                     unitY = GetUnitY(self[i].unitHealing)
                     IssuePointOrder(self[i].unit, "move", unitX, unitY)
-
+                
                 elseif self[i].defending then
                     unitX = GetUnitX(self[i].unitDefending)
-                    unitX = GetUnitY(self[i].unitDefending)
+                    unitY = GetUnitY(self[i].unitDefending)
+
                     if not self:teleportCheck(i, unitX, unitY) then
-                        IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                        if self[i].defendingFast == true then
+                            IssuePointOrder(self[i].unit, "move", unitX, unitY)
+                        else
+                            IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+                        end    
                     end
 
                 else
@@ -818,9 +835,8 @@ function init_aiClass()
             local teleportUnit
             local g = CreateGroup()
             local heroUnit = self[i].unit
-            local heroX = GetUnitX(self[i].unit)
-            local heroY = GetUnitY(self[i].unit)
-            local distanceOrig = distance(heroX, heroY, destX, destY)
+
+            local distanceOrig = distance(self[i].x, self[i].y, destX, destY)
             local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(heroUnit, hero.item.teleportation.abilityId)
 
             if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
@@ -974,7 +990,7 @@ function init_aiClass()
                             DestroyGroup(g)
 
                             if unitsNearby < self[i].countUnitEnemyClose then
-                                IssuePointOrder(self[i].unit, curspell.order, GetUnitX(u), GetUnitY(u))
+                                IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
                             end
                         end
                     end
@@ -2023,14 +2039,16 @@ function init_baseClass()
         unitsTotal = 0,
         unitsAlive = 0,
         advantage = 0,
-        gDanger = CreateGroup()
+        gDanger = CreateGroup(),
+        gHealing = CreateGroup()
     }
     base.federation = {
         g = CreateGroup(),
         unitsTotal = 0,
         unitsAlive = 0,
         advantage = 0,
-        gDanger = CreateGroup()
+        gDanger = CreateGroup(),
+        gHealing = CreateGroup()
     }
 
     base.top = {
@@ -2149,6 +2167,7 @@ function init_baseClass()
             unitsFriendly = 0,
             unitsEnemy = 0,
             unitsCount = 0,
+            danger = 0,
             update = update,
             idType = idType,
             fourType = fourType,
@@ -2161,7 +2180,7 @@ function init_baseClass()
     end
 
     function base.update(unit)
-        local u
+        local u, heroLevel
 
         local unitsFriendly = 0
         local unitsEnemy = 0
@@ -2177,23 +2196,26 @@ function init_baseClass()
         local teamName = base[handleId].teamName
 
         local g = CreateGroup()
-        g = GetUnitsInRangeOfLocAll(1200, l)
+        g = GetUnitsInRangeOfLocAll(900, l)
         while true do
             u = FirstOfGroup(g)
             if u == nil then
                 break
             end
 
+            -- Calculate Danger Levels
             if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and IsUnitAliveBJ(u) then
                 if IsUnitAlly(u, GetOwningPlayer(unit)) then
-                    unitsFriendly = unitsFriendly + 1
                     if IsUnitType(u, UNIT_TYPE_HERO) then
-                        unitsFriendly = unitsFriendly + 15
+                        unitsFriendly = unitsFriendly + 3 * GetHeroLevel(u)
+                    else
+                        unitsFriendly = unitsFriendly + GetUnitLevel(u)
                     end
                 else
-                    unitsEnemy = unitsEnemy + 1
                     if IsUnitType(u, UNIT_TYPE_HERO) then
-                        unitsEnemy = unitsEnemy + 15
+                        unitsEnemy = unitsEnemy + 3 * GetHeroLevel(u)
+                    else
+                        unitsEnemy = unitsEnemy + GetUnitLevel(u)
                     end
                 end
             end
@@ -2211,7 +2233,6 @@ function init_baseClass()
         else
             if unitsEnemy > 0 then
                 GroupAddUnit(base[teamName].gDanger, unit)
-                print("IN DANGER!")
             end
         end
 
@@ -2246,9 +2267,8 @@ function init_baseClass()
         base[handleId].mana = GetUnitState(unit, UNIT_STATE_MANA)
         base[handleId].unitsFriendly = unitsFriendly
         base[handleId].unitsEnemy = unitsEnemy
-        base[handleId].unitsCount = unitsFriendly - unitsEnemy
-        base[handleId].danger = unitsCount * (((100 - base[handleId].lifePercent) / 10) + 1) *
-                                    -base[handleId].importance
+        base[handleId].unitsCount = unitsEnemy - unitsFriendly
+        base[handleId].danger = base[handleId].unitsCount * (((100 - base[handleId].lifePercent) / 10) + 1) * base[handleId].importance
 
         -- print(base[handleId].name .. " Allies:" .. base[handleId].unitsFriendly .. " Enemies: " .. base[handleId].unitsEnemy)
     end
