@@ -189,7 +189,7 @@ function init_aiLoopStates()
         local t = CreateTrigger()
         TriggerRegisterTimerEventPeriodic(t, ai.tick)
         TriggerAddAction(t, function()
-            print(" -- ")
+            --print(" -- ")
             if ai.loop >= ai.count then
                 ai.loop = 1
             else
@@ -216,7 +216,7 @@ function init_aiLoopStates()
                 else
                     ai:STATERevived(i)
                 end
-                print("Finished")
+                print(" --")
             end, "AI STATES")
         end)
     end

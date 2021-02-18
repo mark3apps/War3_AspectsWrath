@@ -13998,3 +13998,15 @@ STRING 4569
 Pathing Blocker (Ground) (Small)
 }
 
+STRING 4570
+// Units: h01A (Farm), EditorSuffix (Name - Editor Suffix)
+{
+(Larger)
+}
+
+STRING 4571
+// Destructibles: B003 (Large Tree), Name (Name)
+{
+Large Tree
+}
+

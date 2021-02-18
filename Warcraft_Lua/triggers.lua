@@ -139,7 +139,7 @@ end
 
 -- Update Base Buildings
 function init_BaseLoop()
-    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 1.5)
+    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 2.5)
     TriggerAddAction(Trig_baseLoop, function()
 
         local u, id
@@ -154,13 +154,6 @@ function init_BaseLoop()
             end
 
             base.update(u)
-
-            --TESTING
-            if IsUnitInGroup(u, base.federation.gDanger) then
-                id = GetHandleId(u)
-                print(base[id].name .. " - Danger: " .. base[id].danger .. " Enemies: " .. base[id].unitsEnemy)
-            end
-            --TESTING
 
             GroupRemoveUnit(g, u)
         end

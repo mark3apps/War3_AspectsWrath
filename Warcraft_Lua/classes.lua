@@ -104,9 +104,11 @@ function init_aiClass()
             if self[i].playerNumber > 6 then
                 self[i].teamNumber = 2
                 self[i].teamName = "federation"
+                self[i].teamNameEnemy = "allied"
             else
                 self[i].teamNumber = 1
                 self[i].teamName = "allied"
+                self[i].teamNameEnemy = "federation"
             end
 
             print("Team Number: " .. self[i].teamNumber)
@@ -132,6 +134,8 @@ function init_aiClass()
             self[i].lowLife = false
             self[i].highDamage = false
             self[i].updateDest = false
+
+            self[i].regionAttacking = nil
 
             self[i].unitHealing = nil
             self[i].unitAttacking = nil
@@ -198,7 +202,7 @@ function init_aiClass()
                 self[i].intelRange = 1000.00
                 self[i].closeRange = 400.00
 
-                self[i].strats = {"aggressive", "defensive", "passive", "support"}
+                self[i].strats = {"aggressive", "defensive", "passive"}
 
             elseif self[i].four == hero.timeMage.four then -- Time Mage
                 self[i].healthFactor = 1.00
@@ -219,7 +223,7 @@ function init_aiClass()
                 self[i].intelRange = 1100.00
                 self[i].closeRange = 700.00
 
-                self[i].strats = {"aggressive", "defensive", "passive", "support"}
+                self[i].strats = {"aggressive", "defensive", "passive"}
 
             elseif self[i].four == hero.shiftMaster.four then -- Shifter
                 self[i].healthFactor = 1.00
@@ -240,15 +244,15 @@ function init_aiClass()
                 self[i].intelRange = 1100.00
                 self[i].closeRange = 400.00
 
-                self[i].strats = {"aggressive", "defensive", "passive", "assassin"}
+                self[i].strats = {"aggressive", "defensive", "passive"}
             end
 
             local randI = GetRandomInt(1, #self[i].strats)
             self[i].strat = self[i].strats[randI]
 
-            --TESTING
+            -- TESTING
             self[i].strat = "defensive"
-            --TESTING
+            -- TESTING
 
             print(self[i].strat)
         end
@@ -485,7 +489,8 @@ function init_aiClass()
 
             if (self[i].currentOrder ~= "attack" and self[i].currentOrder ~= "move" and self[i].lowLife == false and
                 self[i].casting == false) then
-                self:ACTIONattackBase(i)
+
+                self:ACTIONtravelToDest(i)
             end
         end
 
@@ -547,12 +552,12 @@ function init_aiClass()
                         self[i].unitDefending = base[id].unit
                         distanceToBase = distance(self[i].x, self[i].y, base[id].x, base[id].y)
 
-                        if distanceToBase > 2200 then
+                        if distanceToBase > 3500 then
                             self[i].defendingFast = true
                         end
 
                         self:ACTIONtravelToDest(i)
-                        print("Defending: ".. GetUnitName(self[i].unitDefending))
+                        print("Defending: " .. GetUnitName(self[i].unitDefending))
                     end
                 end
             end
@@ -562,21 +567,22 @@ function init_aiClass()
             if self[i].defending then
 
                 local id = GetHandleId(self[i].unitDefending)
-                if base[id].danger <= 0 then
+                if base[id].danger <= 0 or not IsUnitAliveBJ(self[i].unitDefending) then
                     self[i].defending = false
                     self[i].defendingFast = false
                     self[i].unitDefending = nil
-                    self:ACTIONtravelToDest(i)
+                    self:ACTIONattackBase(i)
                     print("Stop Defending")
 
                 else
                     local distanceToBase = distance(self[i].x, self[i].y, base[id].x, base[id].y)
-                    local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit, hero.item.teleportation.abilityId)
-                    
-                    if distanceToBase < 1200 and self[i].defendingFast then
+                    local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit,
+                                                 hero.item.teleportation.abilityId)
+
+                    if distanceToBase < 2500 and self[i].defendingFast then
                         self[i].defendingFast = false
                         self:ACTIONtravelToDest(i)
-                    
+
                     elseif distanceToBase > 4000 and teleportCooldown == 0 then
                         self:ACTIONtravelToDest(i)
                     end
@@ -616,11 +622,15 @@ function init_aiClass()
                 self[i].lifeLowPercent = self[i].lifeLowPercent - 1.00
                 self[i].lifeHighPercent = self[i].lifeHighPercent - 1.00
 
-                local rand = GetRandomInt(1, 3)
-                if rand == 1 then
-                    self:ACTIONattackBase(i)
-                else
+                if self[i].defending then
                     self:ACTIONtravelToDest(i)
+                else
+                    local rand = GetRandomInt(1, 3)
+                    if rand == 1 then
+                        self:ACTIONattackBase(i)
+                    else
+                        self:ACTIONtravelToDest(i)
+                    end
                 end
             end
         end
@@ -638,9 +648,11 @@ function init_aiClass()
                 self[i].updateDest = false
                 self[i].casting = false
                 self[i].castingUlt = false
+                self[i].defending = false
+                self[i].defendingFast = false
                 self[i].castingCounter = -10.00
 
-                -- Punish the AI for screwing up
+                -- Punish the AI for screwing up.  IT WILL FEAR DEATH!!!
                 self[i].lifeLowPercent = self[i].lifeLowPercent + 4.00
                 self[i].powerBase = self[i].powerBase / 2
 
@@ -692,8 +704,7 @@ function init_aiClass()
             if self[i].casting == true then
 
                 if self[i].castingDuration > 0.00 then
-                    print("Casting Spell: " .. self[i].castingDuration)
-                    print(self[i].spellCast.name)
+                    print("Casting Spell: " .. self[i].spellCast.name .. " - " .. self[i].castingDuration)
 
                     self[i].castingDuration = self[i].castingDuration - (self.tick * self.count)
                 else
@@ -713,7 +724,6 @@ function init_aiClass()
 
         function self:castSpell(i, spellCast, danger)
 
-            print("TESTING " .. spellCast.name)
             if not self[i].casting then
                 danger = danger or false
                 if spellCast ~= nil then
@@ -735,7 +745,6 @@ function init_aiClass()
                             self[i].castingDuration = self[i].spellCast.castTime[1]
                         end
 
-                        print(self[i].spellCast.name)
                     end
                 end
             end
@@ -747,7 +756,7 @@ function init_aiClass()
             local unitX, unitY, u
             local g = CreateGroup()
 
-            GroupAddGroup(udg_UNIT_Healing[self[i].teamNumber], g)
+            GroupAddGroup(base[self[i].teamName].gHealing, g)
             while true do
                 u = FirstOfGroup(g)
                 if u == nil then
@@ -770,7 +779,7 @@ function init_aiClass()
             unitX = GetUnitX(self[i].unitHealing)
             unitY = GetUnitY(self[i].unitHealing)
 
-            print("x:" .. unitX .. "y:" .. unitY)
+            -- print("x:" .. unitX .. "y:" .. unitY)
 
             IssuePointOrder(self[i].unit, "move", unitX, unitY)
         end
@@ -779,11 +788,11 @@ function init_aiClass()
             local unitX, unitY
 
             if not self[i].casting then
-                if self[i].lowLife == true or self[i].fleeing == true  then
+                if self[i].lowLife == true or self[i].fleeing == true then
                     unitX = GetUnitX(self[i].unitHealing)
                     unitY = GetUnitY(self[i].unitHealing)
                     IssuePointOrder(self[i].unit, "move", unitX, unitY)
-                
+
                 elseif self[i].defending then
                     unitX = GetUnitX(self[i].unitDefending)
                     unitY = GetUnitY(self[i].unitDefending)
@@ -793,17 +802,20 @@ function init_aiClass()
                             IssuePointOrder(self[i].unit, "move", unitX, unitY)
                         else
                             IssuePointOrder(self[i].unit, "attack", unitX, unitY)
-                        end    
+                        end
                     end
 
                 else
+                    if not IsUnitAliveBJ(self[i].unitAttacking) then
+                        self:ACTIONattackBase(i)
+                        return
+                    end
                     unitX = GetUnitX(self[i].unitAttacking)
                     unitY = GetUnitY(self[i].unitAttacking)
                     if not self:teleportCheck(i, unitX, unitY) then
                         IssuePointOrder(self[i].unit, "attack", unitX, unitY)
                     end
                 end
-                print("x:" .. unitX .. "y:" .. unitY)
             end
 
         end
@@ -811,10 +823,46 @@ function init_aiClass()
         function self:ACTIONattackBase(i)
 
             if not self[i].casting then
-                self[i].unitAttacking = GroupPickRandomUnit(udg_UNIT_Bases[self[i].teamNumber])
+                local regionAdvantage = 0
+                local regions = {"top", "middle", "bottom"}
+                local regionsPick = {}
+                local baseAdvantage
+
+                if self[i].strat == "agressive" then
+                    baseAdvantage = self[i].teamName
+                elseif self[i].strat == "defensive" then
+                    baseAdvantage = self[i].teamNameEnemy
+                end
+
+                if self[i].strat == "passive" then
+                    self[i].regionAttacking = regions[GetRandomInt(1, #regions)]
+                else
+                    for a = 1, 3 do
+                        if regionAdvantage < base[regions[a]][baseAdvantage].advantage then
+                            regionAdvantage = base[regions[a]][baseAdvantage].advantage
+                            self[i].regionAttacking = regions[a]
+
+                            regionsPick = {}
+                            table.insert(regionsPick, regions[a])
+
+                        elseif regionAdvantage == base[regions[a]][baseAdvantage].advantage then
+
+                            table.insert(regionsPick, regions[a])
+
+                        end
+                    end
+
+                    if #regionsPick > 1 then
+                        self[i].regionAttacking = regionsPick[GetRandomInt(1, #regionsPick)]
+                    end
+
+                end
+
+                self[i].unitAttacking = GroupPickRandomUnit(base[self[i].regionAttacking][self[i].teamNameEnemy].g)
+
                 local unitX = GetUnitX(self[i].unitAttacking)
                 local unitY = GetUnitY(self[i].unitAttacking)
-                print("attacking " .. GetUnitName(self[i].unitAttacking))
+                print("Attacking: " .. self[i].regionAttacking .. " Base: " .. GetUnitName(self[i].unitAttacking))
 
                 if not self:teleportCheck(i, unitX, unitY) then
                     IssuePointOrder(self[i].unit, "attack", unitX, unitY)
@@ -825,7 +873,6 @@ function init_aiClass()
         function self:getHeroData(unit)
             return self[indexer:get(unit).heroName]
         end
-
 
         -- Teleport Stuff
         function self:teleportCheck(i, destX, destY)
@@ -841,7 +888,8 @@ function init_aiClass()
 
             if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
 
-                GroupAddGroup(udg_UNIT_Bases_Teleport[self[i].teamNumber], g)
+                
+                GroupAddGroup(base[self[i].teamName].gTeleport, g)
                 while true do
                     u = FirstOfGroup(g)
                     if u == nil then
@@ -981,7 +1029,7 @@ function init_aiClass()
                                     break
                                 end
 
-                                if IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
+                                if not IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
                                     unitsNearby = unitsNearby + 1
                                 end
 
@@ -990,7 +1038,7 @@ function init_aiClass()
                             DestroyGroup(g)
 
                             if unitsNearby < self[i].countUnitEnemyClose then
-                                IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
+                                IssuePointOrderById(self[i].unit, oid.reveal, GetUnitX(u), GetUnitY(u))
                             end
                         end
                     end
@@ -1010,6 +1058,7 @@ function init_aiClass()
                     curSpell = hero:spell(self[i], "shift")
                     if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
                         print(curSpell.name)
+                       
                         IssueImmediateOrder(self[i].unit, curSpell.order)
                         self:castSpell(i, curSpell)
                     end
@@ -2035,18 +2084,18 @@ function init_baseClass()
     }
 
     base.allied = {
-        g = CreateGroup(),
         unitsTotal = 0,
         unitsAlive = 0,
         advantage = 0,
+        gTeleport = CreateGroup(),
         gDanger = CreateGroup(),
         gHealing = CreateGroup()
     }
     base.federation = {
-        g = CreateGroup(),
         unitsTotal = 0,
         unitsAlive = 0,
         advantage = 0,
+        gTeleport = CreateGroup(),
         gDanger = CreateGroup(),
         gHealing = CreateGroup()
     }
@@ -2124,16 +2173,25 @@ function init_baseClass()
             regionName = "top"
         end
 
-        -- Add to ALL Unit Group
-        GroupAddUnit(base.all.g, unit)
+        
+        if update then
+            -- Add to ALL Unit Group
+            GroupAddUnit(base.all.g, unit)
+
+            -- Add to HEALING Unit Group
+            GroupAddUnit(base[teamName].gHealing, unit)
+
+             -- Add to REGION Unit Group
+            GroupAddUnit(base[regionName][teamName].g, unit)
+        end
 
         -- Add to TELEPORT Unit Group
         if teleport then
-            GroupAddUnit(base[teamName].g, unit)
+            GroupAddUnit(base[teamName].gTeleport, unit)
         end
 
-        -- Add to REGION Unit Group
-        GroupAddUnit(base[regionName][teamName].g, unit)
+       
+        
 
         -- Set Importance
         base[regionName][teamName].unitsTotal = base[regionName][teamName].unitsTotal + importance
@@ -2204,7 +2262,7 @@ function init_baseClass()
             end
 
             -- Calculate Danger Levels
-            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and IsUnitAliveBJ(u) then
+            if IsUnitAliveBJ(u) then
                 if IsUnitAlly(u, GetOwningPlayer(unit)) then
                     if IsUnitType(u, UNIT_TYPE_HERO) then
                         unitsFriendly = unitsFriendly + 3 * GetHeroLevel(u)
@@ -2228,38 +2286,42 @@ function init_baseClass()
         if IsUnitInGroup(unit, base[teamName].gDanger) then
             if unitsEnemy == 0 then
                 GroupRemoveUnit(base[teamName].gDanger, unit)
+                GroupAddUnit(base[teamName].gHealing, unit)
             end
 
         else
             if unitsEnemy > 0 then
                 GroupAddUnit(base[teamName].gDanger, unit)
+                GroupRemoveUnit(base[teamName].gHealing, unit)
             end
         end
 
         -- Heal Units as needed
-        if unitsEnemy == 0 and unitsFriendly > 0 and base[handleId].mana > 50 and
-            BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) == 0 then
+        if unitsEnemy == 0 and unitsFriendly > 0 and base[handleId].mana > 50 then
+            if IsUnitInGroup(unit, base[teamName].gHealing) and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) ==
+                0 then
 
-            g = GetUnitsInRangeOfLocAll(500, l)
+                g = GetUnitsInRangeOfLocAll(500, l)
 
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
-
-                if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
-                    if not UnitHasBuffBJ(u, FourCC("Brej")) and
-                        (GetUnitLifePercent(u) < 95 or GetUnitManaPercent(u) < 95) then
-                        IssueTargetOrder(unit, "rejuvination", u)
+                while true do
+                    u = FirstOfGroup(g)
+                    if u == nil then
                         break
                     end
+
+                    if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
+                        if not UnitHasBuffBJ(u, FourCC("Brej")) and
+                            (GetUnitLifePercent(u) < 95 or GetUnitManaPercent(u) < 95) then
+                            IssueTargetOrder(unit, "rejuvination", u)
+                            break
+                        end
+                    end
+
+                    GroupRemoveUnit(g, u)
                 end
 
-                GroupRemoveUnit(g, u)
+                DestroyGroup(g)
             end
-
-            DestroyGroup(g)
         end
         RemoveLocation(l)
 
@@ -2268,7 +2330,8 @@ function init_baseClass()
         base[handleId].unitsFriendly = unitsFriendly
         base[handleId].unitsEnemy = unitsEnemy
         base[handleId].unitsCount = unitsEnemy - unitsFriendly
-        base[handleId].danger = base[handleId].unitsCount * (((100 - base[handleId].lifePercent) / 10) + 1) * base[handleId].importance
+        base[handleId].danger = base[handleId].unitsCount * (((100 - base[handleId].lifePercent) / 10) + 1) *
+                                    base[handleId].importance
 
         -- print(base[handleId].name .. " Allies:" .. base[handleId].unitsFriendly .. " Enemies: " .. base[handleId].unitsEnemy)
     end
@@ -2288,11 +2351,21 @@ function init_baseClass()
         GroupRemoveUnit(base.all.g, unit)
 
         -- Remove Unit from REGION Group
+        if IsUnitInGroup(unit, base[regionName][teamName].g) then
         GroupRemoveUnit(base[regionName][teamName].g, unit)
+        end
+
+        if IsUnitInGroup(unit, base[teamName].gDanger) then
+            GroupRemoveUnit(base[teamName].gDanger, unit)
+        end
+
+        if IsUnitInGroup(unit, base[teamName].gHealing) then
+            GroupRemoveUnit(base[teamName].gDanger, unit)
+        end
 
         -- Remove Unit from TELEPORT Group
         if teleport then
-            GroupRemoveUnit(base[teamName].g, unit)
+            GroupRemoveUnit(base[teamName].gTeleport, unit)
         end
 
         -- Adjust Region importance

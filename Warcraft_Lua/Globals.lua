@@ -428,6 +428,7 @@ function Init_luaGlobals()
         returnresources = 852020,
         revenge = 852241,
         revive = 852039,
+        reveal = 852270,
         roar = 852164,
         robogoblin = 852656,
         root = 852165,
