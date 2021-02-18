@@ -316,7 +316,6 @@ function ABTY_ShifterSwitch()
 
             local xOrig = GetUnitX(castingUnit)
             local yOrig = GetUnitY(castingUnit)
-            local rOrig = GetUnitFacing(castingUnit)
 
             while true do
                 u = GroupPickRandomUnit(g)
@@ -334,23 +333,16 @@ function ABTY_ShifterSwitch()
 
                     local xIll = GetUnitX(u)
                     local yIll = GetUnitY(u)
-                    local rIll = GetUnitFacing(u)
-
-                    ShowUnitHide(u)
-                    ShowUnitHide(castingUnit)
 
                     AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xIll, yIll)
                     DestroyEffect(GetLastCreatedEffectBJ())
-                    AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xOrig, yOrig)
+                    AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xOrig, yOrig)
                     DestroyEffect(GetLastCreatedEffectBJ())
 
                     SetUnitX(castingUnit, xIll)
-                    SetUnitY(castingUnit, yIll)
                     SetUnitX(u, xOrig)
+                    SetUnitY(castingUnit, yIll)
                     SetUnitY(u, yOrig)
-
-                    ShowUnitShow(castingUnit)
-                    ShowUnitShow(u)
 
                     SelectUnitForPlayerSingle(castingUnit, castingPlayer)
 
