@@ -4380,6 +4380,8 @@ function init_aiClass()
 
                     print("Teleporting")
 
+                    PingMinimap(unitX, unitY, 15)
+                    
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
 
@@ -4496,7 +4498,7 @@ function init_aiClass()
                                     break
                                 end
 
-                                if IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
+                                if not IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
                                     unitsNearby = unitsNearby + 1
                                 end
 
@@ -6029,7 +6031,6 @@ function init_BaseLoop()
         local u, id
         local g = CreateGroup()
 
-
         GroupAddGroup(base.all.g, g)
         while true do
             u = FirstOfGroup(g)
@@ -6189,80 +6190,62 @@ function ABTY_ShifterSwitch()
 
         if GetSpellAbilityId() == hero.switch.id then
 
-            local g = CreateGroup()
-            local gGood = CreateGroup()
-            local p = GetSpellTargetLoc()
             local u
+
+            local g = CreateGroup()
+            local p = GetSpellTargetLoc()
             local castingUnit = GetTriggerUnit()
             local castingPlayer = GetOwningPlayer(castingUnit)
-
-            local xOrig = GetUnitX(castingUnit)
-            local yOrig = GetUnitY(castingUnit)
-            local pOrig = Location(xOrig, yOrig)
-            local rOrig = GetUnitFacing(castingUnit)
-
+            
             g = GetUnitsInRangeOfLocAll(200, p)
             RemoveLocation(p)
 
+            local xOrig = GetUnitX(castingUnit)
+            local yOrig = GetUnitY(castingUnit)
+            local rOrig = GetUnitFacing(castingUnit)
+
             while true do
-                u = FirstOfGroup(g)
+                u = GroupPickRandomUnit(g)
                 if u == nil then
+                    BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
+                    local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
+                                            GetUnitAbilityLevel(castingUnit, hero.switch.id))
+                    SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
+                    print("added ability and mana back")
+
                     break
                 end
 
                 if IsUnitIllusion(u) and GetOwningPlayer(u) == castingPlayer then
-                    GroupAddUnit(gGood, u)
+
+                    local xIll = GetUnitX(u)
+                    local yIll = GetUnitY(u)
+                    local rIll = GetUnitFacing(u)
+
+                    ShowUnitHide(u)
+                    ShowUnitHide(castingUnit)
+
+                    AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xIll, yIll)
+                    DestroyEffect(GetLastCreatedEffectBJ())
+                    AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xOrig, yOrig)
+                    DestroyEffect(GetLastCreatedEffectBJ())
+
+                    SetUnitX(castingUnit, xIll)
+                    SetUnitY(castingUnit, yIll)
+                    SetUnitX(u, xOrig)
+                    SetUnitY(u, yOrig)
+
+                    ShowUnitShow(castingUnit)
+                    ShowUnitShow(u)
+
+                    SelectUnitForPlayerSingle(castingUnit, castingPlayer)
+
+                    break
                 end
 
                 GroupRemoveUnit(g, u)
             end
             DestroyGroup(g)
-
-            if CountUnitsInGroup(gGood) > 0 then
-                print("Switching")
-                u = GroupPickRandomUnit(gGood)
-                local xIll = GetUnitX(u)
-                local yIll = GetUnitY(u)
-                local pIll = Location(xIll, yIll)
-                local rIll = GetUnitFacing(u)
-
-                ShowUnitHide(u)
-                ShowUnitHide(castingUnit)
-
-                PauseUnit(castingUnit, true)
-                PauseUnit(u, true)
-
-                AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pIll)
-                DestroyEffect(GetLastCreatedEffectBJ())
-                AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pOrig)
-                DestroyEffect(GetLastCreatedEffectBJ())
-
-                PolledWait(0.1)
-
-                SetUnitX(castingUnit, xIll)
-                SetUnitY(castingUnit, yIll)
-                SetUnitX(u, xOrig)
-                SetUnitY(u, yOrig)
-
-                PauseUnit(castingUnit, false)
-                PauseUnit(u, false)
-                SetUnitInvulnerable(castingUnit, false)
-                SetUnitInvulnerable(u, false)
-                ShowUnitShow(castingUnit)
-                ShowUnitShow(u)
-
-                SelectUnitForPlayerSingle(castingUnit, castingPlayer)
-
-                RemoveLocation(pIll)
-                RemoveLocation(pOrig)
-            else
-
-                BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
-                local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
-                                        GetUnitAbilityLevel(castingUnit, hero.switch.id))
-                SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
-                print("added ability and mana back")
-            end
 
         end
     end)
@@ -6551,12 +6534,12 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -13280.0, -10272.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -14112.0, -3488.0, 270.000, FourCC("nnzg"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -22848.0, -384.0, 270.000, FourCC("negt"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12256.0, -9952.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -12256.0, -9888.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11872.0, -9632.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -19872.0, -2336.0, 270.000, FourCC("e007"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10272.0, -12256.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10272.0, -12064.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -19360.0, 3424.0, 270.000, FourCC("n00Z"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20224.0, -4544.0, 270.000, FourCC("hgtw"))
@@ -6613,7 +6596,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18528.0, -6560.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -13952.0, 256.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01A"), -16256.0, -6400.0, 270.000, FourCC("h01A"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -16864.0, -6112.0, 270.000, FourCC("ncb6"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -16800.0, -6880.0, 270.000, FourCC("ncb6"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -15584.0, -6304.0, 270.000, FourCC("ncb6"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -12640.0, -8352.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbc"), -18080.0, -4416.0, 270.000, FourCC("ncbc"))
@@ -6629,8 +6612,10 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -18976.0, -4000.0, 270.000, FourCC("ncba"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -18784.0, -4000.0, 270.000, FourCC("ncba"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -18592.0, -4000.0, 270.000, FourCC("ncba"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -14752.0, -5920.0, 270.000, FourCC("ncb6"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -17952.0, -5824.0, 0.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -17504.0, -6176.0, 270.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -17792.0, -5120.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -18400.0, -5728.0, 90.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20800.0, -6912.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("oalt"), -15904.0, -1760.0, 270.000, FourCC("oalt"))
@@ -7287,6 +7272,7 @@ function CreateNeutralPassiveBuildings()
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), -24512.0, -4032.0, 270.000, FourCC("ncp3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), 1344.0, -5056.0, 270.000, FourCC("ncp3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb0"), -16864.0, -6112.0, 270.000, FourCC("ncb0"))
 end
 
 function CreateNeutralPassive()

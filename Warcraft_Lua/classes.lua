@@ -913,6 +913,8 @@ function init_aiClass()
 
                     print("Teleporting")
 
+                    PingMinimap(unitX, unitY, 15)
+                    
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
 

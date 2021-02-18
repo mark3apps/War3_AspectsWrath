@@ -145,7 +145,6 @@ function init_BaseLoop()
         local u, id
         local g = CreateGroup()
 
-
         GroupAddGroup(base.all.g, g)
         while true do
             u = FirstOfGroup(g)
@@ -305,80 +304,62 @@ function ABTY_ShifterSwitch()
 
         if GetSpellAbilityId() == hero.switch.id then
 
-            local g = CreateGroup()
-            local gGood = CreateGroup()
-            local p = GetSpellTargetLoc()
             local u
+
+            local g = CreateGroup()
+            local p = GetSpellTargetLoc()
             local castingUnit = GetTriggerUnit()
             local castingPlayer = GetOwningPlayer(castingUnit)
-
-            local xOrig = GetUnitX(castingUnit)
-            local yOrig = GetUnitY(castingUnit)
-            local pOrig = Location(xOrig, yOrig)
-            local rOrig = GetUnitFacing(castingUnit)
-
+            
             g = GetUnitsInRangeOfLocAll(200, p)
             RemoveLocation(p)
 
+            local xOrig = GetUnitX(castingUnit)
+            local yOrig = GetUnitY(castingUnit)
+            local rOrig = GetUnitFacing(castingUnit)
+
             while true do
-                u = FirstOfGroup(g)
+                u = GroupPickRandomUnit(g)
                 if u == nil then
+                    BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
+                    local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
+                                            GetUnitAbilityLevel(castingUnit, hero.switch.id))
+                    SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
+                    print("added ability and mana back")
+
                     break
                 end
 
                 if IsUnitIllusion(u) and GetOwningPlayer(u) == castingPlayer then
-                    GroupAddUnit(gGood, u)
+
+                    local xIll = GetUnitX(u)
+                    local yIll = GetUnitY(u)
+                    local rIll = GetUnitFacing(u)
+
+                    ShowUnitHide(u)
+                    ShowUnitHide(castingUnit)
+
+                    AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xIll, yIll)
+                    DestroyEffect(GetLastCreatedEffectBJ())
+                    AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xOrig, yOrig)
+                    DestroyEffect(GetLastCreatedEffectBJ())
+
+                    SetUnitX(castingUnit, xIll)
+                    SetUnitY(castingUnit, yIll)
+                    SetUnitX(u, xOrig)
+                    SetUnitY(u, yOrig)
+
+                    ShowUnitShow(castingUnit)
+                    ShowUnitShow(u)
+
+                    SelectUnitForPlayerSingle(castingUnit, castingPlayer)
+
+                    break
                 end
 
                 GroupRemoveUnit(g, u)
             end
             DestroyGroup(g)
-
-            if CountUnitsInGroup(gGood) > 0 then
-                print("Switching")
-                u = GroupPickRandomUnit(gGood)
-                local xIll = GetUnitX(u)
-                local yIll = GetUnitY(u)
-                local pIll = Location(xIll, yIll)
-                local rIll = GetUnitFacing(u)
-
-                ShowUnitHide(u)
-                ShowUnitHide(castingUnit)
-
-                PauseUnit(castingUnit, true)
-                PauseUnit(u, true)
-
-                AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pIll)
-                DestroyEffect(GetLastCreatedEffectBJ())
-                AddSpecialEffectLoc("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", pOrig)
-                DestroyEffect(GetLastCreatedEffectBJ())
-
-                PolledWait(0.1)
-
-                SetUnitX(castingUnit, xIll)
-                SetUnitY(castingUnit, yIll)
-                SetUnitX(u, xOrig)
-                SetUnitY(u, yOrig)
-
-                PauseUnit(castingUnit, false)
-                PauseUnit(u, false)
-                SetUnitInvulnerable(castingUnit, false)
-                SetUnitInvulnerable(u, false)
-                ShowUnitShow(castingUnit)
-                ShowUnitShow(u)
-
-                SelectUnitForPlayerSingle(castingUnit, castingPlayer)
-
-                RemoveLocation(pIll)
-                RemoveLocation(pOrig)
-            else
-
-                BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
-                local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
-                                        GetUnitAbilityLevel(castingUnit, hero.switch.id))
-                SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
-                print("added ability and mana back")
-            end
 
         end
     end)
