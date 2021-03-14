@@ -111,10 +111,10 @@ end
 
 function addBases()
 
-    base.add()
     base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
     base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
 
+    print("Working")
     base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
     base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
 

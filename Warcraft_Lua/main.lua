@@ -11,6 +11,7 @@ function init_Lua()
         init_spawnClass()
         init_aiClass()
         init_baseClass()
+        --init_gateClass()
     end, "Define Classes")
     --dprint("Classes Defined", 2)
 

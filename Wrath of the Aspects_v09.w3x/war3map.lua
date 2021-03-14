@@ -2333,6 +2333,7 @@ function init_Lua()
         init_spawnClass()
         init_aiClass()
         init_baseClass()
+        --init_gateClass()
     end, "Define Classes")
     --dprint("Classes Defined", 2)
 
@@ -2739,10 +2740,10 @@ end
 
 function addBases()
 
-    base.add()
     base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
     base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
 
+    print("Working")
     base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
     base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
 
@@ -3720,7 +3721,7 @@ function init_aiClass()
             self[i].strat = self[i].strats[randI]
 
             -- TESTING
-            self[i].strat = "defensive"
+            self[i].strat = "aggressive"
             -- TESTING
 
             print(self[i].strat)
@@ -4357,7 +4358,6 @@ function init_aiClass()
 
             if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
 
-                
                 GroupAddGroup(base[self[i].teamName].gTeleport, g)
                 while true do
                     u = FirstOfGroup(g)
@@ -4383,7 +4383,7 @@ function init_aiClass()
                     print("Teleporting")
 
                     PingMinimap(unitX, unitY, 15)
-                    
+
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
 
@@ -4529,7 +4529,7 @@ function init_aiClass()
                     curSpell = hero:spell(self[i], "shift")
                     if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
                         print(curSpell.name)
-                       
+
                         IssueImmediateOrder(self[i].unit, curSpell.order)
                         self:castSpell(i, curSpell)
                     end
@@ -5614,7 +5614,7 @@ function init_baseClass()
         }
     }
 
-    function base.add(unit, importance, mainBase, update, teleport)
+    function base.add(unit, importance, mainBase, update, teleport, healing)
 
         local teamNumber, regionName, teamName, allied, federation
         local handleId = GetHandleId(unit)
@@ -5644,15 +5644,16 @@ function init_baseClass()
             regionName = "top"
         end
 
-        
         if update then
             -- Add to ALL Unit Group
             GroupAddUnit(base.all.g, unit)
 
             -- Add to HEALING Unit Group
-            GroupAddUnit(base[teamName].gHealing, unit)
+            --if healing then
+                GroupAddUnit(base[teamName].gHealing, unit)
+            --end
 
-             -- Add to REGION Unit Group
+            -- Add to REGION Unit Group
             GroupAddUnit(base[regionName][teamName].g, unit)
         end
 
@@ -5660,9 +5661,6 @@ function init_baseClass()
         if teleport then
             GroupAddUnit(base[teamName].gTeleport, unit)
         end
-
-       
-        
 
         -- Set Importance
         base[regionName][teamName].unitsTotal = base[regionName][teamName].unitsTotal + importance
@@ -5823,7 +5821,7 @@ function init_baseClass()
 
         -- Remove Unit from REGION Group
         if IsUnitInGroup(unit, base[regionName][teamName].g) then
-        GroupRemoveUnit(base[regionName][teamName].g, unit)
+            GroupRemoveUnit(base[regionName][teamName].g, unit)
         end
 
         if IsUnitInGroup(unit, base[teamName].gDanger) then
@@ -5884,6 +5882,182 @@ function init_baseClass()
 
     end
 
+end
+
+function init_gateClass()
+
+    gate = {}
+    gate.g = CreateGroup()
+    gate.gClosed = CreateGroup()
+    gate.gOpen = CreateGroup()
+
+    function gate.add(unit)
+
+        local playerForce, facingAngle, unitTypeOpen
+        local player = GetOwningPlayer(unit)
+        local unitType = GetUnitTypeId(unit)
+        local x = GetUnitX(unit)
+        local y = GetUnitY(unit)
+        local unitId = GetHandleId(unit)
+
+        -- Find if unit is Allied or Fed
+        if IsPlayerInForce(player, udg_PLAYERGRPallied) then
+            playerForce = "allied"
+        else
+            playerForce = "federation"
+        end
+
+        -- Determine Proper Angle
+        if unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 45 Degrees
+            facingAngle = 45
+        elseif unitType == FourCC("h01F") or unitType == FourCC("h01B") or unitType == FourCC("h01F") or unitType ==
+            FourCC("h01B") then -- City Gate and Arcane Gate 0 Degrees
+            facingAngle = 0
+        elseif unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 135 Degrees
+            facingAngle = 135
+        end
+
+        -- Find Open Unit Type
+        if unitType == FourCC("h01G") then -- City Gate 0
+            unitTypeOpen = FourCC("h01C")
+
+        elseif unitType == FourCC("h01F") then -- City Gate 45
+            unitTypeOpen = FourCC("h01B")
+
+        elseif unitType == FourCC("h01E") then -- City Gate 135
+            unitTypeOpen = FourCC("h01D")
+
+        elseif unitType == FourCC("h01T") then -- Arcane Gate 0
+            unitTypeOpen = FourCC("h01U")
+        end
+
+        if playerForce == "federation" then
+            facingAngle = facingAngle + 180
+        end
+
+        RemoveUnit(unit)
+        unit = CreateUnit(player, unitType, x, y, facingAngle)
+
+        GroupAddUnit(gate.g, unit)
+        GroupAddUnit(gate.gClosed, unit)
+
+        gate[unitId].force = playerForce
+        gate[unitId].unitTypeClosed = unitType
+        gate[unitId].unitTypeOpen = unitTypeOpen
+        gate[unitId].x = x
+        gate[unitId].y = y
+        gate[unitId].facing = facingAngle
+
+    end
+
+    function gate.update()
+
+        ForForce(gate.g, function()
+            local u, heroes
+            local enemies = 0
+            local unit = GetEnumUnit()
+            local info = gate[GetHandleId(unit)]
+            local g = CreateGroup()
+            local l = GetUnitLoc(unit)
+
+            g = GetUnitsInRangeOfLocAll(900, l)
+
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                if not IsUnitAlly(u, GetOwningPlayer(unit)) then
+                    enemies = enemies + 1
+
+                    if IsUnitType(unit, UNIT_TYPE_HERO) then
+                        heroes = heroes + 1
+                    end
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
+
+                GroupRemoveUnit(gate.gOpen, unit)
+                gate[GetHandleId(unit)] = {}
+
+                -- Replace Gate with Closed Gate
+                DisableTrigger(gate.Trig_gateDies)
+                ReplaceUnitBJ(unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
+                EnableTrigger(gate.Trig_gateDies)
+
+                unit = GetLastReplacedUnitBJ()
+                gate[GetHandleId(unit)] = info
+                GroupAddUnit(gate.gClosed, unit)
+
+                -- Play animation
+                SetUnitAnimation(unit, "stand")
+
+            elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
+
+                GroupRemoveUnit(gate.gClosed, unit)
+                gate[GetHandleId(unit)] = {}
+
+                -- Replace Gate with Closed Gate
+                DisableTrigger(gate.Trig_gateDies)
+                ReplaceUnitBJ(unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
+                EnableTrigger(gate.Trig_gateDies)
+
+                unit = GetLastReplacedUnitBJ()
+                gate[GetHandleId(unit)] = info
+                GroupAddUnit(gate.gOpen, unit)
+
+                -- Play animation
+                SetUnitAnimation(unit, "Death Alternate 1")
+
+            end
+
+        end)
+    end
+
+    function gate.InitTrig_update()
+        local t = CreateTrigger()
+        TriggerRegisterTimerEventPeriodic(t, 2)
+        TriggerAddAction(t, function()
+            gate.update()
+        end)
+    end
+
+    function gate.InitTrig_dies()
+        gate.Trig_gateDies = CreateTrigger()
+        TriggerRegisterAnyUnitEventBJ(gate.Trig_gateDies, EVENT_PLAYER_UNIT_DEATH)
+        TriggerAddAction(gate.Trig_gateDies, function()
+            local dyingUnit = GetTriggerUnit()
+
+            if IsUnitInGroup(dyingUnit, gate.g) then
+                local player
+                local info = gate[GetHandleId(dyingUnit)]
+
+                -- Remove Traces of Unit
+                GroupRemoveUnit(gate.g, dyingUnit)
+                RemoveUnit(dyingUnit)
+                gate[GetHandleId(dyingUnit)] = {}
+
+                if info.force == "allied" then
+                    player = Player(21)
+                else
+                    player = Player(18)
+                end
+
+                CreateUnit(player, info.unitTypeOpen, info.x, info.y, info.facingAngle)
+
+                -- Play Death animation
+                SetUnitAnimation(unit, "Death Alternate 1")
+            end
+        end)
+    end
+
+    gate.InitTrig_update()
+    gate.InitTrig_dies()
 end
 
 --
@@ -6279,6 +6453,10 @@ function CreateBuildingsForPlayer0()
     local t
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("halt"), -24992.0, -4576.0, 270.000, FourCC("halt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01B"), -14912.0, -6592.0, 270.000, FourCC("h01B"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -14080.0, -6656.0, 270.000, FourCC("h01D"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -12736.0, -7104.0, 270.000, FourCC("h01D"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -12224.0, -8000.0, 270.000, FourCC("h01C"))
 end
 
 function CreateBuildingsForPlayer1()
@@ -6485,7 +6663,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -21632.0, -4416.0, 270.000, FourCC("n000"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -11584.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -10816.0, 270.000, FourCC("h00G"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -16128.0, -6656.0, 270.000, FourCC("hhou"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -16000.0, -6656.0, 270.000, FourCC("hhou"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -21632.0, -12928.0, 270.000, FourCC("h00T"))
     u = BlzCreateUnitWithSkin(p, FourCC("npgf"), -15648.0, -2080.0, 270.000, FourCC("npgf"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -21632.0, -9472.0, 270.000, FourCC("h00T"))
@@ -6538,7 +6716,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -19360.0, 3424.0, 270.000, FourCC("n00Z"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20224.0, -4544.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -21312.0, -11200.0, 270.000, FourCC("h00G"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18272.0, -4960.0, 270.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18208.0, -4960.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -24192.0, -5248.0, 270.000, FourCC("n000"))
     gg_unit_hars_0355 = BlzCreateUnitWithSkin(p, FourCC("hars"), -19584.0, -9152.0, 270.000, FourCC("hars"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -23168.0, -5824.0, 270.000, FourCC("h004"))
@@ -6546,13 +6724,13 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -21632.0, -6720.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -22144.0, -9472.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -21632.0, -6272.0, 270.000, FourCC("hgtw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18272.0, -5152.0, 270.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18208.0, -5152.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -25216.0, 896.0, 270.000, FourCC("negt"))
     gg_unit_n00B_0364 = BlzCreateUnitWithSkin(p, FourCC("n00B"), -18816.0, -5120.0, 270.000, FourCC("n00B"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19904.0, -6912.0, 270.000, FourCC("hgtw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18272.0, -5344.0, 270.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18208.0, -5344.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20416.0, -5440.0, 270.000, FourCC("h004"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18720.0, -6560.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18656.0, -6560.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -13376.0, -2112.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("hvlt"), -23488.0, -15808.0, 270.000, FourCC("hvlt"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -15104.0, -1792.0, 270.000, FourCC("otrb"))
@@ -6575,7 +6753,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -13504.0, -2176.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -24352.0, 1312.0, 270.000, FourCC("nef4"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef3"), -22688.0, 288.0, 270.000, FourCC("nef3"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -19296.0, -5152.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -19200.0, -4096.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -15648.0, -224.0, 270.000, FourCC("ngnh"))
     gg_unit_ngt2_0525 = BlzCreateUnitWithSkin(p, FourCC("ngt2"), -16736.0, 96.0, 270.000, FourCC("ngt2"))
@@ -6587,7 +6764,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18592.0, -4512.0, 90.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18400.0, -4512.0, 90.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmg0"), -18080.0, 4832.0, 270.000, FourCC("nmg0"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18528.0, -6560.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18464.0, -6560.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -13952.0, 256.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01A"), -16256.0, -6400.0, 270.000, FourCC("h01A"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -16800.0, -6880.0, 270.000, FourCC("ncb6"))
@@ -7143,6 +7320,8 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), 3752.2, -8628.1, 269.333, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -25884.4, 4121.0, 50.327, FourCC("ncea"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00N"), 3526.8, -8575.4, 262.230, FourCC("n00N"))
+    u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -26972.4, -674.1, 270.000, FourCC("etrp"))
+    IssueImmediateOrder(u, "unroot")
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -28533.6, 1297.0, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), 4727.4, 2240.6, 122.380, FourCC("nvdw"))
     u = BlzCreateUnitWithSkin(p, FourCC("uabo"), -27023.1, -7100.7, 247.980, FourCC("uabo"))
@@ -8388,219 +8567,6 @@ function InitTrig_Attribute_Upgrade()
     TriggerRegisterAnyUnitEventBJ(gg_trg_Attribute_Upgrade, EVENT_PLAYER_UNIT_RESEARCH_FINISH)
     TriggerAddCondition(gg_trg_Attribute_Upgrade, Condition(Trig_Attribute_Upgrade_Conditions))
     TriggerAddAction(gg_trg_Attribute_Upgrade, Trig_Attribute_Upgrade_Actions)
-end
-
-function Trig_INIT_Gates_Func005Func005C()
-    if (not (IsPlayerInForce(udg_TEMP_Player, udg_PLAYERGRPallied) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_INIT_Gates_Func005A()
-    udg_TEMP_Player = GetOwningPlayer(GetEnumUnit())
-    udg_TEMP_Pos2 = GetUnitLoc(GetEnumUnit())
-    GroupRemoveUnitSimple(GetEnumUnit(), udg_Gates_Closed)
-    RemoveUnit(GetEnumUnit())
-    if (Trig_INIT_Gates_Func005Func005C()) then
-        CreateNUnitsAtLoc(1, FourCC("h00T"), udg_TEMP_Player, udg_TEMP_Pos2, 180.00)
-    else
-        CreateNUnitsAtLoc(1, FourCC("h00T"), udg_TEMP_Player, udg_TEMP_Pos2, 0.00)
-    end
-    GroupAddUnitSimple(GetLastCreatedUnit(), udg_Gates_Closed)
-        RemoveLocation ( udg_TEMP_Pos2 )
-end
-
-function Trig_INIT_Gates_Actions()
-    udg_Gates_Closed = GetUnitsOfTypeIdAll(FourCC("h00T"))
-    ForGroupBJ(udg_Gates_Closed, Trig_INIT_Gates_Func005A)
-    EnableTrigger(gg_trg_Toggle_Gate)
-    EnableTrigger(gg_trg_Gate_Dies)
-end
-
-function InitTrig_INIT_Gates()
-    gg_trg_INIT_Gates = CreateTrigger()
-    TriggerAddAction(gg_trg_INIT_Gates, Trig_INIT_Gates_Actions)
-end
-
-function Trig_Toggle_Gate_Func001Func002002003001()
-    return (IsUnitEnemy(GetFilterUnit(), GetOwningPlayer(GetEnumUnit())) == true)
-end
-
-function Trig_Toggle_Gate_Func001Func002002003002()
-    return (IsUnitAliveBJ(GetFilterUnit()) == true)
-end
-
-function Trig_Toggle_Gate_Func001Func002002003()
-    return GetBooleanAnd(Trig_Toggle_Gate_Func001Func002002003001(), Trig_Toggle_Gate_Func001Func002002003002())
-end
-
-function Trig_Toggle_Gate_Func001Func003002003001()
-    return (IsUnitEnemy(GetFilterUnit(), GetOwningPlayer(GetEnumUnit())) == false)
-end
-
-function Trig_Toggle_Gate_Func001Func003002003002()
-    return (IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO) == true)
-end
-
-function Trig_Toggle_Gate_Func001Func003002003()
-    return GetBooleanAnd(Trig_Toggle_Gate_Func001Func003002003001(), Trig_Toggle_Gate_Func001Func003002003002())
-end
-
-function Trig_Toggle_Gate_Func001Func004Func007C()
-    if (CountUnitsInGroup(udg_TEMP_UnitGroup) == 0) then
-        return true
-    end
-    if (CountUnitsInGroup(udg_TEMP_UnitGroup2) > 0) then
-        return true
-    end
-    return false
-end
-
-function Trig_Toggle_Gate_Func001Func004C()
-    if (not Trig_Toggle_Gate_Func001Func004Func007C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_Toggle_Gate_Func001A()
-    udg_TEMP_Pos2 = GetUnitLoc(GetEnumUnit())
-    udg_TEMP_UnitGroup = GetUnitsInRangeOfLocMatching(900.00, udg_TEMP_Pos2, Condition(Trig_Toggle_Gate_Func001Func002002003))
-    udg_TEMP_UnitGroup2 = GetUnitsInRangeOfLocMatching(900.00, udg_TEMP_Pos2, Condition(Trig_Toggle_Gate_Func001Func003002003))
-    if (Trig_Toggle_Gate_Func001Func004C()) then
-        GroupRemoveUnitSimple(GetEnumUnit(), udg_Gates_Closed)
-        DisableTrigger(gg_trg_Gate_Dies)
-        ReplaceUnitBJ(GetEnumUnit(), FourCC("h00U"), bj_UNIT_STATE_METHOD_RELATIVE)
-        EnableTrigger(gg_trg_Gate_Dies)
-        GroupAddUnitSimple(GetLastReplacedUnitBJ(), udg_Gates_Open)
-        SetUnitAnimation(GetLastReplacedUnitBJ(), "Death Alternate 1")
-    else
-    end
-        DestroyGroup ( udg_TEMP_UnitGroup )
-        DestroyGroup ( udg_TEMP_UnitGroup2 )
-        RemoveLocation ( udg_TEMP_Pos2 )
-end
-
-function Trig_Toggle_Gate_Func004Func002002003001()
-    return (IsUnitEnemy(GetFilterUnit(), GetOwningPlayer(GetEnumUnit())) == true)
-end
-
-function Trig_Toggle_Gate_Func004Func002002003002()
-    return (IsUnitAliveBJ(GetFilterUnit()) == true)
-end
-
-function Trig_Toggle_Gate_Func004Func002002003()
-    return GetBooleanAnd(Trig_Toggle_Gate_Func004Func002002003001(), Trig_Toggle_Gate_Func004Func002002003002())
-end
-
-function Trig_Toggle_Gate_Func004Func003002003001()
-    return (IsUnitEnemy(GetFilterUnit(), GetOwningPlayer(GetEnumUnit())) == false)
-end
-
-function Trig_Toggle_Gate_Func004Func003002003002()
-    return (IsUnitType(GetFilterUnit(), UNIT_TYPE_HERO) == true)
-end
-
-function Trig_Toggle_Gate_Func004Func003002003()
-    return GetBooleanAnd(Trig_Toggle_Gate_Func004Func003002003001(), Trig_Toggle_Gate_Func004Func003002003002())
-end
-
-function Trig_Toggle_Gate_Func004Func004C()
-    if (not (CountUnitsInGroup(udg_TEMP_UnitGroup) > 0)) then
-        return false
-    end
-    if (not (CountUnitsInGroup(udg_TEMP_UnitGroup2) == 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Toggle_Gate_Func004A()
-    udg_TEMP_Pos2 = GetUnitLoc(GetEnumUnit())
-    udg_TEMP_UnitGroup = GetUnitsInRangeOfLocMatching(900.00, udg_TEMP_Pos2, Condition(Trig_Toggle_Gate_Func004Func002002003))
-    udg_TEMP_UnitGroup2 = GetUnitsInRangeOfLocMatching(900.00, udg_TEMP_Pos2, Condition(Trig_Toggle_Gate_Func004Func003002003))
-    if (Trig_Toggle_Gate_Func004Func004C()) then
-        GroupRemoveUnitSimple(GetEnumUnit(), udg_Gates_Open)
-        DisableTrigger(gg_trg_Gate_Dies)
-        ReplaceUnitBJ(GetEnumUnit(), FourCC("h00T"), bj_UNIT_STATE_METHOD_RELATIVE)
-        EnableTrigger(gg_trg_Gate_Dies)
-        GroupAddUnitSimple(GetLastReplacedUnitBJ(), udg_Gates_Closed)
-        SetUnitAnimation(GetLastReplacedUnitBJ(), "stand")
-    else
-    end
-        DestroyGroup ( udg_TEMP_UnitGroup )
-        DestroyGroup ( udg_TEMP_UnitGroup2 )
-        RemoveLocation ( udg_TEMP_Pos2 )
-end
-
-function Trig_Toggle_Gate_Actions()
-    ForGroupBJ(udg_Gates_Closed, Trig_Toggle_Gate_Func001A)
-    ForGroupBJ(udg_Gates_Open, Trig_Toggle_Gate_Func004A)
-end
-
-function InitTrig_Toggle_Gate()
-    gg_trg_Toggle_Gate = CreateTrigger()
-    TriggerRegisterTimerEventPeriodic(gg_trg_Toggle_Gate, 1.00)
-    TriggerAddAction(gg_trg_Toggle_Gate, Trig_Toggle_Gate_Actions)
-end
-
-function Trig_Gate_Dies_Func007C()
-    if (IsUnitInGroup(GetDyingUnit(), udg_Gates_Closed) == true) then
-        return true
-    end
-    if (IsUnitInGroup(GetDyingUnit(), udg_Gates_Open) == true) then
-        return true
-    end
-    return false
-end
-
-function Trig_Gate_Dies_Conditions()
-    if (not Trig_Gate_Dies_Func007C()) then
-        return false
-    end
-    return true
-end
-
-function Trig_Gate_Dies_Func004C()
-    if (not (IsPlayerInForce(GetOwningPlayer(GetDyingUnit()), udg_PLAYERGRPallied) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Gate_Dies_Func006C()
-    if (not ((CountUnitsInGroup(udg_Gates_Closed) + CountUnitsInGroup(udg_Gates_Open)) == 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Gate_Dies_Actions()
-    GroupRemoveUnitSimple(GetDyingUnit(), udg_Gates_Closed)
-    GroupRemoveUnitSimple(GetDyingUnit(), udg_Gates_Open)
-    udg_TEMP_Pos2 = GetUnitLoc(GetDyingUnit())
-    if (Trig_Gate_Dies_Func004C()) then
-        CreateNUnitsAtLoc(1, FourCC("h00U"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, 180.00)
-        SetUnitAnimation(GetLastCreatedUnit(), "Death 1")
-    else
-        CreateNUnitsAtLoc(1, FourCC("h00U"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, 0.00)
-        SetUnitAnimation(GetLastCreatedUnit(), "Death 1")
-    end
-        RemoveLocation ( udg_TEMP_Pos2 )
-    if (Trig_Gate_Dies_Func006C()) then
-        DisableTrigger(GetTriggeringTrigger())
-        DisableTrigger(gg_trg_Toggle_Gate)
-    else
-    end
-end
-
-function InitTrig_Gate_Dies()
-    gg_trg_Gate_Dies = CreateTrigger()
-    DisableTrigger(gg_trg_Gate_Dies)
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Gate_Dies, EVENT_PLAYER_UNIT_DEATH)
-    TriggerAddCondition(gg_trg_Gate_Dies, Condition(Trig_Gate_Dies_Conditions))
-    TriggerAddAction(gg_trg_Gate_Dies, Trig_Gate_Dies_Actions)
 end
 
 function Trig_Start_Event_Actions()
@@ -11553,9 +11519,6 @@ function InitCustomTriggers()
     InitTrig_Swift_Moves()
     InitTrig_Swift_Attacks()
     InitTrig_Attribute_Upgrade()
-    InitTrig_INIT_Gates()
-    InitTrig_Toggle_Gate()
-    InitTrig_Gate_Dies()
     InitTrig_Start_Event()
     InitTrig_Event_Count()
     InitTrig_DW_Ancient_Chaos()
@@ -11615,7 +11578,6 @@ function InitCustomTriggers()
 end
 
 function RunInitializationTriggers()
-    ConditionalTriggerExecute(gg_trg_INIT_Gates)
     ConditionalTriggerExecute(gg_trg_Frost_INIT)
     ConditionalTriggerExecute(gg_trg_Paradox_INIT)
     ConditionalTriggerExecute(gg_trg_Time_Travel_INIT)

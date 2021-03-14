@@ -888,7 +888,6 @@ function init_aiClass()
 
             if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
 
-                
                 GroupAddGroup(base[self[i].teamName].gTeleport, g)
                 while true do
                     u = FirstOfGroup(g)
@@ -914,7 +913,7 @@ function init_aiClass()
                     print("Teleporting")
 
                     PingMinimap(unitX, unitY, 15)
-                    
+
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
 
@@ -1060,7 +1059,7 @@ function init_aiClass()
                     curSpell = hero:spell(self[i], "shift")
                     if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
                         print(curSpell.name)
-                       
+
                         IssueImmediateOrder(self[i].unit, curSpell.order)
                         self:castSpell(i, curSpell)
                     end
@@ -2175,17 +2174,16 @@ function init_baseClass()
             regionName = "top"
         end
 
-        
         if update then
             -- Add to ALL Unit Group
             GroupAddUnit(base.all.g, unit)
 
             -- Add to HEALING Unit Group
-            if healing then
+            --if healing then
                 GroupAddUnit(base[teamName].gHealing, unit)
-            end
-            
-             -- Add to REGION Unit Group
+            --end
+
+            -- Add to REGION Unit Group
             GroupAddUnit(base[regionName][teamName].g, unit)
         end
 
@@ -2193,9 +2191,6 @@ function init_baseClass()
         if teleport then
             GroupAddUnit(base[teamName].gTeleport, unit)
         end
-
-       
-        
 
         -- Set Importance
         base[regionName][teamName].unitsTotal = base[regionName][teamName].unitsTotal + importance
@@ -2356,7 +2351,7 @@ function init_baseClass()
 
         -- Remove Unit from REGION Group
         if IsUnitInGroup(unit, base[regionName][teamName].g) then
-        GroupRemoveUnit(base[regionName][teamName].g, unit)
+            GroupRemoveUnit(base[regionName][teamName].g, unit)
         end
 
         if IsUnitInGroup(unit, base[teamName].gDanger) then
@@ -2417,4 +2412,180 @@ function init_baseClass()
 
     end
 
+end
+
+function init_gateClass()
+
+    gate = {}
+    gate.g = CreateGroup()
+    gate.gClosed = CreateGroup()
+    gate.gOpen = CreateGroup()
+
+    function gate.add(unit)
+
+        local playerForce, facingAngle, unitTypeOpen
+        local player = GetOwningPlayer(unit)
+        local unitType = GetUnitTypeId(unit)
+        local x = GetUnitX(unit)
+        local y = GetUnitY(unit)
+        local unitId = GetHandleId(unit)
+
+        -- Find if unit is Allied or Fed
+        if IsPlayerInForce(player, udg_PLAYERGRPallied) then
+            playerForce = "allied"
+        else
+            playerForce = "federation"
+        end
+
+        -- Determine Proper Angle
+        if unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 45 Degrees
+            facingAngle = 45
+        elseif unitType == FourCC("h01F") or unitType == FourCC("h01B") or unitType == FourCC("h01F") or unitType ==
+            FourCC("h01B") then -- City Gate and Arcane Gate 0 Degrees
+            facingAngle = 0
+        elseif unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 135 Degrees
+            facingAngle = 135
+        end
+
+        -- Find Open Unit Type
+        if unitType == FourCC("h01G") then -- City Gate 0
+            unitTypeOpen = FourCC("h01C")
+
+        elseif unitType == FourCC("h01F") then -- City Gate 45
+            unitTypeOpen = FourCC("h01B")
+
+        elseif unitType == FourCC("h01E") then -- City Gate 135
+            unitTypeOpen = FourCC("h01D")
+
+        elseif unitType == FourCC("h01T") then -- Arcane Gate 0
+            unitTypeOpen = FourCC("h01U")
+        end
+
+        if playerForce == "federation" then
+            facingAngle = facingAngle + 180
+        end
+
+        RemoveUnit(unit)
+        unit = CreateUnit(player, unitType, x, y, facingAngle)
+
+        GroupAddUnit(gate.g, unit)
+        GroupAddUnit(gate.gClosed, unit)
+
+        gate[unitId].force = playerForce
+        gate[unitId].unitTypeClosed = unitType
+        gate[unitId].unitTypeOpen = unitTypeOpen
+        gate[unitId].x = x
+        gate[unitId].y = y
+        gate[unitId].facing = facingAngle
+
+    end
+
+    function gate.update()
+
+        ForForce(gate.g, function()
+            local u, heroes
+            local enemies = 0
+            local unit = GetEnumUnit()
+            local info = gate[GetHandleId(unit)]
+            local g = CreateGroup()
+            local l = GetUnitLoc(unit)
+
+            g = GetUnitsInRangeOfLocAll(900, l)
+
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                if not IsUnitAlly(u, GetOwningPlayer(unit)) then
+                    enemies = enemies + 1
+
+                    if IsUnitType(unit, UNIT_TYPE_HERO) then
+                        heroes = heroes + 1
+                    end
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
+
+                GroupRemoveUnit(gate.gOpen, unit)
+                gate[GetHandleId(unit)] = {}
+
+                -- Replace Gate with Closed Gate
+                DisableTrigger(gate.Trig_gateDies)
+                ReplaceUnitBJ(unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
+                EnableTrigger(gate.Trig_gateDies)
+
+                unit = GetLastReplacedUnitBJ()
+                gate[GetHandleId(unit)] = info
+                GroupAddUnit(gate.gClosed, unit)
+
+                -- Play animation
+                SetUnitAnimation(unit, "stand")
+
+            elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
+
+                GroupRemoveUnit(gate.gClosed, unit)
+                gate[GetHandleId(unit)] = {}
+
+                -- Replace Gate with Closed Gate
+                DisableTrigger(gate.Trig_gateDies)
+                ReplaceUnitBJ(unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
+                EnableTrigger(gate.Trig_gateDies)
+
+                unit = GetLastReplacedUnitBJ()
+                gate[GetHandleId(unit)] = info
+                GroupAddUnit(gate.gOpen, unit)
+
+                -- Play animation
+                SetUnitAnimation(unit, "Death Alternate 1")
+
+            end
+
+        end)
+    end
+
+    function gate.InitTrig_update()
+        local t = CreateTrigger()
+        TriggerRegisterTimerEventPeriodic(t, 2)
+        TriggerAddAction(t, function()
+            gate.update()
+        end)
+    end
+
+    function gate.InitTrig_dies()
+        gate.Trig_gateDies = CreateTrigger()
+        TriggerRegisterAnyUnitEventBJ(gate.Trig_gateDies, EVENT_PLAYER_UNIT_DEATH)
+        TriggerAddAction(gate.Trig_gateDies, function()
+            local dyingUnit = GetTriggerUnit()
+
+            if IsUnitInGroup(dyingUnit, gate.g) then
+                local player
+                local info = gate[GetHandleId(dyingUnit)]
+
+                -- Remove Traces of Unit
+                GroupRemoveUnit(gate.g, dyingUnit)
+                RemoveUnit(dyingUnit)
+                gate[GetHandleId(dyingUnit)] = {}
+
+                if info.force == "allied" then
+                    player = Player(21)
+                else
+                    player = Player(18)
+                end
+
+                CreateUnit(player, info.unitTypeOpen, info.x, info.y, info.facingAngle)
+
+                -- Play Death animation
+                SetUnitAnimation(unit, "Death Alternate 1")
+            end
+        end)
+    end
+
+    gate.InitTrig_update()
+    gate.InitTrig_dies()
 end

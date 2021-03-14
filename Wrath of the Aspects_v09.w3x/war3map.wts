@@ -14004,3 +14004,75 @@ STRING 4573
 It fights for the Alliance!
 }
 
+STRING 4574
+// Units: h01B (City Gate), Name (Name)
+{
+City Gate
+}
+
+STRING 4575
+// Units: h01B (City Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Open 45)
+}
+
+STRING 4576
+// Units: h01C (City Gate), Name (Name)
+{
+City Gate
+}
+
+STRING 4577
+// Units: h01C (City Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Open 0)
+}
+
+STRING 4578
+// Units: h01D (City Gate), Name (Name)
+{
+City Gate
+}
+
+STRING 4579
+// Units: h01D (City Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Open 135)
+}
+
+STRING 4580
+// Units: h01E (City Gate), Name (Name)
+{
+City Gate
+}
+
+STRING 4581
+// Units: h01E (City Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Closed 135)
+}
+
+STRING 4582
+// Units: h01F (City Gate), Name (Name)
+{
+City Gate
+}
+
+STRING 4583
+// Units: h01F (City Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Closed 45)
+}
+
+STRING 4584
+// Units: h01G (City Gate), Name (Name)
+{
+City Gate
+}
+
+STRING 4585
+// Units: h01G (City Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Closed 0)
+}
+
