@@ -110,68 +110,70 @@ function addRegions()
 end
 
 function addBases()
-    base.add(gg_unit_h003_0015, 3, false, true, true) -- Allied Arcane Main
-    base.add(gg_unit_h003_0007, 3, false, true, true) -- Federation Arcane Main
 
-    base.add(gg_unit_h014_0017, 2, false, true, true) -- Allied Arcane Hero
-    base.add(gg_unit_h014_0158, 2, false, true, true) -- Federation
+    base.add()
+    base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
+    base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
 
-    base.add(gg_unit_hars_0355, 1, false, true, true) -- Allied Arcane Top
-    base.add(gg_unit_hars_0293, 1, false, true, true) -- Federation
+    base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
+    base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
+
+    base.add(gg_unit_hars_0355, 1, false, true, true, false) -- Allied Arcane Top
+    base.add(gg_unit_hars_0293, 1, false, true, true, false) -- Federation
     
-    base.add(gg_unit_hars_0292, 1, false, true, true) -- Allied Arcane Bottom
-    base.add(gg_unit_hars_0303, 1, false, true, true) -- Federation
+    base.add(gg_unit_hars_0292, 1, false, true, true, false) -- Allied Arcane Bottom
+    base.add(gg_unit_hars_0303, 1, false, true, true, false) -- Federation
     
-    base.add(gg_unit_n00K_0802, 2, false, true, true) -- Allied Blacksmith
-    base.add(gg_unit_n00K_0477, 2, false, true, true) -- Federation
+    base.add(gg_unit_n00K_0802, 2, false, true, true, true) -- Allied Blacksmith
+    base.add(gg_unit_n00K_0477, 2, false, true, true, true) -- Federation
     
-    base.add(gg_unit_h00E_0033, 1, true, true, true) -- Allied Castle
-    base.add(gg_unit_h00E_0081, 1, true, true, true) -- Federation
+    base.add(gg_unit_h00E_0033, 1, true, true, true, true) -- Allied Castle
+    base.add(gg_unit_h00E_0081, 1, true, true, true, true) -- Federation
     
-    base.add(gg_unit_hvlt_0207, 2, false, true, true) -- Allied City Elves
-    base.add(gg_unit_hvlt_0406, 2, false, true, true) -- Federation
+    base.add(gg_unit_hvlt_0207, 2, false, true, true, true) -- Allied City Elves
+    base.add(gg_unit_hvlt_0406, 2, false, true, true, true) -- Federation
     
-    base.add(gg_unit_n00B_0364, 1, false, true, true) -- Allied City Front
-    base.add(gg_unit_n00B_0399, 1, false, true, true) -- Federation
+    base.add(gg_unit_n00B_0364, 1, false, true, true, true) -- Allied City Front
+    base.add(gg_unit_n00B_0399, 1, false, true, true, true) -- Federation
     
-    base.add(gg_unit_n00B_0102, 1, false, true, true) -- Allied City Side
-    base.add(gg_unit_n00B_0038, 1, false, true, true) -- Federation
+    base.add(gg_unit_n00B_0102, 1, false, true, true, true) -- Allied City Side
+    base.add(gg_unit_n00B_0038, 1, false, true, true, true) -- Federation
     
-    base.add(gg_unit_ngt2_0525, 1, false, true, true) -- Allied Kobold
-    base.add(gg_unit_ngt2_0455, 1, false, true, true) -- Federation
+    base.add(gg_unit_ngt2_0525, 1, false, true, true, true) -- Allied Kobold
+    base.add(gg_unit_ngt2_0455, 1, false, true, true, true) -- Federation
     
-    base.add(gg_unit_nheb_0109, 3, false, true, true) -- Allied High Elves
-    base.add(gg_unit_nheb_0036, 3, false, true, true) -- Federation
+    base.add(gg_unit_nheb_0109, 3, false, true, true, true) -- Allied High Elves
+    base.add(gg_unit_nheb_0036, 3, false, true, true, true) -- Federation
     
-    base.add(gg_unit_n001_0048, 2, false, true, true) -- Allied Merc Camp
-    base.add(gg_unit_n001_0049, 2, false, true, true) -- Federation
+    base.add(gg_unit_n001_0048, 2, false, true, true, true) -- Allied Merc Camp
+    base.add(gg_unit_n001_0049, 2, false, true, true, true) -- Federation
         
-    base.add(gg_unit_h006_0074, 2, false, true, true) -- Allied Mine
-    base.add(gg_unit_h006_0055, 2, false, true, true) -- Federation
+    base.add(gg_unit_h006_0074, 2, false, true, true, true) -- Allied Mine
+    base.add(gg_unit_h006_0055, 2, false, true, true, true) -- Federation
         
-    base.add(gg_unit_nmh1_0735, 1, false, true, true) -- Allied Murloc
-    base.add(gg_unit_nmh1_0783, 1, false, true, true) -- Federation
+    base.add(gg_unit_nmh1_0735, 1, false, true, true, false) -- Allied Murloc
+    base.add(gg_unit_nmh1_0783, 1, false, true, true, false) -- Federation
         
-    base.add(gg_unit_nntt_0135, 2, false, true, true) -- Allied Naga
-    base.add(gg_unit_nntt_0132, 2, false, true, true) -- Federation
+    base.add(gg_unit_nntt_0135, 2, false, true, true, true) -- Allied Naga
+    base.add(gg_unit_nntt_0132, 2, false, true, true, true) -- Federation
         
-    base.add(gg_unit_e003_0058, 3, false, true, true) -- Allied Night Elves
-    base.add(gg_unit_e003_0014, 3, false, true, true) -- Federation
+    base.add(gg_unit_e003_0058, 3, false, true, true, true) -- Allied Night Elves
+    base.add(gg_unit_e003_0014, 3, false, true, true, true) -- Federation
             
-    base.add(gg_unit_o001_0075, 2, false, true, true) -- Allied Orcs
-    base.add(gg_unit_o001_0078, 2, false, true, true) -- Federation
+    base.add(gg_unit_o001_0075, 2, false, true, true, true) -- Allied Orcs
+    base.add(gg_unit_o001_0078, 2, false, true, true, true) -- Federation
             
-    base.add(gg_unit_eshy_0120, 1, false, true, true) -- Allied Night Elf Shipyard
-    base.add(gg_unit_eshy_0047, 1, false, true, true) -- Federation
+    base.add(gg_unit_eshy_0120, 1, false, true, true, false) -- Allied Night Elf Shipyard
+    base.add(gg_unit_eshy_0047, 1, false, true, true, false) -- Federation
             
-    base.add(gg_unit_hshy_0011, 1, false, true, true) -- Allied Human Shipyard
-    base.add(gg_unit_hshy_0212, 1, false, true, true) -- Federation
+    base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
+    base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
             
-    base.add(gg_unit_h00F_0029, 2, false, true, true) -- Allied Town
-    base.add(gg_unit_h00F_0066, 2, false, true, true) -- Federation
+    base.add(gg_unit_h00F_0029, 2, false, true, true, true) -- Allied Town
+    base.add(gg_unit_h00F_0066, 2, false, true, true, true) -- Federation
                 
-    base.add(gg_unit_u001_0262, 2, false, true, true) -- Federation
-    base.add(gg_unit_u001_0264, 2, false, true, true) -- Federation
+    base.add(gg_unit_u001_0262, 2, false, true, true, true) -- Federation Undead
+    base.add(gg_unit_u001_0264, 2, false, true, true, true) -- Federation
 end
 
 function Init_luaGlobals()

@@ -1,5 +1,9 @@
 [Misc]
 
+FadeBuffMinDuration=10
+FadeBuffMinAlpha=96
+FadeBuffMaxAlpha=255
+
 // gold text data
 GoldTextColor=255,255,220,0
 GoldTextVelocity=0,0.03,100
@@ -18,6 +22,18 @@ BountyTextVelocity=0,0.03,100
 BountyTextLifetime=3
 BountyTextFadeStart=2
 
+// lumber bounty text data
+LumberBountyTextColor=255,0,200,80
+LumberBountyTextVelocity=0,0.03,100
+LumberBountyTextLifetime=3
+LumberBountyTextFadeStart=2
+
+// XP text data
+XPTextColor=255,111,111,255
+XPTextVelocity=0,0.02,100
+XPTextLifetime=2
+XPTextFadeStart=1
+
 // missile 'miss' text tag data
 MissTextColor=255,255,0,0
 MissTextVelocity=0,0.03,100
@@ -29,6 +45,12 @@ CriticalStrikeTextColor=255,255,0,0
 CriticalStrikeTextVelocity=0,0.04,100
 CriticalStrikeTextLifetime=5
 CriticalStrikeTextFadeStart=2
+
+// ShadowStrike text tag data
+ShadowStrikeTextColor=255,160,255,0
+ShadowStrikeTextVelocity=0,0.04,100
+ShadowStrikeTextLifetime=5
+ShadowStrikeTextFadeStart=2
 
 // ManaBurn text tag data
 ManaBurnTextColor=255,82,82,255
@@ -42,7 +64,38 @@ BashTextVelocity=0,0.04,100
 BashTextLifetime=5
 BashTextFadeStart=2
 
+// Lava Spawn Vertex Colors
+LavaSpawnColor=255,255,255,255,255,220,220,220,255,185,185,185
+
 ActiveButtonColor=255,75,150,255
+
+[Camera]
+// Update Listener section in bin\ui\soundinfo\miscdata.txt
+// if the number of camera zooms changes
+// game camera paramters
+AOA=304,311,318,325,332,339
+FOV=80,80,80,80,80,80
+Rotation=90,90,90,90,90,90,20,20,20,20,20,20,160,160,160,160,160,160
+Distance=1650,1600,1500,1400,1275,1100
+FarZ=5000,5000,5000,5000,5000,5000
+NearZ=100,100,100,100,100,100,60
+Height=0,0,0,0,0,0,0
+// Camera smoothing. 
+Smoothing=1
+SmoothMaxDist=1000
+SmoothScale=0.80
+SmoothBias=0.15
+SmoothMinFPS=10
+SmoothBeta=1.5
+
+[CameraRates]
+// game camera change rates
+AOA=20
+FOV=20
+Rotation=30
+Distance=1200
+Forward=3000
+Strafe=3000
 
 [QuestIndicatorTimeout]
 QuestIndicatorTimeout=10
@@ -77,46 +130,57 @@ Density=0.5
 Color=255,0,0,0
 
 [MenuZFog]
+Style=0,0
+Start=100,0
+End=5500,7000
+Density=1,1
+Color=255,11,20,11,255,178,178,204
+
+[ReforgedMenuZFog]
 Style=0
-Start=100
-End=5500
+Start=0
+End=7000
+Density=0.4
+Color=255,255,255,255
+
+[ArthasIllidanFightZFog]
+Style=0
+Start=0
+End=6000
 Density=1
-Color=255,11,20,11
+Color=255,92,112,120
 
-[TutorialZFog]
-Style=0
-Start=0
-End=2000
-Density=0.5
-Color=255,0,51,77
+[ArthasIllidanFightPrefetchList]
+File0="Sound\Ambient\DoodadEffects\FinalCinematic.flac"
+File1="Doodads\Cinematic\ArthasIllidanFight\ArthasCape0001.mrf"
+File3="Doodads\Cinematic\ArthasIllidanFight\ArthasCloakFight.blp"
+File4="Doodads\Cinematic\ArthasIllidanFight\Arthas1.blp"
+File5="Doodads\Cinematic\ArthasIllidanFight\StoneTiledSnowTALLtrev.blp"
+File6="Doodads\Cinematic\ArthasIllidanFight\IllidanBlade.blp"
+File7="Doodads\Cinematic\ArthasIllidanFight\FrostMorne.blp"
+File8="Doodads\Cinematic\ArthasIllidanFight\BigAssSky.blp"
+File9="Doodads\Cinematic\ArthasIllidanFight\ArthasCape0000.mrf"
+File10="Doodads\Cinematic\ArthasIllidanFight\ArthasCape0002.mrf"
+File11="Doodads\Cinematic\ArthasIllidanFight\ArthasCape0003.mrf"
+File12="Doodads\Cinematic\ArthasIllidanFight\SpeedLines1_solid.blp"
+File13="Doodads\Cinematic\ArthasIllidanFight\IllidanDeathShadowA.blp"
+File14="Doodads\Cinematic\ArthasIllidanFight\IllidanCineStuff.blp"
+File15="Doodads\Cinematic\ArthasIllidanFight\IllidanCine.blp"
+File16="Doodads\Cinematic\ArthasIllidanFight\IceCrownWalls.blp"
+File17="Doodads\Cinematic\ArthasIllidanFight\IceCrownDoodads0.blp"
+File18="Doodads\Cinematic\ArthasIllidanFight\Ice_Natural01.blp"
+File19="Doodads\Cinematic\ArthasIllidanFight\Clouds8x8.blp"
+File20="Doodads\Cinematic\ArthasIllidanFight\Ice_Natural01.blp"
+File21="Doodads\Cinematic\ArthasIllidanFight\ArthasCape0004.mrf"
+File22="Doodads\Cinematic\ArthasIllidanFight\ArthasCape0005.mrf"
+File23="Doodads\Cinematic\ArthasIllidanFight\SacrificialAltarskull1.blp"
+File24="Doodads\Cinematic\ArthasIllidanFight\rockShadow.blp"
+File25="Doodads\Cinematic\ArthasIllidanFight\IronForgeSnow01solid1.blp"
+File26="Doodads\Cinematic\ArthasIllidanFight\furboots2.blp"
+File27="Doodads\Cinematic\ArthasIllidanFight\IllidanBlade.blp"
 
-[HumanZFog]
-Style=0
-Start=0
-End=9000
-Density=0.5
-Color=255,77,77,51
-
-[OrcZFog]
-Style=0
-Start=0
-End=2950
-Density=0.5
-Color=255,77,51,0
-
-[UndeadZFog]
-Style=0
-Start=0
-End=8000
-Density=0.5
-Color=255,0,51,51
-
-[NightElfZFog]
-Style=0
-Start=0
-End=1600
-Density=0.5
-Color=255,51,77,128
+[ArthasIllidanFightSounds]
+Scene1="FinalCinematic"
 
 [Terrain]
 // terrain parameters
@@ -126,8 +190,8 @@ MaxSlope=90
 
 // Global height limits
 // 0 = low ground, each cliff level = 128
-MaxHeight=3000
-MinHeight=-3000
+MaxHeight=1536
+MinHeight=-128
 
 [FlyerMap]
 // Radius, in pathing cells, to search for maximum height
@@ -135,16 +199,10 @@ MaximizeRadius=6
 // Number of times to halve map size
 SmoothLevels=3
 
-[Sound]
-Attenuation=3.0
-MinDist=1200
-MaxDist=20000
-MusicFadeRate=16
-MusicFadeInterval=500
-
 [Light]
 // Vector from light to world
 Direction=0.3,0.3,-0.25
+PortraitAOStrength=20
 
 [SelectionCircle]
 // Defines different textures to be used based on selection circle size.
@@ -182,7 +240,7 @@ Texture=TerrainArt\Blight\Blight
 PuffModel=Environment\BlightDoodad\BlightDoodad.mdl
 PuffDuration=3000 // Duration of a puff, in milliseconds
 PuffInterval=2500 // Interval between checks for new puffs, in milliseconds
-PuffChance=0.7 // Chance for a vertex to create a puff (per interval), in percent
+PuffChance=1 // Chance for a vertex to create a puff (per interval), in percent
 
 // Dirt Chance Table
 // Specifies the chance (in percent) that a neighboring vertex will be changed to dirt
@@ -226,6 +284,12 @@ DeepLevelPathing=52
 
 WavesDepth=25
 
+[TeamColorFilter]
+ColorIndexPlayer=1
+ColorIndexAlly=2
+ColorIndexCreep=24
+ColorIndexEnemy=0
+
 [FogOfWar]
 FoggedTerrain=170,16,16,32
 BlackMaskedTerrain=255,0,0,0
@@ -240,21 +304,29 @@ FoggedBoundaryObject=255,64,64,96
 ShadowImageColor=170,0,0,0
 
 FogColorPlayer=255,255,255,255
-FogColorAlly=255,255,255,0
+FogColorAlly=255,0,255,210
 FogColorEnemy=255,255,0,0
 FogColorResource=255,32,128,128
 FogColorItem=255,240,240,0
 FogColorHero=255,255,255,128
 FogColorDestructable=255,0,160,128
-FogColorCreepAllied=255,255,120,0
+FogColorCreepAllied=255,0,0,50
+FogColorCreepNormal=255,0,0,50
 FogColorBlackMaskAlpha=0
-FogColorDarkMaskAlpha=40
-FogColorFogMaskAlpha=128
+FogColorDarkMaskAlpha=96
+FogColorFogMaskAlpha=192
 FogColorVisibleAlpha=255
 FogColorBlightMask=0,63,63,64
 
 [Minimap]
 MinimapColorBorder=255,60,60,70
+MinimapMiddleCampThreshold=10
+MinimapToughCampThreshold=20
+MinimapMiddleCampScale=1.3
+MinimapWeakCampColor=255,0,200,0
+MinimapMiddleCampColor=255,255,128,0
+MinimapToughCampColor=255,220,0,0
+MinimapCampPulseScale=0.5
 
 [TargetingColors]
 TargetLightColor=180,0,255,0
@@ -262,7 +334,13 @@ SelTargetColor=255,240,200,0
 
 [Glue]
 ControlFadeDuration=0.25
+ControlFadeDurationDebug=0.01
 CustomLoadTimerDuration=10.0
+
+[BattleNetCustomFilter]
+SmallMapRange=2,4
+MediumMapRange=5,8
+LargeMapRange=9,12
 
 [InfoPanel]
 MeleeRangeMax=128
@@ -275,13 +353,6 @@ AttackSlow=2
 AttackAverage=1.5
 AttackFast=1       // lower bound, everything below this is "very fast"
 
-[BattleNetTiers]
-// how many wins are needed to attain that tier
-BattleNetTier2=25       // Footman
-BattleNetTier3=250      // Knight
-BattleNetTier4=500     // ArchMage
-BattleNetTier5=1500     // Uther
-
 [Occlusion]
 MarkImage=ReplaceableTextures\Occlusion\OcclusionMark
 MarkColor=255,255,0,255
@@ -289,10 +360,15 @@ OccluderColor=128,255,255,255
 OccluderFadeTime=300 // Time to fade to OccluderColor, in milliseconds
 BuildingsOcclude=0
 
-[PlacementAlpha]
-PlacementAlpha=200
+[Placement]
+PaidStructureColor=96,128,128,255
+UnpaidStructureColor=96,255,128,128
 
 [PingColor]
 PingColor=255,0,255,0
 PingAttackColor=255,255,0,0
 PingAdvisorColor=255,255,255,0
+PingWaypointColor=255,255,255,255
+
+[Cinematics]
+CinematicPanelAddedShowTime=0.75

@@ -251,7 +251,7 @@ function init_aiClass()
             self[i].strat = self[i].strats[randI]
 
             -- TESTING
-            self[i].strat = "defensive"
+            self[i].strat = "aggressive"
             -- TESTING
 
             print(self[i].strat)
@@ -2145,7 +2145,7 @@ function init_baseClass()
         }
     }
 
-    function base.add(unit, importance, mainBase, update, teleport)
+    function base.add(unit, importance, mainBase, update, teleport, healing)
 
         local teamNumber, regionName, teamName, allied, federation
         local handleId = GetHandleId(unit)
@@ -2181,8 +2181,10 @@ function init_baseClass()
             GroupAddUnit(base.all.g, unit)
 
             -- Add to HEALING Unit Group
-            GroupAddUnit(base[teamName].gHealing, unit)
-
+            if healing then
+                GroupAddUnit(base[teamName].gHealing, unit)
+            end
+            
              -- Add to REGION Unit Group
             GroupAddUnit(base[regionName][teamName].g, unit)
         end

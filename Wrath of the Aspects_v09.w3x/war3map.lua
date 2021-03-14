@@ -2738,68 +2738,70 @@ function addRegions()
 end
 
 function addBases()
-    base.add(gg_unit_h003_0015, 3, false, true, true) -- Allied Arcane Main
-    base.add(gg_unit_h003_0007, 3, false, true, true) -- Federation Arcane Main
 
-    base.add(gg_unit_h014_0017, 2, false, true, true) -- Allied Arcane Hero
-    base.add(gg_unit_h014_0158, 2, false, true, true) -- Federation
+    base.add()
+    base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
+    base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
 
-    base.add(gg_unit_hars_0355, 1, false, true, true) -- Allied Arcane Top
-    base.add(gg_unit_hars_0293, 1, false, true, true) -- Federation
+    base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
+    base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
+
+    base.add(gg_unit_hars_0355, 1, false, true, true, false) -- Allied Arcane Top
+    base.add(gg_unit_hars_0293, 1, false, true, true, false) -- Federation
     
-    base.add(gg_unit_hars_0292, 1, false, true, true) -- Allied Arcane Bottom
-    base.add(gg_unit_hars_0303, 1, false, true, true) -- Federation
+    base.add(gg_unit_hars_0292, 1, false, true, true, false) -- Allied Arcane Bottom
+    base.add(gg_unit_hars_0303, 1, false, true, true, false) -- Federation
     
-    base.add(gg_unit_n00K_0802, 2, false, true, true) -- Allied Blacksmith
-    base.add(gg_unit_n00K_0477, 2, false, true, true) -- Federation
+    base.add(gg_unit_n00K_0802, 2, false, true, true, true) -- Allied Blacksmith
+    base.add(gg_unit_n00K_0477, 2, false, true, true, true) -- Federation
     
-    base.add(gg_unit_h00E_0033, 1, true, true, true) -- Allied Castle
-    base.add(gg_unit_h00E_0081, 1, true, true, true) -- Federation
+    base.add(gg_unit_h00E_0033, 1, true, true, true, true) -- Allied Castle
+    base.add(gg_unit_h00E_0081, 1, true, true, true, true) -- Federation
     
-    base.add(gg_unit_hvlt_0207, 2, false, true, true) -- Allied City Elves
-    base.add(gg_unit_hvlt_0406, 2, false, true, true) -- Federation
+    base.add(gg_unit_hvlt_0207, 2, false, true, true, true) -- Allied City Elves
+    base.add(gg_unit_hvlt_0406, 2, false, true, true, true) -- Federation
     
-    base.add(gg_unit_n00B_0364, 1, false, true, true) -- Allied City Front
-    base.add(gg_unit_n00B_0399, 1, false, true, true) -- Federation
+    base.add(gg_unit_n00B_0364, 1, false, true, true, true) -- Allied City Front
+    base.add(gg_unit_n00B_0399, 1, false, true, true, true) -- Federation
     
-    base.add(gg_unit_n00B_0102, 1, false, true, true) -- Allied City Side
-    base.add(gg_unit_n00B_0038, 1, false, true, true) -- Federation
+    base.add(gg_unit_n00B_0102, 1, false, true, true, true) -- Allied City Side
+    base.add(gg_unit_n00B_0038, 1, false, true, true, true) -- Federation
     
-    base.add(gg_unit_ngt2_0525, 1, false, true, true) -- Allied Kobold
-    base.add(gg_unit_ngt2_0455, 1, false, true, true) -- Federation
+    base.add(gg_unit_ngt2_0525, 1, false, true, true, true) -- Allied Kobold
+    base.add(gg_unit_ngt2_0455, 1, false, true, true, true) -- Federation
     
-    base.add(gg_unit_nheb_0109, 3, false, true, true) -- Allied High Elves
-    base.add(gg_unit_nheb_0036, 3, false, true, true) -- Federation
+    base.add(gg_unit_nheb_0109, 3, false, true, true, true) -- Allied High Elves
+    base.add(gg_unit_nheb_0036, 3, false, true, true, true) -- Federation
     
-    base.add(gg_unit_n001_0048, 2, false, true, true) -- Allied Merc Camp
-    base.add(gg_unit_n001_0049, 2, false, true, true) -- Federation
+    base.add(gg_unit_n001_0048, 2, false, true, true, true) -- Allied Merc Camp
+    base.add(gg_unit_n001_0049, 2, false, true, true, true) -- Federation
         
-    base.add(gg_unit_h006_0074, 2, false, true, true) -- Allied Mine
-    base.add(gg_unit_h006_0055, 2, false, true, true) -- Federation
+    base.add(gg_unit_h006_0074, 2, false, true, true, true) -- Allied Mine
+    base.add(gg_unit_h006_0055, 2, false, true, true, true) -- Federation
         
-    base.add(gg_unit_nmh1_0735, 1, false, true, true) -- Allied Murloc
-    base.add(gg_unit_nmh1_0783, 1, false, true, true) -- Federation
+    base.add(gg_unit_nmh1_0735, 1, false, true, true, false) -- Allied Murloc
+    base.add(gg_unit_nmh1_0783, 1, false, true, true, false) -- Federation
         
-    base.add(gg_unit_nntt_0135, 2, false, true, true) -- Allied Naga
-    base.add(gg_unit_nntt_0132, 2, false, true, true) -- Federation
+    base.add(gg_unit_nntt_0135, 2, false, true, true, true) -- Allied Naga
+    base.add(gg_unit_nntt_0132, 2, false, true, true, true) -- Federation
         
-    base.add(gg_unit_e003_0058, 3, false, true, true) -- Allied Night Elves
-    base.add(gg_unit_e003_0014, 3, false, true, true) -- Federation
+    base.add(gg_unit_e003_0058, 3, false, true, true, true) -- Allied Night Elves
+    base.add(gg_unit_e003_0014, 3, false, true, true, true) -- Federation
             
-    base.add(gg_unit_o001_0075, 2, false, true, true) -- Allied Orcs
-    base.add(gg_unit_o001_0078, 2, false, true, true) -- Federation
+    base.add(gg_unit_o001_0075, 2, false, true, true, true) -- Allied Orcs
+    base.add(gg_unit_o001_0078, 2, false, true, true, true) -- Federation
             
-    base.add(gg_unit_eshy_0120, 1, false, true, true) -- Allied Night Elf Shipyard
-    base.add(gg_unit_eshy_0047, 1, false, true, true) -- Federation
+    base.add(gg_unit_eshy_0120, 1, false, true, true, false) -- Allied Night Elf Shipyard
+    base.add(gg_unit_eshy_0047, 1, false, true, true, false) -- Federation
             
-    base.add(gg_unit_hshy_0011, 1, false, true, true) -- Allied Human Shipyard
-    base.add(gg_unit_hshy_0212, 1, false, true, true) -- Federation
+    base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
+    base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
             
-    base.add(gg_unit_h00F_0029, 2, false, true, true) -- Allied Town
-    base.add(gg_unit_h00F_0066, 2, false, true, true) -- Federation
+    base.add(gg_unit_h00F_0029, 2, false, true, true, true) -- Allied Town
+    base.add(gg_unit_h00F_0066, 2, false, true, true, true) -- Federation
                 
-    base.add(gg_unit_u001_0262, 2, false, true, true) -- Federation
-    base.add(gg_unit_u001_0264, 2, false, true, true) -- Federation
+    base.add(gg_unit_u001_0262, 2, false, true, true, true) -- Federation Undead
+    base.add(gg_unit_u001_0264, 2, false, true, true, true) -- Federation
 end
 
 function Init_luaGlobals()
@@ -6531,7 +6533,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11872.0, -9632.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -19872.0, -2336.0, 270.000, FourCC("e007"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10272.0, -12064.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10336.0, -12128.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -19360.0, 3424.0, 270.000, FourCC("n00Z"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20224.0, -4544.0, 270.000, FourCC("hgtw"))
@@ -6591,6 +6593,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -16800.0, -6880.0, 270.000, FourCC("ncb6"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -15584.0, -6304.0, 270.000, FourCC("ncb6"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -12640.0, -8352.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb0"), -16864.0, -6112.0, 270.000, FourCC("ncb0"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbc"), -18080.0, -4416.0, 270.000, FourCC("ncbc"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18784.0, -4512.0, 90.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -19424.0, -5920.0, 270.000, FourCC("ncba"))
@@ -6687,6 +6690,7 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -15736.2, -1126.7, 245.453, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -24729.3, -7565.4, 58.328, FourCC("hpea"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -15785.7, -7885.1, 103.395, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n002"), -11833.7, -13443.5, 353.485, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -10560.0, 90.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15616.0, -11840.0, 270.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -24568.9, -7426.3, 273.909, FourCC("hpea"))
@@ -6716,7 +6720,7 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nhea"), -23799.0, -295.6, 91.508, FourCC("nhea"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12870.8, -11295.8, 324.658, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -13140.8, -12066.8, 28.045, FourCC("n002"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12811.8, -11603.0, 353.485, FourCC("n002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12023.5, -13896.1, 353.485, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12091.1, -12094.7, 118.557, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12381.2, -12806.8, 91.671, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -12128.1, -11756.7, 144.937, FourCC("n002"))
@@ -6726,6 +6730,9 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10695.9, -11972.9, 167.084, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15808.0, -11200.0, 0.000, FourCC("n006"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -16192.0, -11840.0, 270.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10661.9, -13467.2, 353.485, FourCC("n002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n002"), -10041.0, -12622.0, 353.485, FourCC("n002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n002"), -13339.1, -13763.6, 353.485, FourCC("n002"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -15104.0, -11200.0, 0.000, FourCC("n006"))
 end
 
@@ -7079,8 +7086,6 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("eaow"), -28082.7, 1889.5, 270.000, FourCC("eaow"))
     IssueImmediateOrder(u, "unroot")
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), 3679.6, 3268.8, 38.420, FourCC("nvdl"))
-    u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -27004.7, -750.3, 270.000, FourCC("etrp"))
-    IssueImmediateOrder(u, "unroot")
     u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -26964.9, -222.1, 270.000, FourCC("etrp"))
     IssueImmediateOrder(u, "unroot")
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -27933.5, 2165.6, 195.299, FourCC("e008"))
@@ -7264,7 +7269,6 @@ function CreateNeutralPassiveBuildings()
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), -24512.0, -4032.0, 270.000, FourCC("ncp3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), 1344.0, -5056.0, 270.000, FourCC("ncp3"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncb0"), -16864.0, -6112.0, 270.000, FourCC("ncb0"))
 end
 
 function CreateNeutralPassive()
@@ -8664,18 +8668,8 @@ function Trig_Event_Count_Func005Func007C()
     return true
 end
 
-function Trig_Event_Count_Func005Func008Func006C()
-    if (not (udg_Event_Count[1] > udg_Event_Count[2])) then
-        return false
-    end
-    return true
-end
-
 function Trig_Event_Count_Func005Func008C()
-    if (not (udg_TEMP_Real <= 0.02)) then
-        return false
-    end
-    if (not (udg_TEMP_Real >= -0.02)) then
+    if (not (udg_Event_Count[1] > udg_Event_Count[2])) then
         return false
     end
     return true
@@ -8712,19 +8706,13 @@ function Trig_Event_Count_Actions()
         else
         end
         if (Trig_Event_Count_Func005Func008C()) then
-            CreateNUnitsAtLoc(1, udg_Event_Unit_Type, Player(PLAYER_NEUTRAL_AGGRESSIVE), udg_TEMP_Pos2, bj_UNIT_FACING)
+            CreateNUnitsAtLoc(1, udg_Event_Unit_Type, Player(18), udg_TEMP_Pos2, bj_UNIT_FACING)
             udg_Doom_Warden = GetLastCreatedUnit()
-            DisplayTextToForce(udg_ALL_PLAYERS, "TRIGSTR_3989")
+            DisplayTextToForce(udg_ALL_PLAYERS, "TRIGSTR_4573")
         else
-            if (Trig_Event_Count_Func005Func008Func006C()) then
-                CreateNUnitsAtLoc(1, udg_Event_Unit_Type, Player(18), udg_TEMP_Pos2, bj_UNIT_FACING)
-                udg_Doom_Warden = GetLastCreatedUnit()
-                DisplayTextToForce(udg_ALL_PLAYERS, "TRIGSTR_3990")
-            else
-                CreateNUnitsAtLoc(1, udg_Event_Unit_Type, Player(21), udg_TEMP_Pos2, bj_UNIT_FACING)
-                udg_Doom_Warden = GetLastCreatedUnit()
-                DisplayTextToForce(udg_ALL_PLAYERS, "TRIGSTR_3991")
-            end
+            CreateNUnitsAtLoc(1, udg_Event_Unit_Type, Player(21), udg_TEMP_Pos2, bj_UNIT_FACING)
+            udg_Doom_Warden = GetLastCreatedUnit()
+            DisplayTextToForce(udg_ALL_PLAYERS, "TRIGSTR_4572")
         end
         SetUnitUserData(GetLastCreatedUnit(), 4)
         SetUnitPathing(udg_Doom_Warden, false)

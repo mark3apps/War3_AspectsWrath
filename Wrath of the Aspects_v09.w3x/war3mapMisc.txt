@@ -42,6 +42,5 @@ NeedHeroXPFormulaB=300.0
 StrAttackBonus=1.0
 StrHitPointBonus=20.0
 StrRegenBonus=0.05
-StructureDecayTime=
 SummonedKillFactor=0.3
 
