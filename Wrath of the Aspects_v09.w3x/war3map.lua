@@ -2333,7 +2333,7 @@ function init_Lua()
         init_spawnClass()
         init_aiClass()
         init_baseClass()
-        --init_gateClass()
+        init_gateClass()
     end, "Define Classes")
     --dprint("Classes Defined", 2)
 
@@ -4298,7 +4298,7 @@ function init_aiClass()
                 local regionsPick = {}
                 local baseAdvantage
 
-                if self[i].strat == "agressive" then
+                if self[i].strat == "aggressive" then
                     baseAdvantage = self[i].teamName
                 elseif self[i].strat == "defensive" then
                     baseAdvantage = self[i].teamNameEnemy
@@ -5649,9 +5649,9 @@ function init_baseClass()
             GroupAddUnit(base.all.g, unit)
 
             -- Add to HEALING Unit Group
-            --if healing then
-                GroupAddUnit(base[teamName].gHealing, unit)
-            --end
+            -- if healing then
+            GroupAddUnit(base[teamName].gHealing, unit)
+            -- end
 
             -- Add to REGION Unit Group
             GroupAddUnit(base[regionName][teamName].g, unit)
@@ -5893,7 +5893,7 @@ function init_gateClass()
 
     function gate.add(unit)
 
-        local playerForce, facingAngle, unitTypeOpen
+        local playerForce, facingAngle, unitTypeClosed
         local player = GetOwningPlayer(unit)
         local unitType = GetUnitTypeId(unit)
         local x = GetUnitX(unit)
@@ -5909,41 +5909,48 @@ function init_gateClass()
 
         -- Determine Proper Angle
         if unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 45 Degrees
-            facingAngle = 45
-        elseif unitType == FourCC("h01F") or unitType == FourCC("h01B") or unitType == FourCC("h01F") or unitType ==
-            FourCC("h01B") then -- City Gate and Arcane Gate 0 Degrees
-            facingAngle = 0
-        elseif unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 135 Degrees
-            facingAngle = 135
-        end
-
-        -- Find Open Unit Type
-        if unitType == FourCC("h01G") then -- City Gate 0
-            unitTypeOpen = FourCC("h01C")
-
-        elseif unitType == FourCC("h01F") then -- City Gate 45
-            unitTypeOpen = FourCC("h01B")
-
-        elseif unitType == FourCC("h01E") then -- City Gate 135
-            unitTypeOpen = FourCC("h01D")
-
-        elseif unitType == FourCC("h01T") then -- Arcane Gate 0
-            unitTypeOpen = FourCC("h01U")
+            facingAngle = 270
+        elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or unitType ==
+            FourCC("h00U") then -- City Gate and Arcane Gate 0 Degrees
+            facingAngle = 180
+        elseif unitType == FourCC("h01E") or unitType == FourCC("h01D") then -- City Gate 135 Degrees
+            facingAngle = 180
+        else
+            facingAngle = 180
         end
 
         if playerForce == "federation" then
-            facingAngle = facingAngle + 180
+            facingAngle = facingAngle - 180
+        end
+
+        -- Find Open Unit Type
+        if unitType == FourCC("h01C") then -- City Gate 0
+            unitTypeClosed = FourCC("h01G")
+
+        elseif unitType == FourCC("h01B") then -- City Gate 45
+            unitTypeClosed = FourCC("h01F")
+
+        elseif unitType == FourCC("h01D") then -- City Gate 135
+            unitTypeClosed = FourCC("h01E")
+
+        elseif unitType == FourCC("h00U") then -- Arcane Gate 0
+            unitTypeClosed = FourCC("h00T")
         end
 
         RemoveUnit(unit)
         unit = CreateUnit(player, unitType, x, y, facingAngle)
 
-        GroupAddUnit(gate.g, unit)
-        GroupAddUnit(gate.gClosed, unit)
+        -- Play animation
+        SetUnitAnimation(unit, "Death Alternate 1")
 
+
+        GroupAddUnit(gate.g, unit)
+        GroupAddUnit(gate.gOpen, unit)
+
+        gate[unitId] = {}
         gate[unitId].force = playerForce
-        gate[unitId].unitTypeClosed = unitType
-        gate[unitId].unitTypeOpen = unitTypeOpen
+        gate[unitId].unitTypeClosed = unitTypeClosed
+        gate[unitId].unitTypeOpen = unitType
         gate[unitId].x = x
         gate[unitId].y = y
         gate[unitId].facing = facingAngle
@@ -5952,8 +5959,9 @@ function init_gateClass()
 
     function gate.update()
 
-        ForForce(gate.g, function()
-            local u, heroes
+        ForGroup(gate.g, function()
+            local u
+            local heroes = 0
             local enemies = 0
             local unit = GetEnumUnit()
             local info = gate[GetHandleId(unit)]
@@ -5962,26 +5970,29 @@ function init_gateClass()
 
             g = GetUnitsInRangeOfLocAll(900, l)
 
+           
             while true do
                 u = FirstOfGroup(g)
                 if u == nil then
                     break
                 end
 
-                if not IsUnitAlly(u, GetOwningPlayer(unit)) then
+                if not IsUnitAlly(u, GetOwningPlayer(unit)) and IsUnitAliveBJ(u) then
                     enemies = enemies + 1
+                end
 
-                    if IsUnitType(unit, UNIT_TYPE_HERO) then
-                        heroes = heroes + 1
-                    end
+                if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
+                    heroes = heroes + 1
                 end
 
                 GroupRemoveUnit(g, u)
             end
             DestroyGroup(g)
 
-            if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
+            print("Enemies:" .. enemies .. " Heroes: " .. heroes)
 
+            if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
+                print("CLOSE GATE")
                 GroupRemoveUnit(gate.gOpen, unit)
                 gate[GetHandleId(unit)] = {}
 
@@ -5998,7 +6009,7 @@ function init_gateClass()
                 SetUnitAnimation(unit, "stand")
 
             elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
-
+                print("OPEN GATE")
                 GroupRemoveUnit(gate.gClosed, unit)
                 gate[GetHandleId(unit)] = {}
 
@@ -6019,11 +6030,18 @@ function init_gateClass()
         end)
     end
 
+    --
+    --  TRIGGERS
+    --
+
     function gate.InitTrig_update()
         local t = CreateTrigger()
         TriggerRegisterTimerEventPeriodic(t, 2)
         TriggerAddAction(t, function()
-            gate.update()
+
+            debugfunc(function()
+                gate.update()
+            end, "Init Spawn")
         end)
     end
 
@@ -6056,8 +6074,48 @@ function init_gateClass()
         end)
     end
 
-    gate.InitTrig_update()
-    gate.InitTrig_dies()
+    --
+    -- MAIN
+    --
+
+    function gate.main()
+        local unitId, u
+        local g = CreateGroup()
+
+        for i = 1, 4 do
+            if i == 1 then
+                unitId = FourCC("h01B")
+            elseif i == 2 then
+                unitId = FourCC("h01D")
+            elseif i == 3 then
+                unitId = FourCC("h01C")
+            else
+                unitId = FourCC("h00U")
+            end
+
+            g = GetUnitsOfTypeIdAll(unitId)
+
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                print("adding" .. GetUnitName(u))
+                gate.add(u)
+                print("Added")
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+        end
+
+        -- Init Triggers
+        gate.InitTrig_update()
+        gate.InitTrig_dies()
+    end
+
+    gate.main()
 end
 
 --
@@ -6453,10 +6511,6 @@ function CreateBuildingsForPlayer0()
     local t
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("halt"), -24992.0, -4576.0, 270.000, FourCC("halt"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01B"), -14912.0, -6592.0, 270.000, FourCC("h01B"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -14080.0, -6656.0, 270.000, FourCC("h01D"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -12736.0, -7104.0, 270.000, FourCC("h01D"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -12224.0, -8000.0, 270.000, FourCC("h01C"))
 end
 
 function CreateBuildingsForPlayer1()
@@ -6587,7 +6641,7 @@ function CreateBuildingsForPlayer20()
     SetUnitColor(gg_unit_n001_0048, ConvertPlayerColor(9))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -22400.0, -11392.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -14272.0, -9536.0, 270.000, FourCC("h00X"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -20544.0, -11200.0, 270.000, FourCC("h00T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -20544.0, -11200.0, 270.000, FourCC("h00U"))
     gg_unit_e003_0058 = BlzCreateUnitWithSkin(p, FourCC("e003"), -21056.0, -1536.0, 270.000, FourCC("e003"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -16064.0, -7424.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -16416.0, -7008.0, 270.000, FourCC("ncb9"))
@@ -6664,9 +6718,9 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -11584.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -10816.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("hhou"), -16000.0, -6656.0, 270.000, FourCC("hhou"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -21632.0, -12928.0, 270.000, FourCC("h00T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -21632.0, -12928.0, 270.000, FourCC("h00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("npgf"), -15648.0, -2080.0, 270.000, FourCC("npgf"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -21632.0, -9472.0, 270.000, FourCC("h00T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -21632.0, -9472.0, 270.000, FourCC("h00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -19328.0, -11200.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -20800.0, -10624.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -20800.0, -11776.0, 270.000, FourCC("n007"))
@@ -6788,6 +6842,9 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -17952.0, -5824.0, 0.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -17504.0, -6176.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -17792.0, -5120.0, 270.000, FourCC("h004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01B"), -14912.0, -6592.0, 270.000, FourCC("h01B"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -14144.0, -6656.0, 270.000, FourCC("h01D"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -12736.0, -7104.0, 270.000, FourCC("h01D"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -18400.0, -5728.0, 90.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20800.0, -6912.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("oalt"), -15904.0, -1760.0, 270.000, FourCC("oalt"))
@@ -6818,6 +6875,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nfv4"), -21984.0, -5024.0, 0.000, FourCC("nfv4"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -19552.0, -7840.0, 90.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -19360.0, -7840.0, 90.000, FourCC("ncbb"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -12224.0, -8000.0, 270.000, FourCC("h01C"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14048.0, -8544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14240.0, -8544.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("obar"), -16064.0, -2496.0, 270.000, FourCC("obar"))
@@ -6985,7 +7043,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("osld"), -8832.0, -6592.0, 270.000, FourCC("osld"))
     u = BlzCreateUnitWithSkin(p, FourCC("ovln"), -9472.0, -7488.0, 270.000, FourCC("ovln"))
     u = BlzCreateUnitWithSkin(p, FourCC("o000"), -6912.0, -9024.0, 270.000, FourCC("o000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -1536.0, 320.0, 270.000, FourCC("h00T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -1536.0, 320.0, 270.000, FourCC("h00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -4640.0, -13344.0, 270.000, FourCC("nmg1"))
     u = BlzCreateUnitWithSkin(p, FourCC("uzg1"), -9632.0, -4832.0, 270.000, FourCC("uzg1"))
     gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -8544.0, 32.0, 270.000, FourCC("hshy"))
@@ -6995,11 +7053,11 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -11296.0, 544.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10656.0, 3552.0, 270.000, FourCC("n00M"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -1536.0, 3840.0, 270.000, FourCC("h00T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -1536.0, 3840.0, 270.000, FourCC("h00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -3840.0, 256.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -10912.0, 864.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 150)
-    u = BlzCreateUnitWithSkin(p, FourCC("h00T"), -2624.0, 2112.0, 270.000, FourCC("h00T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -2624.0, 2112.0, 270.000, FourCC("h00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -9824.0, 2336.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -8896.0, 448.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("ofor"), -8224.0, -6880.0, 270.000, FourCC("ofor"))
