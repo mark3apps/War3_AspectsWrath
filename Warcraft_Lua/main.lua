@@ -86,7 +86,8 @@ function init_Delayed_1()
             startHeroPicker()
         end, "Start Delayed Triggers")
         --dprint("AI Started", 2)
-
+        
+        gate.main()
         orderStartingUnits()
         spawn:startSpawn()
 

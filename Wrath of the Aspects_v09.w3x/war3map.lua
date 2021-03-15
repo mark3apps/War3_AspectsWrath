@@ -2408,7 +2408,8 @@ function init_Delayed_1()
             startHeroPicker()
         end, "Start Delayed Triggers")
         --dprint("AI Started", 2)
-
+        
+        gate.main()
         orderStartingUnits()
         spawn:startSpawn()
 
@@ -5891,36 +5892,35 @@ function init_gateClass()
     gate.gClosed = CreateGroup()
     gate.gOpen = CreateGroup()
 
-    function gate.add(unit)
+    function gate.add(unit, owningPlayer)
 
         local playerForce, facingAngle, unitTypeClosed
-        local owningPlayer = GetOwningPlayer(unit)
         local unitType = GetUnitTypeId(unit)
         local x = GetUnitX(unit)
         local y = GetUnitY(unit)
 
         -- Find if unit is Allied or Fed
-        if GetConvertedPlayerId(owningPlayer) > 20 then
-            playerForce = "federation"
-        else
+        if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
             playerForce = "allied"
+        else
+            playerForce = "federation"
         end
 
         -- Determine Proper Angle
         if unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 45 Degrees
-            facingAngle = 270
+            facingAngle = 90
         elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or unitType ==
             FourCC("h00U") then -- City Gate and Arcane Gate 0 Degrees
-            facingAngle = 180
+            facingAngle = 0
         elseif unitType == FourCC("h01E") or unitType == FourCC("h01D") then -- City Gate 135 Degrees
-            facingAngle = 180
+            facingAngle = 0
         else
-            facingAngle = 180
+            facingAngle = 0
         end
 
         if playerForce == "federation" then
             print("FED")
-            facingAngle = facingAngle - 180
+            facingAngle = facingAngle + 180
         end
 
         -- Find Open Unit Type
@@ -5988,7 +5988,7 @@ function init_gateClass()
             end
             DestroyGroup(g)
 
-            print("Enemies:" .. enemies .. " Heroes: " .. heroes)
+            -- print("Enemies:" .. enemies .. " Heroes: " .. heroes)
 
             if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
                 print("CLOSE GATE")
@@ -6031,7 +6031,7 @@ function init_gateClass()
             end
 
         end)
-        print("--")
+        -- print("--")
     end
 
     --
@@ -6053,48 +6053,63 @@ function init_gateClass()
         gate.Trig_gateDies = CreateTrigger()
         TriggerRegisterAnyUnitEventBJ(gate.Trig_gateDies, EVENT_PLAYER_UNIT_DEATH)
         TriggerAddAction(gate.Trig_gateDies, function()
-            local dyingUnit = GetDyingUnit()
 
-            if IsUnitInGroup(dyingUnit, gate.g) then
-                local player, unit, unitType, unitTypeOpen
-                local x = GetUnitX(dyingUnit)
-                local y = GetUnitY(dyingUnit)
-                local unitType = GetUnitTypeId(dyingUnit)
-                local owningPlayer = GetOwningPlayer(dyingUnit)
+            debugfunc(function()
+                local dyingUnit = GetDyingUnit()
 
-                print("DEAD " .. x)
+                if IsUnitInGroup(dyingUnit, gate.g) then
+                    local player, unit, unitType, unitTypeOpen, facingAngle
+                    local x = GetUnitX(dyingUnit)
+                    local y = GetUnitY(dyingUnit)
+                    local unitType = GetUnitTypeId(dyingUnit)
+                    local owningPlayer = GetOwningPlayer(dyingUnit)
 
-                -- Find Open Unit Type
-                if unitType == FourCC("h01G") then -- City Gate 0
-                    unitTypeOpen = FourCC("h01C")
+                    print("DEAD " .. x)
 
-                elseif unitType == FourCC("h01F") then -- City Gate 45
-                    unitTypeOpen = FourCC("h01B")
+                    -- Find Open Unit Type
+                    if unitType == FourCC("h01G") then -- City Gate 0
+                        unitTypeOpen = FourCC("h01C")
 
-                elseif unitType == FourCC("h01E") then -- City Gate 135
-                    unitTypeOpen = FourCC("h01D")
+                    elseif unitType == FourCC("h01F") then -- City Gate 45
+                        unitTypeOpen = FourCC("h01B")
 
-                elseif unitType == FourCC("h00T") then -- Arcane Gate 0
-                    unitTypeOpen = FourCC("h00U")
+                    elseif unitType == FourCC("h01E") then -- City Gate 135
+                        unitTypeOpen = FourCC("h01D")
+
+                    elseif unitType == FourCC("h00T") then -- Arcane Gate 0
+                        unitTypeOpen = FourCC("h00U")
+                    end
+
+                    -- Determine Proper Angle
+                    if unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 45 Degrees
+                        facingAngle = 90
+                    elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or
+                        unitType == FourCC("h00U") then -- City Gate and Arcane Gate 0 Degrees
+                        facingAngle = 0
+                    elseif unitType == FourCC("h01E") or unitType == FourCC("h01D") then -- City Gate 135 Degrees
+                        facingAngle = 0
+                    else
+                        facingAngle = 0
+                    end
+
+
+                    -- Remove Traces of Unit
+                    GroupRemoveUnit(gate.g, dyingUnit)
+                    RemoveUnit(dyingUnit)
+
+                    if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
+                        player = Player(21)
+                    else
+                        player = Player(18)
+                        facingAngle = facingAngle + 180
+                    end
+
+                    unit = CreateUnit(player, unitTypeOpen, x, y, facingAngle)
+
+                    -- Play Death animation
+                    SetUnitAnimation(unit, "Death 1")
                 end
-
-                print("Dying: " .. info.facingAngle)
-
-                -- Remove Traces of Unit
-                GroupRemoveUnit(gate.g, dyingUnit)
-                RemoveUnit(dyingUnit)
-
-                if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
-                    player = Player(21)
-                else
-                    player = Player(18)
-                end
-
-                unit = CreateUnit(player, unitTypeOpen, x, y, 0)
-
-                -- Play Death animation
-                SetUnitAnimation(unit, "Death Alternate 1")
-            end
+            end, "Start Delayed Triggers")
         end)
     end
 
@@ -6126,7 +6141,7 @@ function init_gateClass()
                 end
 
                 print("adding" .. GetUnitName(u))
-                gate.add(u)
+                gate.add(u, GetOwningPlayer(u))
                 print("Added")
 
                 GroupRemoveUnit(g, u)
@@ -6139,7 +6154,6 @@ function init_gateClass()
         gate.InitTrig_dies()
     end
 
-    gate.main()
 end
 
 --
