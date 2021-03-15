@@ -5894,17 +5894,16 @@ function init_gateClass()
     function gate.add(unit)
 
         local playerForce, facingAngle, unitTypeClosed
-        local player = GetOwningPlayer(unit)
+        local owningPlayer = GetOwningPlayer(unit)
         local unitType = GetUnitTypeId(unit)
         local x = GetUnitX(unit)
         local y = GetUnitY(unit)
-        local unitId = GetHandleId(unit)
 
         -- Find if unit is Allied or Fed
-        if IsPlayerInForce(player, udg_PLAYERGRPallied) then
-            playerForce = "allied"
-        else
+        if GetConvertedPlayerId(owningPlayer) > 20 then
             playerForce = "federation"
+        else
+            playerForce = "allied"
         end
 
         -- Determine Proper Angle
@@ -5920,6 +5919,7 @@ function init_gateClass()
         end
 
         if playerForce == "federation" then
+            print("FED")
             facingAngle = facingAngle - 180
         end
 
@@ -5938,15 +5938,15 @@ function init_gateClass()
         end
 
         RemoveUnit(unit)
-        unit = CreateUnit(player, unitType, x, y, facingAngle)
+        unit = CreateUnit(owningPlayer, unitType, x, y, facingAngle)
 
         -- Play animation
         SetUnitAnimation(unit, "Death Alternate 1")
 
-
         GroupAddUnit(gate.g, unit)
         GroupAddUnit(gate.gOpen, unit)
 
+        local unitId = GetHandleId(unit)
         gate[unitId] = {}
         gate[unitId].force = playerForce
         gate[unitId].unitTypeClosed = unitTypeClosed
@@ -5970,7 +5970,6 @@ function init_gateClass()
 
             g = GetUnitsInRangeOfLocAll(900, l)
 
-           
             while true do
                 u = FirstOfGroup(g)
                 if u == nil then
@@ -5994,6 +5993,7 @@ function init_gateClass()
             if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
                 print("CLOSE GATE")
                 GroupRemoveUnit(gate.gOpen, unit)
+                GroupRemoveUnit(gate.g, unit)
                 gate[GetHandleId(unit)] = {}
 
                 -- Replace Gate with Closed Gate
@@ -6004,6 +6004,7 @@ function init_gateClass()
                 unit = GetLastReplacedUnitBJ()
                 gate[GetHandleId(unit)] = info
                 GroupAddUnit(gate.gClosed, unit)
+                GroupAddUnit(gate.g, unit)
 
                 -- Play animation
                 SetUnitAnimation(unit, "stand")
@@ -6011,6 +6012,7 @@ function init_gateClass()
             elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
                 print("OPEN GATE")
                 GroupRemoveUnit(gate.gClosed, unit)
+                GroupRemoveUnit(gate.g, unit)
                 gate[GetHandleId(unit)] = {}
 
                 -- Replace Gate with Closed Gate
@@ -6021,6 +6023,7 @@ function init_gateClass()
                 unit = GetLastReplacedUnitBJ()
                 gate[GetHandleId(unit)] = info
                 GroupAddUnit(gate.gOpen, unit)
+                GroupAddUnit(gate.g, unit)
 
                 -- Play animation
                 SetUnitAnimation(unit, "Death Alternate 1")
@@ -6028,6 +6031,7 @@ function init_gateClass()
             end
 
         end)
+        print("--")
     end
 
     --
@@ -6049,24 +6053,44 @@ function init_gateClass()
         gate.Trig_gateDies = CreateTrigger()
         TriggerRegisterAnyUnitEventBJ(gate.Trig_gateDies, EVENT_PLAYER_UNIT_DEATH)
         TriggerAddAction(gate.Trig_gateDies, function()
-            local dyingUnit = GetTriggerUnit()
+            local dyingUnit = GetDyingUnit()
 
             if IsUnitInGroup(dyingUnit, gate.g) then
-                local player
-                local info = gate[GetHandleId(dyingUnit)]
+                local player, unit, unitType, unitTypeOpen
+                local x = GetUnitX(dyingUnit)
+                local y = GetUnitY(dyingUnit)
+                local unitType = GetUnitTypeId(dyingUnit)
+                local owningPlayer = GetOwningPlayer(dyingUnit)
+
+                print("DEAD " .. x)
+
+                -- Find Open Unit Type
+                if unitType == FourCC("h01G") then -- City Gate 0
+                    unitTypeOpen = FourCC("h01C")
+
+                elseif unitType == FourCC("h01F") then -- City Gate 45
+                    unitTypeOpen = FourCC("h01B")
+
+                elseif unitType == FourCC("h01E") then -- City Gate 135
+                    unitTypeOpen = FourCC("h01D")
+
+                elseif unitType == FourCC("h00T") then -- Arcane Gate 0
+                    unitTypeOpen = FourCC("h00U")
+                end
+
+                print("Dying: " .. info.facingAngle)
 
                 -- Remove Traces of Unit
                 GroupRemoveUnit(gate.g, dyingUnit)
                 RemoveUnit(dyingUnit)
-                gate[GetHandleId(dyingUnit)] = {}
 
-                if info.force == "allied" then
+                if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
                     player = Player(21)
                 else
                     player = Player(18)
                 end
 
-                CreateUnit(player, info.unitTypeOpen, info.x, info.y, info.facingAngle)
+                unit = CreateUnit(player, unitTypeOpen, x, y, 0)
 
                 -- Play Death animation
                 SetUnitAnimation(unit, "Death Alternate 1")
@@ -6819,7 +6843,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18400.0, -4512.0, 90.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmg0"), -18080.0, 4832.0, 270.000, FourCC("nmg0"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18464.0, -6560.0, 270.000, FourCC("ncb9"))
-    u = BlzCreateUnitWithSkin(p, FourCC("o000"), -13952.0, 256.0, 270.000, FourCC("o000"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01A"), -16256.0, -6400.0, 270.000, FourCC("h01A"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -16800.0, -6880.0, 270.000, FourCC("ncb6"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb6"), -15584.0, -6304.0, 270.000, FourCC("ncb6"))
@@ -6844,7 +6867,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -17792.0, -5120.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01B"), -14912.0, -6592.0, 270.000, FourCC("h01B"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -14144.0, -6656.0, 270.000, FourCC("h01D"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -12736.0, -7104.0, 270.000, FourCC("h01D"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -12800.0, -7040.0, 270.000, FourCC("h01D"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -18400.0, -5728.0, 90.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20800.0, -6912.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("oalt"), -15904.0, -1760.0, 270.000, FourCC("oalt"))
@@ -6913,6 +6936,10 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -13792.0, -7712.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -19168.0, -1760.0, 270.000, FourCC("e007"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -18432.0, -2624.0, 270.000, FourCC("ngob"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -14816.0, -14112.0, 270.000, FourCC("ncb3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb0"), -14496.0, -13792.0, 270.000, FourCC("ncb0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -14944.0, -13152.0, 270.000, FourCC("ncb3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o005"), -13952.0, 256.0, 270.000, FourCC("o005"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -14496.0, -7392.0, 270.000, FourCC("ncb9"))
 end
 
@@ -7259,6 +7286,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -10208.0, -1120.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -9376.0, -1376.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -4128.0, -7456.0, 270.000, FourCC("e007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -10368.0, -2048.0, 270.000, FourCC("h01D"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncnt"), -9824.0, -7840.0, 270.000, FourCC("ncnt"))
 end
 
@@ -7302,6 +7330,7 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -9217.2, -1783.7, 211.092, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -7001.6, -1508.7, 304.171, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -6824.6, -1861.5, 14.969, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11289.7, -6949.3, 267.701, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -7939.0, -1806.1, 45.020, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -7382.3, -1202.9, 283.396, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -5428.7, -2451.3, 313.894, FourCC("h007"))
@@ -7310,6 +7339,19 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -6932.2, -864.0, 261.631, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -3024.7, -11838.2, 50.140, FourCC("nmyr"))
     u = BlzCreateUnitWithSkin(p, FourCC("n006"), -8064.0, 2112.0, 180.000, FourCC("n006"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11216.4, -7185.4, 253.726, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11160.3, -7589.1, 135.905, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11129.5, -7791.3, 49.693, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11057.1, -8006.9, 339.543, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -10902.8, -8227.5, 275.875, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11177.7, -7370.5, 333.907, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11329.8, -6751.8, 150.342, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11390.3, -6590.2, 87.190, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11548.5, -6551.0, 359.022, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h018"), -11098.0, -7134.1, 104.945, FourCC("h018"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h018"), -10969.1, -7538.4, 166.030, FourCC("h018"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h018"), -11220.8, -6642.4, 193.838, FourCC("h018"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h018"), -10905.9, -7951.9, 228.852, FourCC("h018"))
 end
 
 function CreateNeutralHostile()
@@ -11683,7 +11725,7 @@ function InitCustomPlayerSlots()
     SetPlayerColor(Player(6), ConvertPlayerColor(6))
     SetPlayerRacePreference(Player(6), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(6), false)
-    SetPlayerController(Player(6), MAP_CONTROL_COMPUTER)
+    SetPlayerController(Player(6), MAP_CONTROL_USER)
     SetPlayerStartLocation(Player(7), 7)
     SetPlayerColor(Player(7), ConvertPlayerColor(7))
     SetPlayerRacePreference(Player(7), RACE_PREF_HUMAN)
@@ -12069,72 +12111,78 @@ function InitCustomTeams()
 end
 
 function InitAllyPriorities()
-    SetStartLocPrioCount(0, 10)
+    SetStartLocPrioCount(0, 11)
     SetStartLocPrio(0, 0, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(0, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(0, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(0, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(0, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(0, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(1, 10)
+    SetStartLocPrio(0, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(0, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(1, 11)
     SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 1, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(1, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(1, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(1, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(1, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(1, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(1, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(2, 10)
+    SetStartLocPrio(1, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(1, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(1, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(1, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(1, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(1, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(2, 11)
     SetStartLocPrio(2, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 2, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(2, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(2, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(3, 10)
+    SetStartLocPrio(2, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(2, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(3, 11)
     SetStartLocPrio(3, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 2, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 3, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(3, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(3, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(4, 10)
+    SetStartLocPrio(3, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(3, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(4, 11)
     SetStartLocPrio(4, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 2, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 3, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(4, 4, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(4, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(5, 10)
+    SetStartLocPrio(4, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(4, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(5, 11)
     SetStartLocPrio(5, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 2, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 3, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(5, 4, 4, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 5, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(5, 9, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 5, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 6, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(5, 10, 11, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(6, 11)
     SetStartLocPrio(6, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 1, 1, MAP_LOC_PRIO_HIGH)
@@ -12147,61 +12195,66 @@ function InitAllyPriorities()
     SetStartLocPrio(6, 8, 9, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 9, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(6, 10, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(7, 10)
+    SetStartLocPrioCount(7, 11)
     SetStartLocPrio(7, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 2, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 3, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 4, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(7, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 6, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(7, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(8, 10)
+    SetStartLocPrio(7, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 7, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(7, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(8, 11)
     SetStartLocPrio(8, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 2, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 3, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 4, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(8, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 7, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(8, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(9, 10)
+    SetStartLocPrio(8, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 7, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 8, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(8, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(9, 11)
     SetStartLocPrio(9, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 2, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 3, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 4, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(9, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 8, 10, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(9, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(10, 10)
+    SetStartLocPrio(9, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 7, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 8, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(9, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(10, 11)
     SetStartLocPrio(10, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 2, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 3, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 4, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(10, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(10, 9, 11, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrioCount(11, 10)
+    SetStartLocPrio(10, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 7, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 8, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 9, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(10, 10, 11, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(11, 11)
     SetStartLocPrio(11, 0, 0, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 1, 1, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 2, 2, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 3, 3, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 4, 4, MAP_LOC_PRIO_HIGH)
     SetStartLocPrio(11, 5, 5, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 6, 7, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 7, 8, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 8, 9, MAP_LOC_PRIO_HIGH)
-    SetStartLocPrio(11, 9, 10, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 6, 6, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 7, 7, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 8, 8, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 9, 9, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrio(11, 10, 10, MAP_LOC_PRIO_HIGH)
     SetStartLocPrioCount(12, 2)
     SetStartLocPrio(12, 0, 5, MAP_LOC_PRIO_LOW)
     SetStartLocPrio(12, 1, 17, MAP_LOC_PRIO_LOW)

@@ -2424,17 +2424,16 @@ function init_gateClass()
     function gate.add(unit)
 
         local playerForce, facingAngle, unitTypeClosed
-        local player = GetOwningPlayer(unit)
+        local owningPlayer = GetOwningPlayer(unit)
         local unitType = GetUnitTypeId(unit)
         local x = GetUnitX(unit)
         local y = GetUnitY(unit)
-        local unitId = GetHandleId(unit)
 
         -- Find if unit is Allied or Fed
-        if IsPlayerInForce(player, udg_PLAYERGRPallied) then
-            playerForce = "allied"
-        else
+        if GetConvertedPlayerId(owningPlayer) > 20 then
             playerForce = "federation"
+        else
+            playerForce = "allied"
         end
 
         -- Determine Proper Angle
@@ -2450,6 +2449,7 @@ function init_gateClass()
         end
 
         if playerForce == "federation" then
+            print("FED")
             facingAngle = facingAngle - 180
         end
 
@@ -2468,15 +2468,15 @@ function init_gateClass()
         end
 
         RemoveUnit(unit)
-        unit = CreateUnit(player, unitType, x, y, facingAngle)
+        unit = CreateUnit(owningPlayer, unitType, x, y, facingAngle)
 
         -- Play animation
         SetUnitAnimation(unit, "Death Alternate 1")
 
-
         GroupAddUnit(gate.g, unit)
         GroupAddUnit(gate.gOpen, unit)
 
+        local unitId = GetHandleId(unit)
         gate[unitId] = {}
         gate[unitId].force = playerForce
         gate[unitId].unitTypeClosed = unitTypeClosed
@@ -2500,7 +2500,6 @@ function init_gateClass()
 
             g = GetUnitsInRangeOfLocAll(900, l)
 
-           
             while true do
                 u = FirstOfGroup(g)
                 if u == nil then
@@ -2519,11 +2518,12 @@ function init_gateClass()
             end
             DestroyGroup(g)
 
-            print("Enemies:" .. enemies .. " Heroes: " .. heroes)
+            --print("Enemies:" .. enemies .. " Heroes: " .. heroes)
 
             if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
                 print("CLOSE GATE")
                 GroupRemoveUnit(gate.gOpen, unit)
+                GroupRemoveUnit(gate.g, unit)
                 gate[GetHandleId(unit)] = {}
 
                 -- Replace Gate with Closed Gate
@@ -2534,6 +2534,7 @@ function init_gateClass()
                 unit = GetLastReplacedUnitBJ()
                 gate[GetHandleId(unit)] = info
                 GroupAddUnit(gate.gClosed, unit)
+                GroupAddUnit(gate.g, unit)
 
                 -- Play animation
                 SetUnitAnimation(unit, "stand")
@@ -2541,6 +2542,7 @@ function init_gateClass()
             elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
                 print("OPEN GATE")
                 GroupRemoveUnit(gate.gClosed, unit)
+                GroupRemoveUnit(gate.g, unit)
                 gate[GetHandleId(unit)] = {}
 
                 -- Replace Gate with Closed Gate
@@ -2551,6 +2553,7 @@ function init_gateClass()
                 unit = GetLastReplacedUnitBJ()
                 gate[GetHandleId(unit)] = info
                 GroupAddUnit(gate.gOpen, unit)
+                GroupAddUnit(gate.g, unit)
 
                 -- Play animation
                 SetUnitAnimation(unit, "Death Alternate 1")
@@ -2558,6 +2561,7 @@ function init_gateClass()
             end
 
         end)
+        --print("--")
     end
 
     --
@@ -2579,28 +2583,51 @@ function init_gateClass()
         gate.Trig_gateDies = CreateTrigger()
         TriggerRegisterAnyUnitEventBJ(gate.Trig_gateDies, EVENT_PLAYER_UNIT_DEATH)
         TriggerAddAction(gate.Trig_gateDies, function()
-            local dyingUnit = GetTriggerUnit()
 
-            if IsUnitInGroup(dyingUnit, gate.g) then
-                local player
-                local info = gate[GetHandleId(dyingUnit)]
+            debugfunc(function()
+                local dyingUnit = GetDyingUnit()
 
-                -- Remove Traces of Unit
-                GroupRemoveUnit(gate.g, dyingUnit)
-                RemoveUnit(dyingUnit)
-                gate[GetHandleId(dyingUnit)] = {}
+                if IsUnitInGroup(dyingUnit, gate.g) then
+                    local player, unit, unitType, unitTypeOpen
+                    local x = GetUnitX(dyingUnit)
+                    local y = GetUnitY(dyingUnit)
+                    local unitType = GetUnitTypeId(dyingUnit)
+                    local owningPlayer = GetOwningPlayer(dyingUnit)
 
-                if info.force == "allied" then
-                    player = Player(21)
-                else
-                    player = Player(18)
+                    print("DEAD " .. x)
+
+                    -- Find Open Unit Type
+                    if unitType == FourCC("h01G") then -- City Gate 0
+                        unitTypeOpen = FourCC("h01C")
+
+                    elseif unitType == FourCC("h01F") then -- City Gate 45
+                        unitTypeOpen = FourCC("h01B")
+
+                    elseif unitType == FourCC("h01E") then -- City Gate 135
+                        unitTypeOpen = FourCC("h01D")
+
+                    elseif unitType == FourCC("h00T") then -- Arcane Gate 0
+                        unitTypeOpen = FourCC("h00U")
+                    end
+
+                    print("Dying: " .. info.facingAngle)
+
+                    -- Remove Traces of Unit
+                    GroupRemoveUnit(gate.g, dyingUnit)
+                    RemoveUnit(dyingUnit)
+
+                    if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
+                        player = Player(21)
+                    else
+                        player = Player(18)
+                    end
+
+                    unit = CreateUnit(player, unitTypeOpen, x, y, 0)
+
+                    -- Play Death animation
+                    SetUnitAnimation(unit, "Death Alternate 1")
                 end
-
-                CreateUnit(player, info.unitTypeOpen, info.x, info.y, info.facingAngle)
-
-                -- Play Death animation
-                SetUnitAnimation(unit, "Death Alternate 1")
-            end
+            end, "Start Delayed Triggers")
         end)
     end
 
