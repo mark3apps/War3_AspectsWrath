@@ -114,7 +114,6 @@ function addBases()
     base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
     base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
 
-    print("Working")
     base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
     base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
 
@@ -127,8 +126,8 @@ function addBases()
     base.add(gg_unit_n00K_0802, 2, false, true, true, true) -- Allied Blacksmith
     base.add(gg_unit_n00K_0477, 2, false, true, true, true) -- Federation
     
-    base.add(gg_unit_h00E_0033, 1, true, true, true, true) -- Allied Castle
-    base.add(gg_unit_h00E_0081, 1, true, true, true, true) -- Federation
+    base.add(gg_unit_h00E_0033, 8, true, true, true, true) -- Allied Castle
+    base.add(gg_unit_h00E_0081, 8, true, true, true, true) -- Federation
     
     base.add(gg_unit_hvlt_0207, 2, false, true, true, true) -- Allied City Elves
     base.add(gg_unit_hvlt_0406, 2, false, true, true, true) -- Federation
