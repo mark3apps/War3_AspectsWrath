@@ -828,7 +828,7 @@ function init_aiClass()
                 local regionsPick = {}
                 local baseAdvantage
 
-                if self[i].strat == "agressive" then
+                if self[i].strat == "aggressive" then
                     baseAdvantage = self[i].teamName
                 elseif self[i].strat == "defensive" then
                     baseAdvantage = self[i].teamNameEnemy
@@ -2179,9 +2179,9 @@ function init_baseClass()
             GroupAddUnit(base.all.g, unit)
 
             -- Add to HEALING Unit Group
-            --if healing then
-                GroupAddUnit(base[teamName].gHealing, unit)
-            --end
+            -- if healing then
+            GroupAddUnit(base[teamName].gHealing, unit)
+            -- end
 
             -- Add to REGION Unit Group
             GroupAddUnit(base[regionName][teamName].g, unit)
@@ -2439,17 +2439,23 @@ function init_gateClass()
 
         -- Determine Proper Angle
         if unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 45 Degrees
-            facingAngle = 45
-        elseif unitType == FourCC("h01F") or unitType == FourCC("h01B") or unitType == FourCC("h01F") or unitType ==
-            FourCC("h01B") then -- City Gate and Arcane Gate 0 Degrees
+            facingAngle = 270
+        elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or unitType ==
+            FourCC("h00U") then -- City Gate and Arcane Gate 0 Degrees
+            facingAngle = 180
+        elseif unitType == FourCC("h01E") or unitType == FourCC("h01D") then -- City Gate 135 Degrees
+            facingAngle = 180
+        else
             facingAngle = 0
-        elseif unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 135 Degrees
-            facingAngle = 135
+        end
+
+        if playerForce == "federation" then
+            facingAngle = facingAngle + 180
         end
 
         -- Find Open Unit Type
-        if unitType == FourCC("h01G") then -- City Gate 0
-            unitTypeOpen = FourCC("h01C")
+        if unitTypeOpen == FourCC("h01G") then -- City Gate 0
+            unitType = FourCC("h01C")
 
         elseif unitType == FourCC("h01F") then -- City Gate 45
             unitTypeOpen = FourCC("h01B")
@@ -2461,16 +2467,13 @@ function init_gateClass()
             unitTypeOpen = FourCC("h01U")
         end
 
-        if playerForce == "federation" then
-            facingAngle = facingAngle + 180
-        end
-
         RemoveUnit(unit)
         unit = CreateUnit(player, unitType, x, y, facingAngle)
 
         GroupAddUnit(gate.g, unit)
         GroupAddUnit(gate.gClosed, unit)
 
+        gate[unitId] = {}
         gate[unitId].force = playerForce
         gate[unitId].unitTypeClosed = unitType
         gate[unitId].unitTypeOpen = unitTypeOpen
@@ -2482,8 +2485,9 @@ function init_gateClass()
 
     function gate.update()
 
-        ForForce(gate.g, function()
-            local u, heroes
+        ForGroup(gate.g, function()
+            local u
+            local heroes = 0
             local enemies = 0
             local unit = GetEnumUnit()
             local info = gate[GetHandleId(unit)]
@@ -2498,12 +2502,12 @@ function init_gateClass()
                     break
                 end
 
-                if not IsUnitAlly(u, GetOwningPlayer(unit)) then
+                if not IsUnitAlly(u, GetOwningPlayer(unit)) and IsUnitAliveBJ(unit) then
                     enemies = enemies + 1
+                end
 
-                    if IsUnitType(unit, UNIT_TYPE_HERO) then
-                        heroes = heroes + 1
-                    end
+                if IsUnitType(unit, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
+                    heroes = heroes + 1
                 end
 
                 GroupRemoveUnit(g, u)
@@ -2549,11 +2553,18 @@ function init_gateClass()
         end)
     end
 
+    --
+    --  TRIGGERS
+    --
+
     function gate.InitTrig_update()
         local t = CreateTrigger()
         TriggerRegisterTimerEventPeriodic(t, 2)
         TriggerAddAction(t, function()
-            gate.update()
+
+            debugfunc(function()
+                gate.update()
+            end, "Init Spawn")
         end)
     end
 
@@ -2586,6 +2597,46 @@ function init_gateClass()
         end)
     end
 
-    gate.InitTrig_update()
-    gate.InitTrig_dies()
+    --
+    -- MAIN
+    --
+
+    function gate.main()
+        local unitId, u
+        local g = CreateGroup()
+
+        for i = 1, 4 do
+            if i == 1 then
+                unitId = FourCC("h01F")
+            elseif i == 2 then
+                unitId = FourCC("h01E")
+            elseif i == 3 then
+                unitId = FourCC("h01G")
+            else
+                unitId = FourCC("h00T")
+            end
+
+            g = GetUnitsOfTypeIdAll(unitId)
+
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                print("adding" .. GetUnitName(u))
+                gate.add(u)
+                print("Added")
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+        end
+
+        -- Init Triggers
+        gate.InitTrig_update()
+        gate.InitTrig_dies()
+    end
+
+    gate.main()
 end
