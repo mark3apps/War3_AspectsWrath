@@ -2423,7 +2423,7 @@ function init_gateClass()
 
     function gate.add(unit)
 
-        local playerForce, facingAngle, unitTypeOpen
+        local playerForce, facingAngle, unitTypeClosed
         local player = GetOwningPlayer(unit)
         local unitType = GetUnitTypeId(unit)
         local x = GetUnitX(unit)
@@ -2446,37 +2446,41 @@ function init_gateClass()
         elseif unitType == FourCC("h01E") or unitType == FourCC("h01D") then -- City Gate 135 Degrees
             facingAngle = 180
         else
-            facingAngle = 0
+            facingAngle = 180
         end
 
         if playerForce == "federation" then
-            facingAngle = facingAngle + 180
+            facingAngle = facingAngle - 180
         end
 
         -- Find Open Unit Type
-        if unitTypeOpen == FourCC("h01G") then -- City Gate 0
-            unitType = FourCC("h01C")
+        if unitType == FourCC("h01C") then -- City Gate 0
+            unitTypeClosed = FourCC("h01G")
 
-        elseif unitType == FourCC("h01F") then -- City Gate 45
-            unitTypeOpen = FourCC("h01B")
+        elseif unitType == FourCC("h01B") then -- City Gate 45
+            unitTypeClosed = FourCC("h01F")
 
-        elseif unitType == FourCC("h01E") then -- City Gate 135
-            unitTypeOpen = FourCC("h01D")
+        elseif unitType == FourCC("h01D") then -- City Gate 135
+            unitTypeClosed = FourCC("h01E")
 
-        elseif unitType == FourCC("h01T") then -- Arcane Gate 0
-            unitTypeOpen = FourCC("h01U")
+        elseif unitType == FourCC("h00U") then -- Arcane Gate 0
+            unitTypeClosed = FourCC("h00T")
         end
 
         RemoveUnit(unit)
         unit = CreateUnit(player, unitType, x, y, facingAngle)
 
+        -- Play animation
+        SetUnitAnimation(unit, "Death Alternate 1")
+
+
         GroupAddUnit(gate.g, unit)
-        GroupAddUnit(gate.gClosed, unit)
+        GroupAddUnit(gate.gOpen, unit)
 
         gate[unitId] = {}
         gate[unitId].force = playerForce
-        gate[unitId].unitTypeClosed = unitType
-        gate[unitId].unitTypeOpen = unitTypeOpen
+        gate[unitId].unitTypeClosed = unitTypeClosed
+        gate[unitId].unitTypeOpen = unitType
         gate[unitId].x = x
         gate[unitId].y = y
         gate[unitId].facing = facingAngle
@@ -2496,17 +2500,18 @@ function init_gateClass()
 
             g = GetUnitsInRangeOfLocAll(900, l)
 
+           
             while true do
                 u = FirstOfGroup(g)
                 if u == nil then
                     break
                 end
 
-                if not IsUnitAlly(u, GetOwningPlayer(unit)) and IsUnitAliveBJ(unit) then
+                if not IsUnitAlly(u, GetOwningPlayer(unit)) and IsUnitAliveBJ(u) then
                     enemies = enemies + 1
                 end
 
-                if IsUnitType(unit, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
+                if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
                     heroes = heroes + 1
                 end
 
@@ -2514,8 +2519,10 @@ function init_gateClass()
             end
             DestroyGroup(g)
 
-            if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
+            print("Enemies:" .. enemies .. " Heroes: " .. heroes)
 
+            if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
+                print("CLOSE GATE")
                 GroupRemoveUnit(gate.gOpen, unit)
                 gate[GetHandleId(unit)] = {}
 
@@ -2532,7 +2539,7 @@ function init_gateClass()
                 SetUnitAnimation(unit, "stand")
 
             elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
-
+                print("OPEN GATE")
                 GroupRemoveUnit(gate.gClosed, unit)
                 gate[GetHandleId(unit)] = {}
 
@@ -2607,13 +2614,13 @@ function init_gateClass()
 
         for i = 1, 4 do
             if i == 1 then
-                unitId = FourCC("h01F")
+                unitId = FourCC("h01B")
             elseif i == 2 then
-                unitId = FourCC("h01E")
+                unitId = FourCC("h01D")
             elseif i == 3 then
-                unitId = FourCC("h01G")
+                unitId = FourCC("h01C")
             else
-                unitId = FourCC("h00T")
+                unitId = FourCC("h00U")
             end
 
             g = GetUnitsOfTypeIdAll(unitId)
