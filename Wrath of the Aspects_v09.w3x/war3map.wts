@@ -13801,7 +13801,7 @@ Teleport
 }
 
 STRING 4539
-// Doodads: D012 (Orc Workhouse), Name (Name)
+// Doodads: D01L (Orc Workhouse), Name (Name)
 {
 Orc Workhouse
 }
@@ -14074,5 +14074,65 @@ STRING 4585
 // Units: h01G (City Gate), EditorSuffix (Name - Editor Suffix)
 {
 (Closed 0)
+}
+
+STRING 4586
+// Doodads: D012 (City Dome), Name (Name)
+{
+City Dome
+}
+
+STRING 4587
+// Doodads: D01M (City Main Building), Name (Name)
+{
+City Main Building
+}
+
+STRING 4588
+// Doodads: D01N (City Spire), Name (Name)
+{
+City Spire
+}
+
+STRING 4589
+// Doodads: D01O (City Column), Name (Name)
+{
+City Column
+}
+
+STRING 4590
+// Units: n013 (Night Elf Fishing Village), EditorSuffix (Name - Editor Suffix)
+{
+ (crested, southeast facing Tall)
+}
+
+STRING 4591
+// Units: n014 (Night Elf Fishing Village), EditorSuffix (Name - Editor Suffix)
+{
+ (crested, southwest facing Tall)
+}
+
+STRING 4592
+// Units: n015 (Night Elf Fishing Village), EditorSuffix (Name - Editor Suffix)
+{
+ (one story Tall)
+}
+
+STRING 4593
+// Units: n016 (Night Elf Fishing Village), EditorSuffix (Name - Editor Suffix)
+{
+ (two story, southeast facing Tall)
+}
+
+STRING 4594
+// Units: n017 (Night Elf Fishing Village), EditorSuffix (Name - Editor Suffix)
+{
+ (two story, southwest facing Tall)
+}
+
+STRING 4595
+// Doodads: D01P (Human Tower), Name (Name)
+{
+Human Tower
 }
 

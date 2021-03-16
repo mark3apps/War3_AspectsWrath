@@ -2448,7 +2448,6 @@ function init_gateClass()
         end
 
         if playerForce == "federation" then
-            print("FED")
             facingAngle = facingAngle + 180
         end
 
@@ -2520,7 +2519,6 @@ function init_gateClass()
             -- print("Enemies:" .. enemies .. " Heroes: " .. heroes)
 
             if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
-                print("CLOSE GATE")
                 GroupRemoveUnit(gate.gOpen, unit)
                 GroupRemoveUnit(gate.g, unit)
                 gate[GetHandleId(unit)] = {}
@@ -2539,7 +2537,6 @@ function init_gateClass()
                 SetUnitAnimation(unit, "stand")
 
             elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
-                print("OPEN GATE")
                 GroupRemoveUnit(gate.gClosed, unit)
                 GroupRemoveUnit(gate.g, unit)
                 gate[GetHandleId(unit)] = {}
@@ -2592,8 +2589,6 @@ function init_gateClass()
                     local y = GetUnitY(dyingUnit)
                     local unitType = GetUnitTypeId(dyingUnit)
                     local owningPlayer = GetOwningPlayer(dyingUnit)
-
-                    print("DEAD " .. x)
 
                     -- Find Open Unit Type
                     if unitType == FourCC("h01G") then -- City Gate 0
@@ -2669,9 +2664,7 @@ function init_gateClass()
                     break
                 end
 
-                print("adding" .. GetUnitName(u))
                 gate.add(u, GetOwningPlayer(u))
-                print("Added")
 
                 GroupRemoveUnit(g, u)
             end
