@@ -251,7 +251,7 @@ function init_aiClass()
             self[i].strat = self[i].strats[randI]
 
             -- TESTING
-            self[i].strat = "aggressive"
+            -- self[i].strat = "aggressive"
             -- TESTING
 
             print(self[i].strat)
@@ -333,7 +333,7 @@ function init_aiClass()
 
                         unitX = GetUnitX(u)
                         unitY = GetUnitY(u)
-                        unitDistance = distance(unitX, unitY, self[i].x, self[i].y)
+                        unitDistance = distanceBetweenCoordinates(unitX, unitY, self[i].x, self[i].y)
 
                         -- Get Unit Power
                         if (IsUnitType(u, UNIT_TYPE_HERO) == true) then -- is Hero
@@ -496,8 +496,7 @@ function init_aiClass()
 
         -- AI Run Specifics
         function self:STATEAbilities(i)
-            local heroName = self[i].name
-
+            
             if self[i].name == "manaAddict" then
                 self:manaAddictAI(i)
             elseif self[i].name == "brawler" then
@@ -508,6 +507,15 @@ function init_aiClass()
                 self:tactitionAI(i)
             elseif self[i].name == "timeMage" then
                 self:timeMageAI(i)
+            end
+        end
+
+        -- Check to see if Hero should try to upgrade
+        function self:STATEUpgrade(i)
+            local randInt = GetRandomInt(1, 40)
+
+            if randInt == 10 then
+                hero:upgrade(i)
             end
         end
 
@@ -550,7 +558,7 @@ function init_aiClass()
 
                     if self[i].defending then
                         self[i].unitDefending = base[id].unit
-                        distanceToBase = distance(self[i].x, self[i].y, base[id].x, base[id].y)
+                        distanceToBase = distanceBetweenCoordinates(self[i].x, self[i].y, base[id].x, base[id].y)
 
                         if distanceToBase > 3500 then
                             self[i].defendingFast = true
@@ -575,7 +583,7 @@ function init_aiClass()
                     print("Stop Defending")
 
                 else
-                    local distanceToBase = distance(self[i].x, self[i].y, base[id].x, base[id].y)
+                    local distanceToBase = distanceBetweenCoordinates(self[i].x, self[i].y, base[id].x, base[id].y)
                     local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit,
                                                  hero.item.teleportation.abilityId)
 
@@ -765,7 +773,7 @@ function init_aiClass()
 
                 unitX = GetUnitX(u)
                 unitY = GetUnitY(u)
-                healDistanceNew = distance(self[i].x, self[i].y, unitX, unitY)
+                healDistanceNew = distanceBetweenCoordinates(self[i].x, self[i].y, unitX, unitY)
 
                 if healDistanceNew < healDistance then
                     healDistance = healDistanceNew
@@ -883,7 +891,7 @@ function init_aiClass()
             local g = CreateGroup()
             local heroUnit = self[i].unit
 
-            local distanceOrig = distance(self[i].x, self[i].y, destX, destY)
+            local distanceOrig = distanceBetweenCoordinates(self[i].x, self[i].y, destX, destY)
             local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(heroUnit, hero.item.teleportation.abilityId)
 
             if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
@@ -897,7 +905,7 @@ function init_aiClass()
 
                     unitX = GetUnitX(u)
                     unitY = GetUnitY(u)
-                    destDistanceNew = distance(destX, destY, unitX, unitY)
+                    destDistanceNew = distanceBetweenCoordinates(destX, destY, unitX, unitY)
 
                     if destDistanceNew < destDistance then
                         destDistance = destDistanceNew
@@ -912,7 +920,7 @@ function init_aiClass()
 
                     print("Teleporting")
 
-                    PingMinimap(unitX, unitY, 15)
+                    --PingMinimap(unitX, unitY, 15)
 
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
@@ -1245,6 +1253,7 @@ function init_heroClass()
         self.brawler.id = FourCC(self.brawler.four)
         self.brawler.idAlter = FourCC(self.brawler.fourAlter)
         self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
+        self.brawler.upgrades = {}
         self.brawler.startingSpells = {}
         self.brawler.permanentSpells = {}
         self.brawler.startingItems = {"teleportation", "tank"}
@@ -1304,6 +1313,7 @@ function init_heroClass()
         self.tactition.idAlter = FourCC(self.tactition.fourAlter)
         self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
         self.tactition.startingSpells = {"raiseBanner"}
+        self.brawler.upgrades = {}
         self.tactition.permanentSpells = {}
         self.tactition.startingItems = {"teleportation", "tank"}
         self.ironDefense = {
@@ -1371,6 +1381,8 @@ function init_heroClass()
         self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
         self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
         self.shiftMaster.startingSpells = {"shift"}
+        self.brawler.upgrades = {"shadeStrength", "swiftMoves", "swiftAttacks"}
+
         self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "shadeStrength", "swiftMoves", "swiftAttacks",
                                             "attributeStiftMaster"}
         self.shiftMaster.startingItems = {"teleportation", "tank"}
@@ -1675,6 +1687,11 @@ function init_heroClass()
                     end
                 end
             end
+        end
+
+        function self:upgrade(unit)
+
+            IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D"))
         end
 
         function self:setupHero(unit)

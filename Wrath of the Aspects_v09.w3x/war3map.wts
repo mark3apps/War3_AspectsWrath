@@ -9287,12 +9287,6 @@ STRING 3540
 Heals a target friendly unit for <Arej,DataA10> hit points over <Arej,Dur10> seconds.
 }
 
-STRING 3541
-// Units: nchp (Mystic), Name (Name)
-{
-Mystic
-}
-
 STRING 3542
 // Abilities: A006 (TALENT - BR - Attribute Bonus), Name (Name)
 {
@@ -10866,12 +10860,6 @@ STRING 3874
 Elven Guardian
 }
 
-STRING 3875
-// Units: n00U (Fire Hound), Name (Name)
-{
-Fire Hound
-}
-
 STRING 3876
 // Abilities: A04W (Summon Fire Hounds), Name (Name)
 {
@@ -10944,12 +10932,6 @@ STRING 3902
 Arbalist
 }
 
-STRING 3903
-// Units: owad (Orc Warchief), Name (Name)
-{
-Orc Warchief
-}
-
 STRING 3904
 // Units: owar (Fel Orc Warchief), Name (Name)
 {
@@ -10993,7 +10975,7 @@ Ogre Pulverize
 }
 
 STRING 3933
-// Units: o00B (Fel Orc Warchief), Name (Name)
+// Abilities: S006 (Fel Orc Warchief), Name (Name)
 {
 Fel Orc Warchief
 }
@@ -11098,12 +11080,6 @@ STRING 3961
 // Abilities: S005 (Fel Orc Warlock), Name (Name)
 {
 Fel Orc Warlock
-}
-
-STRING 3962
-// Abilities: S006 (Fel Orc Warchief), Name (Name)
-{
-Fel Orc Warchief
 }
 
 STRING 3963
@@ -14134,5 +14110,35 @@ STRING 4595
 // Doodads: D01P (Human Tower), Name (Name)
 {
 Human Tower
+}
+
+STRING 4596
+// Units: nemi (Elven Mystic), Name (Name)
+{
+Elven Mystic
+}
+
+STRING 4597
+// Units: nchp (Mage), Name (Name)
+{
+Mage
+}
+
+STRING 4598
+// Units: owad (Orc Warlord), Name (Name)
+{
+Orc Warlord
+}
+
+STRING 4599
+// Units: o00B (Fel Orc Warlord), Name (Name)
+{
+Fel Orc Warlord
+}
+
+STRING 4600
+// Units: n00U (Fire Spawn), Name (Name)
+{
+Fire Spawn
 }
 

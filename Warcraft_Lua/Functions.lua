@@ -9,9 +9,29 @@ function dprint(message, level)
     end
 end
 
-function distance(x1, y1, x2, y2) -- Find Distance between points
+function distanceBetweenCoordinates(x1, y1, x2, y2) -- Find Distance between points
     return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
+
+function distanceBetweenUnits(unitA, unitB)
+    return distanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
+end
+
+function angleBetweenCoordinates(x1, y1, x2, y2)
+    return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
+end
+
+function angleBetweenUnits(unitA, unitB)
+    return angleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
+end
+
+function PolarProjectionCoordinates(x, y, dist, angle)
+    local newX = x + dist * Cos(angle * bj_DEGTORAD)
+    local newY = y + dist * Sin(angle * bj_DEGTORAD)
+    return {newX, newY}
+end
+
+
 
 function debugfunc(func, name) -- Turn on runtime logging
     local passed, data = pcall(function()

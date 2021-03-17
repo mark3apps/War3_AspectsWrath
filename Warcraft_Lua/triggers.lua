@@ -61,7 +61,7 @@ function Init_IssuedOrder()
             UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]] GetOwningPlayer(triggerUnit) ~=
             Player(17) and GetOwningPlayer(triggerUnit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
 
-            PolledWait(0.5)
+            PolledWait(3)
             indexer:order(triggerUnit)
         end
     end)
@@ -310,7 +310,7 @@ function ABTY_ShifterSwitch()
             local p = GetSpellTargetLoc()
             local castingUnit = GetTriggerUnit()
             local castingPlayer = GetOwningPlayer(castingUnit)
-            
+
             g = GetUnitsInRangeOfLocAll(200, p)
             RemoveLocation(p)
 
@@ -339,6 +339,8 @@ function ABTY_ShifterSwitch()
                     AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xOrig, yOrig)
                     DestroyEffect(GetLastCreatedEffectBJ())
 
+                    PolledWait(.1)
+
                     SetUnitX(castingUnit, xIll)
                     SetUnitX(u, xOrig)
                     SetUnitY(castingUnit, yIll)
@@ -355,4 +357,102 @@ function ABTY_ShifterSwitch()
 
         end
     end)
+end
+
+function ABTY_ManaAddict_ManaExplosion()
+    local t = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
+    TriggerAddAction(t, function()
+
+        if GetSpellAbilityId() == hero.manaOverload.id then
+            local u, new, distance, angle, uX, uY, uNewX, uNewY
+            local g = CreateGroup()
+            local g2 = CreateGroup()
+
+            local castingUnit = GetTriggerUnit()
+            local castingPlayer = GetOwningPlayer(castingUnit)
+
+            -- Get Spell Info
+            local castX = GetUnitX(castingUnit)
+            local castY = GetUnitY(castingUnit)
+            local castL = GetUnitLoc(castingUnit)
+            local spellLevel = GetUnitAbilityLevel(castingUnit, hero.manaOverload.id)
+            local manaStart = GetUnitState(castingUnit, UNIT_STATE_MANA)
+            local manaSpell = manaStart * 0.1
+            local manaLeft = manaStart - manaSpell
+
+            -- Set up Spell Variables
+            local duration = 0.2
+            local tick = 0.04
+            local loopTimes = duration / tick
+            local damageFull = manaSpell * (spellLevel * 0.2 + 0.8)
+            local pushbackArea = 200 + (spellLevel * 35)
+
+            local damageTick = damageFull / loopTimes
+
+            print(spellLevel)
+            print(damageTick)
+
+            -- Prep Spell
+            SetUnitManaBJ(castingUnit, manaLeft)
+            GetUnitsInRangeOfLocAll(pushbackArea, castL)
+
+            -- Filter Out all of the units that don't matter
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
+                    not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
+                    IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
+
+                    print("Adding Unit")
+                    GroupAddUnit(g2, u)
+                    PauseUnit(u, true)
+
+                    AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u, "chest")
+                    DestroyEffect(GetLastCreatedEffectBJ())
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            if CountUnitsInGroup(g2) > 0 then
+                for i = 1, loopTimes do
+                    print("looping")
+                    ForGroup(g2, function()
+                        u = GetEnumUnit()
+
+                        if IsUnitAliveBJ(u) then
+                            uX = GetUnitX(u)
+                            uY = GetUnitY(u)
+                            distance = distanceBetweenUnits(castingUnit, u)
+                            angle = angleBetweenUnits(castingUnit, u)
+
+                            uNewX, uNewY = PolarProjectionCoordinates(uX, uY, distance, angle)
+
+                            SetUnitX(u, uNewX)
+                            SetUnitY(u, uNewY)
+                            UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL)
+
+                            if i == loopTimes then
+                                PauseUnit(u, false)
+                            end
+                        else
+                            PauseUnit(u, false)
+                            GroupRemoveUnit(g2, u)
+                        end
+                    end)
+
+                    PolledWait(tick)
+                end
+            end
+            DestroyGroup(g2)
+        end
+
+    end)
+
 end

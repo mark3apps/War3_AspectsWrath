@@ -56,6 +56,7 @@ function init_Lua()
 
         -- Abilities
         ABTY_ShifterSwitch()
+        ABTY_ManaAddict_ManaExplosion()
     end, "Init Triggers")
 
     --dprint("Triggers Initialized", 2)

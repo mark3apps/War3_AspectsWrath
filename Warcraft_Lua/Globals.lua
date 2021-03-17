@@ -85,6 +85,7 @@ function addRegions()
     loc:add("cTidesRight", gg_rct_Murloc_Right, "bottomLeft", false)
     loc:add("cDeathMidLeft", gg_rct_Zombie_Mid_Left, "cDeathLeft", true)
     loc:add("cDeathLeft", gg_rct_Zombie_End_Left , "middleRight", true)
+    loc:add("cDeathMidRight", gg_rct_Zombie_Mid_Right, "cDeathRight", false)
     loc:add("cDeathRight", gg_rct_Zombie_End_Right, "middleLeft", false)
     loc:add("cStormLeft", gg_rct_Left_Elemental_Start, "bottomRight", true)
     loc:add("cStormRight", gg_rct_Right_Elemental_Start, "topLeft", false)
@@ -614,7 +615,7 @@ function spawnAddBases()
     spawn:addBase("blacksmith", "sCityBlacksmithLeft", "everythingRight", gg_unit_n00K_0802, "sCityBlacksmithRight",
         "everythingLeft", gg_unit_n00K_0477)
     spawn:addBase("blacksmithCreep", "sCityBlacksmithLeft", "cDeathMidLeft", gg_unit_n00K_0802, "sCityBlacksmithRight",
-        "cDeathRight", gg_unit_n00K_0477)
+        "cDeathMidRight", gg_unit_n00K_0477)
     spawn:addBase("castle", "sHeroLeft", "everythingRight", gg_unit_h00E_0033, "sHeroRight", "everythingLeft",
         gg_unit_h00E_0081)
     spawn:addBase("cityElves", "sCityElfLeft", "everythingRight", gg_unit_hvlt_0207, "sCityElfRight", "everythingLeft",
