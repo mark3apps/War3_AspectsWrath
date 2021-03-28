@@ -192,6 +192,7 @@ function init_aiLoopStates()
         local t = CreateTrigger()
         TriggerRegisterTimerEventPeriodic(t, ai.tick)
         TriggerAddAction(t, function()
+            
             --print(" -- ")
             if ai.loop >= ai.count then
                 ai.loop = 1

@@ -365,9 +365,8 @@ function ABTY_ManaAddict_ManaExplosion()
     TriggerAddAction(t, function()
 
         if GetSpellAbilityId() == hero.manaOverload.id then
-            local u, new, distance, angle, uX, uY, uNewX, uNewY
+            local u, new, distance, angle, uX, uY, uNewX, uNewY, newDistance
             local g = CreateGroup()
-            local g2 = CreateGroup()
 
             local castingUnit = GetTriggerUnit()
             local castingPlayer = GetOwningPlayer(castingUnit)
@@ -382,75 +381,40 @@ function ABTY_ManaAddict_ManaExplosion()
             local manaLeft = manaStart - manaSpell
 
             -- Set up Spell Variables
-            local duration = 0.2
+            local duration = 0.6
             local tick = 0.04
-            local loopTimes = duration / tick
             local damageFull = manaSpell * (spellLevel * 0.2 + 0.8)
-            local pushbackArea = 200 + (spellLevel * 35)
-
-            local damageTick = damageFull / loopTimes
-
-            print(spellLevel)
-            print(damageTick)
+            local pushbackArea = 200 + (spellLevel * 40)
 
             -- Prep Spell
             SetUnitManaBJ(castingUnit, manaLeft)
-            GetUnitsInRangeOfLocAll(pushbackArea, castL)
+
+            g = GetUnitsInRangeOfLocAll(pushbackArea, castL)
 
             -- Filter Out all of the units that don't matter
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
+
+            ForGroup(g, function()
+                u = GetEnumUnit()
 
                 if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
                     not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
                     IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
 
-                    print("Adding Unit")
-                    GroupAddUnit(g2, u)
                     PauseUnit(u, true)
 
                     AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u, "chest")
                     DestroyEffect(GetLastCreatedEffectBJ())
+                else
+                    GroupRemoveUnit(g, u)
                 end
 
-                GroupRemoveUnit(g, u)
-            end
+            end)
+
+            debugfunc(function()
+                pushbackUnits(g, castX, castY, pushbackArea, damageFull, tick, duration)
+            end, "ManaBurst")
             DestroyGroup(g)
 
-            if CountUnitsInGroup(g2) > 0 then
-                for i = 1, loopTimes do
-                    print("looping")
-                    ForGroup(g2, function()
-                        u = GetEnumUnit()
-
-                        if IsUnitAliveBJ(u) then
-                            uX = GetUnitX(u)
-                            uY = GetUnitY(u)
-                            distance = distanceBetweenUnits(castingUnit, u)
-                            angle = angleBetweenUnits(castingUnit, u)
-
-                            uNewX, uNewY = PolarProjectionCoordinates(uX, uY, distance, angle)
-
-                            SetUnitX(u, uNewX)
-                            SetUnitY(u, uNewY)
-                            UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL)
-
-                            if i == loopTimes then
-                                PauseUnit(u, false)
-                            end
-                        else
-                            PauseUnit(u, false)
-                            GroupRemoveUnit(g2, u)
-                        end
-                    end)
-
-                    PolledWait(tick)
-                end
-            end
-            DestroyGroup(g2)
         end
 
     end)
