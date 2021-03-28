@@ -496,7 +496,7 @@ function init_aiClass()
 
         -- AI Run Specifics
         function self:STATEAbilities(i)
-            
+
             if self[i].name == "manaAddict" then
                 self:manaAddictAI(i)
             elseif self[i].name == "brawler" then
@@ -920,7 +920,7 @@ function init_aiClass()
 
                     print("Teleporting")
 
-                    --PingMinimap(unitX, unitY, 15)
+                    -- PingMinimap(unitX, unitY, 15)
 
                     UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
                         teleportUnit)
@@ -2328,6 +2328,8 @@ function init_baseClass()
                     if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
                         if not UnitHasBuffBJ(u, FourCC("Brej")) and
                             (GetUnitLifePercent(u) < 95 or GetUnitManaPercent(u) < 95) then
+
+                            SetUnitAbilityLevel(unit, FourCC("A027"), spawn.creepLevel)
                             IssueTargetOrder(unit, "rejuvination", u)
                             break
                         end
@@ -2513,7 +2515,7 @@ function init_gateClass()
             local g = CreateGroup()
             local l = GetUnitLoc(unit)
 
-            g = GetUnitsInRangeOfLocAll(900, l)
+            g = GetUnitsInRangeOfLocAll(700, l)
 
             while true do
                 u = FirstOfGroup(g)
@@ -2583,7 +2585,7 @@ function init_gateClass()
 
     function gate.InitTrig_update()
         local t = CreateTrigger()
-        TriggerRegisterTimerEventPeriodic(t, 2)
+        TriggerRegisterTimerEventPeriodic(t, 2.5)
         TriggerAddAction(t, function()
 
             debugfunc(function()
@@ -2632,7 +2634,6 @@ function init_gateClass()
                     else
                         facingAngle = 0
                     end
-
 
                     -- Remove Traces of Unit
                     GroupRemoveUnit(gate.g, dyingUnit)
