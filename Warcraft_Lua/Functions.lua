@@ -134,7 +134,7 @@ end
 
 function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor)
     local u, uX, uY, distance, angle, newDistance, uNewX, uNewY
-    
+
     local loopTimes = duration / tick
     local damageTick = damage / loopTimes
 
@@ -146,7 +146,7 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
 
                 if IsUnitAliveBJ(u) then
 
-                    if loopTimes == 1 then
+                    if i == 1 then
                         PauseUnit(u, true)
                     end
 
@@ -159,13 +159,15 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
                     newDistance = ((aoe + 80) - distance) * 0.13 * factor
 
                     uNewX, uNewY = polarProjectionCoordinates(uX, uY, newDistance, angle)
-                    
-                    --if IsTerrainPathable(uNewX, uNewY, PATHING_TYPE_WALKABILITY) then
-                        SetUnitX(u, uNewX)
-                        SetUnitY(u, uNewY)
-                    --end
 
-                    UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_MAGIC, DAMAGE_TYPE_MAGIC)
+                    -- if IsTerrainPathable(uNewX, uNewY, PATHING_TYPE_WALKABILITY) then
+                    SetUnitX(u, uNewX)
+                    SetUnitY(u, uNewY)
+                    -- end
+
+                    if damage > 0 then
+                        UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_MAGIC, DAMAGE_TYPE_MAGIC)
+                    end
 
                     if i >= loopTimes - 1 then
                         PauseUnit(u, false)

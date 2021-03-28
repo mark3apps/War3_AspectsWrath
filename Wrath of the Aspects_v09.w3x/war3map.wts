@@ -4848,13 +4848,13 @@ Fel Form
 }
 
 STRING 2462
-// Abilities: A03S (Frost Nova Flame), Researchhotkey (Hotkey - Learn)
+// Abilities: A03P (Frost Nova), Hotkey (Hotkey - Normal)
 {
 E
 }
 
 STRING 2463
-// Abilities: A03S (Frost Nova Flame), Hotkey (Hotkey - Normal)
+// Abilities: A03P (Frost Nova), Researchhotkey (Hotkey - Learn)
 {
 E
 }
@@ -4878,7 +4878,7 @@ STRING 2467
 }
 
 STRING 2477
-// Abilities: A03P (Frost Nova), Hotkey (Hotkey - Normal)
+// Abilities: A04J (Chrono Atropy (dummy ENEMIES)), Hotkey (Hotkey - Normal)
 {
 Q
 }
@@ -5205,36 +5205,6 @@ STRING 2640
 // Abilities: A033 (Time Stop), Name (Name)
 {
 Time Stop
-}
-
-STRING 2648
-// Abilities: A03S (Frost Nova Flame), Ubertip (Tooltip - Normal - Extended)
-{
-Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage.
-}
-
-STRING 2649
-// Abilities: A03S (Frost Nova Flame), Ubertip (Tooltip - Normal - Extended)
-{
-Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage.
-}
-
-STRING 2650
-// Abilities: A03S (Frost Nova Flame), Ubertip (Tooltip - Normal - Extended)
-{
-Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage.
-}
-
-STRING 2651
-// Abilities: A03S (Frost Nova Flame), Ubertip (Tooltip - Normal - Extended)
-{
-Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage.
-}
-
-STRING 2652
-// Abilities: A03S (Frost Nova Flame), Ubertip (Tooltip - Normal - Extended)
-{
-Conjures a pillar of flame that burns ground units for 45 damage a second for 3 seconds. As the pillar of flame subsides, units within the fire continue to take minor damage.
 }
 
 STRING 2654
@@ -8724,7 +8694,7 @@ Spawn Water Elemental Level 1
 }
 
 STRING 3388
-// Abilities: A03P (Frost Nova), Researchhotkey (Hotkey - Learn)
+// Abilities: A04K (TM - Chrono Atrophy), Hotkey (Hotkey - Normal)
 {
 Q
 }
@@ -9071,48 +9041,6 @@ STRING 3443
 TC - Attack
 }
 
-STRING 3446
-// Abilities: A03S (Frost Nova Flame), Name (Name)
-{
-Frost Nova Flame
-}
-
-STRING 3447
-// Abilities: A03S (Frost Nova Flame), Tip (Tooltip - Normal)
-{
-Frost - [|cffffcc00Level 1|r]
-}
-
-STRING 3448
-// Abilities: A03S (Frost Nova Flame), Tip (Tooltip - Normal)
-{
-Frost - [|cffffcc00Level 2|r]
-}
-
-STRING 3449
-// Abilities: A03S (Frost Nova Flame), Tip (Tooltip - Normal)
-{
-Frost - [|cffffcc00Level 3|r]
-}
-
-STRING 3450
-// Abilities: A03S (Frost Nova Flame), Tip (Tooltip - Normal)
-{
-Frost - [|cffffcc00Level 4|r]
-}
-
-STRING 3451
-// Abilities: A03S (Frost Nova Flame), Tip (Tooltip - Normal)
-{
-Frost - [|cffffcc00Level 5|r]
-}
-
-STRING 3452
-// Abilities: A03S (Frost Nova Flame), Tip (Tooltip - Normal)
-{
-Frost - [|cffffcc00Level 6|r]
-}
-
 STRING 3459
 // Abilities: A001 (MS - Mana Shield), Untip (Tooltip - Turn Off)
 {
@@ -9156,13 +9084,13 @@ This base has been captured.  You can now teleport to it.
 }
 
 STRING 3519
-// Abilities: A04J (Chrono Atropy (dummy ENEMIES)), Hotkey (Hotkey - Normal)
+// Abilities: A04K (TM - Chrono Atrophy), Researchhotkey (Hotkey - Learn)
 {
 Q
 }
 
 STRING 3520
-// Abilities: A04K (TM - Chrono Atrophy), Hotkey (Hotkey - Normal)
+// Abilities: A04M (Chrono Atropy (dummy ALLIES)), Hotkey (Hotkey - Normal)
 {
 Q
 }
@@ -10160,7 +10088,7 @@ V
 }
 
 STRING 3709
-// Abilities: A04K (TM - Chrono Atrophy), Researchhotkey (Hotkey - Learn)
+// Abilities: A03U (Switch), Hotkey (Hotkey - Normal)
 {
 Q
 }
@@ -10256,13 +10184,7 @@ Creates a circle where all enemy units who enter have their attack and movement 
 }
 
 STRING 3725
-// Abilities: A04M (Chrono Atropy (dummy ALLIES)), Hotkey (Hotkey - Normal)
-{
-Q
-}
-
-STRING 3726
-// Abilities: A03U (Switch), Hotkey (Hotkey - Normal)
+// Abilities: A03U (Switch), Researchhotkey (Hotkey - Learn)
 {
 Q
 }
@@ -10373,12 +10295,6 @@ STRING 3749
 // Abilities: A04J (Chrono Atropy (dummy ENEMIES)), Name (Name)
 {
 Chrono Atropy (dummy ENEMIES)
-}
-
-STRING 3751
-// Abilities: A03U (Switch), Researchhotkey (Hotkey - Learn)
-{
-Q
 }
 
 STRING 3752
@@ -14140,5 +14056,89 @@ STRING 4600
 // Units: n00U (Fire Spawn), Name (Name)
 {
 Fire Spawn
+}
+
+STRING 4603
+// Abilities: A005 (Unleash Mana), Name (Name)
+{
+Unleash Mana
+}
+
+STRING 4604
+// Abilities: A005 (Unleash Mana), Tip (Tooltip - Normal)
+{
+Unleash Mana - [|cffffcc00Level 1|r]
+}
+
+STRING 4605
+// Abilities: A005 (Unleash Mana), Tip (Tooltip - Normal)
+{
+Unleash Mana - [|cffffcc00Level 2|r]
+}
+
+STRING 4606
+// Abilities: A005 (Unleash Mana), Tip (Tooltip - Normal)
+{
+Unleash Mana - [|cffffcc00Level 3|r]
+}
+
+STRING 4607
+// Abilities: A005 (Unleash Mana), EditorSuffix (Editor Suffix)
+{
+ (Dummy)
+}
+
+STRING 4608
+// Abilities: A03S (Unleash Mana), Name (Name)
+{
+Unleash Mana
+}
+
+STRING 4609
+// Abilities: A03S (Unleash Mana), Researchhotkey (Hotkey - Learn)
+{
+R
+}
+
+STRING 4610
+// Abilities: A03S (Unleash Mana), Hotkey (Hotkey - Normal)
+{
+R
+}
+
+STRING 4611
+// Abilities: A03S (Unleash Mana), Researchtip (Tooltip - Learn)
+{
+Unleah Mana
+}
+
+STRING 4612
+// Abilities: A03S (Unleash Mana), Tip (Tooltip - Normal)
+{
+Unleash Mana
+}
+
+STRING 4613
+// Abilities: A03S (Unleash Mana), Tip (Tooltip - Normal)
+{
+Unleash Mana
+}
+
+STRING 4614
+// Abilities: A03S (Unleash Mana), Tip (Tooltip - Normal)
+{
+Unleash Mana
+}
+
+STRING 4615
+// Abilities: A03S (Unleash Mana), Ubertip (Tooltip - Normal - Extended)
+{
+Channels powerful warding magic.
+}
+
+STRING 4616
+// Abilities: A03S (Unleash Mana), Ubertip (Tooltip - Normal - Extended)
+{
+Channels powerful warding magic.
 }
 

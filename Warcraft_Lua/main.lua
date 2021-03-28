@@ -13,7 +13,7 @@ function init_Lua()
         init_baseClass()
         init_gateClass()
     end, "Define Classes")
-    --dprint("Classes Defined", 2)
+    -- dprint("Classes Defined", 2)
 
     -- Start the Map init
     Init_Map()
@@ -29,37 +29,33 @@ function init_Lua()
         ai = ai_Class.new()
         spawn = spawn_Class.new()
 
-        
-
     end, "Init Classes")
 
-    --dprint("Classes Initialized", 2)
-    
-
+    -- dprint("Classes Initialized", 2)
 
     -- Init Trigger
+
+    ConditionalTriggerExecute(gg_trg_baseAndHeals)
+
+    init_AutoZoom()
+    Init_HeroLevelsUp()
+    Init_UnitCastsSpell()
+    init_spawnTimers()
+    Init_UnitEntersMap()
+    Init_stopCasting()
+    Init_finishCasting()
+    Init_IssuedOrder()
+    Init_UnitDies()
+    init_MoveToNext()
+    Init_PickingPhase()
+    init_BaseLoop()
+
+    -- Abilities
     debugfunc(function()
-        ConditionalTriggerExecute(gg_trg_baseAndHeals)
-
-        init_AutoZoom()
-        Init_HeroLevelsUp()
-        Init_UnitCastsSpell()
-        init_spawnTimers()
-        Init_UnitEntersMap()
-        Init_stopCasting()
-        Init_finishCasting()
-        Init_IssuedOrder()
-        Init_UnitDies()
-        init_MoveToNext()
-        Init_PickingPhase()
-        init_BaseLoop()
-
-        -- Abilities
-        ABTY_ShifterSwitch()
-        ABTY_ManaAddict_ManaExplosion()
+        init_Abilities()
     end, "Init Triggers")
 
-    --dprint("Triggers Initialized", 2)
+    -- dprint("Triggers Initialized", 2)
 
     -- Spawn Base / Unit Setup
     -- Init Trigger
@@ -68,7 +64,7 @@ function init_Lua()
         spawnAddUnits()
     end, "Init Spawn")
 
-    --dprint("Spawn Setup", 2)
+    -- dprint("Spawn Setup", 2)
 
     -- Setup Delayed Init Triggers
     init_Delayed_1()
@@ -86,13 +82,13 @@ function init_Delayed_1()
 
             startHeroPicker()
         end, "Start Delayed Triggers")
-        --dprint("AI Started", 2)
-        
+        -- dprint("AI Started", 2)
+
         gate.main()
         orderStartingUnits()
         spawn:startSpawn()
 
-        --dprint("Spawn Started", 2)
+        -- dprint("Spawn Started", 2)
 
     end)
 end
@@ -192,8 +188,8 @@ function init_aiLoopStates()
         local t = CreateTrigger()
         TriggerRegisterTimerEventPeriodic(t, ai.tick)
         TriggerAddAction(t, function()
-            
-            --print(" -- ")
+
+            -- print(" -- ")
             if ai.loop >= ai.count then
                 ai.loop = 1
             else

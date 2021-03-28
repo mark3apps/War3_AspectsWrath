@@ -961,7 +961,7 @@ function init_aiClass()
             --  Cast available all the time
             -------
             -- Mana Drain
-            curSpell = hero:spell(self[i], "manaOverload")
+            curSpell = hero:spell(self[i], "manaExplosion")
             if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
                 print(curSpell.name)
                 IssueImmediateOrder(self[i].unit, curSpell.order)
@@ -974,7 +974,7 @@ function init_aiClass()
 
             if self[i].lowLife == false and self[i].fleeing == false then
                 -- Frost Nova
-                curSpell = hero:spell(self[i], "frostNova")
+                curSpell = hero:spell(self[i], "manaBomb")
                 if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
                     print(curSpell.name)
                     IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy),
@@ -1491,7 +1491,7 @@ function init_heroClass()
         self.manaAddict.fourAlter = "h00B"
         self.manaAddict.id = FourCC(self.manaAddict.four)
         self.manaAddict.idAlter = FourCC(self.manaAddict.fourAlter)
-        self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "frostNova", "manaOverload", "manaBurst"}
+        self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "manaExplosion", "manaBomb", "manaBurst"}
         self.manaAddict.startingSpells = {"manaShield"}
         self.manaAddict.permanentSpells = {}
         self.manaAddict.startingItems = {"teleportation", "mage"}
@@ -1505,9 +1505,9 @@ function init_heroClass()
             ult = false,
             instant = true
         }
-        self.frostNova = {
-            name = "frostNova",
-            properName = "Frost Nova",
+        self.manaBomb = {
+            name = "manaBomb",
+            properName = "Mana bomb",
             four = "A03P",
             id = FourCC("A03P"),
             buff = 0,
@@ -1515,13 +1515,13 @@ function init_heroClass()
             ult = false,
             instant = true
         }
-        self.manaOverload = {
-            name = "manaOverload",
-            properName = "Mana Overload",
+        self.manaExplosion = {
+            name = "manaExplosion",
+            properName = "Mana Explosion",
             four = "A018",
             id = FourCC("A018"),
             buff = 0,
-            order = "manashield",
+            order = "thunderclap",
             ult = false,
             instant = true
         }
@@ -1536,11 +1536,11 @@ function init_heroClass()
             instant = false,
             castTime = {4, 4, 4, 4, 4, 4}
         }
-        self.starfall = {
-            name = "starfall",
-            properName = "Starfall",
-            four = "A015",
-            id = FourCC("A015"),
+        self.unleashMana = {
+            name = "unleashMana",
+            properName = "Unleash Mana",
+            four = "A03S",
+            id = FourCC("A03S"),
             buff = 0,
             order = "starfall",
             ult = true,
@@ -1549,10 +1549,10 @@ function init_heroClass()
         }
 
         self[self.manaShield.four] = self.manaShield.name
-        self[self.frostNova.four] = self.frostNova.name
-        self[self.manaOverload.four] = self.manaOverload.name
+        self[self.manaBomb.four] = self.manaBomb.name
+        self[self.manaExplosion.four] = self.manaExplosion.name
         self[self.manaBurst.four] = self.manaBurst.name
-        self[self.starfall.four] = self.starfall.name
+        self[self.unleashMana.four] = self.unleashMana.name
 
         self.H00J = "timeMage"
         self.timeMage = {}
