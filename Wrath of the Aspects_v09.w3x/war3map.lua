@@ -963,7 +963,7 @@ function init_Abilities()
     function ability.unleashMana()
         local u, uTarget, unitCount
         local g = CreateGroup()
-        local dummy = FourCC("h000")
+        local dummy = FourCC("h01H")
         local dummySpell = FourCC("A005")
 
         -- Caster vars
@@ -974,17 +974,17 @@ function init_Abilities()
         local player = GetOwningPlayer(castingUnit)
 
         -- Ability Vars
-        local level = GetUnitAbilityLevel(castingUnit, hero.manaBomb.id)
+        local level = GetUnitAbilityLevel(castingUnit, hero.unleashMana.id)
         local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
+        local damage = 50 + (50 * level - 50)
 
+        print(damage)
         local duration = 15
-        local tick = 0.2
+        local tick = 0.15
         local aoe = 900 + 100 * level
         currentOrder = OrderId2String(GetUnitCurrentOrder(castingUnit))
 
         while duration > 0 and mana > 0 and currentOrder == hero.unleashMana.order do
-
-
 
             g = GetUnitsInRangeOfLocAll(aoe, l)
             ForGroup(g, function()
@@ -1000,8 +1000,8 @@ function init_Abilities()
             end)
 
             unitCount = CountUnitsInGroup(g)
-            if unitCount > 5 then
-                unitCount = 5
+            if unitCount > 3 then
+                unitCount = 3
             end
 
             for i = 1, unitCount do
@@ -1010,23 +1010,24 @@ function init_Abilities()
 
                 uTarget = GroupPickRandomUnit(g)
                 u = CreateUnit(player, dummy, x, y, 0)
-                UnitApplyTimedLife(u, FourCC("BTLF"), 1)
-                UnitAddAbility(u, dummySpell)
-                SetUnitAbilityLevel(u, dummySpell, level)
-                IssueTargetOrder(u, "acidbomb", uTarget)
-            end
+                UnitApplyTimedLife(u, FourCC("BTLF"), 0.4)
+                BlzSetUnitBaseDamage(u, damage, 0)
+                BlzSetUnitBaseDamage(castingUnit, damage, 0)
 
+                -- UnitAddAbility(u, dummySpell)
+                -- SetUnitAbilityLevel(u, dummySpell, level)
+                IssueTargetOrder(u, "attack", uTarget)
+            end
             DestroyGroup(g)
 
             currentOrder = OrderId2String(GetUnitCurrentOrder(castingUnit))
-            print(currentOrder)
 
             duration = duration - tick
             PolledWait(tick)
         end
         RemoveLocation(l)
 
-        if  currentOrder == hero.unleashMana.order then
+        if currentOrder == hero.unleashMana.order then
             IssueImmediateOrder(castingUnit, "stop")
         end
 
@@ -8272,6 +8273,7 @@ function Trig_testing_Actions()
     SetCameraTargetControllerNoZForPlayer(Player(0), GetTriggerUnit(), 0, 0, false)
     UnitUseItemTarget(GetLastCreatedUnit(), GetItemOfTypeFromUnitBJ(GetEnumUnit(), FourCC("texp")), GetEnumUnit())
     IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D"))
+    BlzSetUnitBaseDamage(GetTriggerUnit(), 10, 0)
 end
 
 function InitTrig_testing()

@@ -14142,3 +14142,15 @@ STRING 4616
 Channels powerful warding magic.
 }
 
+STRING 4617
+// Units: h01H (Spell Dummy), Name (Name)
+{
+Spell Dummy
+}
+
+STRING 4618
+// Units: h01H (Spell Dummy), EditorSuffix (Name - Editor Suffix)
+{
+(Mana Explosion)
+}
+
