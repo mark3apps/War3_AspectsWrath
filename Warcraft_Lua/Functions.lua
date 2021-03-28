@@ -145,6 +145,11 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
                 u = GetEnumUnit()
 
                 if IsUnitAliveBJ(u) then
+
+                    if loopTimes == 1 then
+                        PauseUnit(u, true)
+                    end
+
                     uX = GetUnitX(u)
                     uY = GetUnitY(u)
 

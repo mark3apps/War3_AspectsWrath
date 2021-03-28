@@ -767,12 +767,12 @@ end
 
 
 --
---  Ability Triggers
+--  Shifter
 --
 
--- Shifter Switch
 
-function ABTY_ShifterSwitch()
+-- Switch
+function ABTY.shifter.switch()
     local t = CreateTrigger()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
     TriggerAddAction(t, function()
@@ -834,7 +834,12 @@ function ABTY_ShifterSwitch()
     end)
 end
 
-function ABTY_ManaAddict_ManaExplosion()
+--
+-- Mana Addict
+--
+
+-- Mana Explosion
+function ABTY.manaAddict.manaExplosion()
     local t = CreateTrigger()
     TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
     TriggerAddAction(t, function()
@@ -857,11 +862,11 @@ function ABTY_ManaAddict_ManaExplosion()
             local manaPercent = GetUnitManaPercent(castingUnit) / 100
 
             -- Set up Spell Variables
-            local duration = 0.6
+            local duration = (0.4 * manaPercent) + 0.2
             local factor = 1
             local tick = 0.04
             local damageFull = manaSpell * (spellLevel * 0.2 + 0.8)
-            local aoe = (300 + (spellLevel * 40)) * manaPercent
+            local aoe = (200 + (spellLevel * 40)) * manaPercent + 100
 
             -- Prep Spell
             SetUnitManaBJ(castingUnit, manaLeft)
@@ -877,8 +882,6 @@ function ABTY_ManaAddict_ManaExplosion()
                     not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
                     IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
 
-                    PauseUnit(u, true)
-
                     AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u, "chest")
                     DestroyEffect(GetLastCreatedEffectBJ())
                 else
@@ -887,9 +890,7 @@ function ABTY_ManaAddict_ManaExplosion()
 
             end)
 
-            debugfunc(function()
-                pushbackUnits(g, castingUnit, castX, castY, aoe, damageFull, tick, duration, factor)
-            end, "ManaBurst")
+            pushbackUnits(g, castingUnit, castX, castY, aoe, damageFull, tick, duration, factor)
             DestroyGroup(g)
 
         end
@@ -898,6 +899,84 @@ function ABTY_ManaAddict_ManaExplosion()
 
 end
 
+
+-- Mana Explosion
+function ABTY.manaAddict.manaBomb()
+    local t = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
+    TriggerAddAction(t, function()
+
+        if GetSpellAbilityId() == hero.frostNova.id then
+            local distance, xNew, yNew, l, u
+            local g = CreateGroup()
+
+            -- Caster vars
+            local castingUnit = GetTriggerUnit()
+            local x = GetUnitX(castingUnit)
+            local y = GetUnitY(castingUnit)
+            local player = GetOwningPlayer(castingUnit)
+
+            -- Ability Vars
+            local xCast = GetOrderPointX()
+            local yCast = GetOrderPointY()
+            local lCast = Location(xCast, yCast)
+            local xBomb = x
+            local yBomb = y
+            local level = GetUnitAbilityLevel(castingUnit, hero.frostNova.id)
+            local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
+            local distanceTotal = distanceBetweenCoordinates(x, y, xCast, yCast)
+            local angle = angleBetweenCoordinates(x, y, xCast, yCast)
+            
+            -- Constants
+            local bombSpeed = 35 + 5 * level
+            local damage = (mana * (0.5 + 0.1 * level)) + 50 * level
+            local duration = 0.3
+            local aoe = 100
+            local bombTick = 0.1
+            local explosionTick = 0.04
+
+            -- Move the Bomb Forward
+            while distance <= distanceTotal do
+
+                xBomb, yBomb = polarProjectionCoordinates(xBomb, yBomb, bombSpeed, angle)
+                distance = distanceBetweenCoordinates(xBomb, yBomb, xCast, yCast)
+
+                l = Location(xBomb, yBomb)
+                AddSpecialEffectLoc("Abilities/Spells/Undead/DeathandDecay/DeathandDecayDamage.mdl", l)
+                DestroyEffect(GetLastCreatedEffectBJ())
+                RemoveLocation(l)
+
+                PolledWait(bombTick)
+            end
+
+            -- Explode the Bomb
+            AddSpecialEffectLoc("Units/NightElf/Wisp/WispExplode.mdl", lCast)
+            DestroyEffect(GetLastCreatedEffectBJ())
+
+            g = GetUnitsInRangeOfLocAll(aoe, lCast)
+            RemoveLocation(lCast)
+
+            ForGroup(g, function()
+                u = GetEnumUnit()
+
+                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
+                    not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
+                    IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
+
+                else
+                    GroupRemoveUnit(g, u)
+                end
+
+            end)
+
+            pushbackUnits(g, castingUnit, xCast, yCast, aoe, damage, explosionTick, duration, 1)
+            DestroyGroup(g)
+
+            
+
+        end
+    end)
+end
 --[[
 HeroSelector V1.5b
 
@@ -3688,6 +3767,11 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
                 u = GetEnumUnit()
 
                 if IsUnitAliveBJ(u) then
+
+                    if loopTimes == 1 then
+                        PauseUnit(u, true)
+                    end
+
                     uX = GetUnitX(u)
                     uY = GetUnitY(u)
 
@@ -5230,8 +5314,8 @@ function init_heroClass()
         self.frostNova = {
             name = "frostNova",
             properName = "Frost Nova",
-            four = "A03S",
-            id = FourCC("A03S"),
+            four = "A03P",
+            id = FourCC("A03P"),
             buff = 0,
             order = "flamestrike",
             ult = false,
@@ -10159,258 +10243,6 @@ function InitTrig_Shifter_Bladestorm_START()
     TriggerAddAction(gg_trg_Shifter_Bladestorm_START, Trig_Shifter_Bladestorm_START_Actions)
 end
 
-function Trig_Frost_INIT_Actions()
-    InitHashtableBJ()
-    udg_FN_Hash = GetLastCreatedHashtableBJ()
-    udg_FN_Interval = 0.10
-    TriggerRegisterTimerEventPeriodic(gg_trg_Frost_LOOP, udg_FN_Interval)
-end
-
-function InitTrig_Frost_INIT()
-    gg_trg_Frost_INIT = CreateTrigger()
-    TriggerAddAction(gg_trg_Frost_INIT, Trig_Frost_INIT_Actions)
-end
-
-function Trig_Frost_CAST_Conditions()
-    if (not (GetSpellAbilityId() == FourCC("A03S"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_CAST_Func018C()
-    if (not (CountUnitsInGroup(udg_FN_Group) == 1)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_CAST_Actions()
-    udg_Spell_LOC_Cast = GetUnitLoc(GetSpellAbilityUnit())
-    udg_Spell_LOC_Spell = GetSpellTargetLoc()
-    udg_Spell_Level = GetUnitAbilityLevelSwapped(FourCC("A03S"), GetSpellAbilityUnit())
-    udg_Spell_Duration = 3.00
-    udg_Spell_Speed = (35.00 + (5.00 * I2R(udg_Spell_Level)))
-    udg_Spell_Distance = DistanceBetweenPoints(udg_Spell_LOC_Cast, udg_Spell_LOC_Spell)
-    GroupAddUnitSimple(GetSpellAbilityUnit(), udg_FN_Group)
-    SaveRealBJ(0.00, 0, GetHandleIdBJ(GetSpellAbilityUnit()), udg_FN_Hash)
-    SaveLocationHandleBJ(udg_Spell_LOC_Cast, 1, GetHandleIdBJ(GetSpellAbilityUnit()), udg_FN_Hash)
-    SaveLocationHandleBJ(udg_Spell_LOC_Spell, 2, GetHandleIdBJ(GetSpellAbilityUnit()), udg_FN_Hash)
-    SaveIntegerBJ(udg_Spell_Level, 3, GetHandleIdBJ(GetSpellAbilityUnit()), udg_FN_Hash)
-    SaveRealBJ(udg_Spell_Duration, 4, GetHandleIdBJ(GetSpellAbilityUnit()), udg_FN_Hash)
-    SaveRealBJ(udg_Spell_Speed, 5, GetHandleIdBJ(GetSpellAbilityUnit()), udg_FN_Hash)
-    SaveRealBJ(udg_Spell_Distance, 6, GetHandleIdBJ(GetSpellAbilityUnit()), udg_FN_Hash)
-    SaveIntegerBJ(1, 7, GetHandleIdBJ(GetSpellAbilityUnit()), udg_FN_Hash)
-    if (Trig_Frost_CAST_Func018C()) then
-        EnableTrigger(gg_trg_Frost_LOOP)
-    else
-    end
-end
-
-function InitTrig_Frost_CAST()
-    gg_trg_Frost_CAST = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Frost_CAST, EVENT_PLAYER_UNIT_SPELL_EFFECT)
-    TriggerAddCondition(gg_trg_Frost_CAST, Condition(Trig_Frost_CAST_Conditions))
-    TriggerAddAction(gg_trg_Frost_CAST, Trig_Frost_CAST_Actions)
-end
-
-function Trig_Frost_LOOP_Func001Func011Func004Func005C()
-    if (not (GetUnitManaPercent(GetEnumUnit()) >= 66.66)) then
-        return false
-    end
-    if (not (udg_Mana_Overload_Researched[GetConvertedPlayerId(GetOwningPlayer(GetEnumUnit()))] >= 1)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func011Func004Func007C()
-    if (not (GetUnitManaPercent(GetEnumUnit()) >= 33.33)) then
-        return false
-    end
-    if (not (udg_Mana_Overload_Researched[GetConvertedPlayerId(GetOwningPlayer(GetEnumUnit()))] >= 2)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func011Func004Func008C()
-    if (not (udg_Mana_Overload_Researched[GetConvertedPlayerId(GetOwningPlayer(GetEnumUnit()))] >= 3)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func011Func004C()
-    if (not (udg_Spell_Counter < udg_Spell_Duration)) then
-        return false
-    end
-    if (not (DistanceBetweenPoints(udg_TEMP_Pos2, udg_Spell_LOC_Spell) > udg_Spell_Speed)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func011C()
-    if (not (udg_Spell_Phase == 1)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func014Func001Func001C()
-    if (not (IsUnitAlly(GetEnumUnit(), ForcePickRandomPlayer(udg_PLAYERGRPallied)) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func014Func001C()
-    if (not (udg_Spell_Counter == 0.00)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func014Func002Func001Func002C()
-    if (not (IsUnitAlly(GetEnumUnit(), ForcePickRandomPlayer(udg_PLAYERGRPallied)) == true)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func014Func002Func001C()
-    if (not (udg_Spell_Counter >= 0.40)) then
-        return false
-    end
-    if (not (ModuloInteger(R2I((udg_Spell_Counter * 10.00)), 2) == 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func014Func002Func005C()
-    if (not (CountUnitsInGroup(udg_FN_Group) == 0)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func014Func002C()
-    if (not (udg_Spell_Counter < udg_Spell_Duration)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001Func014C()
-    if (not (udg_Spell_Phase == 2)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Frost_LOOP_Func001A()
-    udg_Spell_Counter = LoadRealBJ(0, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-    udg_Spell_LOC_Cast = LoadLocationHandleBJ(1, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-    udg_Spell_LOC_Spell = LoadLocationHandleBJ(2, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-    udg_Spell_Level = LoadIntegerBJ(3, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-    udg_Spell_Duration = LoadRealBJ(4, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-    udg_Spell_Speed = LoadRealBJ(5, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-    udg_Spell_Distance = LoadRealBJ(6, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-    udg_Spell_Phase = LoadIntegerBJ(7, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-    if (Trig_Frost_LOOP_Func001Func011C()) then
-        udg_TEMP_Real = (udg_Spell_Speed * (udg_Spell_Counter / udg_FN_Interval))
-        udg_TEMP_Pos2 = PolarProjectionBJ(udg_Spell_LOC_Cast, udg_TEMP_Real, AngleBetweenPoints(udg_Spell_LOC_Cast, udg_Spell_LOC_Spell))
-        if (Trig_Frost_LOOP_Func001Func011Func004C()) then
-            AddSpecialEffectLocBJ(udg_TEMP_Pos2, "Abilities\\Spells\\Undead\\DeathandDecay\\DeathandDecayDamage.mdl")
-            DestroyEffectBJ(GetLastCreatedEffectBJ())
-            SaveRealBJ((udg_Spell_Counter + udg_FN_Interval), 0, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-        else
-            SaveRealBJ(0.00, 0, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-            SaveIntegerBJ(2, 7, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-            udg_Spell_Duration = 0.40
-            if (Trig_Frost_LOOP_Func001Func011Func004Func005C()) then
-                udg_Spell_Duration = (udg_Spell_Duration + 0.60)
-            else
-            end
-            if (Trig_Frost_LOOP_Func001Func011Func004Func007C()) then
-                udg_Spell_Duration = (udg_Spell_Duration + 0.60)
-            else
-            end
-            if (Trig_Frost_LOOP_Func001Func011Func004Func008C()) then
-                udg_Spell_Duration = (udg_Spell_Duration + 0.60)
-            else
-            end
-            SaveRealBJ(udg_Spell_Duration, 4, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-        end
-                RemoveLocation ( udg_TEMP_Pos2 )
-    else
-    end
-    if (Trig_Frost_LOOP_Func001Func014C()) then
-        if (Trig_Frost_LOOP_Func001Func014Func001C()) then
-            if (Trig_Frost_LOOP_Func001Func014Func001Func001C()) then
-                CreateNUnitsAtLoc(1, FourCC("h00V"), Player(23), udg_Spell_LOC_Spell, bj_UNIT_FACING)
-                UnitApplyTimedLifeBJ(0.05, FourCC("BTLF"), GetLastCreatedUnit())
-            else
-                CreateNUnitsAtLoc(1, FourCC("h00V"), Player(20), udg_Spell_LOC_Spell, bj_UNIT_FACING)
-                UnitApplyTimedLifeBJ(0.05, FourCC("BTLF"), GetLastCreatedUnit())
-            end
-            udg_TEMP_Unit = GetLastCreatedUnit()
-            CreateNUnitsAtLoc(1, FourCC("h000"), GetOwningPlayer(GetEnumUnit()), udg_Spell_LOC_Spell, bj_UNIT_FACING)
-            UnitAddAbilityBJ(FourCC("A014"), GetLastCreatedUnit())
-            SetUnitAbilityLevelSwapped(FourCC("A014"), GetLastCreatedUnit(), udg_Spell_Level)
-            IssueTargetOrderBJ(GetLastCreatedUnit(), "frostnova", udg_TEMP_Unit)
-            UnitApplyTimedLifeBJ(3.00, FourCC("BTLF"), GetLastCreatedUnit())
-            CreateNUnitsAtLoc(1, FourCC("h000"), GetOwningPlayer(GetEnumUnit()), udg_Spell_LOC_Spell, bj_UNIT_FACING)
-            UnitAddAbilityBJ(FourCC("A016"), GetLastCreatedUnit())
-            SetUnitAbilityLevelSwapped(FourCC("A016"), GetLastCreatedUnit(), udg_Spell_Level)
-            IssueTargetOrderBJ(GetLastCreatedUnit(), "frostnova", udg_TEMP_Unit)
-            UnitApplyTimedLifeBJ(3.00, FourCC("BTLF"), GetLastCreatedUnit())
-        else
-        end
-        if (Trig_Frost_LOOP_Func001Func014Func002C()) then
-            if (Trig_Frost_LOOP_Func001Func014Func002Func001C()) then
-                udg_TEMP_Pos2 = GetRandomLocInRect(RectFromCenterSizeBJ(udg_Spell_LOC_Spell, 550.00, 550.00))
-                if (Trig_Frost_LOOP_Func001Func014Func002Func001Func002C()) then
-                    CreateNUnitsAtLoc(1, FourCC("h00V"), Player(23), udg_TEMP_Pos2, bj_UNIT_FACING)
-                    UnitApplyTimedLifeBJ(0.05, FourCC("BTLF"), GetLastCreatedUnit())
-                else
-                    CreateNUnitsAtLoc(1, FourCC("h00V"), Player(20), udg_TEMP_Pos2, bj_UNIT_FACING)
-                    UnitApplyTimedLifeBJ(0.05, FourCC("BTLF"), GetLastCreatedUnit())
-                end
-                udg_TEMP_Unit = GetLastCreatedUnit()
-                CreateNUnitsAtLoc(1, FourCC("h000"), GetOwningPlayer(GetEnumUnit()), udg_Spell_LOC_Spell, bj_UNIT_FACING)
-                UnitAddAbilityBJ(FourCC("A017"), GetLastCreatedUnit())
-                SetUnitAbilityLevelSwapped(FourCC("A017"), GetLastCreatedUnit(), udg_Spell_Level)
-                IssueTargetOrderBJ(GetLastCreatedUnit(), "frostnova", udg_TEMP_Unit)
-                UnitApplyTimedLifeBJ(3.00, FourCC("BTLF"), GetLastCreatedUnit())
-                                RemoveLocation ( udg_TEMP_Pos2 )
-            else
-            end
-            SaveRealBJ((udg_Spell_Counter + udg_FN_Interval), 0, GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-        else
-            FlushChildHashtableBJ(GetHandleIdBJ(GetEnumUnit()), udg_FN_Hash)
-            GroupRemoveUnitSimple(GetEnumUnit(), udg_FN_Group)
-            if (Trig_Frost_LOOP_Func001Func014Func002Func005C()) then
-                DisableTrigger(GetTriggeringTrigger())
-            else
-            end
-        end
-    else
-    end
-end
-
-function Trig_Frost_LOOP_Actions()
-    ForGroupBJ(udg_FN_Group, Trig_Frost_LOOP_Func001A)
-end
-
-function InitTrig_Frost_LOOP()
-    gg_trg_Frost_LOOP = CreateTrigger()
-    DisableTrigger(gg_trg_Frost_LOOP)
-    TriggerAddAction(gg_trg_Frost_LOOP, Trig_Frost_LOOP_Actions)
-end
-
 function Trig_Mana_Burst_Secondary_Conditions()
     if (not (GetSpellAbilityId() == FourCC("A02B"))) then
         return false
@@ -11717,9 +11549,6 @@ function InitCustomTriggers()
     InitTrig_FA_Start()
     InitTrig_FA_Loop()
     InitTrig_Shifter_Bladestorm_START()
-    InitTrig_Frost_INIT()
-    InitTrig_Frost_CAST()
-    InitTrig_Frost_LOOP()
     InitTrig_Mana_Burst_Secondary()
     InitTrig_Paradox_INIT()
     InitTrig_Paradox_CAST()
@@ -11746,7 +11575,6 @@ function InitCustomTriggers()
 end
 
 function RunInitializationTriggers()
-    ConditionalTriggerExecute(gg_trg_Frost_INIT)
     ConditionalTriggerExecute(gg_trg_Paradox_INIT)
     ConditionalTriggerExecute(gg_trg_Time_Travel_INIT)
     ConditionalTriggerExecute(gg_trg_Attack_INIT)

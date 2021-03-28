@@ -1508,8 +1508,8 @@ function init_heroClass()
         self.frostNova = {
             name = "frostNova",
             properName = "Frost Nova",
-            four = "A03S",
-            id = FourCC("A03S"),
+            four = "A03P",
+            id = FourCC("A03P"),
             buff = 0,
             order = "flamestrike",
             ult = false,
