@@ -127,8 +127,6 @@ udg_TEMP_Player = nil
 udg_TEMP_UnitGroup2 = nil
 udg_TEMP_Int2 = 0
 udg_SB_Caster = nil
-udg_FN_Hash = nil
-udg_FN_Group = nil
 udg_Spell_LOC_Spell = nil
 udg_Spell_LOC_Cast = nil
 udg_Spell_Counter = 0.0
@@ -136,7 +134,6 @@ udg_Spell_Duration = 0.0
 udg_Spell_Level = 0
 udg_Spell_Distance = 0.0
 udg_Spell_Speed = 0.0
-udg_FN_Interval = 0.0
 udg_Spell_Phase = 0
 udg_Attack_Hash = nil
 udg_Attack_Unit_Group = nil
@@ -335,10 +332,6 @@ gg_trg_Sample_Spell_Jump = nil
 gg_trg_FA_Start = nil
 gg_trg_FA_Loop = nil
 gg_trg_Shifter_Bladestorm_START = nil
-gg_trg_Frost_INIT = nil
-gg_trg_Frost_CAST = nil
-gg_trg_Frost_LOOP = nil
-gg_trg_Mana_Burst_Secondary = nil
 gg_trg_Paradox_INIT = nil
 gg_trg_Paradox_CAST = nil
 gg_trg_Paradox_LOOP = nil
@@ -709,13 +702,11 @@ function InitGlobals()
     udg_TEMP_Real_2 = 0.0
     udg_TEMP_UnitGroup2 = CreateGroup()
     udg_TEMP_Int2 = 0
-    udg_FN_Group = CreateGroup()
     udg_Spell_Counter = 0.0
     udg_Spell_Duration = 0.0
     udg_Spell_Level = 0
     udg_Spell_Distance = 0.0
     udg_Spell_Speed = 0.0
-    udg_FN_Interval = 0.0
     udg_Spell_Phase = 0
     udg_Attack_Unit_Group = CreateGroup()
     udg_Attack_Interval = 0.10
@@ -836,7 +827,7 @@ function init_Abilities()
     -- Mana Explosion
     function ability.manaExplosion()
 
-        local u, new, distance, angle, uX, uY, uNewX, uNewY, newDistance
+        local u, new, distance, angle, uX, uY, uNewX, uNewY, newDistance, sfx
         local g = CreateGroup()
 
         local castingUnit = GetTriggerUnit()
@@ -872,8 +863,8 @@ function init_Abilities()
             if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
                 not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
                 IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
-                AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u, "chest")
-                DestroyEffect(GetLastCreatedEffectBJ())
+                sfx = AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u, "chest")
+                DestroyEffect(sfx)
             else
                 GroupRemoveUnit(g, u)
             end
@@ -887,7 +878,7 @@ function init_Abilities()
     -- Mana Explosion
     function ability.manaBomb()
 
-        local xNew, yNew, l, u
+        local xNew, yNew, l, u, sfx
         local g = CreateGroup()
         local distance = 0
 
@@ -910,35 +901,70 @@ function init_Abilities()
 
         -- Constants
         local bombSpeed = 35 + 5 * level
-        local damage = (mana * (0.5 + 0.1 * level)) + 50 * level
+        local damage = (mana * (0.3 + 0.1 * level)) + 100 * level
+        local damageAftershock = 25 + 25 * level
         local duration = 0.5
-        local aoe = 100
+        local durationExplosion = 0.3
+        local aoe = 200
+        local aoeExplosion = 100
         local bombTick = 0.1
         local explosionTick = 0.04
 
+        local loopTimes = durationExplosion / explosionTick
+        local damageTick = damage / loopTimes
+
         -- Move the Bomb Forward
-        while distance <= distanceTotal do
+        while distance + 150 <= distanceTotal do
 
             xBomb, yBomb = polarProjectionCoordinates(xBomb, yBomb, bombSpeed, angle)
             distance = distanceBetweenCoordinates(x, y, xBomb, yBomb)
 
             l = Location(xBomb, yBomb)
-            AddSpecialEffectLoc("Abilities/Spells/Undead/DeathandDecay/DeathandDecayDamage.mdl", l)
-            DestroyEffect(GetLastCreatedEffectBJ())
+            sfx = AddSpecialEffectLoc("Abilities/Spells/Undead/DeathandDecay/DeathandDecayDamage.mdl", l)
+            DestroyEffect(sfx)
             RemoveLocation(l)
 
             PolledWait(bombTick)
         end
 
+        PolledWait(0.3)
+
         -- Explode the Bomb
+        sfx = AddSpecialEffectLoc("Flamestrike Mystic I/Flamestrike Mystic I.mdx", lCast)
+        DestroyEffect(sfx)
+        sfx = AddSpecialEffectLoc("Units/NightElf/Wisp/WispExplode.mdl", lCast)
+        DestroyEffect(sfx)
 
-        AddSpecialEffectLoc("Flamestrike Mystic I/Flamestrike Mystic I.mdx", lCast)
-        DestroyEffect(GetLastCreatedEffectBJ())
-        AddSpecialEffectLoc("Units/NightElf/Wisp/WispExplode.mdl", lCast)
-        DestroyEffect(GetLastCreatedEffectBJ())
+        for i = 1, loopTimes do
 
-        -- PolledWait(.1)
+            g = GetUnitsInRangeOfLocAll(aoe, lCast)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
 
+                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
+                    not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
+                    IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
+
+                    UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
+
+                    if i == 1 then
+                        sfx = AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u,
+                                  "chest")
+                        DestroyEffect(sfx)
+                    end
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            PolledWait(explosionTick)
+        end
+
+        -- Start the Aftershock
         g = GetUnitsInRangeOfLocAll(aoe, lCast)
         RemoveLocation(lCast)
 
@@ -955,13 +981,13 @@ function init_Abilities()
 
         end)
 
-        pushbackUnits(g, castingUnit, xCast, yCast, aoe, damage, explosionTick, duration, 0.2)
+        pushbackUnits(g, castingUnit, xCast, yCast, aoe, damageAftershock, explosionTick, duration, 0.2)
         DestroyGroup(g)
 
     end
 
     function ability.unleashMana()
-        local u, uTarget, unitCount
+        local u, uTarget, unitCount, sfx1
         local g = CreateGroup()
         local dummy = FourCC("h01H")
         local dummySpell = FourCC("A005")
@@ -976,46 +1002,46 @@ function init_Abilities()
         -- Ability Vars
         local level = GetUnitAbilityLevel(castingUnit, hero.unleashMana.id)
         local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-        local damage = 50 + (50 * level - 50)
+        local damageMissles = 40 + (40 * level - 40)
 
-        print(damage)
+        local aoeMissles = 800 + 100 * level
+
         local duration = 15
         local tick = 0.15
-        local aoe = 900 + 100 * level
+
         currentOrder = OrderId2String(GetUnitCurrentOrder(castingUnit))
+
+        sfx1 = AddSpecialEffectLoc("Mana Storm.mdx", l)
+        BlzSetSpecialEffectScale(sfx1, 0.75)
+
+        PolledWait(0.5)
 
         while duration > 0 and mana > 0 and currentOrder == hero.unleashMana.order do
 
-            g = GetUnitsInRangeOfLocAll(aoe, l)
+            g = GetUnitsInRangeOfLocAll(aoeMissles, l)
             ForGroup(g, function()
                 u = GetEnumUnit()
 
                 if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
                     not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
                     IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
-
                 else
                     GroupRemoveUnit(g, u)
                 end
             end)
 
             unitCount = CountUnitsInGroup(g)
-            if unitCount > 3 then
-                unitCount = 3
-            end
 
+            -- Shoot the Missles
             for i = 1, unitCount do
-                SetUnitState(castingUnit, UNIT_STATE_MANA, mana - 4)
+                SetUnitState(castingUnit, UNIT_STATE_MANA, mana - 3)
                 mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
 
                 uTarget = GroupPickRandomUnit(g)
                 u = CreateUnit(player, dummy, x, y, 0)
                 UnitApplyTimedLife(u, FourCC("BTLF"), 0.4)
-                BlzSetUnitBaseDamage(u, damage, 0)
-                BlzSetUnitBaseDamage(castingUnit, damage, 0)
-
-                -- UnitAddAbility(u, dummySpell)
-                -- SetUnitAbilityLevel(u, dummySpell, level)
+                BlzSetUnitBaseDamage(u, damageMissles, 0)
+                BlzSetUnitBaseDamage(castingUnit, damageMissles, 0)
                 IssueTargetOrder(u, "attack", uTarget)
             end
             DestroyGroup(g)
@@ -1025,12 +1051,86 @@ function init_Abilities()
             duration = duration - tick
             PolledWait(tick)
         end
+
+        DestroyEffect(sfx1)
         RemoveLocation(l)
 
         if currentOrder == hero.unleashMana.order then
             IssueImmediateOrder(castingUnit, "stop")
         end
 
+    end
+
+    function ability.soulBind()
+        local u
+        local g = CreateGroup()
+
+        -- Caster vars
+        local castingUnit = GetTriggerUnit()
+        local player = GetOwningPlayer(castingUnit)
+
+        -- Ability Vars
+        local level = GetUnitAbilityLevel(castingUnit, hero.unleashMana.id)
+        local xCast = GetSpellTargetX()
+        local yCast = GetSpellTargetY()
+        local lCast = Location(xCast, yCast)
+
+        local aoe = valueFactor(level, 150, 1, 20, 0)
+
+        g = GetUnitsInRangeOfLocAll(aoe, lCast)
+        RemoveLocation(lCast)
+
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then
+                break
+            end
+
+            if UnitHasBuffBJ(u, hero.soulBind.buff) then
+                indexer:addKey(u, "soulBind", castingUnit)
+                indexer:addKey(u, "soulBindLevel", level)
+            end
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+
+    end
+
+    function ability.DEATH_soulBind()
+
+        local u, mana, sfx
+
+        local dyingUnit = GetDyingUnit()
+        local lDyingUnit = GetUnitLoc(dyingUnit)
+
+        local castingUnit = indexer:getKey(dyingUnit, "soulBind")
+        local level = indexer:getKey(dyingUnit, "soulBindLevel")
+        local player = GetOwningPlayer(castingUnit)
+
+        print("Working!")
+        print(GetUnitName(castingUnit))
+
+        local distance = distanceBetweenUnits(dyingUnit, castingUnit)
+
+        if distance < 2000 then
+            u = CreateUnitAtLoc(player, FourCC("e00D"), lDyingUnit, 0)
+            IssueTargetOrder(u, "move", castingUnit)
+
+            while distance > 50 and IsUnitAliveBJ(castingUnit) do
+                PolledWait(2)
+            end
+
+            KillUnit(u)
+
+            mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
+            SetUnitState(castingUnit, UNIT_STATE_MANA, mana + valueFactor(level, 10, 1, 2, 0))
+
+            sfx = AddSpecialEffectTarget("Abilities/Spells/Other/Charm/CharmTarget.mdl", castingUnit, "chest")
+            DestroyEffect(sfx)
+
+        end
+        RemoveLocation(lDyingUnit)
     end
 
     --
@@ -1065,7 +1165,37 @@ function init_Abilities()
         end)
     end
 
+    -- EVENT Unit Dies with Buff
+    function ability.Init_SpellUnitDie()
+
+        -- Add Buffs
+        ability.buff = {}
+        ability.buff[1] = {
+            name = "DEATH_" .. hero.soulBind.name,
+            id = hero.soulBind.buff
+        }
+
+        local t = CreateTrigger()
+        TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_DEATH)
+        TriggerAddAction(t, function()
+
+            local buffId
+            local dyingUnit = GetDyingUnit()
+
+            for i = 1, #ability.buff do
+                if UnitHasBuffBJ(dyingUnit, ability.buff[i].buff) then
+
+                    print(ability.buff[i].name)
+                    ability[ability.buff[i].name]()
+                end
+            end
+
+        end)
+
+    end
+
     ability.Init_SpellEffectTrig()
+    ability.Init_SpellUnitDie()
 end
 
 --[[
@@ -3876,7 +4006,7 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
                     -- end
 
                     if damage > 0 then
-                        UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_MAGIC, DAMAGE_TYPE_MAGIC)
+                        UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
                     end
 
                     if i >= loopTimes - 1 then
@@ -3892,6 +4022,21 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
         end
     end
     DestroyGroup(g)
+end
+
+function valueFactor(level, base, previousFactor, levelFactor, constant)
+
+    local value = base
+
+    if level > 1 then
+        for i = 2, level do
+            value = (value * previousFactor) + (i * levelFactor) + (constant)
+            print(value)
+        end
+    end
+
+    print(value)
+    return value
 end
 
 --
@@ -5387,7 +5532,7 @@ function init_heroClass()
         self.manaAddict.fourAlter = "h00B"
         self.manaAddict.id = FourCC(self.manaAddict.four)
         self.manaAddict.idAlter = FourCC(self.manaAddict.fourAlter)
-        self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "manaExplosion", "manaBomb", "manaBurst"}
+        self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "manaExplosion", "manaBomb", "soulBind"}
         self.manaAddict.startingSpells = {"manaShield"}
         self.manaAddict.permanentSpells = {}
         self.manaAddict.startingItems = {"teleportation", "mage"}
@@ -5421,16 +5566,15 @@ function init_heroClass()
             ult = false,
             instant = true
         }
-        self.manaBurst = {
-            name = "manaBurst",
-            properName = "Mana Burst",
-            four = "A02B",
-            id = FourCC("A02B"),
-            buff = 0,
+        self.soulBind = {
+            name = "soulBind",
+            properName = "Soul Bind",
+            four = "A015",
+            id = FourCC("A015"),
+            buff = FourCC("B00F"),
             order = "custerrockets",
             ult = false,
-            instant = false,
-            castTime = {4, 4, 4, 4, 4, 4}
+            instant = true
         }
         self.unleashMana = {
             name = "unleashMana",
@@ -5447,7 +5591,7 @@ function init_heroClass()
         self[self.manaShield.four] = self.manaShield.name
         self[self.manaBomb.four] = self.manaBomb.name
         self[self.manaExplosion.four] = self.manaExplosion.name
-        self[self.manaBurst.four] = self.manaBurst.name
+        self[self.soulBind.four] = self.soulBind.name
         self[self.unleashMana.four] = self.unleashMana.name
 
         self.H00J = "timeMage"
@@ -6696,11 +6840,12 @@ function Init_UnitDies()
         local dieingUnit = GetTriggerUnit()
 
         if IsUnitInGroup(dieingUnit, base.all.g) then
-            debugfunc(function()
                 base.died(dieingUnit)
-            end, "Building Die")
         end
 
+        PolledWait(5)
+
+        -- Remove Index from Unit
         if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
             indexer:remove(dieingUnit)
         end
@@ -8274,6 +8419,7 @@ function Trig_testing_Actions()
     UnitUseItemTarget(GetLastCreatedUnit(), GetItemOfTypeFromUnitBJ(GetEnumUnit(), FourCC("texp")), GetEnumUnit())
     IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D"))
     BlzSetUnitBaseDamage(GetTriggerUnit(), 10, 0)
+    UnitDamageTargetBJ(GetTriggerUnit(), GetTriggerUnit(), 500, ATTACK_TYPE_MELEE, DAMAGE_TYPE_MAGIC)
 end
 
 function InitTrig_testing()
@@ -10334,79 +10480,6 @@ function InitTrig_Shifter_Bladestorm_START()
     TriggerAddAction(gg_trg_Shifter_Bladestorm_START, Trig_Shifter_Bladestorm_START_Actions)
 end
 
-function Trig_Mana_Burst_Secondary_Conditions()
-    if (not (GetSpellAbilityId() == FourCC("A02B"))) then
-        return false
-    end
-    return true
-end
-
-function Trig_Mana_Burst_Secondary_Func003C()
-    if (not (GetUnitManaPercent(GetSpellAbilityUnit()) >= 66.67)) then
-        return false
-    end
-    if (not (GetUnitAbilityLevelSwapped(FourCC("A02N"), GetSpellAbilityUnit()) > 1)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Mana_Burst_Secondary_Func004C()
-    if (not (GetUnitManaPercent(GetSpellAbilityUnit()) >= 33.33)) then
-        return false
-    end
-    if (not (GetUnitAbilityLevelSwapped(FourCC("A02N"), GetSpellAbilityUnit()) > 2)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Mana_Burst_Secondary_Func005C()
-    if (not (GetUnitAbilityLevelSwapped(FourCC("A02N"), GetSpellAbilityUnit()) > 3)) then
-        return false
-    end
-    return true
-end
-
-function Trig_Mana_Burst_Secondary_Actions()
-    udg_TEMP_Pos_Hero = GetUnitLoc(GetSpellAbilityUnit())
-    udg_TEMP_Pos_Spell = GetSpellTargetLoc()
-    if (Trig_Mana_Burst_Secondary_Func003C()) then
-        CreateNUnitsAtLoc(1, FourCC("h000"), GetOwningPlayer(GetSpellAbilityUnit()), udg_TEMP_Pos_Hero, bj_UNIT_FACING)
-        UnitAddAbilityBJ(FourCC("A02C"), GetLastCreatedUnit())
-        SetUnitAbilityLevelSwapped(FourCC("A02C"), GetLastCreatedUnit(), GetUnitAbilityLevelSwapped(FourCC("A02B"), GetSpellAbilityUnit()))
-        IssuePointOrderLocBJ(GetLastCreatedUnit(), "clusterrockets", udg_TEMP_Pos_Spell)
-        UnitApplyTimedLifeBJ(1.00, FourCC("BTLF"), GetLastCreatedUnit())
-    else
-    end
-    if (Trig_Mana_Burst_Secondary_Func004C()) then
-        CreateNUnitsAtLoc(1, FourCC("h000"), GetOwningPlayer(GetSpellAbilityUnit()), udg_TEMP_Pos_Hero, bj_UNIT_FACING)
-        UnitAddAbilityBJ(FourCC("A02C"), GetLastCreatedUnit())
-        SetUnitAbilityLevelSwapped(FourCC("A02C"), GetLastCreatedUnit(), GetUnitAbilityLevelSwapped(FourCC("A02B"), GetSpellAbilityUnit()))
-        IssuePointOrderLocBJ(GetLastCreatedUnit(), "clusterrockets", udg_TEMP_Pos_Spell)
-        UnitApplyTimedLifeBJ(1.00, FourCC("BTLF"), GetLastCreatedUnit())
-    else
-    end
-    if (Trig_Mana_Burst_Secondary_Func005C()) then
-        CreateNUnitsAtLoc(1, FourCC("h000"), GetOwningPlayer(GetSpellAbilityUnit()), udg_TEMP_Pos_Hero, bj_UNIT_FACING)
-        UnitAddAbilityBJ(FourCC("A02C"), GetLastCreatedUnit())
-        SetUnitAbilityLevelSwapped(FourCC("A02C"), GetLastCreatedUnit(), GetUnitAbilityLevelSwapped(FourCC("A02B"), GetSpellAbilityUnit()))
-        IssuePointOrderLocBJ(GetLastCreatedUnit(), "clusterrockets", udg_TEMP_Pos_Spell)
-        UnitApplyTimedLifeBJ(1.00, FourCC("BTLF"), GetLastCreatedUnit())
-    else
-    end
-        RemoveLocation ( udg_TEMP_Pos_Hero )
-        RemoveLocation ( udg_TEMP_Pos_Spell )
-end
-
-function InitTrig_Mana_Burst_Secondary()
-    gg_trg_Mana_Burst_Secondary = CreateTrigger()
-    DisableTrigger(gg_trg_Mana_Burst_Secondary)
-    TriggerRegisterAnyUnitEventBJ(gg_trg_Mana_Burst_Secondary, EVENT_PLAYER_UNIT_SPELL_EFFECT)
-    TriggerAddCondition(gg_trg_Mana_Burst_Secondary, Condition(Trig_Mana_Burst_Secondary_Conditions))
-    TriggerAddAction(gg_trg_Mana_Burst_Secondary, Trig_Mana_Burst_Secondary_Actions)
-end
-
 function Trig_Paradox_INIT_Actions()
     InitHashtableBJ()
     udg_Paradox_HASH = GetLastCreatedHashtableBJ()
@@ -11640,7 +11713,6 @@ function InitCustomTriggers()
     InitTrig_FA_Start()
     InitTrig_FA_Loop()
     InitTrig_Shifter_Bladestorm_START()
-    InitTrig_Mana_Burst_Secondary()
     InitTrig_Paradox_INIT()
     InitTrig_Paradox_CAST()
     InitTrig_Paradox_LOOP()

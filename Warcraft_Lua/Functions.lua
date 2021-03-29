@@ -166,7 +166,7 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
                     -- end
 
                     if damage > 0 then
-                        UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_MAGIC, DAMAGE_TYPE_MAGIC)
+                        UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
                     end
 
                     if i >= loopTimes - 1 then
@@ -182,4 +182,19 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
         end
     end
     DestroyGroup(g)
+end
+
+function valueFactor(level, base, previousFactor, levelFactor, constant)
+
+    local value = base
+
+    if level > 1 then
+        for i = 2, level do
+            value = (value * previousFactor) + (i * levelFactor) + (constant)
+            print(value)
+        end
+    end
+
+    print(value)
+    return value
 end

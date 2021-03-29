@@ -102,11 +102,12 @@ function Init_UnitDies()
         local dieingUnit = GetTriggerUnit()
 
         if IsUnitInGroup(dieingUnit, base.all.g) then
-            debugfunc(function()
                 base.died(dieingUnit)
-            end, "Building Die")
         end
 
+        PolledWait(5)
+
+        -- Remove Index from Unit
         if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
             indexer:remove(dieingUnit)
         end

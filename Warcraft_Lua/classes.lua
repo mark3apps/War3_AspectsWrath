@@ -1491,7 +1491,7 @@ function init_heroClass()
         self.manaAddict.fourAlter = "h00B"
         self.manaAddict.id = FourCC(self.manaAddict.four)
         self.manaAddict.idAlter = FourCC(self.manaAddict.fourAlter)
-        self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "manaExplosion", "manaBomb", "manaBurst"}
+        self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "manaExplosion", "manaBomb", "soulBind"}
         self.manaAddict.startingSpells = {"manaShield"}
         self.manaAddict.permanentSpells = {}
         self.manaAddict.startingItems = {"teleportation", "mage"}
@@ -1525,16 +1525,15 @@ function init_heroClass()
             ult = false,
             instant = true
         }
-        self.manaBurst = {
-            name = "manaBurst",
-            properName = "Mana Burst",
-            four = "A02B",
-            id = FourCC("A02B"),
-            buff = 0,
+        self.soulBind = {
+            name = "soulBind",
+            properName = "Soul Bind",
+            four = "A015",
+            id = FourCC("A015"),
+            buff = FourCC("B00F"),
             order = "custerrockets",
             ult = false,
-            instant = false,
-            castTime = {4, 4, 4, 4, 4, 4}
+            instant = true
         }
         self.unleashMana = {
             name = "unleashMana",
@@ -1551,7 +1550,7 @@ function init_heroClass()
         self[self.manaShield.four] = self.manaShield.name
         self[self.manaBomb.four] = self.manaBomb.name
         self[self.manaExplosion.four] = self.manaExplosion.name
-        self[self.manaBurst.four] = self.manaBurst.name
+        self[self.soulBind.four] = self.soulBind.name
         self[self.unleashMana.four] = self.unleashMana.name
 
         self.H00J = "timeMage"

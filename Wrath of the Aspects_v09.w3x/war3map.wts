@@ -1268,13 +1268,13 @@ Q
 }
 
 STRING 461
-// Abilities: A015 (MS - Starfall), Researchhotkey (Hotkey - Learn)
+// Abilities: A029 (Unleash Rage), Hotkey (Hotkey - Normal)
 {
 R
 }
 
 STRING 462
-// Abilities: A015 (MS - Starfall), Hotkey (Hotkey - Normal)
+// Abilities: A029 (Unleash Rage), Researchhotkey (Hotkey - Learn)
 {
 R
 }
@@ -1640,13 +1640,13 @@ TC - Iron Defense
 }
 
 STRING 601
-// Abilities: A02B (Mana Burst), Researchhotkey (Hotkey - Learn)
+// Abilities: A04J (Chrono Atropy (dummy ENEMIES)), Hotkey (Hotkey - Normal)
 {
 Q
 }
 
 STRING 602
-// Abilities: A02B (Mana Burst), Hotkey (Hotkey - Normal)
+// Abilities: A04K (TM - Chrono Atrophy), Hotkey (Hotkey - Normal)
 {
 Q
 }
@@ -1664,13 +1664,13 @@ E
 }
 
 STRING 608
-// Abilities: A029 (Unleash Rage), Hotkey (Hotkey - Normal)
+// Abilities: A03C (Shifter Bladestorm), Hotkey (Hotkey - Normal)
 {
 R
 }
 
 STRING 609
-// Abilities: A029 (Unleash Rage), Researchhotkey (Hotkey - Learn)
+// Abilities: A03C (Shifter Bladestorm), Researchhotkey (Hotkey - Learn)
 {
 R
 }
@@ -1781,18 +1781,6 @@ STRING 647
 // Units: H009 (Tactition), Ubertip (Tooltip - Extended)
 {
 Defensive hero adept at manipulating creeps and slowly building an unstopable army.
-}
-
-STRING 666
-// Abilities: A015 (MS - Starfall), Researchtip (Tooltip - Learn)
-{
-Learn Starfall - [|cffffcc00Level %d|r]
-}
-
-STRING 667
-// Abilities: A015 (MS - Starfall), Researchubertip (Tooltip - Learn - Extended)
-{
-Calls down waves of falling stars that damage nearby enemy units.
 }
 
 STRING 674
@@ -1908,12 +1896,6 @@ STRING 704
 // Units: e007 (Furbolg Protector), Name (Name)
 {
 Furbolg Protector
-}
-
-STRING 705
-// Abilities: A015 (MS - Starfall), Name (Name)
-{
-MS - Starfall
 }
 
 STRING 706
@@ -2601,13 +2583,13 @@ Sends shockwaves out from the Brawler that deal ### to all units in a line for 6
 }
 
 STRING 928
-// Abilities: A03C (Shifter Bladestorm), Hotkey (Hotkey - Normal)
+// Abilities: A042 (TA - Inspire), Hotkey (Hotkey - Normal)
 {
 R
 }
 
 STRING 929
-// Abilities: A03C (Shifter Bladestorm), Researchhotkey (Hotkey - Learn)
+// Abilities: A042 (TA - Inspire), Researchhotkey (Hotkey - Learn)
 {
 R
 }
@@ -2712,12 +2694,6 @@ STRING 953
 // Abilities: A018 (MS - Mana Overload), Ubertip (Tooltip - Normal - Extended)
 {
 The Mana Addict takes 20 health from all nearby minions.  Which she converts into mana, gaining mana equal to half the total amount taken.  The overloaded mana explodes knocking back nearby enemies.
-}
-
-STRING 959
-// Abilities: A015 (MS - Starfall), Ubertip (Tooltip - Normal - Extended)
-{
-Calls down waves of falling stars that damage nearby enemy units. Each wave deals <A015,DataA1> damage and rains down every 1.5 seconds. |nLasts for <A015,Dur1> seconds.
 }
 
 STRING 975
@@ -2859,156 +2835,78 @@ W
 }
 
 STRING 1009
-// Abilities: A02B (Mana Burst), Name (Name)
-{
-Mana Burst
-}
-
-STRING 1010
-// Abilities: A02B (Mana Burst), Researchtip (Tooltip - Learn)
-{
-Learn Mana Burst - [|cffffcc00Level %d|r]
-}
-
-STRING 1011
-// Abilities: A02B (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 1|r]
-}
-
-STRING 1012
-// Abilities: A02B (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 2|r]
-}
-
-STRING 1013
-// Abilities: A02B (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 3|r]
-}
-
-STRING 1014
-// Abilities: A02B (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 4|r]
-}
-
-STRING 1015
-// Abilities: A02B (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 5|r]
-}
-
-STRING 1016
-// Abilities: A02B (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 6|r]
-}
-
-STRING 1017
-// Abilities: A02B (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur2> second.
-}
-
-STRING 1018
-// Abilities: A02B (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur3> second.
-}
-
-STRING 1019
-// Abilities: A02B (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur4> second.
-}
-
-STRING 1020
-// Abilities: A02B (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur5> second.
-}
-
-STRING 1021
-// Abilities: A02B (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur6> second.
-}
-
-STRING 1022
 // Abilities: A02C (Mana Burst), Name (Name)
 {
 Mana Burst
 }
 
-STRING 1023
+STRING 1010
 // Abilities: A02C (Mana Burst), Researchtip (Tooltip - Learn)
 {
 Learn Mana Burst - [|cffffcc00Level %d|r]
 }
 
-STRING 1024
+STRING 1011
 // Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
 {
 Mana Burst - [|cffffcc00Level 1|r]
 }
 
-STRING 1025
+STRING 1012
 // Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
 {
 Mana Burst - [|cffffcc00Level 2|r]
 }
 
-STRING 1026
+STRING 1013
 // Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
 {
 Mana Burst - [|cffffcc00Level 3|r]
 }
 
-STRING 1027
+STRING 1014
 // Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
 {
 Mana Burst - [|cffffcc00Level 4|r]
 }
 
-STRING 1028
+STRING 1015
 // Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
 {
 Mana Burst - [|cffffcc00Level 5|r]
 }
 
-STRING 1029
+STRING 1016
 // Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
 {
 Mana Burst - [|cffffcc00Level 6|r]
 }
 
-STRING 1030
+STRING 1017
 // Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
 {
 Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur2> second.
 }
 
-STRING 1031
+STRING 1018
 // Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
 {
 Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur3> second.
 }
 
-STRING 1032
+STRING 1019
 // Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
 {
 Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur4> second.
 }
 
-STRING 1033
+STRING 1020
 // Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
 {
 Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur5> second.
 }
 
-STRING 1034
+STRING 1021
 // Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
 {
 Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur6> second.
@@ -4754,12 +4652,6 @@ STRING 2415
 The Mana Addict takes health from all nearby minions.  Which she converts into mana, gaining mana equal to half the total amount taken.  The overloaded mana explodes knocking back nearby enemies.
 }
 
-STRING 2416
-// Abilities: A02B (Mana Burst), Researchubertip (Tooltip - Learn - Extended)
-{
-Mana bursts from the mana seeker showering the target area with mana bursts damaging everyone. When the Mana Addict has more than 1/3 mana remaining a additional missles will fire increasing the damage.
-}
-
 STRING 2418
 // Abilities: A02E (TALENT - BR - Reincarnation), Ubertip (Tooltip - Normal - Extended)
 {
@@ -4848,19 +4740,19 @@ Fel Form
 }
 
 STRING 2462
-// Abilities: A03P (Frost Nova), Hotkey (Hotkey - Normal)
+// Abilities: A03P (MS - Mana Bomb), Hotkey (Hotkey - Normal)
 {
 E
 }
 
 STRING 2463
-// Abilities: A03P (Frost Nova), Researchhotkey (Hotkey - Learn)
+// Abilities: A03P (MS - Mana Bomb), Researchhotkey (Hotkey - Learn)
 {
 E
 }
 
 STRING 2464
-// Abilities: A042 (TA - Inspire), Hotkey (Hotkey - Normal)
+// Abilities: A04N (TM - Paradox), Researchhotkey (Hotkey - Learn)
 {
 R
 }
@@ -4878,7 +4770,7 @@ STRING 2467
 }
 
 STRING 2477
-// Abilities: A04J (Chrono Atropy (dummy ENEMIES)), Hotkey (Hotkey - Normal)
+// Abilities: A04K (TM - Chrono Atrophy), Researchhotkey (Hotkey - Learn)
 {
 Q
 }
@@ -8405,36 +8297,6 @@ STRING 3297
 Mana Tower
 }
 
-STRING 3298
-// Abilities: A015 (MS - Starfall), Tip (Tooltip - Normal)
-{
-Starfall - [|cffffcc00Level 2|r]
-}
-
-STRING 3299
-// Abilities: A015 (MS - Starfall), Tip (Tooltip - Normal)
-{
-Starfall - [|cffffcc00Level 3|r]
-}
-
-STRING 3300
-// Abilities: A015 (MS - Starfall), Ubertip (Tooltip - Normal - Extended)
-{
-Calls down waves of falling stars that damage nearby enemy units. Each wave deals <A015,DataA2> damage and rains down every 1.5 seconds. |nLasts for <A015,Dur2> seconds.
-}
-
-STRING 3301
-// Abilities: A015 (MS - Starfall), Ubertip (Tooltip - Normal - Extended)
-{
-Calls down waves of falling stars that damage nearby enemy units. Each wave deals <A015,DataA3> damage and rains down every 1.5 seconds. |nLasts for <A015,Dur3> seconds.
-}
-
-STRING 3302
-// Abilities: A015 (MS - Starfall), Tip (Tooltip - Normal)
-{
-Starfall - [|cffffcc00Level 1|r]
-}
-
 STRING 3309
 // Abilities: A03O (Shifter Bladestorm), Ubertip (Tooltip - Normal - Extended)
 {
@@ -8568,13 +8430,13 @@ STRING 3344
 }
 
 STRING 3347
-// Abilities: A042 (TA - Inspire), Researchhotkey (Hotkey - Learn)
+// Abilities: A04N (TM - Paradox), Hotkey (Hotkey - Normal)
 {
 R
 }
 
 STRING 3348
-// Abilities: A04N (TM - Paradox), Researchhotkey (Hotkey - Learn)
+// Abilities: A03S (MS - Unleash Mana), Researchhotkey (Hotkey - Learn)
 {
 R
 }
@@ -8633,50 +8495,38 @@ STRING 3367
 (Not Invulnurable)
 }
 
-STRING 3371
-// Abilities: A03P (Frost Nova), Name (Name)
-{
-Frost Nova
-}
-
 STRING 3372
-// Abilities: A03P (Frost Nova), Researchubertip (Tooltip - Learn - Extended)
+// Abilities: A03P (MS - Mana Bomb), Researchubertip (Tooltip - Learn - Extended)
 {
 Thing
 }
 
-STRING 3373
-// Abilities: A03P (Frost Nova), Researchtip (Tooltip - Learn)
-{
-Frost Nova
-}
-
 STRING 3379
-// Abilities: A03P (Frost Nova), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A03P (MS - Mana Bomb), Ubertip (Tooltip - Normal - Extended)
 {
 Channels powerful warding magic.
 }
 
 STRING 3380
-// Abilities: A03P (Frost Nova), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A03P (MS - Mana Bomb), Ubertip (Tooltip - Normal - Extended)
 {
 Channels powerful warding magic.
 }
 
 STRING 3381
-// Abilities: A03P (Frost Nova), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A03P (MS - Mana Bomb), Ubertip (Tooltip - Normal - Extended)
 {
 Channels powerful warding magic.
 }
 
 STRING 3382
-// Abilities: A03P (Frost Nova), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A03P (MS - Mana Bomb), Ubertip (Tooltip - Normal - Extended)
 {
 Channels powerful warding magic.
 }
 
 STRING 3383
-// Abilities: A03P (Frost Nova), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A03P (MS - Mana Bomb), Ubertip (Tooltip - Normal - Extended)
 {
 Channels powerful warding magic.
 }
@@ -8694,7 +8544,7 @@ Spawn Water Elemental Level 1
 }
 
 STRING 3388
-// Abilities: A04K (TM - Chrono Atrophy), Hotkey (Hotkey - Normal)
+// Abilities: A04M (Chrono Atropy (dummy ALLIES)), Hotkey (Hotkey - Normal)
 {
 Q
 }
@@ -8999,42 +8849,6 @@ STRING 3436
 (Level 3)
 }
 
-STRING 3437
-// Abilities: A03P (Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova - [|cffffcc00Level 1|r]
-}
-
-STRING 3438
-// Abilities: A03P (Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova - [|cffffcc00Level 2|r]
-}
-
-STRING 3439
-// Abilities: A03P (Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova - [|cffffcc00Level 3|r]
-}
-
-STRING 3440
-// Abilities: A03P (Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova - [|cffffcc00Level 4|r]
-}
-
-STRING 3441
-// Abilities: A03P (Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova - [|cffffcc00Level 5|r]
-}
-
-STRING 3442
-// Abilities: A03P (Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova - [|cffffcc00Level 6|r]
-}
-
 STRING 3443
 // Abilities: A01B (TC - Attack), Name (Name)
 {
@@ -9084,13 +8898,13 @@ This base has been captured.  You can now teleport to it.
 }
 
 STRING 3519
-// Abilities: A04K (TM - Chrono Atrophy), Researchhotkey (Hotkey - Learn)
+// Abilities: A03U (Switch), Hotkey (Hotkey - Normal)
 {
 Q
 }
 
 STRING 3520
-// Abilities: A04M (Chrono Atropy (dummy ALLIES)), Hotkey (Hotkey - Normal)
+// Abilities: A03U (Switch), Researchhotkey (Hotkey - Learn)
 {
 Q
 }
@@ -10088,7 +9902,7 @@ V
 }
 
 STRING 3709
-// Abilities: A03U (Switch), Hotkey (Hotkey - Normal)
+// Abilities: A015 (MS - Soul Bind), Researchhotkey (Hotkey - Learn)
 {
 Q
 }
@@ -10184,7 +9998,7 @@ Creates a circle where all enemy units who enter have their attack and movement 
 }
 
 STRING 3725
-// Abilities: A03U (Switch), Researchhotkey (Hotkey - Learn)
+// Abilities: A015 (MS - Soul Bind), Hotkey (Hotkey - Normal)
 {
 Q
 }
@@ -10358,7 +10172,7 @@ Paradox (Effect)
 }
 
 STRING 3771
-// Abilities: A04N (TM - Paradox), Hotkey (Hotkey - Normal)
+// Abilities: A03S (MS - Unleash Mana), Hotkey (Hotkey - Normal)
 {
 R
 }
@@ -14089,55 +13903,37 @@ STRING 4607
 }
 
 STRING 4608
-// Abilities: A03S (Unleash Mana), Name (Name)
+// Abilities: A03S (MS - Unleash Mana), Tip (Tooltip - Normal)
 {
 Unleash Mana
 }
 
-STRING 4609
-// Abilities: A03S (Unleash Mana), Researchhotkey (Hotkey - Learn)
-{
-R
-}
-
-STRING 4610
-// Abilities: A03S (Unleash Mana), Hotkey (Hotkey - Normal)
-{
-R
-}
-
 STRING 4611
-// Abilities: A03S (Unleash Mana), Researchtip (Tooltip - Learn)
+// Abilities: A03S (MS - Unleash Mana), Researchtip (Tooltip - Learn)
 {
 Unleah Mana
 }
 
 STRING 4612
-// Abilities: A03S (Unleash Mana), Tip (Tooltip - Normal)
+// Abilities: A03S (MS - Unleash Mana), Tip (Tooltip - Normal)
 {
 Unleash Mana
 }
 
 STRING 4613
-// Abilities: A03S (Unleash Mana), Tip (Tooltip - Normal)
-{
-Unleash Mana
-}
-
-STRING 4614
-// Abilities: A03S (Unleash Mana), Tip (Tooltip - Normal)
+// Abilities: A03S (MS - Unleash Mana), Tip (Tooltip - Normal)
 {
 Unleash Mana
 }
 
 STRING 4615
-// Abilities: A03S (Unleash Mana), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A03S (MS - Unleash Mana), Ubertip (Tooltip - Normal - Extended)
 {
 Channels powerful warding magic.
 }
 
 STRING 4616
-// Abilities: A03S (Unleash Mana), Ubertip (Tooltip - Normal - Extended)
+// Abilities: A03S (MS - Unleash Mana), Ubertip (Tooltip - Normal - Extended)
 {
 Channels powerful warding magic.
 }
@@ -14152,5 +13948,137 @@ STRING 4618
 // Units: h01H (Spell Dummy), EditorSuffix (Name - Editor Suffix)
 {
 (Mana Explosion)
+}
+
+STRING 4619
+// Abilities: A03P (MS - Mana Bomb), Name (Name)
+{
+MS - Mana Bomb
+}
+
+STRING 4620
+// Abilities: A03P (MS - Mana Bomb), Researchtip (Tooltip - Learn)
+{
+Learn Mana Bomb- [|cffffcc00Level %d|r]
+}
+
+STRING 4621
+// Abilities: A03P (MS - Mana Bomb), Tip (Tooltip - Normal)
+{
+Mana Bomb - [|cffffcc00Level 1|r]
+}
+
+STRING 4622
+// Abilities: A03P (MS - Mana Bomb), Tip (Tooltip - Normal)
+{
+Mana Bomb - [|cffffcc00Level 2|r]
+}
+
+STRING 4623
+// Abilities: A03P (MS - Mana Bomb), Tip (Tooltip - Normal)
+{
+Mana Bomb - [|cffffcc00Level 3|r]
+}
+
+STRING 4624
+// Abilities: A03P (MS - Mana Bomb), Tip (Tooltip - Normal)
+{
+Mana Bomb - [|cffffcc00Level 4|r]
+}
+
+STRING 4625
+// Abilities: A03P (MS - Mana Bomb), Tip (Tooltip - Normal)
+{
+Mana Bomb - [|cffffcc00Level 5|r]
+}
+
+STRING 4626
+// Abilities: A03P (MS - Mana Bomb), Tip (Tooltip - Normal)
+{
+Mana Bomb - [|cffffcc00Level 6|r]
+}
+
+STRING 4627
+// Buffs/Effects: B00F (Soul Bind), EditorName (Name (Editor Only))
+{
+Soul Bind
+}
+
+STRING 4628
+// Buffs/Effects: B00F (Soul Bind), Bufftip (Tooltip)
+{
+Soul Bind
+}
+
+STRING 4638
+// Abilities: A03S (MS - Unleash Mana), Name (Name)
+{
+MS - Unleash Mana
+}
+
+STRING 4639
+// Abilities: A015 (MS - Soul Bind), Name (Name)
+{
+MS - Soul Bind
+}
+
+STRING 4640
+// Abilities: A015 (MS - Soul Bind), Researchtip (Tooltip - Learn)
+{
+Learn Soul Bind - [|cffffcc00Level %d|r]
+}
+
+STRING 4641
+// Abilities: A015 (MS - Soul Bind), Tip (Tooltip - Normal)
+{
+Soul Bind - [|cffffcc00Level 1|r]
+}
+
+STRING 4642
+// Abilities: A015 (MS - Soul Bind), Tip (Tooltip - Normal)
+{
+Soul Bind - [|cffffcc00Level 2|r]
+}
+
+STRING 4643
+// Abilities: A015 (MS - Soul Bind), Tip (Tooltip - Normal)
+{
+Soul Bind - [|cffffcc00Level 3|r]
+}
+
+STRING 4644
+// Abilities: A015 (MS - Soul Bind), Tip (Tooltip - Normal)
+{
+Soul Bind - [|cffffcc00Level 4|r]
+}
+
+STRING 4645
+// Abilities: A015 (MS - Soul Bind), Tip (Tooltip - Normal)
+{
+Soul Bind - [|cffffcc00Level 5|r]
+}
+
+STRING 4646
+// Abilities: A015 (MS - Soul Bind), Tip (Tooltip - Normal)
+{
+Soul Bind - [|cffffcc00Level 6|r]
+}
+
+STRING 4647
+// Buffs/Effects: B00F (Soul Bind), Buffubertip (Tooltip - Extended)
+{
+This unit's soul is bound.  When it dies, the units soul will be consumed by the Mana Addict gaining mana.
+}
+
+STRING 4648
+// Units: e00D (Soul), Name (Name)
+{
+Soul
+}
+
+STRING 4649
+// Units: e00D (Soul), EditorSuffix (Name - Editor Suffix)
+{
+(Soul Bind)
 }
 
