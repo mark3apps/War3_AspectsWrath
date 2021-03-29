@@ -1086,9 +1086,10 @@ function init_Abilities()
                 break
             end
 
-            if UnitHasBuffBJ(u, hero.soulBind.buff) then
+            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and IsUnitAliveBJ(u) then
                 indexer:addKey(u, "soulBind", castingUnit)
                 indexer:addKey(u, "soulBindLevel", level)
+                print(GetUnitName(indexer:getKey(u, "soulBind")))
             end
 
             GroupRemoveUnit(g, u)
@@ -1101,7 +1102,7 @@ function init_Abilities()
 
         local u, mana, sfx
 
-        local dyingUnit = GetDyingUnit()
+        local dyingUnit = BlzGetEventDamageTarget()
         local lDyingUnit = GetUnitLoc(dyingUnit)
 
         local castingUnit = indexer:getKey(dyingUnit, "soulBind")
@@ -1176,20 +1177,20 @@ function init_Abilities()
         }
 
         local t = CreateTrigger()
-        TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_DEATH)
+        TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_DAMAGED)
         TriggerAddAction(t, function()
 
-            local buffId
-            local dyingUnit = GetDyingUnit()
+            if GetUnitState(BlzGetEventDamageTarget(), UNIT_STATE_LIFE) - GetEventDamage() < 0 then
+                local dyingUnit = BlzGetEventDamageTarget()
 
-            for i = 1, #ability.buff do
-                if UnitHasBuffBJ(dyingUnit, ability.buff[i].buff) then
+                for i = 1, #ability.buff do
 
-                    print(ability.buff[i].name)
-                    ability[ability.buff[i].name]()
+                    if UnitHasBuffBJ(dyingUnit, ability.buff[i].id) then
+                        print(ability.buff[i].name)
+                        ability[ability.buff[i].name]()
+                    end
                 end
             end
-
         end)
 
     end
