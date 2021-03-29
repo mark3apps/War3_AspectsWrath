@@ -273,10 +273,13 @@ function init_Abilities()
             end)
 
             unitCount = CountUnitsInGroup(g)
+            if unitCount > 3 then
+                unitCount = 3
+            end
 
             -- Shoot the Missles
             for i = 1, unitCount do
-                SetUnitState(castingUnit, UNIT_STATE_MANA, mana - 3)
+                SetUnitState(castingUnit, UNIT_STATE_MANA, mana - 2)
                 mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
 
                 uTarget = GroupPickRandomUnit(g)
@@ -312,7 +315,7 @@ function init_Abilities()
         local player = GetOwningPlayer(castingUnit)
 
         -- Ability Vars
-        local level = GetUnitAbilityLevel(castingUnit, hero.unleashMana.id)
+        local level = GetUnitAbilityLevel(castingUnit, hero.soulBind.id)
         local xCast = GetSpellTargetX()
         local yCast = GetSpellTargetY()
         local lCast = Location(xCast, yCast)
@@ -331,7 +334,6 @@ function init_Abilities()
             if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and IsUnitAliveBJ(u) then
                 indexer:addKey(u, "soulBind", castingUnit)
                 indexer:addKey(u, "soulBindLevel", level)
-                print(GetUnitName(indexer:getKey(u, "soulBind")))
             end
 
             GroupRemoveUnit(g, u)
@@ -350,24 +352,24 @@ function init_Abilities()
         local castingUnit = indexer:getKey(dyingUnit, "soulBind")
         local level = indexer:getKey(dyingUnit, "soulBindLevel")
         local player = GetOwningPlayer(castingUnit)
-
-        print("Working!")
         print(GetUnitName(castingUnit))
 
         local distance = distanceBetweenUnits(dyingUnit, castingUnit)
 
         if distance < 2000 then
             u = CreateUnitAtLoc(player, FourCC("e00D"), lDyingUnit, 0)
-            IssueTargetOrder(u, "move", castingUnit)
 
-            while distance > 50 and IsUnitAliveBJ(castingUnit) do
-                PolledWait(2)
+            while distance > 100 and IsUnitAliveBJ(castingUnit) do
+                IssueTargetOrder(u, "attack", castingUnit)
+                distance = distanceBetweenUnits(u, castingUnit)
+                print(distance)
+                PolledWait(0.1)
             end
 
             KillUnit(u)
 
             mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-            SetUnitState(castingUnit, UNIT_STATE_MANA, mana + valueFactor(level, 10, 1, 2, 0))
+            SetUnitState(castingUnit, UNIT_STATE_MANA, mana + valueFactor(level, 20, 1, 5, 0))
 
             sfx = AddSpecialEffectTarget("Abilities/Spells/Other/Charm/CharmTarget.mdl", castingUnit, "chest")
             DestroyEffect(sfx)
@@ -389,6 +391,7 @@ function init_Abilities()
         ability.spellEffect[hero.manaExplosion.id] = hero.manaExplosion.name
         ability.spellEffect[hero.manaBomb.id] = hero.manaBomb.name
         ability.spellEffect[hero.unleashMana.id] = hero.unleashMana.name
+        ability.spellEffect[hero.soulBind.id] = hero.soulBind.name
 
         local t = CreateTrigger()
         TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
