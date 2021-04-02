@@ -1609,12 +1609,6 @@ STRING 564
 Creates a shield that absorbs damage by using the Mana Seeker's mana, increases armor and returns a percentage of melee damage back.
 }
 
-STRING 566
-// Abilities: A016 (MS - Frost Nova), Name (Name)
-{
-MS - Frost Nova
-}
-
 STRING 571
 // Abilities: S001 (TC - Defender Stategy - Fall Back), Name (Name)
 {
@@ -2720,48 +2714,6 @@ STRING 985
 (Generic)
 }
 
-STRING 986
-// Abilities: A017 (MS - Frost Nova), EditorSuffix (Editor Suffix)
-{
-(Secondary)
-}
-
-STRING 987
-// Abilities: A016 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 988
-// Abilities: A016 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 989
-// Abilities: A016 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 990
-// Abilities: A016 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 991
-// Abilities: A016 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 992
-// Abilities: A017 (MS - Frost Nova), Name (Name)
-{
-MS - Frost Nova
-}
-
 STRING 996
 // Units: nheb (High Elven Hall), Name (Name)
 {
@@ -2778,42 +2730,6 @@ STRING 998
 // Abilities: A013 (Barrage), EditorSuffix (Editor Suffix)
 {
 (High Elf)
-}
-
-STRING 1000
-// Abilities: A017 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 1001
-// Abilities: A017 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 1002
-// Abilities: A017 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 1003
-// Abilities: A017 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 1004
-// Abilities: A017 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 1005
-// Abilities: A014 (MS - Frost Nova), Name (Name)
-{
-MS - Frost Nova
 }
 
 STRING 1006
@@ -8441,48 +8357,6 @@ STRING 3348
 R
 }
 
-STRING 3349
-// Abilities: A016 (MS - Frost Nova), EditorSuffix (Editor Suffix)
-{
-(Primary Wide)
-}
-
-STRING 3351
-// Abilities: A014 (MS - Frost Nova), EditorSuffix (Editor Suffix)
-{
-(Primary)
-}
-
-STRING 3352
-// Abilities: A014 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 3353
-// Abilities: A014 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 3354
-// Abilities: A014 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 3355
-// Abilities: A014 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
-STRING 3356
-// Abilities: A014 (MS - Frost Nova), Tip (Tooltip - Normal)
-{
-Frost Nova
-}
-
 STRING 3366
 // Units: h00V (Spell Dummy), Name (Name)
 {
@@ -13908,12 +13782,6 @@ STRING 4608
 Unleash Mana
 }
 
-STRING 4611
-// Abilities: A03S (MS - Unleash Mana), Researchtip (Tooltip - Learn)
-{
-Unleah Mana
-}
-
 STRING 4612
 // Abilities: A03S (MS - Unleash Mana), Tip (Tooltip - Normal)
 {
@@ -13942,12 +13810,6 @@ STRING 4617
 // Units: h01H (Spell Dummy), Name (Name)
 {
 Spell Dummy
-}
-
-STRING 4618
-// Units: h01H (Spell Dummy), EditorSuffix (Name - Editor Suffix)
-{
-(Mana Explosion)
 }
 
 STRING 4619
@@ -14080,5 +13942,17 @@ STRING 4649
 // Units: e00D (Soul), EditorSuffix (Name - Editor Suffix)
 {
 (Soul Bind)
+}
+
+STRING 4650
+// Units: h01H (Spell Dummy), EditorSuffix (Name - Editor Suffix)
+{
+(Unleash Mana)
+}
+
+STRING 4651
+// Abilities: A03S (MS - Unleash Mana), Researchtip (Tooltip - Learn)
+{
+Learn Unleash Mana - [|cffffcc00Level %d|r]
 }
 

@@ -848,7 +848,7 @@ function init_Abilities()
         local factor = 1
         local tick = 0.04
         local damageFull = manaSpell * (spellLevel * 0.2 + 0.8)
-        local aoe = (200 + (spellLevel * 40)) * manaPercent + 100
+        local aoe = (100 + (spellLevel * 40)) * manaPercent + 200
 
         -- Prep Spell
         SetUnitManaBJ(castingUnit, manaLeft)
@@ -1002,7 +1002,7 @@ function init_Abilities()
         -- Ability Vars
         local level = GetUnitAbilityLevel(castingUnit, hero.unleashMana.id)
         local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-        local damageMissles = 40 + (40 * level - 40)
+        local damageMissles = 60 + (60 * level - 60)
 
         local aoeMissles = 800 + 100 * level
 
@@ -1110,7 +1110,6 @@ function init_Abilities()
         local castingUnit = indexer:getKey(dyingUnit, "soulBind")
         local level = indexer:getKey(dyingUnit, "soulBindLevel")
         local player = GetOwningPlayer(castingUnit)
-        print(GetUnitName(castingUnit))
 
         local distance = distanceBetweenUnits(dyingUnit, castingUnit)
 
@@ -1120,7 +1119,6 @@ function init_Abilities()
             while distance > 100 and IsUnitAliveBJ(castingUnit) do
                 IssueTargetOrder(u, "attack", castingUnit)
                 distance = distanceBetweenUnits(u, castingUnit)
-                print(distance)
                 PolledWait(0.1)
             end
 
@@ -1160,7 +1158,6 @@ function init_Abilities()
             -- If the Ability ID is a match, find the function
             if not (abilityName == nil) then
 
-                print(abilityName)
                 debugfunc(function()
                     ability[abilityName]()
                 end, "Ability Cast")
@@ -1189,7 +1186,6 @@ function init_Abilities()
                 for i = 1, #ability.buff do
 
                     if UnitHasBuffBJ(dyingUnit, ability.buff[i].id) then
-                        print(ability.buff[i].name)
                         ability[ability.buff[i].name]()
                     end
                 end
