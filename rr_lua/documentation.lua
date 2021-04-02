@@ -9,7 +9,7 @@
 --
 --  Add new things to the fold
 --  [X] ai.addTown(name, force)                           -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
---  [ ] ai.addLandmark(town, {types}, name, unit, rect, rectLookAt, radius, maxCapacity)   -- Sets up a new landmark in a town that will be used by Units
+--  [ ] ai.addLandmark(town, {types}, name, rect, *unit, *rectLookAt, *radius, *maxCapacity)   -- Sets up a new landmark in a town that will be used by Units
 --  [ ] ai.addUnit(town, type, unit, name, shift*)                  -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
 --
 --  Extend Town Size
@@ -109,3 +109,11 @@
 --          {move, sleep, play}
 --
 --  [ ] custom      -- No states will be added to this unit.  Will need to manually set up what unit will do.
+--
+--
+-----------
+--SHIFTS
+--
+--  [ ] day     -- Units will be awake and active during the day.
+--  [ ] night   -- Units will be awake and active during the night.
+--  [ ] all     -- Units will be awake and active always.
