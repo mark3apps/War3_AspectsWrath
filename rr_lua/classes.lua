@@ -4,7 +4,7 @@
 -- INIT_ai() -- This needs to be run at initialization
 --
 --  Functions to Add new things to the fold
---  [ ]    ai.addTown(name, rect, force, {states})                         -- Adds a new town to the map.  (Can be extended with additional RECTs)
+--  [ ]    ai.addTown(name, force, {states})                         -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
 --  [ ]    ai.extendTown(name, rect)                                       -- Adds an additional RECT to a town that already exists
 --  [ ]    ai.addLandmark(town, {types}, name, unit, rect, rectLook, maxCapacity)   -- Sets up a new landmark in a town that will be used by Units
 --  [ ]    ai.addUnit(town, {types}, unit, name, {states}, unitLink)          -- Adds a unit into the fold to be controlled by the AI
