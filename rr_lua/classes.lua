@@ -17,8 +17,8 @@
 --
 --  Town Actions
 --  [ ] ai.townState(name, state)               -- Changes the town state to the specified state
---  [ ] ai.townVulnerable(name)                 -- Sets all units and landmarks of a town to be vulnerable.
---  [ ] ai.townInvulnerable(name)               -- Sets all units and landmarks of a town to be invulnerable.
+--  [ ] ai.townVulnerableUnits(name, flag)      -- Sets all units of a town to be vulnerable / invulnerable.
+--  [ ] ai.townVulnerableLandmarks(name, flag)  -- Sets all landmarks of a town to be vulnerable / invulnerable.
 --  [ ] ai.townHurtUnits(name, low, high)       -- Damages all units of the town by a random percentage from low to high.
 --  [ ] ai.townHurtLandmarks(name, low, high)   -- Damages all landmarks of the town by a random percentage from low to high.
 --  [ ] ai.townAddUnits(name, amount, unitType) -- Adds additional units of unit type to the town and places them at a random residence.
