@@ -1,10 +1,9 @@
-
 -- AI FUNCTIONS
 --
 -- INIT_ai() -- This needs to be run at Map initialization as a custom script
 --
 -----------
---FUNCTIONS
+-- FUNCTIONS
 --  * means optional variable
 --
 --  Add new things to the fold
@@ -23,7 +22,6 @@
 --  [ ] ai.townHurtUnits(name, low, high)       -- Damages all units of the town by a random percentage from low to high.
 --  [ ] ai.townHurtLandmarks(name, low, high)   -- Damages all landmarks of the town by a random percentage from low to high.
 --  [ ] ai.townAddUnits(name, amount, unitType) -- Adds additional units of unit type to the town and places them at a random residence.
-
 --  Landmark Actions
 --  [ ] ai.landmarkState(rect, state)           -- Changes the landmark state to the specified state
 --  [ ] ai.landmarkKill(rect)                   -- Kills the landmark, displacing any Units connected to it.
@@ -42,7 +40,7 @@
 --  [ ] ai.unitCustom(unit, {states})           -- Set unit as a custom type.  Will take on the states selected.
 --
 -----------
---STATES
+-- STATES
 --
 --  Town States
 --  [ ] auto        -- The town will automatically choose what state it should be in.
@@ -77,7 +75,7 @@
 --
 --
 -----------
---TYPES
+-- TYPES
 --
 --  Landmark Types (Each landmark can be multiple types)
 --  [ ] residence   -- This landmark will allow Units to sleep in it.
@@ -112,7 +110,7 @@
 --
 --
 -----------
---SHIFTS
+-- SHIFTS
 --
 --  [ ] day     -- Units will be awake and active during the day.
 --  [ ] night   -- Units will be awake and active during the night.
