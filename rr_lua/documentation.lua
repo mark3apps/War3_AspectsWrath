@@ -8,7 +8,7 @@
 --  * means optional variable
 --
 --  Add new things to the fold
---  [ ] ai.addTown(name, force)                           -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
+--  [X] ai.addTown(name, force)                           -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
 --  [ ] ai.addLandmark(town, {types}, name, unit, rect, rectLookAt, radias, maxCapacity)   -- Sets up a new landmark in a town that will be used by Units
 --  [ ] ai.addUnit(town, type, unit, name, shift*)                  -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
 --
