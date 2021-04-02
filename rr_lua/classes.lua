@@ -3,6 +3,10 @@ function INIT_ai()
 
     ai.data = {}
 
+    --------
+    --  Add new things to the fold
+    --------
+
     -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
     function ai.addTown(name, force)
 
@@ -36,7 +40,7 @@ function INIT_ai()
 
     end
 
-    function ai.addLandmark(town, types, name, unit, rect, rectLookAt, radias, maxCapacity)
+    function ai.addLandmark(town, types, name, unit, rect, rectLookAt, radius, maxCapacity)
 
     end
 
