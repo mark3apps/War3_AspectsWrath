@@ -22,6 +22,7 @@
 --  [ ] ai.townHurtUnits(name, low, high)       -- Damages all units of the town by a random percentage from low to high.
 --  [ ] ai.townHurtLandmarks(name, low, high)   -- Damages all landmarks of the town by a random percentage from low to high.
 --  [ ] ai.townAddUnits(name, amount, unitType) -- Adds additional units of unit type to the town and places them at a random residence.
+--
 --  Landmark Actions
 --  [ ] ai.landmarkState(rect, state)           -- Changes the landmark state to the specified state
 --  [ ] ai.landmarkKill(rect)                   -- Kills the landmark, displacing any Units connected to it.
