@@ -12,10 +12,16 @@
 --  [ ] ai.addLandmark(town, {types}, name, unit, rect, rectLookAt, maxCapacity)   -- Sets up a new landmark in a town that will be used by Units
 --  [ ] ai.addUnit(town, type, unit, name, shift*)                  -- Adds a unit into the fold to be controlled by the AI. Defaults to Day shift.
 --
---  Extend Objects
---  [ ] ai.extendTown(name, rect)                                   -- Adds an additional RECT to a town that already exists
---
---
+--  Extend Town Size
+--  [ ] ai.extendTown(name, rect)                -- Adds an additional RECT to a town that already exists
+
+--  Set Unit Types
+--  [ ] ai.unitVillager(unit)                   -- Set unit as a Villager
+--  [ ] ai.unitMilitia(unit, unitTypeTransform) -- Set unit as a Militia
+--  [ ] ai.unitTraveler(unit)                   -- Set unit as a Soldier
+--  [ ] ai.unitFollower(unit, unitFollowing)    -- Set unit as a Follower, also need to specify the unit to follow.
+--  [ ] ai.unitChild(unit)                      -- Set unit as a Child
+--  [ ] ai.unitCustom(unit, {states})           -- Set unit as a custom type.  Will take on the states selected.
 --
 -----------
 --STATES
@@ -43,6 +49,7 @@
 --  [ ] attack      -- Unit will attack the specified town.
 --  [ ] follow      -- Unit will follow it's attached unit
 --  [ ] flee        -- Unit will try to run away. (Either to nearest safehouse, or the nearest allied Town)
+--  [ ] arm         -- Unit will try to find a barracks and arm himself to fight.
 --
 --
 --
@@ -63,7 +70,7 @@
 --          {relax, move, gather, sleep, flee}
 --
 --  [ ] militia     -- Appears as an ordinary villager but if town is in danger and contains a barracks, go to it and transform into a milita and fight.
---          {relax, move, gather, sleep, flee, defend}
+--          {relax, move, gather, sleep, arm}
 --
 --  [ ] soldier     -- protects the town, never leaves the town unless told to attack another town.  Will always fight when under attack.
 --          {relax, move, gather, sleep, guard, patrol, defend, attack}
