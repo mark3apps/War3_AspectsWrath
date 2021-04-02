@@ -85,7 +85,7 @@
 --  [ ] patrol      -- This landmark is used to allow units to patrol it.
 --  [ ] playarea    -- This landmark is an area to play in.
 --  [ ] gathering   -- This landmark is used to gather get the Units to gather together.
---  [ ] sight       -- This landmark is a sight seeing area where Units will move to and hang out at.
+--  [ ] sightseeing       -- This landmark is a sight seeing area where Units will move to and hang out at.
 --
 --
 --  Unit Types (Each unit can only be one type at a time)
