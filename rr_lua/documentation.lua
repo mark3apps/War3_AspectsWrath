@@ -7,12 +7,14 @@
 --  * means optional variable
 --
 --  Add new things to the fold
---  [X] ai.addTown(name, force)                           -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
---  [ ] ai.addLandmark(town, {types}, name, rect, *unit, *rectLookAt, *radius, *maxCapacity)   -- Sets up a new landmark in a town that will be used by Units
---  [ ] ai.addUnit(town, type, unit, name, shift*)                  -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
+--  [X] ai.addTown(name, force)                                                 -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
+--  [ ] ai.addLandmark(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
+--  [ ] ai.addUnit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
+--  [ ] ai.addRoute(town, name, type)                                           -- Adds a route that villagers can take when moving
 --
 --  Extend Town Size
 --  [ ] ai.extendTown(name, rect)                -- Adds an additional RECT to a town that already exists
+--  [ ] ai.extendRoute(name, rect, time, lookAt*, animation*) -- Adds at the end of the selected route, a new place for a unit to move to.
 --
 --  Town Actions
 --  [ ] ai.townState(name, state)               -- Changes the town state to the specified state
@@ -29,6 +31,8 @@
 --
 --  Unit Actions
 --  [ ] ai.unitState(unit, state)               -- Changes the unit state to the specified state
+--  [ ] ai.unitAddRoute(unit, route)            -- Adds the picked route to one of the units routes
+--  [ ] ai.unitChangeHome(unit, rect)           -- Changes the unit's home position to the center of the selected rect.
 --  [ ] ai.unitKill(unit)                       -- Kills the unit
 --  [ ] ai.unitPause(unit, unitLookAt)          -- Stops the unit and tells it to look at a unit.
 --
@@ -87,6 +91,9 @@
 --  [ ] gathering   -- This landmark is used to gather get the Units to gather together.
 --  [ ] sightseeing -- This landmark is a sight seeing area where Units will move to and hang out at.
 --
+--  Route Types (Each route can only be one type)
+--  [ ] inTown      -- This route will take units to other points in it's town.
+--  [ ] outOfTown   -- This route will take a unit to a new town.
 --
 --  Unit Types (Each unit can only be one type at a time)
 --  [ ] villager    -- Ordinary villager.  Will go about business, will always run away, and never fight.  Slows down when hurt, won't leave town.
