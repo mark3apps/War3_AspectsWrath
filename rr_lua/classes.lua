@@ -73,7 +73,62 @@ function INIT_ai()
 
     end
 
+    -- Add a new Route to the list
+    function ai.addRoute(name, type)
+        ai.routes[name] = {}
+        ai.routes[name].name = name
+        ai.routes[name].type = type
+        ai.routes[name].steps = {}
+        ai.routes[name].stepCount = 0
+
+        return true
+    end
+
+    function ai.routeAddStep(rect, time, lookAtRect, animation, speed)
+
+        speed = speed or nil
+        animation = animation or "stand 1"
+        lookAtRect = lookAtRect or nil
+        time = time or 0
+
+        local stepCount = ai.routes[name].stepCount + 1
+
+        ai.routes[name].stepCount = stepCount
+        ai.routes[name].steps[stepCount] = {optionCount = 1, options = {}}
+        ai.routes[name].steps[stepCount].options[1].rect = rect
+        ai.routes[name].steps[stepCount].options[1].time = time
+        ai.routes[name].steps[stepCount].options[1].speed = speed
+        ai.routes[name].steps[stepCount].options[1].lookAtRect = lookAtRect
+        ai.routes[name].steps[stepCount].options[1].animation = animation
+
+        return true
+
+    end
+
+    function ai.routeAddOption(route, step, rect, time, lookAtRect, animation, speed)
+        
+        speed = speed or nil
+        animation = animation or "stand 1"
+        lookAtRect = lookAtRect or nil
+        time = time or 0
+
+        local stepCount = ai.routes[name].stepCount
+
+        local optionCount = ai.routes[name].steps[stepCount].optionCount + 1
+
+        ai.routes[name].steps[stepCount].optionCount = optionCount
+        ai.routes[name].steps[stepCount].options[optionCount].rect = rect
+        ai.routes[name].steps[stepCount].options[optionCount].time = time
+        ai.routes[name].steps[stepCount].options[optionCount].speed = speed
+        ai.routes[name].steps[stepCount].options[optionCount].lookAtRect = lookAtRect
+        ai.routes[name].steps[stepCount].options[optionCount].animation = animation
+
+        return true
+
+    end
+
     function ai.addUnit(town, type, unit, name, shift)
+
 
     end
 

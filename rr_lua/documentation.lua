@@ -8,13 +8,16 @@
 --
 --  Add new things to the fold
 --  [X] ai.addTown(name, hostileForce)                                                 -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
---  [ ] ai.addLandmark(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
+--  [X] ai.addLandmark(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
 --  [ ] ai.addUnit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
---  [ ] ai.addRoute(town, name, type)                                           -- Adds a route that villagers can take when moving
+--  [X] ai.addRoute(name)                                           -- Adds a route that villagers can take when moving
 --
 --  Extend Town Size
---  [ ] ai.extendTown(name, rect)                -- Adds an additional RECT to a town that already exists
---  [ ] ai.extendRoute(name, rect, time, lookAt*, animation*) -- Adds at the end of the selected route, a new place for a unit to move to.
+--  [X] ai.extendTown(name, rect)                -- Adds an additional RECT to a town that already exists
+
+--  Route Actions
+--  [X] ai.routeAddStep(rect, time*, lookAtRect*, animation*, speed*) -- Adds at the end of the selected route, a new place for a unit to move to.
+--  [ ] ai.routeAddOption(route, step,)
 --
 --  Town Actions
 --  [ ] ai.townState(name, state)               -- Changes the town state to the specified state
@@ -86,10 +89,7 @@
 --  [ ] residence   -- This landmark will allow Units to sleep in it.
 --  [ ] safehouse   -- This landmark will allow Units to Hide in it when Fleeing from Danger.
 --  [ ] barracks    -- This landmark can house soldiers to be deployed if the town is under attack.
---  [ ] patrol      -- This landmark is used to allow units to patrol it.
---  [ ] playarea    -- This landmark is an area to play in.
 --  [ ] gathering   -- This landmark is used to gather get the Units to gather together.
---  [ ] sightseeing -- This landmark is a sight seeing area where Units will move to and hang out at.
 --
 --  Route Types (Each route can only be one type)
 --  [ ] inTown      -- This route will take units to other points in it's town.
