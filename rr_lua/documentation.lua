@@ -9,15 +9,17 @@
 --  Add new things to the fold
 --  [X] ai.addTown(name, hostileForce)                                                 -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
 --  [X] ai.addLandmark(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
---  [ ] ai.addUnit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
---  [X] ai.addRoute(name)                                           -- Adds a route that villagers can take when moving
+--  [X] ai.addUnit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
+--  [X] ai.addRoute(name)                                                       -- Adds a route that villagers can take when moving
 --
 --  Extend Town Size
 --  [X] ai.extendTown(name, rect)                -- Adds an additional RECT to a town that already exists
 
 --  Route Actions
---  [X] ai.routeAddStep(rect, time*, lookAtRect*, animation*, speed*) -- Adds at the end of the selected route, a new place for a unit to move to.
---  [ ] ai.routeAddOption(route, step,)
+--  [X] ai.routeAddStep(rect, time*, lookAtRect*, animation*, speed*)            -- Adds at the end of the selected route, a new place for a unit to move to.
+--  [X] ai.routeAddOption(route, step, rect, time, lookAtRect, animation, speed) -- Adds an additional option to the picked route step
+--  [ ] ai.routeGetStepCount(route)
+--  [ ] ai.routeGetOptionCount(route, step)
 --
 --  Town Actions
 --  [ ] ai.townState(name, state)               -- Changes the town state to the specified state

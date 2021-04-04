@@ -1,10 +1,12 @@
 function INIT_ai()
-    ai = {}
 
+    -- Set up basic Variables
+    ai = {}
     ai.towns = {}
     ai.routes = {}
     ai.landmarks = {}
     ai.units = {}
+    ai.units.g = CreateGroup()
 
     --------
     --  Add new things to the fold
@@ -19,15 +21,14 @@ function INIT_ai()
 
         -- Set Up Unit Group
         ai.towns[name].units = CreateGroup()
+        ai.towns[name].unitCount = 0
 
         -- Set up Landmarks
         ai.towns[name].residence = {}
         ai.towns[name].safehouse = {}
         ai.towns[name].barracks = {}
         ai.towns[name].patrol = {}
-        ai.towns[name].playarea = {}
         ai.towns[name].gathering = {}
-        ai.towns[name].sightseeing = {}
 
         -- Sets the Player group that the town will behave hostily towards
         ai.towns[name].hostileForce = hostileForce
@@ -73,8 +74,10 @@ function INIT_ai()
 
     end
 
-    -- Add a new Route to the list
+    -- Adds a route that villagers can take when moving
     function ai.addRoute(name, type)
+
+        -- Set up the route Vars
         ai.routes[name] = {}
         ai.routes[name].name = name
         ai.routes[name].type = type
@@ -84,52 +87,107 @@ function INIT_ai()
         return true
     end
 
+    -- Adds at the end of the selected route, a new place for a unit to move to.
     function ai.routeAddStep(rect, time, lookAtRect, animation, speed)
 
+        -- Set default values if one wasn't specified
         speed = speed or nil
         animation = animation or "stand 1"
         lookAtRect = lookAtRect or nil
         time = time or 0
 
+        -- Update the count of steps in the route
         local stepCount = ai.routes[name].stepCount + 1
 
+        -- Add the step to the route
         ai.routes[name].stepCount = stepCount
-        ai.routes[name].steps[stepCount] = {optionCount = 1, options = {}}
-        ai.routes[name].steps[stepCount].options[1].rect = rect
-        ai.routes[name].steps[stepCount].options[1].time = time
-        ai.routes[name].steps[stepCount].options[1].speed = speed
-        ai.routes[name].steps[stepCount].options[1].lookAtRect = lookAtRect
-        ai.routes[name].steps[stepCount].options[1].animation = animation
+        ai.routes[name].steps[stepCount] = {
+            optionCount = 1,
+            options = {}
+        }
+
+        ai.routes[name].steps[stepCount].options[1] = {
+            rect = rect,
+            time = time,
+            speed = speed,
+            lookAtRect = lookAtRect,
+            animation = animation
+        }
 
         return true
 
     end
 
+    -- Adds an additional option to the picked route step
     function ai.routeAddOption(route, step, rect, time, lookAtRect, animation, speed)
-        
+
+        -- Set default values if one wasn't specified
         speed = speed or nil
         animation = animation or "stand 1"
         lookAtRect = lookAtRect or nil
         time = time or 0
 
+        -- Update the Option Count for the Route
         local stepCount = ai.routes[name].stepCount
-
         local optionCount = ai.routes[name].steps[stepCount].optionCount + 1
 
+        -- Add the Option to the Step in the Route
         ai.routes[name].steps[stepCount].optionCount = optionCount
-        ai.routes[name].steps[stepCount].options[optionCount].rect = rect
-        ai.routes[name].steps[stepCount].options[optionCount].time = time
-        ai.routes[name].steps[stepCount].options[optionCount].speed = speed
-        ai.routes[name].steps[stepCount].options[optionCount].lookAtRect = lookAtRect
-        ai.routes[name].steps[stepCount].options[optionCount].animation = animation
+        ai.routes[name].steps[stepCount].options[optionCount] =
+            {
+                rect = rect,
+                time = time,
+                speed = speed,
+                lookAtRect = lookAtRect,
+                animation = animation
+            }
 
         return true
 
+    end
+
+    function ai.routeGetStepCount(route)
+        return ai.routes[route].stepCount
+    end
+
+    function ai.routeGetOptionCount(route, step)
+        return ai.routes[route].steps[step].optionCount
     end
 
     function ai.addUnit(town, type, unit, name, shift)
 
+        shift = shift or "day"
 
+        local handleId = GetHandleId(unit)
+
+        -- Add to Town Unit groups
+        GroupAddUnit(ai.towns[name].units, unit)
+        GroupAddUnit(ai.units.g, unit)
+
+        -- Update Unit Count
+        ai.towns[name].unitCount = CountUnitsInGroup(ai.towns[name].units)
+        ai.units.count = CountUnitsInGroup(ai.units.g)
+
+        ai.units[handleId] = {}
+        ai.units[handleId] = {
+            unitType = GetUnitTypeId(unit),
+            unitName = GetUnitName(unit),
+            town = town,
+            name = name,
+            shift = shift,
+            type = type,
+            routes = {},
+            x = GetUnitX(unit),
+            y = GetUnitY(unit)
+        }
+
+        if type == "villager" then
+            ai.units[handleId].states = {"relax", "move", "sleep"}
+        end
+
+        ai.units[handleId].state = "relax"
+
+        return true
     end
 
     function ai.INIT_triggers()
