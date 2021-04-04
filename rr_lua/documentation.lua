@@ -7,28 +7,30 @@
 --  * means optional variable
 --
 --  Add new things to the fold
---  [X] ai.addTown(name, hostileForce)                                                 -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
+--  [X] ai.addTown(name, hostileForce)                                          -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
 --  [X] ai.addLandmark(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
 --  [X] ai.addUnit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
 --  [X] ai.addRoute(name)                                                       -- Adds a route that villagers can take when moving
 --
 --  Extend Town Size
---  [X] ai.extendTown(name, rect)                -- Adds an additional RECT to a town that already exists
+--  [X] ai.extendTown(name, rect)                                               -- Adds an additional RECT to a town that already exists
 
 --  Route Actions
 --  [X] ai.routeAddStep(rect, time*, lookAtRect*, animation*, speed*)            -- Adds at the end of the selected route, a new place for a unit to move to.
 --  [X] ai.routeAddOption(route, step, rect, time, lookAtRect, animation, speed) -- Adds an additional option to the picked route step
---  [ ] ai.routeGetStepCount(route)
---  [ ] ai.routeGetOptionCount(route, step)
+--  [X] ai.routeGetStepCount(route)
+--  [X] ai.routeGetOptionCount(route, step)
 --
 --  Town Actions
---  [ ] ai.townState(name, state)               -- Changes the town state to the specified state
---  [ ] ai.townHostileForce(name, force)        -- Changes the allegience of the town and all of the units to the new force.
---  [ ] ai.townVulnerableUnits(name, flag)      -- Sets all units of a town to be vulnerable / invulnerable.
---  [ ] ai.townVulnerableLandmarks(name, flag)  -- Sets all landmarks of a town to be vulnerable / invulnerable.
---  [ ] ai.townHurtUnits(name, low, high)       -- Damages all units of the town by a random percentage from low to high.
---  [ ] ai.townHurtLandmarks(name, low, high)   -- Damages all landmarks of the town by a random percentage from low to high.
---  [ ] ai.townAddUnits(name, amount, unitType) -- Adds additional units of unit type to the town and places them at a random residence.
+--  [X] ai.townState(name, state)                        -- Changes the town state to the specified state
+--  [X] ai.townHostileForce(name, force)                 -- Changes the allegience of the town and all of the units to the new force.
+--  [X] ai.townVulnerableUnits(name, [True, False])      -- Sets all units of a town to be vulnerable / invulnerable.
+--  [X] ai.townVulnerableLandmarks(name, [True, False])  -- Sets all landmarks of a town to be vulnerable / invulnerable.
+--  [X] ai.townUnitsHurt(name, low, high, kill)          -- Damages all units of the town by a random percentage from low to high.
+--  [X] ai.townUnitsSetLife(town, low, high)             -- Sets all units of a town to a percent life in a random number within the low and high.
+--  [ ] ai.townHurtLandmarks(name, low, high)            -- Damages all landmarks of the town by a random percentage from low to high.
+--  [ ] ai.townAddUnits(name, amount, unitType)          -- Adds additional units of unit type to the town and places them at a random residence.
+--  [ ] ai.townPause(town, [True, False])                -- Pauses / Unpauses all Units and Landmarks in a town.
 --
 --  Landmark Actions
 --  [ ] ai.landmarkState(rect, state)           -- Changes the landmark state to the specified state
@@ -38,8 +40,8 @@
 --  [ ] ai.unitState(unit, state)               -- Changes the unit state to the specified state
 --  [ ] ai.unitAddRoute(unit, route)            -- Adds the picked route to one of the units routes
 --  [ ] ai.unitChangeHome(unit, rect)           -- Changes the unit's home position to the center of the selected rect.
---  [ ] ai.unitKill(unit)                       -- Kills the unit
---  [ ] ai.unitPause(unit, unitLookAt)          -- Stops the unit and tells it to look at a unit.
+--  [ ] ai.unitKill(unit)                       -- Kills the unit and removes all references from AI.
+--  [ ] ai.unitPause(unit, flag)                -- Puases a unit.  Pauses the unit and all updating.
 --
 --  Set Unit Types
 --  [ ] ai.unitVillager(unit)                   -- Set unit as a Villager
@@ -98,7 +100,7 @@
 --  [ ] outOfTown   -- This route will take a unit to a new town.
 --
 --  Unit Types (Each unit can only be one type at a time)
---  [ ] villager    -- Ordinary villager.  Will go about business, will always run away, and never fight.  Slows down when hurt, won't leave town.
+--  [X] villager    -- Ordinary villager.  Will go about business, will always run away, and never fight.  Slows down when hurt, won't leave town.
 --          {relax, move, gather, sleep, flee}
 --
 --  [ ] militia     -- Appears as an ordinary villager but if town is in danger and contains a barracks, go to it and transform into a milita and fight.

@@ -18,6 +18,10 @@ function INIT_ai()
         -- Init the Town
         ai.towns[name] = {}
         ai.towns[name].name = name
+        ai.towns[name].paused = false
+        ai.towns[name].state = "auto"
+        ai.towns[name].stateCurrent = "normal"
+        ai.towns[name].states = {"auto", "normal", "danger", "pause", "abadon", "gather"}
 
         -- Set Up Unit Group
         ai.towns[name].units = CreateGroup()
@@ -87,6 +91,115 @@ function INIT_ai()
         return true
     end
 
+    -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
+    function ai.addUnit(town, type, unit, name, shift)
+
+        shift = shift or "day"
+
+        local handleId = GetHandleId(unit)
+
+        -- Add to Town Unit groups
+        GroupAddUnit(ai.towns[name].units, unit)
+        GroupAddUnit(ai.units.g, unit)
+
+        -- Update Unit Count
+        ai.towns[name].unitCount = CountUnitsInGroup(ai.towns[name].units)
+        ai.units.count = CountUnitsInGroup(ai.units.g)
+
+        ai.units[handleId] = {}
+        ai.units[handleId] = {
+            unitType = GetUnitTypeId(unit),
+            unitName = GetUnitName(unit),
+            town = town,
+            name = name,
+            shift = shift,
+            state = "auto",
+            type = type,
+            routes = {},
+            x = GetUnitX(unit),
+            y = GetUnitY(unit)
+        }
+
+        if type == "villager" then
+            ai.units[handleId].states = {"relax", "move", "sleep"}
+            ai.units[handleId].stateCurrent = "relax"
+
+        end
+
+        return true
+    end
+
+    --------
+    --  TOWN ACTIONS
+    --------
+
+    function ai.townState(town, state)
+
+        if tableContains(ai.towns[town].states, state) then
+            ai.towns[town].state = state
+            ai.towns[town].stateCurrent = state
+
+            ai.updateTown(town, state)
+
+            return true
+        end
+
+        return false
+    end
+
+    function ai.townHostileForce(town, force)
+
+        ai.towns[town].force = force
+        return true
+
+    end
+
+    function ai.townVulnerableUnits(town, flag)
+
+        ForGroup(ai.towns[town].gUnits, function()
+            local unit = GetEnumUnit()
+
+            SetUnitInvulnerable(unit, flag)
+        end)
+
+        return true
+
+    end
+
+    function ai.townUnitsHurt(town, low, high, kill)
+
+        ForGroup(ai.towns[town].gUnits, function()
+            local unit = GetEnumUnit()
+            local percentLife = GetUnitLifePercent(unit)
+            local randInt = GetRandomInt(low, high)
+
+            percentLife = percentLife - randInt
+            if not kill and percentLife <= 0 then
+                percentLife = 1
+            end
+
+            SetUnitLifePercentBJ(unit, percentLife)
+        end)
+
+        return true
+    end
+
+    function ai.townUnitsSetLife(town, low, high)
+
+        ForGroup(ai.towns[town].gUnits, function()
+            local unit = GetEnumUnit()
+            local percentLife = GetRandomInt(low, high)
+
+            SetUnitLifePercentBJ(unit, percentLife)
+        end)
+
+        return true
+    end
+
+    --------
+    --  ROUTE ACTIONS
+    --------
+
     -- Adds at the end of the selected route, a new place for a unit to move to.
     function ai.routeAddStep(rect, time, lookAtRect, animation, speed)
 
@@ -154,45 +267,33 @@ function INIT_ai()
         return ai.routes[route].steps[step].optionCount
     end
 
-    function ai.addUnit(town, type, unit, name, shift)
+    --------
+    --  UNIT ACTIONS
+    --------
 
-        shift = shift or "day"
+    function ai.unitAddRoute(unit, route)
 
-        local handleId = GetHandleId(unit)
-
-        -- Add to Town Unit groups
-        GroupAddUnit(ai.towns[name].units, unit)
-        GroupAddUnit(ai.units.g, unit)
-
-        -- Update Unit Count
-        ai.towns[name].unitCount = CountUnitsInGroup(ai.towns[name].units)
-        ai.units.count = CountUnitsInGroup(ai.units.g)
-
-        ai.units[handleId] = {}
-        ai.units[handleId] = {
-            unitType = GetUnitTypeId(unit),
-            unitName = GetUnitName(unit),
-            town = town,
-            name = name,
-            shift = shift,
-            type = type,
-            routes = {},
-            x = GetUnitX(unit),
-            y = GetUnitY(unit)
-        }
-
-        if type == "villager" then
-            ai.units[handleId].states = {"relax", "move", "sleep"}
-        end
-
-        ai.units[handleId].state = "relax"
-
-        return true
     end
+
+    function ai.unitKill(unit)
+
+    end
+
+    function ai.pauseUnit(unit, flag)
+
+    end
+
+    --------
+    --  TRIGGERS
+    --------
 
     function ai.INIT_triggers()
 
     end
+
+    --------
+    --  INIT
+    --------
 
     function ai.init()
 
