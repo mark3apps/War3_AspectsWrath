@@ -7,7 +7,7 @@
 --  * means optional variable
 --
 --  Add new things to the fold
---  [X] ai.addTown(name, force)                                                 -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
+--  [X] ai.addTown(name, hostileForce)                                                 -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
 --  [ ] ai.addLandmark(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
 --  [ ] ai.addUnit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
 --  [ ] ai.addRoute(town, name, type)                                           -- Adds a route that villagers can take when moving
@@ -18,7 +18,7 @@
 --
 --  Town Actions
 --  [ ] ai.townState(name, state)               -- Changes the town state to the specified state
---  [ ] ai.townForceChange(name, force)         -- Changes the allegience of the town and all of the units to the new force.
+--  [ ] ai.townHostileForce(name, force)        -- Changes the allegience of the town and all of the units to the new force.
 --  [ ] ai.townVulnerableUnits(name, flag)      -- Sets all units of a town to be vulnerable / invulnerable.
 --  [ ] ai.townVulnerableLandmarks(name, flag)  -- Sets all landmarks of a town to be vulnerable / invulnerable.
 --  [ ] ai.townHurtUnits(name, low, high)       -- Damages all units of the town by a random percentage from low to high.
