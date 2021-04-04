@@ -9,6 +9,15 @@ function dprint(message, level)
     end
 end
 
+function tableContains(table, element)
+    for _, value in pairs(table) do
+      if value == element then
+        return true
+      end
+    end
+    return false
+  end
+
 function distanceBetweenCoordinates(x1, y1, x2, y2) -- Find Distance between points
     return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
