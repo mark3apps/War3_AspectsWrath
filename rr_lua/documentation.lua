@@ -38,12 +38,14 @@
 --
 --  Unit Actions
 --  [ ] ai.unitState(unit, state)               -- Changes the unit state to the specified state
+--  [ ] ai.unitSetHome(unit, landmark)          -- Sets what landmark this unit considers it's home.  Will be used to sleep when off-shift.
 --  [X] ai.unitAddRoute(unit, route)            -- Adds the picked route to one of the units routes
+--  [ ] ai.unitAddRoutes(unit, {routes})        -- Adds all of the routes contained in the routes list specified to the Unit.
 --  [ ] ai.unitChangeHome(unit, rect)           -- Changes the unit's home position to the center of the selected rect.
 --  [X] ai.unitKill(unit)                       -- Kills the unit and removes all references from AI.
 --  [X] ai.unitRemove(unit)                     -- Removes the unit from the game and all references to it.
 --  [X] ai.unitPause(unit)                      -- Puases a unit.  Pauses the unit and all updating.
---  [ ] ai.unitPickRoute(unit, route*, step*)   -- Starts unit down specified Route.  If no route is chosen, then will pick a random route that has been assigned to the unit.
+--  [X] ai.unitPickRoute(unit, route*, step*)   -- Starts unit down specified Route.  If no route is chosen, then will pick a random route that has been assigned to the unit.
 --
 --  Set Unit Types
 --  [ ] ai.unitVillager(unit)                   -- Set unit as a Villager
@@ -81,11 +83,11 @@
 --  Unit States Available
 --  [ ] auto        -- Unit will automatically choose what state to be in.
 --  [ ] relax       -- Unit will stay where it's at and maybe run some specific animations.
---  [ ] move        -- Unit will move around to a different spot inside it's current town.
+--  [X] move        -- Unit will move around to a different spot inside it's current town.
+--  [X] returnHome  -- Unit will move back to it's home position.
 --  [ ] travel      -- Unit will travel to a new town.
 --  [ ] gather      -- Unit will move to the Town gathering spot, pick a random spot to stand in.
 --  [ ] sleep       -- Unit will look for a residence to sleep in for the night.
---  [ ] play        -- Unit will go to a designated "play" area and run through pre-assigned routes / things.
 --  [ ] patrol      -- Unit will patrol around the town.  Looking for enemies to attack during his shift.
 --  [ ] defend      -- Unit will defend the town until all threats have been eliminated.
 --  [ ] guard       -- Unit will stand in a position and will guard it always during his shift.
@@ -94,6 +96,9 @@
 --  [ ] flee        -- Unit will try to run away. (Either to nearest safehouse, or will keep running to landmarks in town if no safehouses)
 --  [ ] arm         -- Unit will try to find a barracks and arm himself to fight.
 --
+--  Unit States Transient
+--  [X] moving          -- Unit is currently moving along a route.
+--  [X] returningHome   -- Unit is currently returning home.
 --
 --
 -----------

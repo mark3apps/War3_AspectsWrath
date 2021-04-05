@@ -375,12 +375,33 @@ function INIT_ai()
 
     end
 
+    -- Set the Unit State
+    function ai.unitSetState(unit, state)
+        local data = ai.unitData(unit)
+
+        if tableContains(ai.units[data.id].states, state) then
+            ai.units[data.id].state = state
+
+            ai.unitSTATE[state](unit)
+
+            return true
+        end
+
+        return false
+    end
+
+    function ai.unitData(unit)
+        return ai.units[GetHandleId(unit)]
+    end
+
     --------
     --  UNIT STATES
     --------
 
     ai.unitSTATE = {}
 
+    --
+    -- MOVE
     function ai.unitSTATE.move(unit)
         local data = ai.units[GetHandleId(unit)]
 
@@ -411,6 +432,8 @@ function INIT_ai()
         return true
     end
 
+    --
+    -- RETURN HOME
     function ai.unitSTATE.returnHome(unit)
         local data = ai.units[GetHandleId(unit)]
 
@@ -434,7 +457,8 @@ function INIT_ai()
     --  UNIT STATES TRANSIENT
     --------
 
-    -- If Unit is Moving
+    --
+    -- MOVING
     function ai.unitSTATE.moving(unit)
         local data = ai.units[GetHandleId(unit)]
 
@@ -446,7 +470,16 @@ function INIT_ai()
         return true
     end
 
-    -- If Unit is Returning Home
+    --
+    -- WAITING
+    function ai.unitSTATE.waiting(unit)
+
+        -- Do nothing, come on now, what did you think was going to be here??
+        return true
+    end
+
+    --
+    -- RETURNING HOME
     function ai.unitSTATE.returningHome(unit)
         local data = ai.units[GetHandleId(unit)]
 
@@ -488,7 +521,6 @@ function INIT_ai()
 
         end)
 
-
         -- Trigger Unit enters a Rect in a Route
         ai.unitEntersRegion = CreateTrigger()
         TriggerAddAction(ai.unitEntersRegion, function()
@@ -506,6 +538,9 @@ function INIT_ai()
 
                 -- If current State is moving
                 if data.stateCurrent == "moving" then
+
+                    ai.units[data.id].stateCurrent = "waiting"
+
                     if data.optionLookAtRect ~= nil then
 
                         -- Get the angle to the rect
@@ -525,9 +560,9 @@ function INIT_ai()
                     local routeSteps = ai.routes[data.route].optionCount
 
                     if routeSteps == data.step then
-                        ai.unitSTATE.returnHome(unit)
+                        ai.unitSetState(unit, "returnHome")
                     else
-                        ai.unitPickRoute(unit, data.route, (data.step + 1))  
+                        ai.unitPickRoute(unit, data.route, (data.step + 1))
                     end
                 end
             end
@@ -541,7 +576,7 @@ function INIT_ai()
 
     function ai.init()
         ai.INIT_triggers()
-        
+
     end
 
     ai.init()
