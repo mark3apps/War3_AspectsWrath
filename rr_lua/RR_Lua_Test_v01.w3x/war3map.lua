@@ -1,3 +1,4 @@
+udg_townVillageForce = nil
 gg_trg_Melee_Initialization = nil
 gg_rct_R01_01 = nil
 gg_rct_R01_02 = nil
@@ -8,6 +9,7 @@ gg_rct_R01_02L = nil
 gg_rct_R01_03L = nil
 gg_rct_R01_04L = nil
 function InitGlobals()
+    udg_townVillageForce = CreateForce()
 end
 
 --
@@ -1210,7 +1212,7 @@ function CreateUnitsForPlayer0()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -347.4, -110.9, 143.563, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -399.4, -54.2, 143.563, FourCC("hfoo"))
 end
 
 function CreatePlayerBuildings()
@@ -1287,7 +1289,7 @@ function config()
     SetPlayers(1)
     SetTeams(1)
     SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
-    DefineStartLocation(0, 1793.1, -2384.3)
+    DefineStartLocation(0, 1792.0, -2368.0)
     InitCustomPlayerSlots()
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
     InitGenericPlayerSlots()
