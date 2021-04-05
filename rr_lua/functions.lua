@@ -223,7 +223,7 @@ function valueFactor(level, base, previousFactor, levelFactor, constant)
 end
 
 
-function INIT_iod()
+function INIT_oid()
 
     oid = {
         OFFSET = 851970,
