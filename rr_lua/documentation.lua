@@ -38,10 +38,12 @@
 --
 --  Unit Actions
 --  [ ] ai.unitState(unit, state)               -- Changes the unit state to the specified state
---  [ ] ai.unitAddRoute(unit, route)            -- Adds the picked route to one of the units routes
+--  [X] ai.unitAddRoute(unit, route)            -- Adds the picked route to one of the units routes
 --  [ ] ai.unitChangeHome(unit, rect)           -- Changes the unit's home position to the center of the selected rect.
---  [ ] ai.unitKill(unit)                       -- Kills the unit and removes all references from AI.
---  [ ] ai.unitPause(unit, flag)                -- Puases a unit.  Pauses the unit and all updating.
+--  [X] ai.unitKill(unit)                       -- Kills the unit and removes all references from AI.
+--  [X] ai.unitRemove(unit)                     -- Removes the unit from the game and all references to it.
+--  [X] ai.unitPause(unit)                      -- Puases a unit.  Pauses the unit and all updating.
+--  [ ] ai.unitPickRoute(unit, route*, step*)   -- Starts unit down specified Route.  If no route is chosen, then will pick a random route that has been assigned to the unit.
 --
 --  Set Unit Types
 --  [ ] ai.unitVillager(unit)                   -- Set unit as a Villager
@@ -50,6 +52,14 @@
 --  [ ] ai.unitFollower(unit, unitFollowing)    -- Set unit as a Follower, also need to specify the unit to follow.
 --  [ ] ai.unitChild(unit)                      -- Set unit as a Child
 --  [ ] ai.unitCustom(unit, {states})           -- Set unit as a custom type.  Will take on the states selected.
+--
+--
+-----------
+-- UNIT LOOPS
+--
+-- Main Unit Loops
+--
+--
 --
 -----------
 -- STATES

@@ -60,16 +60,20 @@ function INIT_ai()
 
         -- Add initial variables to the table
         ai.landmarks[name] = {}
-        ai.landmarks[name].id = handleId
-        ai.landmarks[name].alive = true
-        ai.landmarks[name].state = "normal"
-        ai.landmarks[name].town = town
-        ai.landmarks[name].name = name
-        ai.landmarks[name].rect = rect
-        ai.landmarks[name].types = types
-        ai.landmarks[name].unit = unit
-        ai.landmarks[name].radius = radius
-        ai.landmarks[name].maxCapacity = maxCapacity
+        ai.landmarks[name] {
+            id = handleId,
+            alive = true,
+            state = "normal",
+            town = town,
+            name = name,
+            rect = rect,
+            x = GetRectCenterX(rect),
+            y = GetRectCenterY(rect),
+            types = types,
+            unit = unit,
+            radius = radius,
+            maxCapacity = maxCapacity
+        }
 
         -- Add Landmark information to the town
         for i = 1, #ai.landmarks[name].types do
@@ -110,14 +114,19 @@ function INIT_ai()
         ai.units[handleId] = {
             unitType = GetUnitTypeId(unit),
             unitName = GetUnitName(unit),
+            paused = false,
             town = town,
             name = name,
             shift = shift,
             state = "auto",
             type = type,
+            route = nil,
+            step = 1,
             routes = {},
-            x = GetUnitX(unit),
-            y = GetUnitY(unit)
+            xHome = GetUnitX(unit),
+            yHome = GetUnitY(unit),
+            xDest = nil,
+            yDest = nil
         }
 
         if type == "villager" then
@@ -209,6 +218,9 @@ function INIT_ai()
         lookAtRect = lookAtRect or nil
         time = time or 0
 
+        -- Add Event to Rect Entering Trigger
+        TriggerRegisterEnterRectSimple(ai.unitEntersRegion, rect)
+
         -- Update the count of steps in the route
         local stepCount = ai.routes[name].stepCount + 1
 
@@ -221,6 +233,8 @@ function INIT_ai()
 
         ai.routes[name].steps[stepCount].options[1] = {
             rect = rect,
+            x = GetRectCenterX(rect),
+            y = GetRectCenterY(rect),
             time = time,
             speed = speed,
             lookAtRect = lookAtRect,
@@ -249,6 +263,8 @@ function INIT_ai()
         ai.routes[name].steps[stepCount].options[optionCount] =
             {
                 rect = rect,
+                x = GetRectCenterX(rect),
+                y = GetRectCenterY(rect),
                 time = time,
                 speed = speed,
                 lookAtRect = lookAtRect,
@@ -272,15 +288,174 @@ function INIT_ai()
     --------
 
     function ai.unitAddRoute(unit, route)
+        local handleId = GetHandleId(unit)
 
+        if ai.routes[route] ~= nil then
+            table.insert(ai.units[handlIe].routes, route)
+            return true
+        end
+
+        return false
+
+    end
+
+    function ai.unitRemoveRoute(unit, route)
+        local handleId = GetHandleId(unit)
+        local routes = ai.units[handleId].routes
+
+        if tableContains(routes, route) then
+            ai.units[handleId].routes = tableRemoveValue(routes, route)
+            return true
+        end
+
+        return false
     end
 
     function ai.unitKill(unit)
+        local handleId = GetHandleId(unit)
+        local data = ai.units[handleId]
+        ai.units[handleId] = nil
+        GroupRemoveUnit(ai.units.g, unit)
+        GroupRemoveUnit(ai.towns[data.town].gUnits, unit)
+
+        KillUnit(unit)
+
+        return true
+    end
+
+    function ai.unitRemove(unit)
+        local handleId = GetHandleId(unit)
+        local data = ai.units[handleId]
+        ai.units[handleId] = nil
+        GroupRemoveUnit(ai.units.g, unit)
+        GroupRemoveUnit(ai.towns[data.town].gUnits, unit)
+
+        RemoveUnit(unit)
+
+        return true
+    end
+
+    function ai.unitPause(unit, flag)
+        local handleId = GetHandleId(unit)
+
+        PauseUnit(unit, flag)
+        ai.units[handleId].paused = flag
+
+        return true
+    end
+
+    function ai.unitPickRoute(unit, route, step)
+        local data = ai.units[GetHandleId(unit)]
+
+        if #data.routes == 0 and route == nil then
+            return false
+        end
+
+        route = route or data.routes[GetRandomInt(1, #data.routes)]
+        step = step or 1
+
+        local optionNumber = GetRandomInt(1, ai.routes[route].optionCount)
+
+        ai.units[data.id].stateCurrent = "moving"
+        ai.units[data.id].route = route
+        ai.units[data.id].step = step
+        ai.units[data.id].option = optionNumber
+
+        local option = ai.routes[route].option[option]
+        ai.units[data.id].xDest = option.x
+        ai.units[data.id].yDest = option.y
+        ai.units[data.id].optionSpeed = option.speed
+        ai.units[data.id].optionTime = option.time
+        ai.units[data.id].optionLookAtRect = option.lookAtRect
+        ai.units[data.id].optionAnimation = option.animation
+
+        SetUnitMoveSpeed(unit, option.speed)
+
+        return true
 
     end
 
-    function ai.pauseUnit(unit, flag)
+    --------
+    --  UNIT STATES
+    --------
 
+    ai.unitSTATE = {}
+
+    function ai.unitSTATE.move(unit)
+        local data = ai.units[GetHandleId(unit)]
+
+        if #data.routes == 0 and route == nil then
+            return false
+        end
+
+        local route = data.routes[GetRandomInt(1, #data.routes)]
+
+        local optionNumber = GetRandomInt(1, ai.routes[route].optionCount)
+
+        ai.units[data.id].stateCurrent = "moving"
+        ai.units[data.id].route = route
+        ai.units[data.id].step = 1
+        ai.units[data.id].option = optionNumber
+
+        local option = ai.routes[route].option[option]
+        ai.units[data.id].xDest = option.x
+        ai.units[data.id].yDest = option.y
+        ai.units[data.id].optionSpeed = option.speed
+        ai.units[data.id].optionTime = option.time
+        ai.units[data.id].optionLookAtRect = option.lookAtRect
+        ai.units[handleId].optionAnimation = option.animation
+
+        SetUnitMoveSpeed(unit, option.speed)
+        IssuePointOrderById(unit, oid.move, option.x, option.y)
+
+        return true
+    end
+
+    function ai.unitSTATE.returnHome(unit)
+        local data = ai.units[GetHandleId(unit)]
+
+        ai.units[data.id].stateCurrent = "returningHome"
+        ai.units[data.id].route = nil
+        ai.units[data.id].step = 0
+        ai.units[data.id].option = 0
+        ai.units[data.id].xDest = nil
+        ai.units[data.id].yDest = nil
+        ai.units[data.id].optionSpeed = nil
+        ai.units[data.id].optionTime = nil
+        ai.units[data.id].optionLookAtRect = nil
+        ai.units[data.id].optionAnimation = nil
+
+        IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
+
+        return true
+    end
+
+    --------
+    --  UNIT STATES TRANSIENT
+    --------
+
+    -- If Unit is Moving
+    function ai.unitSTATE.moving(unit)
+        local data = ai.units[GetHandleId(unit)]
+
+        if GetUnitCurrentOrder(unit) ~= oid.move then
+            IssuePointOrderById(unit, oid.move, data.xDest, data.yDest)
+        end
+        local data = ai.units[GetHandleId(unit)]
+
+        return true
+    end
+
+    -- If Unit is Returning Home
+    function ai.unitSTATE.returningHome(unit)
+        local data = ai.units[GetHandleId(unit)]
+
+        if GetUnitCurrentOrder(unit) ~= oid.move then
+            IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
+        end
+        local data = ai.units[GetHandleId(unit)]
+
+        return true
     end
 
     --------
@@ -289,6 +464,75 @@ function INIT_ai()
 
     function ai.INIT_triggers()
 
+        --------
+        --  UNIT LOOPS
+        --------
+
+        local t = CreateTrigger()
+        TriggerRegisterTimerEventPeriodic(t, 2)
+        TriggerAddAction(t, function()
+
+            local u, data, handleId
+            local g = ai.units.g
+
+            -- Loop through the Units and check to see if they need anything
+            u = FirstOfGroup(g)
+            while u ~= nil do
+                handleId = GetHandleId(unit)
+                data = ai.units[handleId]
+
+                GroupRemoveUnit(g, u)
+                u = FirstOfGroup(g)
+            end
+            DestroyGroup(g)
+
+        end)
+
+
+        -- Trigger Unit enters a Rect in a Route
+        ai.unitEntersRegion = CreateTrigger()
+        TriggerAddAction(ai.unitEntersRegion, function()
+            local unit = GetEnteringUnit()
+
+            if IsUnitInGroup(unit, ai.units.g) then
+
+                local handleId = GetHandleId(unit)
+                local data = ai.units[handleId]
+
+                -- If the Rect isn't the targetted end rect, ignore any future actions
+                if not RectContainsUnit(ai.routes[data.route].step[data.step].options[data.option].rect, unit) then
+                    return false
+                end
+
+                -- If current State is moving
+                if data.stateCurrent == "moving" then
+                    if data.optionLookAtRect ~= nil then
+
+                        -- Get the angle to the rect
+                        local facingAngle = angleBetweenCoordinates(GetUnitX(unit), GetUnitY(unit),
+                                                GetRectCenterX(data.optionLookAtRect),
+                                                GetRectCenterY(data.optionLookAtRect))
+
+                        SetUnitFacingTimed(unit, facingAngle, 0.5)
+                    end
+
+                    if data.optionAnimation ~= nil then
+                        SetUnitAnimation(unit, data.optionAnimation)
+                    end
+
+                    PolledWait(data.optionTime)
+
+                    local routeSteps = ai.routes[data.route].optionCount
+
+                    if routeSteps == data.step then
+                        ai.unitSTATE.returnHome(unit)
+                    else
+                        ai.unitPickRoute(unit, data.route, (data.step + 1))  
+                    end
+                end
+            end
+        end)
+
     end
 
     --------
@@ -296,8 +540,17 @@ function INIT_ai()
     --------
 
     function ai.init()
-
+        ai.INIT_triggers()
+        
     end
 
     ai.init()
+end
+
+--------
+--  Main -- This runs everything
+--------
+do
+    INIT_oid()
+    INIT_ai()
 end
