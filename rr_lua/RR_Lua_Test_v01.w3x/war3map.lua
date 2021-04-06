@@ -1,4 +1,5 @@
 udg_townVillageForce = nil
+udg_TEMP_UnitGroup = nil
 gg_trg_Melee_Initialization = nil
 gg_rct_R01_01 = nil
 gg_rct_R01_02 = nil
@@ -9,57 +10,11 @@ gg_rct_R01_02L = nil
 gg_rct_R01_03L = nil
 gg_rct_R01_04L = nil
 gg_trg_Testing = nil
+gg_trg_Setup = nil
+gg_trg_Send_Units = nil
 function InitGlobals()
     udg_townVillageForce = CreateForce()
-end
-
-function INIT_Config()
-    -- Add Towns
-    ai.addTown("village", udg_townVillageForce)
-
-    -- Add Routes
-    ai.addRoute("Main", "inTown")
-    ai.routeAddStep("Main", gg_rct_R01_01, 5, gg_rct_R01_01L, "Attack 1", 50)
-    ai.routeAddStep("Main", gg_rct_R01_02, 2, gg_rct_R01_02L, "Stand Victory 1", 200)
-    ai.routeAddStep("Main", gg_rct_R01_03, 5, gg_rct_R01_03L, "Stand Defend", 250)
-    ai.routeAddStep("Main", gg_rct_R01_04, 5, gg_rct_R01_04L, "Stand Ready", 75)
-
-    -- Create the Unit
-    local g = CreateGroup()
-    g = GetUnitsInRectAll(GetPlayableMapRect())
-
-    print(CountUnitsInGroup(g))
-
-    local u = FirstOfGroup(g)
-    while u ~= nil do
-        
-        ai.addUnit("village", "villager", u, "villager" .. GetRandomInt(10000, 50000), "day")
-        ai.unitAddRoute(u, "Main")
-
-        GroupRemoveUnit(g, u)
-        u = FirstOfGroup(g)
-    end
-    DestroyGroup(g)
-
-    -- Testing Trigger
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 2)
-    TriggerAddAction(t, function()
-
-        -- THIS IS ALL YOU NEED TO MAKE A UNIT GO
-        local g = CreateGroup()
-        g = GetUnitsInRectAll(GetPlayableMapRect())
-
-        local u = FirstOfGroup(g)
-        while u ~= nil do
-            ai.unitSetState(u, "move")
-            PolledWait(GetRandomReal(0.4, 2))
-
-            GroupRemoveUnit(g, u)
-            u = FirstOfGroup(g)
-        end
-        DestroyGroup(g)
-    end)
+    udg_TEMP_UnitGroup = CreateGroup()
 end
 
 --
@@ -1478,9 +1433,50 @@ function InitTrig_Melee_Initialization()
     TriggerAddAction(gg_trg_Melee_Initialization, Trig_Melee_Initialization_Actions)
 end
 
+function Trig_Setup_Func013A()
+        ai.addUnit("village", "villager", GetEnumUnit(), "villager" .. GetRandomInt(10000, 50000), "day")
+        ai.unitAddRoute(GetEnumUnit(), "Main")
+end
+
+function Trig_Setup_Actions()
+        ai.addTown("village", udg_townVillageForce)
+        ai.addRoute("Main", "inTown")
+        ai.routeAddStep("Main", gg_rct_R01_01, 5, gg_rct_R01_01L, "Attack 1", 50)
+        ai.routeAddStep("Main", gg_rct_R01_02, 2, gg_rct_R01_02L, "Stand Victory 1", 200)
+        ai.routeAddStep("Main", gg_rct_R01_03, 5, gg_rct_R01_03L, "Stand Defend", 250)
+        ai.routeAddStep("Main", gg_rct_R01_04, 5, gg_rct_R01_04L, "Stand Ready", 75)
+    udg_TEMP_UnitGroup = GetUnitsInRectAll(GetPlayableMapRect())
+    ForGroupBJ(udg_TEMP_UnitGroup, Trig_Setup_Func013A)
+        DestroyGroup(udg_TEMP_UnitGroup)
+end
+
+function InitTrig_Setup()
+    gg_trg_Setup = CreateTrigger()
+    TriggerRegisterTimerEventSingle(gg_trg_Setup, 0.00)
+    TriggerAddAction(gg_trg_Setup, Trig_Setup_Actions)
+end
+
+function Trig_Send_Units_Func002A()
+        ai.unitSetState(GetEnumUnit(), "move")
+end
+
+function Trig_Send_Units_Actions()
+    udg_TEMP_UnitGroup = GetUnitsInRectAll(GetPlayableMapRect())
+    ForGroupBJ(udg_TEMP_UnitGroup, Trig_Send_Units_Func002A)
+        DestroyGroup(udg_TEMP_UnitGroup)
+end
+
+function InitTrig_Send_Units()
+    gg_trg_Send_Units = CreateTrigger()
+    TriggerRegisterTimerEventSingle(gg_trg_Send_Units, 2.00)
+    TriggerAddAction(gg_trg_Send_Units, Trig_Send_Units_Actions)
+end
+
 function InitCustomTriggers()
     InitTrig_Testing()
     InitTrig_Melee_Initialization()
+    InitTrig_Setup()
+    InitTrig_Send_Units()
 end
 
 function RunInitializationTriggers()
