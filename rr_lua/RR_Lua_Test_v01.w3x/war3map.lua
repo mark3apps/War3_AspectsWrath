@@ -20,24 +20,45 @@ function INIT_Config()
     -- Add Routes
     ai.addRoute("Main", "inTown")
     ai.routeAddStep("Main", gg_rct_R01_01, 5, gg_rct_R01_01L, "Attack 1", 50)
-    ai.routeAddStep("Main", gg_rct_R01_02, 2, gg_rct_R01_02L, "Stand 2", 200)
-    ai.routeAddStep("Main", gg_rct_R01_03, 5, gg_rct_R01_03L, "Stand 4", 250)
+    ai.routeAddStep("Main", gg_rct_R01_02, 2, gg_rct_R01_02L, "Stand Victory 1", 200)
+    ai.routeAddStep("Main", gg_rct_R01_03, 5, gg_rct_R01_03L, "Stand Defend", 250)
     ai.routeAddStep("Main", gg_rct_R01_04, 5, gg_rct_R01_04L, "Stand Ready", 75)
 
-    unit1 = CreateUnit(Player(0), FourCC("hfoo"), -399.4, -54.2, 143.563)
-    ai.addUnit("village", "villager", unit1, "villagerA", "day")
-    ai.unitAddRoute(unit1, "Main")
+    -- Create the Unit
+    local g = CreateGroup()
+    g = GetUnitsInRectAll(GetPlayableMapRect())
 
+    print(CountUnitsInGroup(g))
+
+    local u = FirstOfGroup(g)
+    while u ~= nil do
+        
+        ai.addUnit("village", "villager", u, "villager" .. GetRandomInt(10000, 50000), "day")
+        ai.unitAddRoute(u, "Main")
+
+        GroupRemoveUnit(g, u)
+        u = FirstOfGroup(g)
+    end
+    DestroyGroup(g)
+
+    -- Testing Trigger
     local t = CreateTrigger()
     TriggerRegisterTimerEventSingle(t, 2)
     TriggerAddAction(t, function()
 
-        print("Working")
-        debugfunc(function()
-            ai.townVulnerableUnits("village", true)
-            ai.unitSetState(unit1, "move")
-        end, "Move Unit")
-        print("Move Unit")
+        -- THIS IS ALL YOU NEED TO MAKE A UNIT GO
+        local g = CreateGroup()
+        g = GetUnitsInRectAll(GetPlayableMapRect())
+
+        local u = FirstOfGroup(g)
+        while u ~= nil do
+            ai.unitSetState(u, "move")
+            PolledWait(GetRandomReal(0.4, 2))
+
+            GroupRemoveUnit(g, u)
+            u = FirstOfGroup(g)
+        end
+        DestroyGroup(g)
     end)
 end
 
@@ -749,7 +770,7 @@ function INIT_ai()
 
         -- Add to Unit groups
         GroupAddUnit(ai.towns[town].units, unit)
-		GroupAddUnit(ai.unitGroup, unit)
+        GroupAddUnit(ai.unitGroup, unit)
 
         -- Update Unit Count
         ai.towns[town].unitCount = CountUnitsInGroup(ai.towns[town].units)
@@ -1001,9 +1022,8 @@ function INIT_ai()
         route = route or data.routes[GetRandomInt(1, #data.routes)]
         step = step or 1
 
-
-		local optionNumber = GetRandomInt(1, ai.routes[route].steps[step].optionCount)
-		local option = ai.routes[route].steps[step].options[optionNumber]
+        local optionNumber = GetRandomInt(1, ai.routes[route].steps[step].optionCount)
+        local option = ai.routes[route].steps[step].options[optionNumber]
 
         ai.units[data.id].stateCurrent = "moving"
         ai.units[data.id].route = route
@@ -1055,7 +1075,7 @@ function INIT_ai()
 
         local route = data.routes[GetRandomInt(1, #data.routes)]
 
-		ai.unitPickRoute(unit)
+        ai.unitPickRoute(unit)
 
         return true
     end
@@ -1135,7 +1155,7 @@ function INIT_ai()
 
             local u, data, handleId
             local g = CreateGroup()
-			GroupAddGroup(ai.unitGroup, g)
+            GroupAddGroup(ai.unitGroup, g)
 
             -- Loop through the Units and check to see if they need anything
             u = FirstOfGroup(g)
@@ -1158,18 +1178,27 @@ function INIT_ai()
             debugfunc(function()
                 print("Entering")
 
-				
                 if IsUnitInGroup(unit, ai.unitGroup) then
-					print("Yay!")
+                    print("Yay!")
 
                     local handleId = GetHandleId(unit)
                     local data = ai.units[handleId]
 
+                    PolledWait(0.5)
+
                     -- If the Rect isn't the targetted end rect, ignore any future actions
                     if not RectContainsUnit(ai.routes[data.route].steps[data.step].options[data.option].rect, unit) then
+                        print("DOESN'T CONTAIN")
                         return false
                     end
 
+                    local order = oid.move
+                    local i = 1
+                    while order == oid.move and i < 15 do
+                        order = GetUnitCurrentOrder(unit)
+                        PolledWait(0.1)
+                        i = i + 1
+                    end
 
                     -- If current State is moving
                     if data.stateCurrent == "moving" then
@@ -1177,25 +1206,34 @@ function INIT_ai()
                         ai.units[data.id].stateCurrent = "waiting"
 
                         if data.optionLookAtRect ~= nil then
+                            local x = GetUnitX(unit)
+                            local y = GetUnitY(unit)
 
-                            -- Get the angle to the rect
-                            local facingAngle = angleBetweenCoordinates(GetUnitX(unit), GetUnitY(unit),
-                                                    GetRectCenterX(data.optionLookAtRect),
+                            -- Get the angle to the rect and find a point 10 units in that direction
+                            local facingAngle = angleBetweenCoordinates(x, y, GetRectCenterX(data.optionLookAtRect),
                                                     GetRectCenterY(data.optionLookAtRect))
+                            local xNew, yNew = polarProjectionCoordinates(x, y, 10, facingAngle)
+							IssuePointOrderById(unit, oid.move, xNew, yNew)
 
-                            SetUnitFacingTimed(unit, facingAngle, 0.2)
+                            order = oid.move
+                            i = 1
+                            while order == oid.move and i < 15 do
+                                order = GetUnitCurrentOrder(unit)
+                                PolledWait(0.1)
+                                i = i + 1
+                            end
                         end
 
-                        --if data.optionAnimation ~= nil then
-							print(data.optionAnimation)
+                        if data.optionAnimation ~= nil then
+                            print(data.optionAnimation)
                             SetUnitAnimation(unit, data.optionAnimation)
-                        --end
+                        end
 
                         PolledWait(data.optionTime)
 
                         local routeSteps = ai.routes[data.route].stepCount
-						
-						print(routeSteps .. ":" .. data.step)
+
+                        print(routeSteps .. ":" .. data.step)
 
                         if routeSteps == data.step then
                             ai.unitSetState(unit, "returnHome")
@@ -1246,7 +1284,153 @@ function CreateUnitsForPlayer0()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("hkni"), 387.3, -333.3, 183.631, FourCC("hkni"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1724.3, -1058.5, 203.341, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1774.6, -779.5, 154.802, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1854.4, -224.2, 319.558, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1990.4, 279.6, 130.115, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2090.1, 510.0, 226.534, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2161.4, 562.0, 231.830, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2255.1, 544.6, 93.936, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2468.3, 394.7, 56.384, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2672.1, 212.2, 179.094, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2799.1, -21.6, 139.388, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2848.7, -288.2, 217.525, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2852.9, -670.8, 321.437, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2810.3, -927.8, 80.313, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2782.2, -1071.5, 259.879, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2767.7, -1154.5, 173.183, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2783.1, -1235.3, 108.405, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2719.0, -1315.9, 352.584, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2582.9, -1402.1, 318.108, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2390.5, -1559.5, 140.168, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2264.1, -1617.3, 79.697, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2126.9, -1679.0, 334.170, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2011.1, -1686.0, 112.031, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2046.8, -1411.7, 230.742, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2240.8, -896.0, 206.461, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2372.5, -504.5, 27.324, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2397.1, -653.6, 259.340, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2421.7, -914.2, 57.515, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1573.1, -1720.7, 141.783, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1553.1, -1904.0, 256.407, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1617.0, -2102.5, 16.491, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1839.2, -2142.6, 281.984, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2090.4, -2194.1, 119.766, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2316.3, -2221.1, 40.332, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2479.3, -2171.9, 359.341, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2535.8, -2135.7, 28.291, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2664.4, -2005.9, 159.043, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1208.4, -2403.2, 33.817, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1416.8, -2642.5, 63.854, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1721.6, -2764.6, 327.414, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2020.3, -2758.0, 298.661, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2302.3, -2651.1, 80.928, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2522.1, -2543.5, 211.285, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2624.5, -2507.2, 320.844, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2642.3, -2444.5, 300.002, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1119.3, -984.6, 289.169, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1160.4, -670.3, 180.972, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1280.6, -341.7, 191.783, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1307.4, -235.0, 8.877, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1271.9, 1071.0, 343.685, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1302.4, 1271.1, 214.515, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1375.4, 1386.9, 50.835, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1570.5, 1547.1, 318.536, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1808.2, 1615.9, 148.419, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1969.6, 1553.9, 176.050, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2233.5, 1550.5, 256.802, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2458.3, 1513.1, 91.145, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2534.2, 1436.2, 290.279, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2561.0, 1338.2, 289.510, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2495.8, 1186.6, 148.902, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2261.7, 881.6, 42.639, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2190.2, 881.6, 270.371, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2168.4, 964.9, 229.698, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2060.4, 1032.3, 243.541, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1876.1, 953.3, 75.676, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1730.5, 817.0, 155.967, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1608.9, 2326.1, 306.418, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1957.9, 2480.3, 254.682, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2451.0, 2597.5, 190.948, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2777.1, 2604.7, 10.811, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -3071.5, 1789.0, 249.793, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -3099.8, 1444.9, 332.929, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -3217.4, 874.2, 32.488, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -3218.5, 516.0, 215.833, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -3192.5, 421.3, 98.616, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -3028.7, -998.9, 200.485, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2988.6, -1410.3, 261.603, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2947.7, -1798.1, 84.542, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2935.5, -1905.8, 324.777, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2985.9, -1948.6, 356.034, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2962.3, -2082.2, 353.342, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -3181.9, -2967.3, 17.732, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2944.1, -3150.3, 246.310, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2643.8, -3345.1, 330.688, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2476.3, -3409.3, 168.502, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2344.7, -3412.8, 209.812, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2172.2, -3402.5, 95.881, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1912.3, -3397.3, 222.546, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1773.5, -3359.1, 262.340, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1726.0, -3273.9, 65.722, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -1856.6, -3180.3, 43.705, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2278.9, -3073.8, 273.392, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2589.7, -3011.2, 278.688, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2757.2, -2977.3, 298.277, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -2823.0, -2945.0, 188.202, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -343.0, -2960.0, 245.739, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -56.4, -2881.5, 15.535, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 303.7, -2611.4, 349.782, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 616.2, -2316.0, 309.681, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 685.8, -2175.7, 222.634, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 639.7, -2016.5, 179.720, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 322.7, -1862.0, 275.084, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 61.6, -1775.3, 231.083, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -245.7, -1783.3, 59.317, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -331.8, -1843.8, 120.535, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -343.9, -2036.2, 152.835, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 953.2, -3095.0, 42.639, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1019.8, -2957.7, 166.569, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1282.7, -2676.0, 42.551, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1502.4, -2362.2, 13.030, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1607.8, -2094.0, 350.980, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1603.9, -1924.8, 274.667, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1593.2, -1847.6, 101.231, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1382.8, -1760.4, 240.125, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1167.9, -1687.8, 15.085, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 906.6, -1648.1, 167.613, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 852.3, -1718.7, 98.682, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 982.4, -1951.0, 91.552, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1161.9, -2121.4, 55.406, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1215.5, -2216.6, 295.431, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1155.1, -2257.2, 87.586, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 454.0, -3059.3, 199.803, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 250.0, -3212.3, 333.247, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 14.2, -3421.9, 255.209, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -204.9, -3529.6, 74.182, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -473.5, -3382.0, 2.461, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -584.1, -3315.2, 200.935, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -649.4, -3249.4, 314.955, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -783.3, -3154.5, 324.777, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -805.1, -3006.7, 286.686, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), -622.9, -2876.9, 90.893, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1138.5, -938.3, 301.441, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1631.8, -873.9, 324.887, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2096.1, -880.4, 327.018, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2346.8, -982.7, 118.118, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2431.3, -1172.9, 126.830, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2438.1, -1481.6, 139.783, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2401.9, -1890.1, 110.614, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2404.6, -2167.1, 329.754, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2384.2, -2394.5, 55.087, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2348.8, -2502.9, 187.070, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2291.2, -2573.0, 44.705, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2241.3, -2635.8, 92.068, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2130.0, -2750.0, 275.732, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 2019.4, -2773.4, 244.475, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1869.9, -2831.8, 219.821, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1779.8, -2873.6, 258.143, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1694.2, -2882.2, 67.107, FourCC("hfoo"))
 end
 
 function CreatePlayerBuildings()
@@ -1263,13 +1447,13 @@ end
 
 function CreateRegions()
     local we
-    gg_rct_R01_01 = Rect(320.0, -224.0, 448.0, -96.0)
-    gg_rct_R01_02 = Rect(320.0, 320.0, 448.0, 448.0)
-    gg_rct_R01_03 = Rect(-192.0, 320.0, -64.0, 448.0)
-    gg_rct_R01_04 = Rect(-320.0, -704.0, -192.0, -576.0)
+    gg_rct_R01_01 = Rect(1024.0, -480.0, 1568.0, 64.0)
+    gg_rct_R01_02 = Rect(224.0, 544.0, 928.0, 1216.0)
+    gg_rct_R01_03 = Rect(-960.0, 160.0, -384.0, 832.0)
+    gg_rct_R01_04 = Rect(-1216.0, -2048.0, -384.0, -1152.0)
     gg_rct_R01_01L = Rect(576.0, -608.0, 704.0, -480.0)
     gg_rct_R01_02L = Rect(576.0, 160.0, 704.0, 288.0)
-    gg_rct_R01_03L = Rect(-512.0, 416.0, -384.0, 544.0)
+    gg_rct_R01_03L = Rect(-1472.0, 96.0, -1344.0, 224.0)
     gg_rct_R01_04L = Rect(-192.0, -416.0, -64.0, -288.0)
 end
 

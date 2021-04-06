@@ -104,7 +104,7 @@ function INIT_ai()
 
         -- Add to Unit groups
         GroupAddUnit(ai.towns[town].units, unit)
-		GroupAddUnit(ai.unitGroup, unit)
+        GroupAddUnit(ai.unitGroup, unit)
 
         -- Update Unit Count
         ai.towns[town].unitCount = CountUnitsInGroup(ai.towns[town].units)
@@ -356,9 +356,8 @@ function INIT_ai()
         route = route or data.routes[GetRandomInt(1, #data.routes)]
         step = step or 1
 
-
-		local optionNumber = GetRandomInt(1, ai.routes[route].steps[step].optionCount)
-		local option = ai.routes[route].steps[step].options[optionNumber]
+        local optionNumber = GetRandomInt(1, ai.routes[route].steps[step].optionCount)
+        local option = ai.routes[route].steps[step].options[optionNumber]
 
         ai.units[data.id].stateCurrent = "moving"
         ai.units[data.id].route = route
@@ -410,7 +409,7 @@ function INIT_ai()
 
         local route = data.routes[GetRandomInt(1, #data.routes)]
 
-		ai.unitPickRoute(unit)
+        ai.unitPickRoute(unit)
 
         return true
     end
@@ -490,7 +489,7 @@ function INIT_ai()
 
             local u, data, handleId
             local g = CreateGroup()
-			GroupAddGroup(ai.unitGroup, g)
+            GroupAddGroup(ai.unitGroup, g)
 
             -- Loop through the Units and check to see if they need anything
             u = FirstOfGroup(g)
@@ -513,18 +512,27 @@ function INIT_ai()
             debugfunc(function()
                 print("Entering")
 
-				
                 if IsUnitInGroup(unit, ai.unitGroup) then
-					print("Yay!")
+                    print("Yay!")
 
                     local handleId = GetHandleId(unit)
                     local data = ai.units[handleId]
 
+                    PolledWait(0.5)
+
                     -- If the Rect isn't the targetted end rect, ignore any future actions
                     if not RectContainsUnit(ai.routes[data.route].steps[data.step].options[data.option].rect, unit) then
+                        print("DOESN'T CONTAIN")
                         return false
                     end
 
+                    local order = oid.move
+                    local i = 1
+                    while order == oid.move and i < 15 do
+                        order = GetUnitCurrentOrder(unit)
+                        PolledWait(0.1)
+                        i = i + 1
+                    end
 
                     -- If current State is moving
                     if data.stateCurrent == "moving" then
@@ -532,25 +540,34 @@ function INIT_ai()
                         ai.units[data.id].stateCurrent = "waiting"
 
                         if data.optionLookAtRect ~= nil then
+                            local x = GetUnitX(unit)
+                            local y = GetUnitY(unit)
 
-                            -- Get the angle to the rect
-                            local facingAngle = angleBetweenCoordinates(GetUnitX(unit), GetUnitY(unit),
-                                                    GetRectCenterX(data.optionLookAtRect),
+                            -- Get the angle to the rect and find a point 10 units in that direction
+                            local facingAngle = angleBetweenCoordinates(x, y, GetRectCenterX(data.optionLookAtRect),
                                                     GetRectCenterY(data.optionLookAtRect))
+                            local xNew, yNew = polarProjectionCoordinates(x, y, 10, facingAngle)
+							IssuePointOrderById(unit, oid.move, xNew, yNew)
 
-                            SetUnitFacingTimed(unit, facingAngle, 0.2)
+                            order = oid.move
+                            i = 1
+                            while order == oid.move and i < 15 do
+                                order = GetUnitCurrentOrder(unit)
+                                PolledWait(0.1)
+                                i = i + 1
+                            end
                         end
 
-                        --if data.optionAnimation ~= nil then
-							print(data.optionAnimation)
+                        if data.optionAnimation ~= nil then
+                            print(data.optionAnimation)
                             SetUnitAnimation(unit, data.optionAnimation)
-                        --end
+                        end
 
                         PolledWait(data.optionTime)
 
                         local routeSteps = ai.routes[data.route].stepCount
-						
-						print(routeSteps .. ":" .. data.step)
+
+                        print(routeSteps .. ":" .. data.step)
 
                         if routeSteps == data.step then
                             ai.unitSetState(unit, "returnHome")
