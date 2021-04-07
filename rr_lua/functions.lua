@@ -223,8 +223,7 @@ function valueFactor(level, base, previousFactor, levelFactor, constant)
 end
 
 
-function INIT_oid()
-
+do
     oid = {
         OFFSET = 851970,
         absorb = 852529,
