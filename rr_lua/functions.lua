@@ -67,6 +67,7 @@ function CC2Four(num) -- Convert from Handle ID to Four Char
     return string.pack(">I4", num)
 end
 
+-- **CREDIT** Bribe
 -- Timer Utils
 do
     local data = {}
@@ -105,11 +106,11 @@ do
     end
 end
 
--- Requires https://www.hiveworkshop.com/threads/lua-timerutils.316957/
-
+-- **CREDIT** Bribe
+-- Perfect Polled Wait
 do
     local oldWait = PolledWait
-    function PolledWait(duration)
+    function PolledWaitPrecise(duration)
         local thread = coroutine.running()
         if thread then
             TimerStart(NewTimer(thread), duration, false, function()
@@ -119,11 +120,6 @@ do
         else
             oldWait(duration)
         end
-    end
-
-    local oldTSA = TriggerSleepAction
-    function TriggerSleepAction(duration)
-        PolledWait(duration)
     end
 
     local thread
@@ -140,17 +136,6 @@ do
             coroutine.yield(thread)
         else
             oldSync()
-        end
-    end
-
-    if not EnableWaits then -- Added this check to ensure compatibilitys with Lua Fast Triggers
-        local oldAction = TriggerAddAction
-        function TriggerAddAction(whichTrig, userAction)
-            oldAction(whichTrig, function()
-                coroutine.resume(coroutine.create(function()
-                    userAction()
-                end))
-            end)
         end
     end
 end
