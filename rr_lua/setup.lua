@@ -15,7 +15,7 @@ function INIT_Config()
 
     local u = FirstOfGroup(g)
     while u ~= nil do
-        
+
         ai.addUnit("village", "villager", u, "villager" .. GetRandomInt(10000, 50000), "day")
         ai.unitAddRoute(u, "Main")
 

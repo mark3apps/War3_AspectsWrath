@@ -248,7 +248,7 @@ function INIT_ai()
     end
 
     -- Adds an additional option to the picked route step
-    function ai.routeAddOption(route, step, rect, time, lookAtRect, animation, speed)
+    function ai.routeAddAction(route, step, rect, time, lookAtRect, animation, speed)
 
         -- Set default values if one wasn't specified
         speed = speed or nil
@@ -513,7 +513,6 @@ function INIT_ai()
                 print("Entering")
 
                 if IsUnitInGroup(unit, ai.unitGroup) then
-                    print("Yay!")
 
                     local handleId = GetHandleId(unit)
                     local data = ai.units[handleId]
@@ -528,12 +527,14 @@ function INIT_ai()
 
                     local order = oid.move
                     local i = 1
-                    while order == oid.move and i < 15 do
+                    local tick = 0.1
+                    while order == oid.move and i < 2 do
                         order = GetUnitCurrentOrder(unit)
-                        PolledWait(0.1)
-                        i = i + 1
+                        PolledWait(tick)
+                        i = i + tick
                     end
 
+                    
                     -- If current State is moving
                     if data.stateCurrent == "moving" then
 
@@ -547,14 +548,14 @@ function INIT_ai()
                             local facingAngle = angleBetweenCoordinates(x, y, GetRectCenterX(data.optionLookAtRect),
                                                     GetRectCenterY(data.optionLookAtRect))
                             local xNew, yNew = polarProjectionCoordinates(x, y, 10, facingAngle)
-							IssuePointOrderById(unit, oid.move, xNew, yNew)
+                            IssuePointOrderById(unit, oid.move, xNew, yNew)
 
                             order = oid.move
                             i = 1
-                            while order == oid.move and i < 15 do
+                            while order == oid.move and i < 2 do
                                 order = GetUnitCurrentOrder(unit)
-                                PolledWait(0.1)
-                                i = i + 1
+                                PolledWait(tick)
+                                i = i + tick
                             end
                         end
 
@@ -596,18 +597,9 @@ end
 --------
 --  Main -- This runs everything
 --------
-function INIT()
-    print("Start")
-    INIT_oid()
-    print("OID")
-
+do
     debugfunc(function()
         INIT_ai()
+        print("AI INIT")
     end, "Init")
-    print("AI INIT")
-
-    debugfunc(function()
-        INIT_Config()
-    end, "Config")
-    print("SETUP INIT")
 end

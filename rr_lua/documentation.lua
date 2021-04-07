@@ -7,24 +7,26 @@
 --  * means optional variable
 --
 --  Add new things to the fold
---  [X] ai.addTown(name, hostileForce)                                          -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
+--  [A] ai.addTown(name, hostileForce)                                          -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
 --  [X] ai.addLandmark(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
---  [X] ai.addUnit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
---  [X] ai.addRoute(name)                                                       -- Adds a route that villagers can take when moving
---
+--  [A] ai.addUnit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
+--  [ABILITY_RLF_MANA_TRANSFERRED_PER_SECOND] ai.addRoute(name)                                                       -- Adds a route that villagers can take when moving
+
 --  Extend Town Size
 --  [X] ai.extendTown(name, rect)                                               -- Adds an additional RECT to a town that already exists
 
 --  Route Actions
---  [X] ai.routeAddStep(rect, time*, lookAtRect*, animation*, speed*)            -- Adds at the end of the selected route, a new place for a unit to move to.
---  [X] ai.routeAddOption(route, step, rect, time, lookAtRect, animation, speed) -- Adds an additional option to the picked route step
+--  [A] ai.routeAddStep(route, rect, time, speed*, walk?*, lookAtRect*, animation*)     -- Adds at the end of the selected route, a new place for a unit to move to.
+--  [X] ai.routeAddAction(route, time, lookAtRect, animation*)                          -- Adds an additional option to the picked route step
+--  [ ] ai.routeAddBranch(route, {newRoutes})                                           -- Adds a branch at the end of a route to pick a random new route from list of routes to send a unit to.                               
+
 --  [X] ai.routeGetStepCount(route)
 --  [X] ai.routeGetOptionCount(route, step)
---
+
 --  Town Actions
 --  [X] ai.townState(name, state)                        -- Changes the town state to the specified state
 --  [X] ai.townHostileForce(name, force)                 -- Changes the allegience of the town and all of the units to the new force.
---  [X] ai.townVulnerableUnits(name, [True, False])      -- Sets all units of a town to be vulnerable / invulnerable.
+--  [A] ai.townVulnerableUnits(name, [True, False])      -- Sets all units of a town to be vulnerable / invulnerable.
 --  [X] ai.townVulnerableLandmarks(name, [True, False])  -- Sets all landmarks of a town to be vulnerable / invulnerable.
 --  [X] ai.townUnitsHurt(name, low, high, kill)          -- Damages all units of the town by a random percentage from low to high.
 --  [X] ai.townUnitsSetLife(town, low, high)             -- Sets all units of a town to a percent life in a random number within the low and high.
@@ -37,15 +39,15 @@
 --  [ ] ai.landmarkKill(rect)                   -- Kills the landmark, displacing any Units connected to it.
 --
 --  Unit Actions
---  [ ] ai.unitState(unit, state)               -- Changes the unit state to the specified state
+--  [X] ai.unitState(unit, state)               -- Changes the unit state to the specified state
 --  [ ] ai.unitSetHome(unit, landmark)          -- Sets what landmark this unit considers it's home.  Will be used to sleep when off-shift.
---  [X] ai.unitAddRoute(unit, route)            -- Adds the picked route to one of the units routes
+--  [A] ai.unitAddRoute(unit, route)            -- Adds the picked route to one of the units routes
 --  [ ] ai.unitAddRoutes(unit, {routes})        -- Adds all of the routes contained in the routes list specified to the Unit.
 --  [ ] ai.unitChangeHome(unit, rect)           -- Changes the unit's home position to the center of the selected rect.
 --  [X] ai.unitKill(unit)                       -- Kills the unit and removes all references from AI.
 --  [X] ai.unitRemove(unit)                     -- Removes the unit from the game and all references to it.
 --  [X] ai.unitPause(unit)                      -- Puases a unit.  Pauses the unit and all updating.
---  [X] ai.unitPickRoute(unit, route*, step*)   -- Starts unit down specified Route.  If no route is chosen, then will pick a random route that has been assigned to the unit.
+--  [A] ai.unitPickRoute(unit, route*, step*)   -- Starts unit down specified Route.  If no route is chosen, then will pick a random route that has been assigned to the unit.
 --
 --  Set Unit Types
 --  [ ] ai.unitVillager(unit)                   -- Set unit as a Villager
