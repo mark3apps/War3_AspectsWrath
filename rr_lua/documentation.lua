@@ -7,21 +7,21 @@
 --  * means optional variable
 --
 --  Add new things to the fold
---  [A] ai.add.town(name, hostileForce)                                          -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
---  [X] ai.add.landmark(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
---  [A] ai.add.unit(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
---  [A] ai.add.route(name)                                                       -- Adds a route that villagers can take when moving
+--  [A] ai.town.new(name, hostileForce)                                          -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
+--  [X] ai.landmark.new(town, name, rect, {types}, *unit, *radius, *maxCapacity) -- Sets up a new landmark in a town that will be used by Units
+--  [A] ai.unit.new(town, type, name, unit, shift*)                              -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
+--  [A] ai.route.new(name)                                                       -- Adds a route that villagers can take when moving
 
 --  Extend Town Size
 --  [X] ai.town.extend(name, rect)                                               -- Adds an additional RECT to a town that already exists
 
 --  Route Actions
---  [A] ai.route.addStep(route, rect, time, speed*, walk?*, lookAtRect*, animation*)     -- Adds at the end of the selected route, a new place for a unit to move to.
---  [X] ai.route.addAction(route, time, lookAtRect, animation*)                          -- Adds an additional option to the picked route step
---  [ ] ai.route.addBranch(route, {newRoutes})                                           -- Adds a branch at the end of a route to pick a random new route from list of routes to send a unit to.                               
+--  [A] ai.route.step(route, rect, time, speed*, walk?*)     -- Adds at the end of the selected route, a new place for a unit to move to.
+--  [X] ai.route.action(route, time, lookAtRect*, animation*, loop?*)                          -- Adds an additional option to the picked route step
+--  [ ] ai.route.branch(route, {newRoutes})                                           -- Adds a branch at the end of a route to pick a random new route from list of routes to send a unit to.                               
 
---  [X] ai.route.getStepCount(route)
---  [X] ai.route.getActionCount(route, step)
+--  [X] ai.route.stepCount(route)
+--  [X] ai.route.actionCount(route, step)
 
 --  Town Actions
 --  [X] ai.town.state(name, state)                        -- Changes the town state to the specified state

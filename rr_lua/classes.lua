@@ -2,12 +2,14 @@ function INIT_ai()
 
     -- Set up basic Variables
     ai = {}
-    
+
     -- Set up Function Bases
     ai.town = {}
     ai.unit = {}
     ai.landmark = {}
     ai.route = {}
+    ai.trig = {}
+    ai.unitSTATE = {}
 
     ai.towns = {}
     ai.routes = {}
@@ -20,7 +22,7 @@ function INIT_ai()
     --------
 
     -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
-    function ai.add.town(name, hostileForce)
+    function ai.town.new(name, hostileForce)
 
         -- Init the Town
         ai.towns[name] = {}
@@ -58,7 +60,7 @@ function INIT_ai()
     end
 
     -- Add a new landmark
-    function ai.add.landmark(town, name, rect, types, unit, radius, maxCapacity)
+    function ai.landmark.new(town, name, rect, types, unit, radius, maxCapacity)
         unit = unit or nil
         radius = radius or 600
         maxCapacity = maxCapacity or 500
@@ -90,7 +92,7 @@ function INIT_ai()
     end
 
     -- Adds a route that villagers can take when moving
-    function ai.add.route(name, type)
+    function ai.route.new(name, type)
 
         -- Set up the route Vars
         ai.routes[name] = {}
@@ -103,7 +105,7 @@ function INIT_ai()
     end
 
     -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
-    function ai.add.unit(town, type, unit, name, shift)
+    function ai.unit.new(town, type, unit, name, shift)
 
         shift = shift or "day"
 
@@ -218,65 +220,52 @@ function INIT_ai()
     --------
 
     -- Adds at the end of the selected route, a new place for a unit to move to.
-    function ai.route.addStep(route, rect, time, lookAtRect, animation, speed)
+    function ai.route.step(route, rect, speed, walk)
 
         -- Set default values if one wasn't specified
         speed = speed or nil
-        animation = animation or "stand 1"
-        lookAtRect = lookAtRect or nil
-        time = time or 0
+        walk = walk or false
 
         -- Add Event to Rect Entering Trigger
-        TriggerRegisterEnterRectSimple(ai.unitEntersRegion, rect)
+        TriggerRegisterEnterRectSimple(ai.trig.unitEntersRegion, rect)
 
         -- Update the count of steps in the route
-        local stepCount = ai.routes[route].stepCount + 1
+        local stepCount = ai.route.getStepCount(route) + 1
 
         -- Add the step to the route
         ai.routes[route].stepCount = stepCount
-        ai.routes[route].steps[stepCount] = {
-            optionCount = 1,
-            options = {}
-        }
 
-        ai.routes[route].steps[stepCount].optionCount = 1
-        ai.routes[route].steps[stepCount].options[1] = {
+        ai.routes[route].step[stepCount] = {
             rect = rect,
+            speed = speed,
             x = GetRectCenterX(rect),
             y = GetRectCenterY(rect),
-            time = time,
-            speed = speed,
-            lookAtRect = lookAtRect,
-            animation = animation
+            actionCount = 0,
+            action = {}
         }
+
 
         return true
 
     end
 
-    
     -- Adds an additional option to the picked route step
-    function ai.route.addAction(route, step, rect, time, lookAtRect, animation, speed)
+    function ai.route.action(route, time, lookAtRect, animation, loop)
 
         -- Set default values if one wasn't specified
-        speed = speed or nil
-        animation = animation or "stand 1"
+        animation = animation or nil
         lookAtRect = lookAtRect or nil
-        time = time or 0
+        loop = loop or false
 
         -- Update the Option Count for the Route
-        local stepCount = ai.routes[name].stepCount
-        local optionCount = ai.routes[name].steps[stepCount].optionCount + 1
+        local stepCount = ai.route.getStepCount(route)
+        local actionCount = ai.routes.getOptionCount(route, stepCount) + 1
 
         -- Add the Option to the Step in the Route
-        ai.routes[name].steps[stepCount].optionCount = optionCount
-        ai.routes[name].steps[stepCount].options[optionCount] =
+        ai.routes[route].steps[stepCount].actionCount = actionCount
+        ai.routes[route].steps[stepCount].action[actionCount] =
             {
-                rect = rect,
-                x = GetRectCenterX(rect),
-                y = GetRectCenterY(rect),
                 time = time,
-                speed = speed,
                 lookAtRect = lookAtRect,
                 animation = animation
             }
@@ -285,11 +274,12 @@ function INIT_ai()
 
     end
 
-    function ai.route.getStepCount(route)
+    
+    function ai.route.stepCount(route)
         return ai.routes[route].stepCount
     end
 
-    function ai.route.getOptionCount(route, step)
+    function ai.route.actionCount(route, step)
         return ai.routes[route].steps[step].optionCount
     end
 
@@ -404,8 +394,6 @@ function INIT_ai()
     --  UNIT STATES
     --------
 
-    ai.unitSTATE = {}
-
     --
     -- MOVE
     function ai.unitSTATE.move(unit)
@@ -513,12 +501,11 @@ function INIT_ai()
         end)
 
         -- Trigger Unit enters a Rect in a Route
-        ai.unitEntersRegion = CreateTrigger()
+        ai.trig.unitEntersRegion = CreateTrigger()
         TriggerAddAction(ai.unitEntersRegion, function()
             local unit = GetEnteringUnit()
 
             debugfunc(function()
-                print("Entering")
 
                 if IsUnitInGroup(unit, ai.unitGroup) then
 
@@ -529,7 +516,6 @@ function INIT_ai()
 
                     -- If the Rect isn't the targetted end rect, ignore any future actions
                     if not RectContainsUnit(ai.routes[data.route].steps[data.step].options[data.option].rect, unit) then
-                        print("DOESN'T CONTAIN")
                         return false
                     end
 
@@ -542,7 +528,6 @@ function INIT_ai()
                         i = i + tick
                     end
 
-                    
                     -- If current State is moving
                     if data.stateCurrent == "moving" then
 

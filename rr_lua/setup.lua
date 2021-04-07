@@ -1,13 +1,20 @@
 function INIT_Config()
     -- Add Towns
-    ai.add.town("village", udg_townVillageForce)
+    ai.add.town("Farms", udg_townVillageForce)
 
     -- Add Routes
-    ai.add.route("Main", "inTown")
-    ai.route.addStep("Main", gg_rct_R01_01, 5, gg_rct_R01_01L, "Attack 1", 50)
-    ai.route.addStep("Main", gg_rct_R01_02, 2, gg_rct_R01_02L, "Stand Victory 1", 200)
-    ai.route.addStep("Main", gg_rct_R01_03, 5, gg_rct_R01_03L, "Stand Defend", 250)
-    ai.route.addStep("Main", gg_rct_R01_04, 5, gg_rct_R01_04L, "Stand Ready", 75)
+    ai.route.new("Main", "inTown")
+    ai.route.step("Main", gg_rct_R01_01, 50, true)
+    ai.route.action("Main", 5, gg_rct_R01_01L, "Attack 1", true)
+
+    ai.route.step("Main", gg_rct_R01_02, 200)
+    ai.route.action("Main", 2, gg_rct_R01_02L, "Stand Victory 1", true)
+
+    ai.route.step("Main", gg_rct_R01_03, 250)
+    ai.route.action("Main", 5, gg_rct_R01_03L, "Stand Defend")
+
+    ai.route.step("Main", gg_rct_R01_04, 75)
+    ai.route.action("Main", 5, gg_rct_R01_04L, "Stand Ready")
 
     -- Create the Unit
     local g = CreateGroup()
@@ -16,7 +23,7 @@ function INIT_Config()
     local u = FirstOfGroup(g)
     while u ~= nil do
 
-        ai.add.unit("village", "villager", u, "villager" .. GetRandomInt(10000, 50000), "day")
+        ai.add.unit("Farms", "villager", u, "Peasant", "day")
         ai.unit.addRoute(u, "Main")
 
         GroupRemoveUnit(g, u)
@@ -36,7 +43,7 @@ function INIT_Config()
         local u = FirstOfGroup(g)
         while u ~= nil do
             ai.unit.state(u, "move")
-            
+
             PolledWait(GetRandomReal(0.4, 2))
 
             GroupRemoveUnit(g, u)
