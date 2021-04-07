@@ -2,6 +2,13 @@ function INIT_ai()
 
     -- Set up basic Variables
     ai = {}
+    
+    -- Set up Function Bases
+    ai.town = {}
+    ai.unit = {}
+    ai.landmark = {}
+    ai.route = {}
+
     ai.towns = {}
     ai.routes = {}
     ai.landmarks = {}
@@ -13,7 +20,7 @@ function INIT_ai()
     --------
 
     -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
-    function ai.addTown(name, hostileForce)
+    function ai.add.town(name, hostileForce)
 
         -- Init the Town
         ai.towns[name] = {}
@@ -44,14 +51,14 @@ function INIT_ai()
         return true
     end
 
-    function ai.extendTown(name, rect)
+    function ai.town.extend(name, rect)
         RegionAddRect(ai.towns[name].region, rect)
 
         return true
     end
 
     -- Add a new landmark
-    function ai.addLandmark(town, name, rect, types, unit, radius, maxCapacity)
+    function ai.add.landmark(town, name, rect, types, unit, radius, maxCapacity)
         unit = unit or nil
         radius = radius or 600
         maxCapacity = maxCapacity or 500
@@ -83,7 +90,7 @@ function INIT_ai()
     end
 
     -- Adds a route that villagers can take when moving
-    function ai.addRoute(name, type)
+    function ai.add.route(name, type)
 
         -- Set up the route Vars
         ai.routes[name] = {}
@@ -96,7 +103,7 @@ function INIT_ai()
     end
 
     -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
-    function ai.addUnit(town, type, unit, name, shift)
+    function ai.add.unit(town, type, unit, name, shift)
 
         shift = shift or "day"
 
@@ -143,7 +150,7 @@ function INIT_ai()
     --  TOWN ACTIONS
     --------
 
-    function ai.townState(town, state)
+    function ai.town.state(town, state)
 
         if tableContains(ai.towns[town].states, state) then
             ai.towns[town].state = state
@@ -157,14 +164,14 @@ function INIT_ai()
         return false
     end
 
-    function ai.townHostileForce(town, force)
+    function ai.town.hostileForce(town, force)
 
         ai.towns[town].force = force
         return true
 
     end
 
-    function ai.townVulnerableUnits(town, flag)
+    function ai.town.vulnerableUnits(town, flag)
 
         ForGroup(ai.towns[town].units, function()
             local unit = GetEnumUnit()
@@ -176,7 +183,7 @@ function INIT_ai()
 
     end
 
-    function ai.townUnitsHurt(town, low, high, kill)
+    function ai.town.unitsHurt(town, low, high, kill)
 
         ForGroup(ai.towns[town].units, function()
             local unit = GetEnumUnit()
@@ -194,7 +201,7 @@ function INIT_ai()
         return true
     end
 
-    function ai.townUnitsSetLife(town, low, high)
+    function ai.town.unitsSetLife(town, low, high)
 
         ForGroup(ai.towns[town].units, function()
             local unit = GetEnumUnit()
@@ -211,7 +218,7 @@ function INIT_ai()
     --------
 
     -- Adds at the end of the selected route, a new place for a unit to move to.
-    function ai.routeAddStep(route, rect, time, lookAtRect, animation, speed)
+    function ai.route.addStep(route, rect, time, lookAtRect, animation, speed)
 
         -- Set default values if one wasn't specified
         speed = speed or nil
@@ -247,8 +254,9 @@ function INIT_ai()
 
     end
 
+    
     -- Adds an additional option to the picked route step
-    function ai.routeAddAction(route, step, rect, time, lookAtRect, animation, speed)
+    function ai.route.addAction(route, step, rect, time, lookAtRect, animation, speed)
 
         -- Set default values if one wasn't specified
         speed = speed or nil
@@ -277,11 +285,11 @@ function INIT_ai()
 
     end
 
-    function ai.routeGetStepCount(route)
+    function ai.route.getStepCount(route)
         return ai.routes[route].stepCount
     end
 
-    function ai.routeGetOptionCount(route, step)
+    function ai.route.getOptionCount(route, step)
         return ai.routes[route].steps[step].optionCount
     end
 
@@ -289,7 +297,7 @@ function INIT_ai()
     --  UNIT ACTIONS
     --------
 
-    function ai.unitAddRoute(unit, route)
+    function ai.unit.addRoute(unit, route)
         local handleId = GetHandleId(unit)
 
         if ai.routes[route] ~= nil then
@@ -301,7 +309,7 @@ function INIT_ai()
 
     end
 
-    function ai.unitRemoveRoute(unit, route)
+    function ai.unit.removeRoute(unit, route)
         local handleId = GetHandleId(unit)
         local routes = ai.units[handleId].routes
 
@@ -313,7 +321,7 @@ function INIT_ai()
         return false
     end
 
-    function ai.unitKill(unit)
+    function ai.unit.kill(unit)
         local handleId = GetHandleId(unit)
         local data = ai.units[handleId]
         ai.units[handleId] = nil
@@ -325,7 +333,7 @@ function INIT_ai()
         return true
     end
 
-    function ai.unitRemove(unit)
+    function ai.unit.remove(unit)
         local handleId = GetHandleId(unit)
         local data = ai.units[handleId]
         ai.units[handleId] = nil
@@ -337,7 +345,7 @@ function INIT_ai()
         return true
     end
 
-    function ai.unitPause(unit, flag)
+    function ai.unit.pause(unit, flag)
         local handleId = GetHandleId(unit)
 
         PauseUnit(unit, flag)
@@ -346,7 +354,7 @@ function INIT_ai()
         return true
     end
 
-    function ai.unitPickRoute(unit, route, step)
+    function ai.unit.pickRoute(unit, route, step)
         local data = ai.units[GetHandleId(unit)]
 
         if #data.routes == 0 and route == nil then
@@ -378,7 +386,7 @@ function INIT_ai()
     end
 
     -- Set the Unit State
-    function ai.unitSetState(unit, state)
+    function ai.unit.state(unit, state)
         local data = ai.units[GetHandleId(unit)]
 
         if tableContains(ai.units[data.id].states, state) then
@@ -409,7 +417,7 @@ function INIT_ai()
 
         local route = data.routes[GetRandomInt(1, #data.routes)]
 
-        ai.unitPickRoute(unit)
+        ai.unit.pickRoute(unit)
 
         return true
     end
@@ -571,9 +579,9 @@ function INIT_ai()
                         print(routeSteps .. ":" .. data.step)
 
                         if routeSteps == data.step then
-                            ai.unitSetState(unit, "returnHome")
+                            ai.unit.state(unit, "returnHome")
                         else
-                            ai.unitPickRoute(unit, data.route, (data.step + 1))
+                            ai.unit.pickRoute(unit, data.route, (data.step + 1))
                         end
                     end
                 end
