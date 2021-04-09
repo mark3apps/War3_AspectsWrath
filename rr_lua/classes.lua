@@ -244,7 +244,6 @@ function INIT_ai()
             action = {}
         }
 
-
         return true
 
     end
@@ -265,6 +264,7 @@ function INIT_ai()
         ai.routes[route].steps[stepCount].actionCount = actionCount
         ai.routes[route].steps[stepCount].action[actionCount] =
             {
+                type = "action",
                 time = time,
                 lookAtRect = lookAtRect,
                 animation = animation
@@ -274,7 +274,34 @@ function INIT_ai()
 
     end
 
-    
+    function ai.route.trigger(route, trigger)
+        -- Update the Option Count for the Route
+        local stepCount = ai.route.getStepCount(route)
+        local actionCount = ai.routes.getOptionCount(route, stepCount) + 1
+
+        -- Add the Option to the Step in the Route
+        ai.routes[route].steps[stepCount].actionCount = actionCount
+        ai.routes[route].steps[stepCount].action[actionCount] =
+            {
+                type = "trigger",
+                trigger = trigger
+            }
+    end
+
+    function ai.route.funct(route, funct)
+        -- Update the Option Count for the Route
+        local stepCount = ai.route.getStepCount(route)
+        local actionCount = ai.routes.getOptionCount(route, stepCount) + 1
+
+        -- Add the Option to the Step in the Route
+        ai.routes[route].steps[stepCount].actionCount = actionCount
+        ai.routes[route].steps[stepCount].action[actionCount] =
+            {
+                type = "function",
+                funct = funct
+            }
+    end
+
     function ai.route.stepCount(route)
         return ai.routes[route].stepCount
     end
@@ -515,7 +542,7 @@ function INIT_ai()
                     PolledWait(0.5)
 
                     -- If the Rect isn't the targetted end rect, ignore any future actions
-                    if not RectContainsUnit(ai.routes[data.route].steps[data.step].options[data.option].rect, unit) then
+                    if not RectContainsUnit(ai.routes[data.route].steps[data.step].rect, unit) then
                         return false
                     end
 
@@ -533,31 +560,43 @@ function INIT_ai()
 
                         ai.units[data.id].stateCurrent = "waiting"
 
-                        if data.optionLookAtRect ~= nil then
-                            local x = GetUnitX(unit)
-                            local y = GetUnitY(unit)
+                        if data.type == "action" then
+                            if data.optionLookAtRect ~= nil then
+                                local x = GetUnitX(unit)
+                                local y = GetUnitY(unit)
 
-                            -- Get the angle to the rect and find a point 10 units in that direction
-                            local facingAngle = angleBetweenCoordinates(x, y, GetRectCenterX(data.optionLookAtRect),
-                                                    GetRectCenterY(data.optionLookAtRect))
-                            local xNew, yNew = polarProjectionCoordinates(x, y, 10, facingAngle)
-                            IssuePointOrderById(unit, oid.move, xNew, yNew)
+                                -- Get the angle to the rect and find a point 10 units in that direction
+                                local facingAngle = angleBetweenCoordinates(x, y, GetRectCenterX(data.optionLookAtRect),
+                                                        GetRectCenterY(data.optionLookAtRect))
+                                local xNew, yNew = polarProjectionCoordinates(x, y, 10, facingAngle)
+                                IssuePointOrderById(unit, oid.move, xNew, yNew)
 
-                            order = oid.move
-                            i = 1
-                            while order == oid.move and i < 2 do
-                                order = GetUnitCurrentOrder(unit)
-                                PolledWait(tick)
-                                i = i + tick
+                                order = oid.move
+                                i = 1
+                                while order == oid.move and i < 2 do
+                                    order = GetUnitCurrentOrder(unit)
+                                    PolledWait(tick)
+                                    i = i + tick
+                                end
                             end
-                        end
 
-                        if data.optionAnimation ~= nil then
-                            print(data.optionAnimation)
-                            SetUnitAnimation(unit, data.optionAnimation)
-                        end
+                            if data.optionAnimation ~= nil then
+                                print(data.optionAnimation)
+                                SetUnitAnimation(unit, data.optionAnimation)
+                            end
 
-                        PolledWait(data.optionTime)
+                            PolledWait(data.optionTime)
+
+                        elseif data.type == "trigger" then
+                            
+                            -- Set Data that needs to get passed to trigger
+                            udg_AI_TriggeringUnit = unit
+
+                            -- Run the trigger (Checking Conditions)
+                            ConditionalTriggerExecute(data.trigger)
+                            print("working!")
+
+                        end
 
                         local routeSteps = ai.routes[data.route].stepCount
 

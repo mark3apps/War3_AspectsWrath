@@ -18,6 +18,8 @@
 --  Route Actions
 --  [A] ai.route.step(route, rect, time, speed*, walk?*)     -- Adds at the end of the selected route, a new place for a unit to move to.
 --  [X] ai.route.action(route, time, lookAtRect*, animation*, loop?*)                          -- Adds an additional option to the picked route step
+--  [ ] ai.route.trigger(route, trigger)
+--  [ ] ai.route.function(route, function)
 --  [ ] ai.route.branch(route, {newRoutes})                                           -- Adds a branch at the end of a route to pick a random new route from list of routes to send a unit to.                               
 
 --  [X] ai.route.stepCount(route)
