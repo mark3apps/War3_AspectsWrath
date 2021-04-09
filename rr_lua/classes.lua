@@ -227,9 +227,7 @@ function INIT_ai()
         walk = walk or false
 
         -- Add Event to Rect Entering Trigger
-        print("Adding")
         TriggerRegisterEnterRectSimple(ai.trig.unitEntersRegion, rect)
-        print("Added")
 
         -- Update the count of steps in the route
         local stepCount = ai.route[route].stepCount + 1
@@ -522,7 +520,8 @@ function INIT_ai()
 
     -- Trigger Unit enters a Rect in a Route
     ai.trig.unitEntersRegion = CreateTrigger()
-    TriggerAddAction(ai.trig.unitEntersRegionn, function()
+    TriggerAddAction(ai.trig.unitEntersRegion, function()
+
         print("Triggered")
 
         local unit = GetEnteringUnit()
@@ -535,7 +534,7 @@ function INIT_ai()
                 local handleId = GetHandleId(unit)
                 local data = ai.units[handleId]
 
-                PolledWaitPrecise(0.5)
+                PolledWait(0.5)
 
                 -- If the Rect isn't the targetted end rect, ignore any future actions
                 if not RectContainsUnit(ai.route[data.route].step[data.step].rect, unit) then
@@ -551,7 +550,7 @@ function INIT_ai()
                 local i = 1
                 while order == oid.move and i < 2 do
                     order = GetUnitCurrentOrder(unit)
-                    PolledWaitPrecise(tick)
+                    PolledWait(tick)
                     i = i + tick
                 end
 
@@ -577,7 +576,7 @@ function INIT_ai()
                             i = 1
                             while order == oid.move and i < 2 do
                                 order = GetUnitCurrentOrder(unit)
-                                PolledWaitPrecise(tick)
+                                PolledWait(tick)
                                 i = i + tick
                             end
                         end
@@ -587,16 +586,21 @@ function INIT_ai()
                             SetUnitAnimation(unit, action.animation)
                         end
 
-                        PolledWaitPrecise(action.time)
+                        PolledWait(action.time)
 
-                    elseif data.type == "trigger" then
+                    elseif action.type == "trigger" then
 
                         -- Set Data that needs to get passed to trigger
                         udg_AI_TriggeringUnit = unit
+                        ai.units[data.id].stateCurrent = "triggering"
 
                         print("Trying!")
                         -- Run the trigger (Checking Conditions)
                         ConditionalTriggerExecute(action.trigger)
+
+                        while ai.units[data.id].stateCurrent == "triggering" do
+                            PolledWait(.5)
+                        end
                         print("working!")
 
                     end
@@ -628,6 +632,7 @@ end
 function INIT_LUA()
     debugfunc(function()
         INIT_ai()
+        INIT_Config()
         print("AI INIT")
     end, "Init")
 end

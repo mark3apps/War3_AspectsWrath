@@ -6,11 +6,12 @@ function INIT_Config()
         -- Add Routes
         ai.route.new("Main", "inTown")
         ai.route.step("Main", gg_rct_R01_01, 500, true)
+        ai.route.trigger("Main", gg_trg_Action_Test)
         ai.route.action("Main", 5, gg_rct_R01_01L, "Attack 1", true)
 
         ai.route.step("Main", gg_rct_R01_02, 200)
         ai.route.action("Main", 2, gg_rct_R01_02L, "Stand Victory 1", true)
-        ai.route.trigger("Main", gg_trg_Action_Test)
+        
 
         ai.route.step("Main", gg_rct_R01_03, 250)
         ai.route.action("Main", 5, gg_rct_R01_03L, "Stand Defend")

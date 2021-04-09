@@ -128,39 +128,7 @@ do
     end
 end
 
--- **CREDIT** Bribe
--- Perfect Polled Wait
-do
-    local oldWait = PolledWait
-    function PolledWaitPrecise(duration)
-        local thread = coroutine.running()
-        if thread then
-            TimerStart(NewTimer(thread), duration, false, function()
-                coroutine.resume(ReleaseTimer())
-            end)
-            coroutine.yield(thread)
-        else
-            oldWait(duration)
-        end
-    end
 
-    local thread
-    local oldSync = SyncSelections
-    function SyncSelectionsHelper()
-        local t = thread
-        oldSync()
-        coroutine.resume(t)
-    end
-    function SyncSelections()
-        thread = coroutine.running()
-        if thread then
-            ExecuteFunc("SyncSelectionsHelper")
-            coroutine.yield(thread)
-        else
-            oldSync()
-        end
-    end
-end
 
 -- **Credit** KickKing
 -- This function pushes units back from a point and can also damage units while being pushedback
