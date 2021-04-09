@@ -1,6 +1,9 @@
 --
 -- Functions
 --
+
+-- **Credit** KickKing
+-- This is kinda useless
 function dprint(message, level)
     level = level or 1
 
@@ -9,6 +12,8 @@ function dprint(message, level)
     end
 end
 
+-- **Credit** KickKing
+-- Returns true if the value is found in the table
 function tableContains(table, element)
     for _, value in pairs(table) do
         if value == element then
@@ -18,11 +23,14 @@ function tableContains(table, element)
     return false
 end
 
+-- **Credit** KickKing
+-- Remove a value from a table
 function tableRemoveValue(table, value)
-
     return table.remove(table, tableFind(table, value))
 end
 
+-- **Credit** KickKing
+-- Find the indext of a value in a table
 function tableFind(tab, el)
     for index, value in pairs(tab) do
         if value == el then
@@ -31,28 +39,40 @@ function tableFind(tab, el)
     end
 end
 
-function distanceBetweenCoordinates(x1, y1, x2, y2) -- Find Distance between points
+-- **Credit** KickKing
+-- get distance without locations
+function distanceBetweenCoordinates(x1, y1, x2, y2)
     return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
 
+-- **Credit** KickKing
+-- get distance without locations
 function distanceBetweenUnits(unitA, unitB)
     return distanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
+-- **Credit** KickKing
+-- get angle without locations
 function angleBetweenCoordinates(x1, y1, x2, y2)
     return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
 end
 
+-- **Credit** KickKing
+-- get angle without locations
 function angleBetweenUnits(unitA, unitB)
     return angleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
+-- **Credit** KickKing
+-- Polar projection with Locations
 function polarProjectionCoordinates(x, y, dist, angle)
     local newX = x + dist * Cos(angle * bj_DEGTORAD)
     local newY = y + dist * Sin(angle * bj_DEGTORAD)
     return newX, newY
 end
 
+-- ** Credit** Planetary
+-- Wraps your code in a "Try" loop so you can see errors printed in the log at runtime
 function debugfunc(func, name) -- Turn on runtime logging
     local passed, data = pcall(function()
         func()
@@ -63,10 +83,13 @@ function debugfunc(func, name) -- Turn on runtime logging
     end
 end
 
+-- **CREDIT** Taysen
+-- Converts integer formated types into the 4 digit strings (Opposite of FourCC())
 function CC2Four(num) -- Convert from Handle ID to Four Char
     return string.pack(">I4", num)
 end
 
+-- **CREDIT** Bribe
 -- Timer Utils
 do
     local data = {}
@@ -105,11 +128,11 @@ do
     end
 end
 
--- Requires https://www.hiveworkshop.com/threads/lua-timerutils.316957/
-
+-- **CREDIT** Bribe
+-- Perfect Polled Wait
 do
     local oldWait = PolledWait
-    function PolledWait(duration)
+    function PolledWaitPrecise(duration)
         local thread = coroutine.running()
         if thread then
             TimerStart(NewTimer(thread), duration, false, function()
@@ -119,11 +142,6 @@ do
         else
             oldWait(duration)
         end
-    end
-
-    local oldTSA = TriggerSleepAction
-    function TriggerSleepAction(duration)
-        PolledWait(duration)
     end
 
     local thread
@@ -142,19 +160,10 @@ do
             oldSync()
         end
     end
-
-    if not EnableWaits then -- Added this check to ensure compatibilitys with Lua Fast Triggers
-        local oldAction = TriggerAddAction
-        function TriggerAddAction(whichTrig, userAction)
-            oldAction(whichTrig, function()
-                coroutine.resume(coroutine.create(function()
-                    userAction()
-                end))
-            end)
-        end
-    end
 end
 
+-- **Credit** KickKing
+-- This function pushes units back from a point and can also damage units while being pushedback
 function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor)
     local u, uX, uY, distance, angle, newDistance, uNewX, uNewY
 
@@ -207,6 +216,8 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
     DestroyGroup(g)
 end
 
+-- **Credit** KickKing
+-- A system that allow you to duplicate the functionality of auto-filling in the Object Editor
 function valueFactor(level, base, previousFactor, levelFactor, constant)
 
     local value = base
@@ -223,6 +234,7 @@ function valueFactor(level, base, previousFactor, levelFactor, constant)
 end
 
 
+-- **Credit** Nestharus (Converted to Lua and turned into object by KickKing)
 do
     oid = {
         OFFSET = 851970,

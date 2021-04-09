@@ -539,7 +539,7 @@ function INIT_ai()
                     local handleId = GetHandleId(unit)
                     local data = ai.units[handleId]
 
-                    PolledWait(0.5)
+                    PolledWaitPrecise(0.5)
 
                     -- If the Rect isn't the targetted end rect, ignore any future actions
                     if not RectContainsUnit(ai.routes[data.route].steps[data.step].rect, unit) then
@@ -551,7 +551,7 @@ function INIT_ai()
                     local tick = 0.1
                     while order == oid.move and i < 2 do
                         order = GetUnitCurrentOrder(unit)
-                        PolledWait(tick)
+                        PolledWaitPrecise(tick)
                         i = i + tick
                     end
 
