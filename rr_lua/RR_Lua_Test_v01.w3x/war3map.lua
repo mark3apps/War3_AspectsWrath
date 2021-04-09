@@ -19,14 +19,22 @@ end
 
 function INIT_Config()
     -- Add Towns
-    ai.addTown("village", udg_townVillageForce)
+    ai.add.town("Farms", udg_townVillageForce)
 
     -- Add Routes
-    ai.addRoute("Main", "inTown")
-    ai.routeAddStep("Main", gg_rct_R01_01, 5, gg_rct_R01_01L, "Attack 1", 50)
-    ai.routeAddStep("Main", gg_rct_R01_02, 2, gg_rct_R01_02L, "Stand Victory 1", 200)
-    ai.routeAddStep("Main", gg_rct_R01_03, 5, gg_rct_R01_03L, "Stand Defend", 250)
-    ai.routeAddStep("Main", gg_rct_R01_04, 5, gg_rct_R01_04L, "Stand Ready", 75)
+    ai.route.new("Main", "inTown")
+    ai.route.step("Main", gg_rct_R01_01, 50, true)
+    ai.route.action("Main", 5, gg_rct_R01_01L, "Attack 1", true)
+
+    ai.route.step("Main", gg_rct_R01_02, 200)
+    ai.route.action("Main", 2, gg_rct_R01_02L, "Stand Victory 1", true)
+    ai.route.trigger("Main", gg_trg_Action_Test)
+
+    ai.route.step("Main", gg_rct_R01_03, 250)
+    ai.route.action("Main", 5, gg_rct_R01_03L, "Stand Defend")
+
+    ai.route.step("Main", gg_rct_R01_04, 75)
+    ai.route.action("Main", 5, gg_rct_R01_04L, "Stand Ready")
 
     -- Create the Unit
     local g = CreateGroup()
@@ -35,8 +43,8 @@ function INIT_Config()
     local u = FirstOfGroup(g)
     while u ~= nil do
 
-        ai.addUnit("village", "villager", u, "villager" .. GetRandomInt(10000, 50000), "day")
-        ai.unitAddRoute(u, "Main")
+        ai.add.unit("Farms", "villager", u, "Peasant", "day")
+        ai.unit.addRoute(u, "Main")
 
         GroupRemoveUnit(g, u)
         u = FirstOfGroup(g)
@@ -54,8 +62,9 @@ function INIT_Config()
 
         local u = FirstOfGroup(g)
         while u ~= nil do
-            ai.unitSetState(u, "move")
-            PolledWait(GetRandomReal(0.4, 2))
+            ai.unit.state(u, "move")
+
+            PolledWait(GetRandomReal(0.2, 7))
 
             GroupRemoveUnit(g, u)
             u = FirstOfGroup(g)
@@ -67,6 +76,9 @@ end
 --
 -- Functions
 --
+
+-- **Credit** KickKing
+-- This is kinda useless
 function dprint(message, level)
     level = level or 1
 
@@ -75,6 +87,8 @@ function dprint(message, level)
     end
 end
 
+-- **Credit** KickKing
+-- Returns true if the value is found in the table
 function tableContains(table, element)
     for _, value in pairs(table) do
         if value == element then
@@ -84,11 +98,14 @@ function tableContains(table, element)
     return false
 end
 
+-- **Credit** KickKing
+-- Remove a value from a table
 function tableRemoveValue(table, value)
-
     return table.remove(table, tableFind(table, value))
 end
 
+-- **Credit** KickKing
+-- Find the indext of a value in a table
 function tableFind(tab, el)
     for index, value in pairs(tab) do
         if value == el then
@@ -97,28 +114,40 @@ function tableFind(tab, el)
     end
 end
 
-function distanceBetweenCoordinates(x1, y1, x2, y2) -- Find Distance between points
+-- **Credit** KickKing
+-- get distance without locations
+function distanceBetweenCoordinates(x1, y1, x2, y2)
     return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
 
+-- **Credit** KickKing
+-- get distance without locations
 function distanceBetweenUnits(unitA, unitB)
     return distanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
+-- **Credit** KickKing
+-- get angle without locations
 function angleBetweenCoordinates(x1, y1, x2, y2)
     return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
 end
 
+-- **Credit** KickKing
+-- get angle without locations
 function angleBetweenUnits(unitA, unitB)
     return angleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
+-- **Credit** KickKing
+-- Polar projection with Locations
 function polarProjectionCoordinates(x, y, dist, angle)
     local newX = x + dist * Cos(angle * bj_DEGTORAD)
     local newY = y + dist * Sin(angle * bj_DEGTORAD)
     return newX, newY
 end
 
+-- ** Credit** Planetary
+-- Wraps your code in a "Try" loop so you can see errors printed in the log at runtime
 function debugfunc(func, name) -- Turn on runtime logging
     local passed, data = pcall(function()
         func()
@@ -129,10 +158,13 @@ function debugfunc(func, name) -- Turn on runtime logging
     end
 end
 
+-- **CREDIT** Taysen
+-- Converts integer formated types into the 4 digit strings (Opposite of FourCC())
 function CC2Four(num) -- Convert from Handle ID to Four Char
     return string.pack(">I4", num)
 end
 
+-- **CREDIT** Bribe
 -- Timer Utils
 do
     local data = {}
@@ -171,11 +203,11 @@ do
     end
 end
 
--- Requires https://www.hiveworkshop.com/threads/lua-timerutils.316957/
-
+-- **CREDIT** Bribe
+-- Perfect Polled Wait
 do
     local oldWait = PolledWait
-    function PolledWait(duration)
+    function PolledWaitPrecise(duration)
         local thread = coroutine.running()
         if thread then
             TimerStart(NewTimer(thread), duration, false, function()
@@ -185,11 +217,6 @@ do
         else
             oldWait(duration)
         end
-    end
-
-    local oldTSA = TriggerSleepAction
-    function TriggerSleepAction(duration)
-        PolledWait(duration)
     end
 
     local thread
@@ -208,19 +235,10 @@ do
             oldSync()
         end
     end
-
-    if not EnableWaits then -- Added this check to ensure compatibilitys with Lua Fast Triggers
-        local oldAction = TriggerAddAction
-        function TriggerAddAction(whichTrig, userAction)
-            oldAction(whichTrig, function()
-                coroutine.resume(coroutine.create(function()
-                    userAction()
-                end))
-            end)
-        end
-    end
 end
 
+-- **Credit** KickKing
+-- This function pushes units back from a point and can also damage units while being pushedback
 function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor)
     local u, uX, uY, distance, angle, newDistance, uNewX, uNewY
 
@@ -273,6 +291,8 @@ function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor
     DestroyGroup(g)
 end
 
+-- **Credit** KickKing
+-- A system that allow you to duplicate the functionality of auto-filling in the Object Editor
 function valueFactor(level, base, previousFactor, levelFactor, constant)
 
     local value = base
@@ -289,6 +309,7 @@ function valueFactor(level, base, previousFactor, levelFactor, constant)
 end
 
 
+-- **Credit** Nestharus (Converted to Lua and turned into object by KickKing)
 do
     oid = {
         OFFSET = 851970,
@@ -669,6 +690,15 @@ function INIT_ai()
 
     -- Set up basic Variables
     ai = {}
+
+    -- Set up Function Bases
+    ai.town = {}
+    ai.unit = {}
+    ai.landmark = {}
+    ai.route = {}
+    ai.trig = {}
+    ai.unitSTATE = {}
+
     ai.towns = {}
     ai.routes = {}
     ai.landmarks = {}
@@ -680,7 +710,7 @@ function INIT_ai()
     --------
 
     -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
-    function ai.addTown(name, hostileForce)
+    function ai.town.new(name, hostileForce)
 
         -- Init the Town
         ai.towns[name] = {}
@@ -711,14 +741,14 @@ function INIT_ai()
         return true
     end
 
-    function ai.extendTown(name, rect)
+    function ai.town.extend(name, rect)
         RegionAddRect(ai.towns[name].region, rect)
 
         return true
     end
 
     -- Add a new landmark
-    function ai.addLandmark(town, name, rect, types, unit, radius, maxCapacity)
+    function ai.landmark.new(town, name, rect, types, unit, radius, maxCapacity)
         unit = unit or nil
         radius = radius or 600
         maxCapacity = maxCapacity or 500
@@ -750,7 +780,7 @@ function INIT_ai()
     end
 
     -- Adds a route that villagers can take when moving
-    function ai.addRoute(name, type)
+    function ai.route.new(name, type)
 
         -- Set up the route Vars
         ai.routes[name] = {}
@@ -763,7 +793,7 @@ function INIT_ai()
     end
 
     -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
-    function ai.addUnit(town, type, unit, name, shift)
+    function ai.unit.new(town, type, unit, name, shift)
 
         shift = shift or "day"
 
@@ -810,7 +840,7 @@ function INIT_ai()
     --  TOWN ACTIONS
     --------
 
-    function ai.townState(town, state)
+    function ai.town.state(town, state)
 
         if tableContains(ai.towns[town].states, state) then
             ai.towns[town].state = state
@@ -824,14 +854,14 @@ function INIT_ai()
         return false
     end
 
-    function ai.townHostileForce(town, force)
+    function ai.town.hostileForce(town, force)
 
         ai.towns[town].force = force
         return true
 
     end
 
-    function ai.townVulnerableUnits(town, flag)
+    function ai.town.vulnerableUnits(town, flag)
 
         ForGroup(ai.towns[town].units, function()
             local unit = GetEnumUnit()
@@ -843,7 +873,7 @@ function INIT_ai()
 
     end
 
-    function ai.townUnitsHurt(town, low, high, kill)
+    function ai.town.unitsHurt(town, low, high, kill)
 
         ForGroup(ai.towns[town].units, function()
             local unit = GetEnumUnit()
@@ -861,7 +891,7 @@ function INIT_ai()
         return true
     end
 
-    function ai.townUnitsSetLife(town, low, high)
+    function ai.town.unitsSetLife(town, low, high)
 
         ForGroup(ai.towns[town].units, function()
             local unit = GetEnumUnit()
@@ -878,36 +908,28 @@ function INIT_ai()
     --------
 
     -- Adds at the end of the selected route, a new place for a unit to move to.
-    function ai.routeAddStep(route, rect, time, lookAtRect, animation, speed)
+    function ai.route.step(route, rect, speed, walk)
 
         -- Set default values if one wasn't specified
         speed = speed or nil
-        animation = animation or "stand 1"
-        lookAtRect = lookAtRect or nil
-        time = time or 0
+        walk = walk or false
 
         -- Add Event to Rect Entering Trigger
-        TriggerRegisterEnterRectSimple(ai.unitEntersRegion, rect)
+        TriggerRegisterEnterRectSimple(ai.trig.unitEntersRegion, rect)
 
         -- Update the count of steps in the route
-        local stepCount = ai.routes[route].stepCount + 1
+        local stepCount = ai.route.getStepCount(route) + 1
 
         -- Add the step to the route
         ai.routes[route].stepCount = stepCount
-        ai.routes[route].steps[stepCount] = {
-            optionCount = 1,
-            options = {}
-        }
 
-        ai.routes[route].steps[stepCount].optionCount = 1
-        ai.routes[route].steps[stepCount].options[1] = {
+        ai.routes[route].step[stepCount] = {
             rect = rect,
+            speed = speed,
             x = GetRectCenterX(rect),
             y = GetRectCenterY(rect),
-            time = time,
-            speed = speed,
-            lookAtRect = lookAtRect,
-            animation = animation
+            actionCount = 0,
+            action = {}
         }
 
         return true
@@ -915,27 +937,23 @@ function INIT_ai()
     end
 
     -- Adds an additional option to the picked route step
-    function ai.routeAddOption(route, step, rect, time, lookAtRect, animation, speed)
+    function ai.route.action(route, time, lookAtRect, animation, loop)
 
         -- Set default values if one wasn't specified
-        speed = speed or nil
-        animation = animation or "stand 1"
+        animation = animation or nil
         lookAtRect = lookAtRect or nil
-        time = time or 0
+        loop = loop or false
 
         -- Update the Option Count for the Route
-        local stepCount = ai.routes[name].stepCount
-        local optionCount = ai.routes[name].steps[stepCount].optionCount + 1
+        local stepCount = ai.route.getStepCount(route)
+        local actionCount = ai.routes.getOptionCount(route, stepCount) + 1
 
         -- Add the Option to the Step in the Route
-        ai.routes[name].steps[stepCount].optionCount = optionCount
-        ai.routes[name].steps[stepCount].options[optionCount] =
+        ai.routes[route].steps[stepCount].actionCount = actionCount
+        ai.routes[route].steps[stepCount].action[actionCount] =
             {
-                rect = rect,
-                x = GetRectCenterX(rect),
-                y = GetRectCenterY(rect),
+                type = "action",
                 time = time,
-                speed = speed,
                 lookAtRect = lookAtRect,
                 animation = animation
             }
@@ -944,11 +962,39 @@ function INIT_ai()
 
     end
 
-    function ai.routeGetStepCount(route)
+    function ai.route.trigger(route, trigger)
+        -- Update the Option Count for the Route
+        local stepCount = ai.route.getStepCount(route)
+        local actionCount = ai.routes.getOptionCount(route, stepCount) + 1
+
+        -- Add the Option to the Step in the Route
+        ai.routes[route].steps[stepCount].actionCount = actionCount
+        ai.routes[route].steps[stepCount].action[actionCount] =
+            {
+                type = "trigger",
+                trigger = trigger
+            }
+    end
+
+    function ai.route.funct(route, funct)
+        -- Update the Option Count for the Route
+        local stepCount = ai.route.getStepCount(route)
+        local actionCount = ai.routes.getOptionCount(route, stepCount) + 1
+
+        -- Add the Option to the Step in the Route
+        ai.routes[route].steps[stepCount].actionCount = actionCount
+        ai.routes[route].steps[stepCount].action[actionCount] =
+            {
+                type = "function",
+                funct = funct
+            }
+    end
+
+    function ai.route.stepCount(route)
         return ai.routes[route].stepCount
     end
 
-    function ai.routeGetOptionCount(route, step)
+    function ai.route.actionCount(route, step)
         return ai.routes[route].steps[step].optionCount
     end
 
@@ -956,7 +1002,7 @@ function INIT_ai()
     --  UNIT ACTIONS
     --------
 
-    function ai.unitAddRoute(unit, route)
+    function ai.unit.addRoute(unit, route)
         local handleId = GetHandleId(unit)
 
         if ai.routes[route] ~= nil then
@@ -968,7 +1014,7 @@ function INIT_ai()
 
     end
 
-    function ai.unitRemoveRoute(unit, route)
+    function ai.unit.removeRoute(unit, route)
         local handleId = GetHandleId(unit)
         local routes = ai.units[handleId].routes
 
@@ -980,7 +1026,7 @@ function INIT_ai()
         return false
     end
 
-    function ai.unitKill(unit)
+    function ai.unit.kill(unit)
         local handleId = GetHandleId(unit)
         local data = ai.units[handleId]
         ai.units[handleId] = nil
@@ -992,7 +1038,7 @@ function INIT_ai()
         return true
     end
 
-    function ai.unitRemove(unit)
+    function ai.unit.remove(unit)
         local handleId = GetHandleId(unit)
         local data = ai.units[handleId]
         ai.units[handleId] = nil
@@ -1004,7 +1050,7 @@ function INIT_ai()
         return true
     end
 
-    function ai.unitPause(unit, flag)
+    function ai.unit.pause(unit, flag)
         local handleId = GetHandleId(unit)
 
         PauseUnit(unit, flag)
@@ -1013,7 +1059,7 @@ function INIT_ai()
         return true
     end
 
-    function ai.unitPickRoute(unit, route, step)
+    function ai.unit.pickRoute(unit, route, step)
         local data = ai.units[GetHandleId(unit)]
 
         if #data.routes == 0 and route == nil then
@@ -1045,7 +1091,7 @@ function INIT_ai()
     end
 
     -- Set the Unit State
-    function ai.unitSetState(unit, state)
+    function ai.unit.state(unit, state)
         local data = ai.units[GetHandleId(unit)]
 
         if tableContains(ai.units[data.id].states, state) then
@@ -1063,8 +1109,6 @@ function INIT_ai()
     --  UNIT STATES
     --------
 
-    ai.unitSTATE = {}
-
     --
     -- MOVE
     function ai.unitSTATE.move(unit)
@@ -1076,7 +1120,7 @@ function INIT_ai()
 
         local route = data.routes[GetRandomInt(1, #data.routes)]
 
-        ai.unitPickRoute(unit)
+        ai.unit.pickRoute(unit)
 
         return true
     end
@@ -1172,33 +1216,31 @@ function INIT_ai()
         end)
 
         -- Trigger Unit enters a Rect in a Route
-        ai.unitEntersRegion = CreateTrigger()
+        ai.trig.unitEntersRegion = CreateTrigger()
         TriggerAddAction(ai.unitEntersRegion, function()
             local unit = GetEnteringUnit()
 
             debugfunc(function()
-                print("Entering")
 
                 if IsUnitInGroup(unit, ai.unitGroup) then
-                    print("Yay!")
 
                     local handleId = GetHandleId(unit)
                     local data = ai.units[handleId]
 
-                    PolledWait(0.5)
+                    PolledWaitPrecise(0.5)
 
                     -- If the Rect isn't the targetted end rect, ignore any future actions
-                    if not RectContainsUnit(ai.routes[data.route].steps[data.step].options[data.option].rect, unit) then
-                        print("DOESN'T CONTAIN")
+                    if not RectContainsUnit(ai.routes[data.route].steps[data.step].rect, unit) then
                         return false
                     end
 
                     local order = oid.move
                     local i = 1
-                    while order == oid.move and i < 15 do
+                    local tick = 0.1
+                    while order == oid.move and i < 2 do
                         order = GetUnitCurrentOrder(unit)
-                        PolledWait(0.1)
-                        i = i + 1
+                        PolledWaitPrecise(tick)
+                        i = i + tick
                     end
 
                     -- If current State is moving
@@ -1206,40 +1248,52 @@ function INIT_ai()
 
                         ai.units[data.id].stateCurrent = "waiting"
 
-                        if data.optionLookAtRect ~= nil then
-                            local x = GetUnitX(unit)
-                            local y = GetUnitY(unit)
+                        if data.type == "action" then
+                            if data.optionLookAtRect ~= nil then
+                                local x = GetUnitX(unit)
+                                local y = GetUnitY(unit)
 
-                            -- Get the angle to the rect and find a point 10 units in that direction
-                            local facingAngle = angleBetweenCoordinates(x, y, GetRectCenterX(data.optionLookAtRect),
-                                                    GetRectCenterY(data.optionLookAtRect))
-                            local xNew, yNew = polarProjectionCoordinates(x, y, 10, facingAngle)
-                            IssuePointOrderById(unit, oid.move, xNew, yNew)
+                                -- Get the angle to the rect and find a point 10 units in that direction
+                                local facingAngle = angleBetweenCoordinates(x, y, GetRectCenterX(data.optionLookAtRect),
+                                                        GetRectCenterY(data.optionLookAtRect))
+                                local xNew, yNew = polarProjectionCoordinates(x, y, 10, facingAngle)
+                                IssuePointOrderById(unit, oid.move, xNew, yNew)
 
-                            order = oid.move
-                            i = 1
-                            while order == oid.move and i < 15 do
-                                order = GetUnitCurrentOrder(unit)
-                                PolledWait(0.1)
-                                i = i + 1
+                                order = oid.move
+                                i = 1
+                                while order == oid.move and i < 2 do
+                                    order = GetUnitCurrentOrder(unit)
+                                    PolledWait(tick)
+                                    i = i + tick
+                                end
                             end
-                        end
 
-                        if data.optionAnimation ~= nil then
-                            print(data.optionAnimation)
-                            SetUnitAnimation(unit, data.optionAnimation)
-                        end
+                            if data.optionAnimation ~= nil then
+                                print(data.optionAnimation)
+                                SetUnitAnimation(unit, data.optionAnimation)
+                            end
 
-                        PolledWait(data.optionTime)
+                            PolledWait(data.optionTime)
+
+                        elseif data.type == "trigger" then
+                            
+                            -- Set Data that needs to get passed to trigger
+                            udg_AI_TriggeringUnit = unit
+
+                            -- Run the trigger (Checking Conditions)
+                            ConditionalTriggerExecute(data.trigger)
+                            print("working!")
+
+                        end
 
                         local routeSteps = ai.routes[data.route].stepCount
 
                         print(routeSteps .. ":" .. data.step)
 
                         if routeSteps == data.step then
-                            ai.unitSetState(unit, "returnHome")
+                            ai.unit.state(unit, "returnHome")
                         else
-                            ai.unitPickRoute(unit, data.route, (data.step + 1))
+                            ai.unit.pickRoute(unit, data.route, (data.step + 1))
                         end
                     end
                 end
