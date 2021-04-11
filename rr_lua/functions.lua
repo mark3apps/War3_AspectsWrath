@@ -3,18 +3,8 @@
 --
 
 -- **Credit** KickKing
--- This is kinda useless
-function dprint(message, level)
-    level = level or 1
-
-    if debugprint >= level then
-        print("|cff00ff00[debug " .. level .. "]|r " .. tostring(message))
-    end
-end
-
--- **Credit** KickKing
 -- Returns true if the value is found in the table
-function tableContains(table, element)
+function TableContains(table, element)
     for _, value in pairs(table) do
         if value == element then
             return true
@@ -25,13 +15,13 @@ end
 
 -- **Credit** KickKing
 -- Remove a value from a table
-function tableRemoveValue(table, value)
-    return table.remove(table, tableFind(table, value))
+function TableRemoveValue(table, value)
+    return table.remove(table, TableFind(table, value))
 end
 
 -- **Credit** KickKing
 -- Find the indext of a value in a table
-function tableFind(tab, el)
+function TableFind(tab, el)
     for index, value in pairs(tab) do
         if value == el then
             return index
@@ -41,31 +31,31 @@ end
 
 -- **Credit** KickKing
 -- get distance without locations
-function distanceBetweenCoordinates(x1, y1, x2, y2)
+function DistanceBetweenCoordinates(x1, y1, x2, y2)
     return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
 
 -- **Credit** KickKing
 -- get distance without locations
-function distanceBetweenUnits(unitA, unitB)
+function DistanceBetweenUnits(unitA, unitB)
     return distanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
 -- **Credit** KickKing
 -- get angle without locations
-function angleBetweenCoordinates(x1, y1, x2, y2)
+function AngleBetweenCoordinates(x1, y1, x2, y2)
     return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
 end
 
 -- **Credit** KickKing
 -- get angle without locations
-function angleBetweenUnits(unitA, unitB)
+function AngleBetweenUnits(unitA, unitB)
     return angleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
 -- **Credit** KickKing
 -- Polar projection with Locations
-function polarProjectionCoordinates(x, y, dist, angle)
+function PolarProjectionCoordinates(x, y, dist, angle)
     local newX = x + dist * Cos(angle * bj_DEGTORAD)
     local newY = y + dist * Sin(angle * bj_DEGTORAD)
     return newX, newY
@@ -73,7 +63,7 @@ end
 
 -- ** Credit** Planetary
 -- Wraps your code in a "Try" loop so you can see errors printed in the log at runtime
-function debugfunc(func, name) -- Turn on runtime logging
+function Debugfunc(func, name) -- Turn on runtime logging
     local passed, data = pcall(function()
         func()
         return "func " .. name .. " passed"
@@ -128,76 +118,18 @@ do
     end
 end
 
-
-
--- **Credit** KickKing
--- This function pushes units back from a point and can also damage units while being pushedback
-function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor)
-    local u, uX, uY, distance, angle, newDistance, uNewX, uNewY
-
-    local loopTimes = duration / tick
-    local damageTick = damage / loopTimes
-
-    if CountUnitsInGroup(g) > 0 then
-        for i = 1, loopTimes do
-
-            ForGroup(g, function()
-                u = GetEnumUnit()
-
-                if IsUnitAliveBJ(u) then
-
-                    if i == 1 then
-                        PauseUnit(u, true)
-                    end
-
-                    uX = GetUnitX(u)
-                    uY = GetUnitY(u)
-
-                    distance = distanceBetweenCoordinates(x, y, uX, uY)
-                    angle = angleBetweenCoordinates(x, y, uX, uY)
-
-                    newDistance = ((aoe + 80) - distance) * 0.13 * factor
-
-                    uNewX, uNewY = polarProjectionCoordinates(uX, uY, newDistance, angle)
-
-                    -- if IsTerrainPathable(uNewX, uNewY, PATHING_TYPE_WALKABILITY) then
-                    SetUnitX(u, uNewX)
-                    SetUnitY(u, uNewY)
-                    -- end
-
-                    if damage > 0 then
-                        UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
-                    end
-
-                    if i >= loopTimes - 1 then
-                        PauseUnit(u, false)
-                    end
-                else
-                    PauseUnit(u, false)
-                    GroupRemoveUnit(g, u)
-                end
-            end)
-
-            PolledWait(tick)
-        end
-    end
-    DestroyGroup(g)
-end
-
 -- **Credit** KickKing
 -- A system that allow you to duplicate the functionality of auto-filling in the Object Editor
-function valueFactor(level, base, previousFactor, levelFactor, constant)
+function ValueFactor(level, base, previousFactor, levelFactor, constant)
 
     local value = base
 
     if level > 1 then
         for i = 2, level do
             value = (value * previousFactor) + (i * levelFactor) + (constant)
-            print(value)
         end
     end
 
-    print(value)
     return value
 end
 

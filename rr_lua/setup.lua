@@ -1,23 +1,26 @@
 function INIT_Config()
-    debugfunc(function()
+    Debugfunc(function()
         -- Add Towns
-        ai.town.new("Farms", udg_townVillageForce)
+        ai.town.New("Farms", udg_townVillageForce)
 
         -- Add Routes
-        ai.route.new("Main", "inTown")
-        ai.route.step("Main", gg_rct_R01_01, 500, true)
-        ai.route.trigger("Main", gg_trg_Action_Test)
-        ai.route.action("Main", 5, gg_rct_R01_01L, "Attack 1", true)
+        ai.route.New("Main", "inTown")
 
-        ai.route.step("Main", gg_rct_R01_02, 200)
-        ai.route.action("Main", 2, gg_rct_R01_02L, "Stand Victory 1", true)
-        
+        ai.route.Step(gg_rct_R01_01, 100)
+        ai.route.Trigger(gg_trg_Action_Test)
+        ai.route.Action(10, gg_rct_R01_01L, "Attack 1")
+        ai.route.Action(10, gg_rct_R01_02L, "Attack 1", true)
 
-        ai.route.step("Main", gg_rct_R01_03, 250)
-        ai.route.action("Main", 5, gg_rct_R01_03L, "Stand Defend")
+        ai.route.Step(gg_rct_R01_02)
+        ai.route.Action(4, gg_rct_R01_02L, "Stand Victory 1", true)
 
-        ai.route.step("Main", gg_rct_R01_04, 75)
-        ai.route.action("Main", 5, gg_rct_R01_04L, "Stand Ready")
+        ai.route.Step(gg_rct_R01_03)
+        ai.route.Action(3, gg_rct_R01_03L, "Stand Defend")
+
+        ai.route.Step(gg_rct_R01_04, 100)
+        ai.route.Action(5, gg_rct_R01_04L, "Stand Ready")
+
+        ai.route.Finish(100)
 
         -- Create the Unit
         local g = CreateGroup()
@@ -26,8 +29,8 @@ function INIT_Config()
         local u = FirstOfGroup(g)
         while u ~= nil do
 
-            ai.unit.new("Farms", "villager", u, "Peasant", "day")
-            ai.unit.addRoute(u, "Main")
+            ai.unit.New("Farms", "villager", u, "Peasant", "day")
+            ai.unit.AddRoute(u, "Main")
 
             GroupRemoveUnit(g, u)
             u = FirstOfGroup(g)
@@ -48,8 +51,8 @@ function INIT_Config()
         local u = FirstOfGroup(g)
         while u ~= nil do
 
-            debugfunc(function()
-                ai.unit.state(u, "move")
+            Debugfunc(function()
+                ai.unit.State(u, "Move")
             end, "Testing")
 
             PolledWait(GetRandomReal(4, 10))

@@ -1,6 +1,12 @@
 udg_townVillageForce = nil
 udg_TEMP_UnitGroup = nil
 udg_AI_TriggeringUnit = nil
+udg_AI_TriggeringRegion = nil
+udg_AI_TriggeringRoute = ""
+udg_AI_TriggeringStep = 0
+udg_AI_TriggeringAction = 0
+udg_AI_TriggeringState = ""
+udg_AI_TriggeringId = 0
 gg_rct_R01_01 = nil
 gg_rct_R01_02 = nil
 gg_rct_R01_03 = nil
@@ -15,28 +21,36 @@ gg_trg_Action_Test = nil
 function InitGlobals()
     udg_townVillageForce = CreateForce()
     udg_TEMP_UnitGroup = CreateGroup()
+    udg_AI_TriggeringRoute = ""
+    udg_AI_TriggeringStep = 0
+    udg_AI_TriggeringAction = 0
+    udg_AI_TriggeringState = ""
+    udg_AI_TriggeringId = 0
 end
 
 function INIT_Config()
-    debugfunc(function()
+    Debugfunc(function()
         -- Add Towns
-        ai.town.new("Farms", udg_townVillageForce)
+        ai.town.New("Farms", udg_townVillageForce)
 
         -- Add Routes
-        ai.route.new("Main", "inTown")
-        ai.route.step("Main", gg_rct_R01_01, 500, true)
-        ai.route.trigger("Main", gg_trg_Action_Test)
-        ai.route.action("Main", 5, gg_rct_R01_01L, "Attack 1", true)
+        ai.route.New("Main", "inTown")
 
-        ai.route.step("Main", gg_rct_R01_02, 200)
-        ai.route.action("Main", 2, gg_rct_R01_02L, "Stand Victory 1", true)
-        
+        ai.route.Step(gg_rct_R01_01, 100)
+        ai.route.Trigger(gg_trg_Action_Test)
+        ai.route.Action(10, gg_rct_R01_01L, "Attack 1")
+        ai.route.Action(10, gg_rct_R01_02L, "Attack 1", true)
 
-        ai.route.step("Main", gg_rct_R01_03, 250)
-        ai.route.action("Main", 5, gg_rct_R01_03L, "Stand Defend")
+        ai.route.Step(gg_rct_R01_02)
+        ai.route.Action(4, gg_rct_R01_02L, "Stand Victory 1", true)
 
-        ai.route.step("Main", gg_rct_R01_04, 75)
-        ai.route.action("Main", 5, gg_rct_R01_04L, "Stand Ready")
+        ai.route.Step(gg_rct_R01_03)
+        ai.route.Action(3, gg_rct_R01_03L, "Stand Defend")
+
+        ai.route.Step(gg_rct_R01_04, 100)
+        ai.route.Action(5, gg_rct_R01_04L, "Stand Ready")
+
+        ai.route.Finish(100)
 
         -- Create the Unit
         local g = CreateGroup()
@@ -45,8 +59,8 @@ function INIT_Config()
         local u = FirstOfGroup(g)
         while u ~= nil do
 
-            ai.unit.new("Farms", "villager", u, "Peasant", "day")
-            ai.unit.addRoute(u, "Main")
+            ai.unit.New("Farms", "villager", u, "Peasant", "day")
+            ai.unit.AddRoute(u, "Main")
 
             GroupRemoveUnit(g, u)
             u = FirstOfGroup(g)
@@ -67,8 +81,8 @@ function INIT_Config()
         local u = FirstOfGroup(g)
         while u ~= nil do
 
-            debugfunc(function()
-                ai.unit.state(u, "move")
+            Debugfunc(function()
+                ai.unit.State(u, "Move")
             end, "Testing")
 
             PolledWait(GetRandomReal(4, 10))
@@ -82,7 +96,14 @@ function INIT_Config()
 end
 
 
-function INIT_ai()
+--------------
+-- Village AI
+-- Credit: Mark Wright (KickKing)
+-- v0.1.0
+--------------
+
+-- Init the Class
+function INIT_AI()
 
     -- Set up basic Variables
     ai = {}
@@ -94,57 +115,17 @@ function INIT_ai()
     ai.route = {}
     ai.trig = {}
     ai.unitSTATE = {}
+    ai.townSTATE = {}
+    ai.landmarkSTATE = {}
 
-    ai.towns = {}
-    ai.routes = {}
-    ai.landmarks = {}
-    ai.units = {}
     ai.unitGroup = CreateGroup()
 
     --------
     --  Add new things to the fold
     --------
 
-    -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
-    function ai.town.new(name, hostileForce)
-
-        -- Init the Town
-        ai.towns[name] = {}
-        ai.towns[name].name = name
-        ai.towns[name].paused = false
-        ai.towns[name].state = "auto"
-        ai.towns[name].stateCurrent = "normal"
-        ai.towns[name].states = {"auto", "normal", "danger", "pause", "abadon", "gather"}
-
-        -- Set Up Unit Group
-        ai.towns[name].units = CreateGroup()
-        ai.towns[name].unitCount = 0
-
-        -- Set up Landmarks
-        ai.towns[name].residence = {}
-        ai.towns[name].safehouse = {}
-        ai.towns[name].barracks = {}
-        ai.towns[name].patrol = {}
-        ai.towns[name].gathering = {}
-
-        -- Sets the Player group that the town will behave hostily towards
-        ai.towns[name].hostileForce = hostileForce
-
-        -- Set up the regions and rects to be extended
-        ai.towns[name].region = CreateRegion()
-        ai.towns[name].rects = {}
-
-        return true
-    end
-
-    function ai.town.extend(name, rect)
-        RegionAddRect(ai.towns[name].region, rect)
-
-        return true
-    end
-
     -- Add a new landmark
-    function ai.landmark.new(town, name, rect, types, unit, radius, maxCapacity)
+    function ai.landmark.New(town, name, rect, types, unit, radius, maxCapacity)
         unit = unit or nil
         radius = radius or 600
         maxCapacity = maxCapacity or 500
@@ -152,8 +133,8 @@ function INIT_ai()
         local handleId = GetHandleId(rect)
 
         -- Add initial variables to the table
-        ai.landmarks[name] = {}
-        ai.landmarks[name] {
+        ai.landmark[name] = {}
+        ai.landmark[name] {
             id = handleId,
             alive = true,
             state = "normal",
@@ -169,67 +150,61 @@ function INIT_ai()
         }
 
         -- Add Landmark information to the town
-        for i = 1, #ai.landmarks[name].types do
-            ai.towns[town][ai.landmarks[name].type[i]] = name
+        for i = 1, #ai.landmark[name].types do
+            ai.town[town][ai.landmark[name].type[i]] = name
         end
 
-    end
-
-    -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
-    function ai.unit.new(town, type, unit, name, shift)
-
-        shift = shift or "day"
-
-        local handleId = GetHandleId(unit)
-
-        -- Add to Unit groups
-        GroupAddUnit(ai.towns[town].units, unit)
-        GroupAddUnit(ai.unitGroup, unit)
-
-        -- Update Unit Count
-        ai.towns[town].unitCount = CountUnitsInGroup(ai.towns[town].units)
-        ai.units.count = CountUnitsInGroup(ai.unitGroup)
-
-        ai.units[handleId] = {}
-        ai.units[handleId] = {
-            id = handleId,
-            unitType = GetUnitTypeId(unit),
-            unitName = GetUnitName(unit),
-            paused = false,
-            town = town,
-            name = name,
-            shift = shift,
-            state = "auto",
-            type = type,
-            route = nil,
-            step = 1,
-            routes = {},
-            xHome = GetUnitX(unit),
-            yHome = GetUnitY(unit),
-            xDest = nil,
-            yDest = nil
-        }
-
-        if type == "villager" then
-            ai.units[handleId].states = {"relax", "move", "sleep"}
-            ai.units[handleId].stateCurrent = "relax"
-
-        end
-
-        return true
     end
 
     --------
     --  TOWN ACTIONS
     --------
 
-    function ai.town.state(town, state)
+    -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
+    function ai.town.New(name, hostileForce)
 
-        if tableContains(ai.towns[town].states, state) then
-            ai.towns[town].state = state
-            ai.towns[town].stateCurrent = state
+        -- Init the Town
+        ai.town[name] = {}
+        ai.town[name].name = name
+        ai.town[name].paused = false
+        ai.town[name].state = "auto"
+        ai.town[name].stateCurrent = "normal"
+        ai.town[name].states = {"auto", "normal", "danger", "pause", "abadon", "gather"}
 
-            ai.updateTown(town, state)
+        -- Set Up Unit Group
+        ai.town[name].units = CreateGroup()
+        ai.town[name].unitCount = 0
+
+        -- Set up Landmarks
+        ai.town[name].residence = {}
+        ai.town[name].safehouse = {}
+        ai.town[name].barracks = {}
+        ai.town[name].patrol = {}
+        ai.town[name].gathering = {}
+
+        -- Sets the Player group that the town will behave hostily towards
+        ai.town[name].hostileForce = hostileForce
+
+        -- Set up the regions and rects to be extended
+        ai.town[name].region = CreateRegion()
+        ai.town[name].rects = {}
+
+        return true
+    end
+
+    function ai.town.Extend(name, rect)
+        RegionAddRect(ai.town[name].region, rect)
+
+        return true
+    end
+
+    function ai.town.State(town, state)
+
+        if TableContains(ai.town[town].states, state) then
+            ai.town[town].state = state
+            ai.town[town].stateCurrent = state
+
+            ai.townSTATE[state](town)
 
             return true
         end
@@ -237,16 +212,16 @@ function INIT_ai()
         return false
     end
 
-    function ai.town.hostileForce(town, force)
+    function ai.town.HostileForce(town, force)
 
-        ai.towns[town].force = force
+        ai.town[town].force = force
         return true
 
     end
 
-    function ai.town.vulnerableUnits(town, flag)
+    function ai.town.VulnerableUnits(town, flag)
 
-        ForGroup(ai.towns[town].units, function()
+        ForGroup(ai.town[town].units, function()
             local unit = GetEnumUnit()
 
             SetUnitInvulnerable(unit, flag)
@@ -256,9 +231,9 @@ function INIT_ai()
 
     end
 
-    function ai.town.unitsHurt(town, low, high, kill)
+    function ai.town.UnitsHurt(town, low, high, kill)
 
-        ForGroup(ai.towns[town].units, function()
+        ForGroup(ai.town[town].units, function()
             local unit = GetEnumUnit()
             local percentLife = GetUnitLifePercent(unit)
             local randInt = GetRandomInt(low, high)
@@ -274,9 +249,9 @@ function INIT_ai()
         return true
     end
 
-    function ai.town.unitsSetLife(town, low, high)
+    function ai.town.UnitsSetLife(town, low, high)
 
-        ForGroup(ai.towns[town].units, function()
+        ForGroup(ai.town[town].units, function()
             local unit = GetEnumUnit()
             local percentLife = GetRandomInt(low, high)
 
@@ -290,28 +265,31 @@ function INIT_ai()
     --  ROUTE ACTIONS
     --------
 
-    -- Adds a route that villagers can take when moving
-    function ai.route.new(name, type)
+    -- Adds a route that villagers can take when Moving
+    function ai.route.New(name, type)
 
+        ai.routeSetup = name
         -- Set up the route Vars
         ai.route[name] = {}
         ai.route[name].name = name
         ai.route[name].type = type
         ai.route[name].step = {}
         ai.route[name].stepCount = 0
+        ai.route[name].endSpeed = nil
 
         return true
     end
 
     -- Adds at the end of the selected route, a new place for a unit to move to.
-    function ai.route.step(route, rect, speed, walk)
+    function ai.route.Step(rect, speed, order, animationTag)
 
         -- Set default values if one wasn't specified
+        local route = ai.routeSetup
         speed = speed or nil
-        walk = walk or false
+        order = order or oid.move
 
         -- Add Event to Rect Entering Trigger
-        TriggerRegisterEnterRectSimple(ai.trig.unitEntersRegion, rect)
+        TriggerRegisterEnterRectSimple(ai.trig.UnitEntersRegion, rect)
 
         -- Update the count of steps in the route
         local stepCount = ai.route[route].stepCount + 1
@@ -325,7 +303,9 @@ function INIT_ai()
             x = GetRectCenterX(rect),
             y = GetRectCenterY(rect),
             actionCount = 0,
-            action = {}
+            order = order,
+            action = {},
+            animationTag = animationTag
         }
 
         return true
@@ -333,16 +313,17 @@ function INIT_ai()
     end
 
     -- Adds an additional action to the picked route step
-    function ai.route.action(route, time, lookAtRect, animation, loop)
+    function ai.route.Action(time, lookAtRect, animation, loop)
 
         -- Set default values if one wasn't specified
+        local route = ai.routeSetup
         animation = animation or nil
         lookAtRect = lookAtRect or nil
         loop = loop or false
 
         -- Update the action Count for the Route
-        local stepCount = ai.route.stepCount(route)
-        local actionCount = ai.route.actionCount(route, stepCount) + 1
+        local stepCount = ai.route.StepCount(route)
+        local actionCount = ai.route.ActionCount(route, stepCount) + 1
 
         -- Add the action to the Step in the Route
         ai.route[route].step[stepCount].actionCount = actionCount
@@ -351,17 +332,19 @@ function INIT_ai()
                 type = "action",
                 time = time,
                 lookAtRect = lookAtRect,
-                animation = animation
+                animation = animation,
+                loop = loop
             }
 
         return true
 
     end
 
-    function ai.route.trigger(route, trigger)
+    function ai.route.Trigger(trigger)
         -- Update the action Count for the Route
-        local stepCount = ai.route.stepCount(route)
-        local actionCount = ai.route.actionCount(route, stepCount) + 1
+        local route = ai.routeSetup
+        local stepCount = ai.route.StepCount(route)
+        local actionCount = ai.route.ActionCount(route, stepCount) + 1
 
         -- Add the action to the Step in the Route
         ai.route[route].step[stepCount].actionCount = actionCount
@@ -372,10 +355,11 @@ function INIT_ai()
             }
     end
 
-    function ai.route.funct(route, funct)
+    function ai.route.Funct(funct)
         -- Update the action Count for the Route
-        local stepCount = ai.route.stepCount(route)
-        local actionCount = ai.route.actionCount(route, stepCount) + 1
+        local route = ai.routeSetup
+        local stepCount = ai.route.StepCount(route)
+        local actionCount = ai.route.ActionCount(route, stepCount) + 1
 
         -- Add the action to the Step in the Route
         ai.route[route].step[stepCount].actionCount = actionCount
@@ -384,13 +368,23 @@ function INIT_ai()
                 type = "function",
                 funct = funct
             }
+
+        return true
     end
 
-    function ai.route.stepCount(route)
+    function ai.route.Finish(speed)
+        speed = speed or nil
+
+        ai.route[ai.routeSetup].endSpeed = nil
+
+        return true
+    end
+
+    function ai.route.StepCount(route)
         return ai.route[route].stepCount
     end
 
-    function ai.route.actionCount(route, step)
+    function ai.route.ActionCount(route, step)
         return ai.route[route].step[step].actionCount
     end
 
@@ -398,11 +392,60 @@ function INIT_ai()
     --  UNIT ACTIONS
     --------
 
-    function ai.unit.addRoute(unit, route)
+    -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
+    function ai.unit.New(town, type, unit, name, shift)
+
+        shift = shift or "day"
+
+        local handleId = GetHandleId(unit)
+
+        -- Add to Unit groups
+        GroupAddUnit(ai.town[town].units, unit)
+        GroupAddUnit(ai.unitGroup, unit)
+
+        -- Update Unit Count
+        ai.town[town].unitCount = CountUnitsInGroup(ai.town[town].units)
+        ai.unit.count = CountUnitsInGroup(ai.unitGroup)
+
+        ai.unit[handleId] = {}
+        ai.unit[handleId] = {
+            id = handleId,
+            unitType = GetUnitTypeId(unit),
+            unitName = GetUnitName(unit),
+            paused = false,
+            town = town,
+            name = name,
+            shift = shift,
+            state = "Auto",
+            type = type,
+            walking = false,
+            speed = GetUnitMoveSpeed(unit),
+            speedDefault = GetUnitMoveSpeed(unit),
+            route = nil,
+            stepNumber = 0,
+            actionNumber = 0,
+            routes = {},
+            xHome = GetUnitX(unit),
+            yHome = GetUnitY(unit),
+            facingHome = GetUnitFacing(unit),
+            xDest = nil,
+            yDest = nil
+        }
+
+        if type == "villager" then
+            ai.unit[handleId].states = {"Relax", "Move", "Sleep", "ReturnHome", "Moving", "ReturningHome", "Waiting"}
+            ai.unit[handleId].stateCurrent = "Relax"
+
+        end
+
+        return true
+    end
+
+    function ai.unit.AddRoute(unit, route)
         local handleId = GetHandleId(unit)
 
         if ai.route[route] ~= nil then
-            table.insert(ai.units[handleId].routes, route)
+            table.insert(ai.unit[handleId].routes, route)
             return true
         end
 
@@ -410,84 +453,210 @@ function INIT_ai()
 
     end
 
-    function ai.unit.removeRoute(unit, route)
+    function ai.unit.RemoveRoute(unit, route)
         local handleId = GetHandleId(unit)
-        local routes = ai.units[handleId].routes
+        local routes = ai.unit[handleId].routes
 
-        if tableContains(routes, route) then
-            ai.units[handleId].routes = tableRemoveValue(routes, route)
+        if TableContains(routes, route) then
+            ai.unit[handleId].routes = TableRemoveValue(routes, route)
             return true
         end
 
         return false
     end
 
-    function ai.unit.kill(unit)
+    function ai.unit.Kill(unit)
         local handleId = GetHandleId(unit)
-        local data = ai.units[handleId]
-        ai.units[handleId] = nil
+        local data = ai.unit[handleId]
+        ai.unit[handleId] = nil
         GroupRemoveUnit(ai.unitGroup, unit)
-        GroupRemoveUnit(ai.towns[data.town].units, unit)
+        GroupRemoveUnit(ai.town[data.town].units, unit)
 
         KillUnit(unit)
 
         return true
     end
 
-    function ai.unit.remove(unit)
+    function ai.unit.Remove(unit)
         local handleId = GetHandleId(unit)
-        local data = ai.units[handleId]
-        ai.units[handleId] = nil
+        local data = ai.unit[handleId]
+        ai.unit[handleId] = nil
         GroupRemoveUnit(ai.unitGroup, unit)
-        GroupRemoveUnit(ai.towns[data.town].units, unit)
-
-        RemoveUnit(unit)
+        GroupRemoveUnit(ai.town[data.town].units, unit)
 
         return true
     end
 
-    function ai.unit.pause(unit, flag)
+    function ai.unit.Pause(unit, flag)
         local handleId = GetHandleId(unit)
 
         PauseUnit(unit, flag)
-        ai.units[handleId].paused = flag
+        ai.unit[handleId].paused = flag
 
         return true
     end
 
-    function ai.unit.pickRoute(unit, route, stepNumber)
-        local data = ai.units[GetHandleId(unit)]
+    function ai.unit.PickRoute(unit, route, stepNumber, actionNumber)
+        local data = ai.unit[GetHandleId(unit)]
 
         if #data.routes == 0 and route == nil then
             return false
         end
 
         route = route or data.routes[GetRandomInt(1, #data.routes)]
-        stepNumber = stepNumber or 1
+        stepNumber = stepNumber or 0
+        actionNumber = actionNumber or 0
 
-        local step = ai.route[route].step[stepNumber]
-
-        ai.units[data.id].stateCurrent = "moving"
-        ai.units[data.id].route = route
-        ai.units[data.id].stepNumber = stepNumber
-        ai.units[data.id].actionNumber = 1
-        ai.units[data.id].xDest = step.x
-        ai.units[data.id].yDest = step.y
-        ai.units[data.id].speed = step.speed
-
-        SetUnitMoveSpeed(unit, step.speed)
-        IssuePointOrderById(unit, oid.move, step.x, step.y)
+        ai.unit[data.id].route = route
+        ai.unit[data.id].stepNumber = stepNumber
+        ai.unit[data.id].actionNumber = actionNumber
 
         return true
+    end
 
+    -- Run next Step in a Units Current Route
+    function ai.unit.NextStep(unit)
+        local data = ai.unit[GetHandleId(unit)]
+
+        local stepNumber = ai.unit[data.id].stepNumber + 1
+
+        print(stepNumber .. " " .. ai.route[data.route].stepCount)
+
+        -- If there are no more steps, return
+        if stepNumber > ai.route[data.route].stepCount then
+            return false
+        end
+
+        -- Set new Unit Step Info || Reset Action Number
+        ai.unit[data.id].stateCurrent = "Moving"
+        ai.unit[data.id].stepNumber = stepNumber
+        ai.unit[data.id].actionNumber = 0
+
+        local step = ai.route[data.route].step[stepNumber]
+        local speed = step.speed or data.speedDefault
+
+        -- Get new Destination for unit
+        ai.unit[data.id].xDest = step.x
+        ai.unit[data.id].yDest = step.y
+        ai.unit[data.id].speed = speed
+
+        if speed <= 100 then
+            BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 120.00)
+            AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
+            ai.unit[data.id].walk = true
+        else
+            BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
+            AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
+            ai.unit[data.id].walk = false
+        end
+
+        SetUnitMoveSpeed(unit, speed)
+        IssuePointOrderById(unit, step.order, step.x, step.y)
+
+        return true
+    end
+
+    function ai.unit.NextAction(unit)
+        local data = ai.unit[GetHandleId(unit)]
+
+        -- Get Default Variable
+        local tick = 0.1
+
+        local stepNumber = data.stepNumber
+        local actionNumber = ai.unit[data.id].actionNumber + 1
+
+        -- If there are no more actions, return
+        if actionNumber > ai.route[data.route].step[stepNumber].actionCount then
+            return false
+        end
+
+        ai.unit[data.id].actionNumber = actionNumber
+
+        -- If current State is Moving
+        if data.stateCurrent == "Moving" then
+
+            -- Get Next Action
+            local step = ai.route[data.route].step[stepNumber]
+            local action = step.action[actionNumber]
+
+            if action.type == "action" then
+
+                -- Change State to "Waiting"
+                ai.unit[data.id].stateCurrent = "Waiting"
+
+                if action.lookAtRect ~= nil then
+                    local x = GetUnitX(unit)
+                    local y = GetUnitY(unit)
+
+                    -- Get the angle to the rect and find a point 10 units in that direction
+                    local facingAngle = AngleBetweenCoordinates(x, y, GetRectCenterX(action.lookAtRect),
+                                            GetRectCenterY(action.lookAtRect))
+
+                    -- Get Position 10 units away in the correct direction
+                    local xNew, yNew = PolarProjectionCoordinates(x, y, 10, facingAngle)
+
+                    -- Move unit to direction
+                    IssuePointOrderById(unit, oid.move, xNew, yNew)
+
+                    -- Wait for unit to stop Moving or 2 seconds
+                    local order = oid.move
+                    local i = 1
+                    while order == oid.move and i < 2 do
+                        order = GetUnitCurrentOrder(unit)
+                        PolledWait(tick)
+                        i = i + tick
+                    end
+                end
+
+                if action.animation ~= nil then
+                    SetUnitAnimation(unit, action.animation)
+
+                    -- Loop Animation if checked
+                    if action.loop then
+                        for i = 1, math.floor(action.time) do
+                            QueueUnitAnimation(unit, action.animation)
+                        end
+                    end
+
+                end
+
+                PolledWait(action.time)
+
+                -- Change State to "Moving"
+                SetUnitAnimation(unit, oid.stop)
+                ai.unit[data.id].stateCurrent = "Moving"
+
+            elseif action.type == "trigger" then
+
+                -- Set Temp Global Data that needs to get passed to trigger
+                udg_AI_TriggeringUnit = unit
+                udg_AI_TriggeringId = data.id
+                udg_AI_TriggeringState = data.stateCurrent
+                udg_AI_TriggeringRegion = step.rect
+                udg_AI_TriggeringRoute = data.route
+                udg_AI_TriggeringStep = data.stepNumber
+                udg_AI_TriggeringAction = data.actionNumber
+
+                ai.unit[data.id].stateCurrent = "Waiting"
+
+                -- Run the trigger (Ignoring Conditions)
+                TriggerExecute(action.trigger)
+
+                while ai.unit[data.id].stateCurrent == "Waiting" do
+                    PolledWait(.5)
+                end
+            end
+        end
+
+        return true
     end
 
     -- Set the Unit State
-    function ai.unit.state(unit, state)
-        local data = ai.units[GetHandleId(unit)]
+    function ai.unit.State(unit, state)
+        local data = ai.unit[GetHandleId(unit)]
 
-        if tableContains(ai.units[data.id].states, state) then
-            ai.units[data.id].state = state
+        if TableContains(ai.unit[data.id].states, state) then
+            ai.unit[data.id].state = state
 
             ai.unitSTATE[state](unit)
 
@@ -503,8 +672,8 @@ function INIT_ai()
 
     --
     -- MOVE
-    function ai.unitSTATE.move(unit)
-        local data = ai.units[GetHandleId(unit)]
+    function ai.unitSTATE.Move(unit)
+        local data = ai.unit[GetHandleId(unit)]
 
         if #data.routes == 0 and route == nil then
             return false
@@ -512,26 +681,26 @@ function INIT_ai()
 
         local route = data.routes[GetRandomInt(1, #data.routes)]
 
-        ai.unit.pickRoute(unit)
+        ai.unit.PickRoute(unit)
+        ai.unit.NextStep(unit)
 
         return true
     end
 
     --
     -- RETURN HOME
-    function ai.unitSTATE.returnHome(unit)
-        local data = ai.units[GetHandleId(unit)]
+    function ai.unitSTATE.ReturnHome(unit)
+        local data = ai.unit[GetHandleId(unit)]
 
-        ai.units[data.id].stateCurrent = "returningHome"
-        ai.units[data.id].route = nil
-        ai.units[data.id].stepNumber = nil
-        ai.units[data.id].actionNumber = nil
-        ai.units[data.id].xDest = nil
-        ai.units[data.id].yDest = nil
-        ai.units[data.id].speed = nil
+        ai.unit[data.id].stateCurrent = "ReturningHome"
+        ai.unit[data.id].route = nil
+        ai.unit[data.id].stepNumber = nil
+        ai.unit[data.id].actionNumber = nil
+        ai.unit[data.id].xDest = nil
+        ai.unit[data.id].yDest = nil
+        ai.unit[data.id].speed = nil
 
-        ai.units[data.id].stateCurrent = "moving"
-
+        print("x:" .. data.xHome .. " y:" .. data.yHome)
         IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
 
         return true
@@ -542,9 +711,9 @@ function INIT_ai()
     --------
 
     --
-    -- MOVING
-    function ai.unitSTATE.moving(unit)
-        local data = ai.units[GetHandleId(unit)]
+    -- Moving
+    function ai.unitSTATE.Moving(unit)
+        local data = ai.unit[GetHandleId(unit)]
 
         if GetUnitCurrentOrder(unit) ~= oid.move then
             IssuePointOrderById(unit, oid.move, data.xDest, data.yDest)
@@ -555,7 +724,7 @@ function INIT_ai()
 
     --
     -- WAITING
-    function ai.unitSTATE.waiting(unit)
+    function ai.unitSTATE.Waiting(unit)
 
         -- Do nothing, come on now, what did you think was going to be here??
         return true
@@ -563,10 +732,11 @@ function INIT_ai()
 
     --
     -- RETURNING HOME
-    function ai.unitSTATE.returningHome(unit)
-        local data = ai.units[GetHandleId(unit)]
+    function ai.unitSTATE.ReturningHome(unit)
+        local data = ai.unit[GetHandleId(unit)]
 
         if GetUnitCurrentOrder(unit) ~= oid.move then
+
             IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
         end
 
@@ -581,7 +751,7 @@ function INIT_ai()
     --  UNIT LOOPS
     --------
 
-    -- ai.TRIGunitLoop = CreateTrigger()
+    -- ai.trig.UnitLoop = CreateTrigger()
     -- TriggerRegisterTimerEventPeriodic(ai.TRIGunitLoop, 2)
     -- TriggerAddAction(ai.TRIGunitLoop, function()
 
@@ -593,7 +763,7 @@ function INIT_ai()
     --     u = FirstOfGroup(g)
     --     while u ~= nil do
     --         handleId = GetHandleId(unit)
-    --         data = ai.units[handleId]
+    --         data = ai.unit[handleId]
 
     --         GroupRemoveUnit(g, u)
     --         u = FirstOfGroup(g)
@@ -603,33 +773,38 @@ function INIT_ai()
     -- end)
 
     -- Trigger Unit enters a Rect in a Route
-    ai.trig.unitEntersRegion = CreateTrigger()
-    TriggerAddAction(ai.trig.unitEntersRegion, function()
-
-        print("Triggered")
+    ai.trig.UnitEntersRegion = CreateTrigger()
+    TriggerAddAction(ai.trig.UnitEntersRegion, function()
 
         local unit = GetEnteringUnit()
 
-        debugfunc(function()
+        Debugfunc(function()
 
             -- If Unit is an AI Unit
             if IsUnitInGroup(unit, ai.unitGroup) then
-                print("Here we Are")
-                local handleId = GetHandleId(unit)
-                local data = ai.units[handleId]
 
+                -- Get Unit Data
+                local data = ai.unit[GetHandleId(unit)]
+
+                -- This helps to verify unit will show up as in the target rect
                 PolledWait(0.5)
 
-                -- If the Rect isn't the targetted end rect, ignore any future actions
-                if not RectContainsUnit(ai.route[data.route].step[data.step].rect, unit) then
-                    print("NOT IN REGION")
+                -- If usit it on a route
+                if data.route then
+
+                    -- If the Rect isn't the targetted end rect, ignore any future actions
+                    if not RectContainsUnit(ai.route[data.route].step[data.stepNumber].rect, unit) then
+                        return false
+                    end
+                else
                     return false
                 end
 
-                -- Set up Locals
+                -- Set Local Variables
+                local success = true
                 local tick = 0.1
 
-                print("YAY!")
+                -- Wait until unit stops Moving or 2 seconds
                 local order = oid.move
                 local i = 1
                 while order == oid.move and i < 2 do
@@ -638,67 +813,34 @@ function INIT_ai()
                     i = i + tick
                 end
 
-                -- If current State is moving
-                if data.stateCurrent == "moving" then
-
-                    -- Change State to "Waiting"
-                    ai.units[data.id].stateCurrent = "waiting"
-                    local action = ai.route[data.route].step[data.stepNumber].action[data.actionNumber]
-
-                    if action.type == "action" then
-                        if action.lookAtRect ~= nil then
-                            local x = GetUnitX(unit)
-                            local y = GetUnitY(unit)
-
-                            -- Get the angle to the rect and find a point 10 units in that direction
-                            local facingAngle = angleBetweenCoordinates(x, y, GetRectCenterX(action.lookAtRect),
-                                                    GetRectCenterY(action.lookAtRect))
-                            local xNew, yNew = polarProjectionCoordinates(x, y, 10, facingAngle)
-                            IssuePointOrderById(unit, oid.move, xNew, yNew)
-
-                            order = oid.move
-                            i = 1
-                            while order == oid.move and i < 2 do
-                                order = GetUnitCurrentOrder(unit)
-                                PolledWait(tick)
-                                i = i + tick
-                            end
-                        end
-
-                        if action.animation ~= nil then
-                            print(action.animation)
-                            SetUnitAnimation(unit, action.animation)
-                        end
-
-                        PolledWait(action.time)
-
-                    elseif action.type == "trigger" then
-
-                        -- Set Data that needs to get passed to trigger
-                        udg_AI_TriggeringUnit = unit
-                        ai.units[data.id].stateCurrent = "triggering"
-
-                        print("Trying!")
-                        -- Run the trigger (Checking Conditions)
-                        ConditionalTriggerExecute(action.trigger)
-
-                        while ai.units[data.id].stateCurrent == "triggering" do
-                            PolledWait(.5)
-                        end
-                        print("working!")
-
-                    end
-
-                    local routeSteps = ai.route[data.route].stepCount
-
-                    print(routeSteps .. ":" .. data.step)
-
-                    if routeSteps == data.step then
-                        ai.unit.state(unit, "returnHome")
-                    else
-                        ai.unit.pickRoute(unit, data.route, (data.step + 1))
-                    end
+                -- Keep running actions unit finished with step
+                while success do
+                    success = ai.unit.NextAction(unit)
                 end
+
+                -- Run next Step
+                success = ai.unit.NextStep(unit)
+
+                -- If route is finished Send unit Home
+                if not success then
+
+                    local speed = ai.route[data.route].endSpeed or data.speedDefault
+
+                    if speed < 100 then
+                        BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 100.00)
+                        AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
+                        ai.unit[data.id].walk = true
+                    else
+                        BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
+                        AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
+                        ai.unit[data.id].walk = false
+                    end
+
+                    SetUnitMoveSpeed(unit, speed)
+
+                    ai.unit.State(unit, "ReturnHome")
+                end
+
             end
         end, "Entering")
     end)
@@ -714,10 +856,9 @@ end
 --  Main -- This runs everything
 --------
 function INIT_LUA()
-    debugfunc(function()
-        INIT_ai()
+    Debugfunc(function()
+        INIT_AI()
         INIT_Config()
-        print("AI INIT")
     end, "Init")
 end
 
@@ -726,18 +867,8 @@ end
 --
 
 -- **Credit** KickKing
--- This is kinda useless
-function dprint(message, level)
-    level = level or 1
-
-    if debugprint >= level then
-        print("|cff00ff00[debug " .. level .. "]|r " .. tostring(message))
-    end
-end
-
--- **Credit** KickKing
 -- Returns true if the value is found in the table
-function tableContains(table, element)
+function TableContains(table, element)
     for _, value in pairs(table) do
         if value == element then
             return true
@@ -748,13 +879,13 @@ end
 
 -- **Credit** KickKing
 -- Remove a value from a table
-function tableRemoveValue(table, value)
-    return table.remove(table, tableFind(table, value))
+function TableRemoveValue(table, value)
+    return table.remove(table, TableFind(table, value))
 end
 
 -- **Credit** KickKing
 -- Find the indext of a value in a table
-function tableFind(tab, el)
+function TableFind(tab, el)
     for index, value in pairs(tab) do
         if value == el then
             return index
@@ -764,31 +895,31 @@ end
 
 -- **Credit** KickKing
 -- get distance without locations
-function distanceBetweenCoordinates(x1, y1, x2, y2)
+function DistanceBetweenCoordinates(x1, y1, x2, y2)
     return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
 
 -- **Credit** KickKing
 -- get distance without locations
-function distanceBetweenUnits(unitA, unitB)
+function DistanceBetweenUnits(unitA, unitB)
     return distanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
 -- **Credit** KickKing
 -- get angle without locations
-function angleBetweenCoordinates(x1, y1, x2, y2)
+function AngleBetweenCoordinates(x1, y1, x2, y2)
     return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
 end
 
 -- **Credit** KickKing
 -- get angle without locations
-function angleBetweenUnits(unitA, unitB)
+function AngleBetweenUnits(unitA, unitB)
     return angleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
 -- **Credit** KickKing
 -- Polar projection with Locations
-function polarProjectionCoordinates(x, y, dist, angle)
+function PolarProjectionCoordinates(x, y, dist, angle)
     local newX = x + dist * Cos(angle * bj_DEGTORAD)
     local newY = y + dist * Sin(angle * bj_DEGTORAD)
     return newX, newY
@@ -796,7 +927,7 @@ end
 
 -- ** Credit** Planetary
 -- Wraps your code in a "Try" loop so you can see errors printed in the log at runtime
-function debugfunc(func, name) -- Turn on runtime logging
+function Debugfunc(func, name) -- Turn on runtime logging
     local passed, data = pcall(function()
         func()
         return "func " .. name .. " passed"
@@ -851,76 +982,18 @@ do
     end
 end
 
-
-
--- **Credit** KickKing
--- This function pushes units back from a point and can also damage units while being pushedback
-function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor)
-    local u, uX, uY, distance, angle, newDistance, uNewX, uNewY
-
-    local loopTimes = duration / tick
-    local damageTick = damage / loopTimes
-
-    if CountUnitsInGroup(g) > 0 then
-        for i = 1, loopTimes do
-
-            ForGroup(g, function()
-                u = GetEnumUnit()
-
-                if IsUnitAliveBJ(u) then
-
-                    if i == 1 then
-                        PauseUnit(u, true)
-                    end
-
-                    uX = GetUnitX(u)
-                    uY = GetUnitY(u)
-
-                    distance = distanceBetweenCoordinates(x, y, uX, uY)
-                    angle = angleBetweenCoordinates(x, y, uX, uY)
-
-                    newDistance = ((aoe + 80) - distance) * 0.13 * factor
-
-                    uNewX, uNewY = polarProjectionCoordinates(uX, uY, newDistance, angle)
-
-                    -- if IsTerrainPathable(uNewX, uNewY, PATHING_TYPE_WALKABILITY) then
-                    SetUnitX(u, uNewX)
-                    SetUnitY(u, uNewY)
-                    -- end
-
-                    if damage > 0 then
-                        UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
-                    end
-
-                    if i >= loopTimes - 1 then
-                        PauseUnit(u, false)
-                    end
-                else
-                    PauseUnit(u, false)
-                    GroupRemoveUnit(g, u)
-                end
-            end)
-
-            PolledWait(tick)
-        end
-    end
-    DestroyGroup(g)
-end
-
 -- **Credit** KickKing
 -- A system that allow you to duplicate the functionality of auto-filling in the Object Editor
-function valueFactor(level, base, previousFactor, levelFactor, constant)
+function ValueFactor(level, base, previousFactor, levelFactor, constant)
 
     local value = base
 
     if level > 1 then
         for i = 2, level do
             value = (value * previousFactor) + (i * levelFactor) + (constant)
-            print(value)
         end
     end
 
-    print(value)
     return value
 end
 
@@ -1309,8 +1382,19 @@ function CreateUnitsForPlayer0()
     local t
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 341.0, -161.7, 261.603, FourCC("hfoo"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 382.0, -549.5, 84.542, FourCC("hfoo"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 394.2, -657.2, 324.777, FourCC("hfoo"))
+end
+
+function CreateNeutralPassive()
+    local p = Player(PLAYER_NEUTRAL_PASSIVE)
+    local u
+    local unitID
+    local t
+    local life
+    u = BlzCreateUnitWithSkin(p, FourCC("nvk2"), -56.8, 135.6, 109.834, FourCC("nvk2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -481.7, -658.2, 196.046, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), -362.7, 506.7, 62.646, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlk"), -296.2, -170.4, 72.699, FourCC("nvlk"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), 3.6, 579.1, 188.180, FourCC("nvil"))
 end
 
 function CreatePlayerBuildings()
@@ -1322,6 +1406,7 @@ end
 
 function CreateAllUnits()
     CreatePlayerBuildings()
+    CreateNeutralPassive()
     CreatePlayerUnits()
 end
 
@@ -1340,7 +1425,11 @@ end
 function Trig_Testing_Actions()
     SetUnitAnimation(GetEnumUnit(), "stand")
     TriggerSleepAction(2)
-    ConditionalTriggerExecute(gg_trg_Melee_Initialization)
+    TriggerExecute(gg_trg_Action_Test)
+    BlzSetUnitRealFieldBJ(BlzGetEventDamageTarget(), UNIT_RF_ANIMATION_WALK_SPEED, 100.00)
+    AddUnitAnimationPropertiesBJ(true, "cinematic", GetFilterUnit())
+    AddUnitAnimationPropertiesBJ(false, "cinematic", GetFilterUnit())
+    AddUnitAnimationPropertiesBJ(false, "cinematic", GetFilterUnit())
 end
 
 function InitTrig_Testing()
@@ -1361,11 +1450,12 @@ function InitTrig_Melee_Initialization()
 end
 
 function Trig_Action_Test_Actions()
-        local id = GetHandleId(udg_AI_TriggeringUnit)
+        local id, state = udg_AI_TriggeringId, udg_AI_TriggeringState
     DisplayTextToForce(GetPlayersAll(), GetUnitName(udg_AI_TriggeringUnit))
+    SetUnitLifePercentBJ(udg_AI_TriggeringUnit, 50.00)
     TriggerSleepAction(2)
     DisplayTextToForce(GetPlayersAll(), "TRIGSTR_007")
-        ai.units[id].stateCurrent = "moving"
+        ai.units[id].stateCurrent = state
 end
 
 function InitTrig_Action_Test()
