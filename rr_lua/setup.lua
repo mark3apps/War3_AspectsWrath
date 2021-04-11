@@ -1,7 +1,8 @@
 function INIT_Config()
     Debugfunc(function()
         -- Add Towns
-        ai.town.New("Farms", udg_townVillageForce)
+        ai.town.New("Farms")
+        ai.town.HostileForce(udg_townVillageForce)
 
         -- Add Routes
         ai.route.New("Main", "inTown")

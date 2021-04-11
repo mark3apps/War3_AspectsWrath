@@ -579,10 +579,10 @@ function INIT_AI()
             local step = ai.route[data.route].step[stepNumber]
             local action = step.action[actionNumber]
 
-            if action.type == "action" then
+            -- Change State to "Waiting"
+            ai.unit[data.id].stateCurrent = "Waiting"
 
-                -- Change State to "Waiting"
-                ai.unit[data.id].stateCurrent = "Waiting"
+            if action.type == "action" then
 
                 if action.lookAtRect ~= nil then
                     local x = GetUnitX(unit)
@@ -645,6 +645,8 @@ function INIT_AI()
                 while ai.unit[data.id].stateCurrent == "Waiting" do
                     PolledWait(.5)
                 end
+
+                ai.unit[data.id].stateCurrent = "Moving"
             end
         end
 
@@ -1450,12 +1452,12 @@ function InitTrig_Melee_Initialization()
 end
 
 function Trig_Action_Test_Actions()
-        local id, state = udg_AI_TriggeringId, udg_AI_TriggeringState
+        local id = udg_AI_TriggeringId
     DisplayTextToForce(GetPlayersAll(), GetUnitName(udg_AI_TriggeringUnit))
     SetUnitLifePercentBJ(udg_AI_TriggeringUnit, 50.00)
     TriggerSleepAction(2)
     DisplayTextToForce(GetPlayersAll(), "TRIGSTR_007")
-        ai.units[id].stateCurrent = state
+        ai.unit[id].stateCurrent = "TriggerFinished"
 end
 
 function InitTrig_Action_Test()

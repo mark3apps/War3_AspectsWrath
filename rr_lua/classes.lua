@@ -3,27 +3,32 @@
 -- Credit: Mark Wright (KickKing)
 -- v0.1.0
 --------------
-
 -- Init the Class
-function INIT_AI()
+function INIT_AI(overallTick, overallSplit)
 
-    -- Set up basic Variables
-    ai = {}
+    -- Set Overall Tick if a value isn't specified
+    overallTick = overallTick or 2
+    overallSplit = overallSplit or 5
 
-    -- Set up Function Bases
-    ai.town = {}
-    ai.unit = {}
-    ai.landmark = {}
-    ai.route = {}
-    ai.trig = {}
-    ai.unitSTATE = {}
-    ai.townSTATE = {}
-    ai.landmarkSTATE = {}
-
-    ai.unitGroup = CreateGroup()
+    -- Set up Table
+    ai = {
+        town = {},
+        townNames = {},
+        unit = {},
+        landmark = {},
+        landmarkNames = {},
+        route = {},
+        trig = {},
+        unitSTATE = {},
+        townSTATE = {},
+        landmarkSTATE = {},
+        tick = overallTick,
+        split = overallSplit,
+        unitGroup = CreateGroup()
+    }
 
     --------
-    --  Add new things to the fold
+    --  LANDMARK ACTIONS
     --------
 
     -- Add a new landmark
@@ -63,33 +68,46 @@ function INIT_AI()
     --------
 
     -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
-    function ai.town.New(name, hostileForce)
+    function ai.town.New(name, activityProbability, tickMultiplier)
+
+        activityProbability = activityProbability or 5
+        tickMultiplier = tickMultiplier or 1
+
+        -- Add to list of towns
+        table.insert(ai.townNames, name)
 
         -- Init the Town
-        ai.town[name] = {}
-        ai.town[name].name = name
-        ai.town[name].paused = false
-        ai.town[name].state = "auto"
-        ai.town[name].stateCurrent = "normal"
-        ai.town[name].states = {"auto", "normal", "danger", "pause", "abadon", "gather"}
+        ai.town[name] = {
 
-        -- Set Up Unit Group
-        ai.town[name].units = CreateGroup()
-        ai.town[name].unitCount = 0
+            -- Add Town Name
+            name = name,
+            hostileForce = nil,
 
-        -- Set up Landmarks
-        ai.town[name].residence = {}
-        ai.town[name].safehouse = {}
-        ai.town[name].barracks = {}
-        ai.town[name].patrol = {}
-        ai.town[name].gathering = {}
+            -- States
+            state = "Auto",
+            stateCurrent = "Normal",
+            states = {"Auto", "Normal", "Danger", "Pause", "Paused", "Abadon", "Gather"},
 
-        -- Sets the Player group that the town will behave hostily towards
-        ai.town[name].hostileForce = hostileForce
+            -- Units
+            units = CreateGroup(),
+            unitCount = 0,
 
-        -- Set up the regions and rects to be extended
-        ai.town[name].region = CreateRegion()
-        ai.town[name].rects = {}
+            -- AI Activity Probability
+            activityProbability = activityProbability,
+
+            -- AI Intelligence Tick
+            tickMultiplier = tickMultiplier,
+
+            -- Set Up Landmarks
+            residence = {},
+            safehouse = {},
+            barracks = {},
+            gathering = {},
+
+            -- Set Up town Regions
+            region = CreateRegion(),
+            rects = {}
+        }
 
         return true
     end
@@ -295,9 +313,10 @@ function INIT_AI()
     --------
 
     -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
-    function ai.unit.New(town, type, unit, name, shift)
+    function ai.unit.New(town, type, unit, name, shift, radius)
 
         shift = shift or "day"
+        radius = radius or 600
 
         local handleId = GetHandleId(unit)
 
@@ -317,6 +336,8 @@ function INIT_AI()
             paused = false,
             town = town,
             name = name,
+            tick = ai.tick,
+            loop = GetRandomReal(0, ai.tick),
             shift = shift,
             state = "Auto",
             type = type,
@@ -324,6 +345,7 @@ function INIT_AI()
             speed = GetUnitMoveSpeed(unit),
             speedDefault = GetUnitMoveSpeed(unit),
             route = nil,
+            radius = radius,
             stepNumber = 0,
             actionNumber = 0,
             routes = {},
@@ -481,10 +503,10 @@ function INIT_AI()
             local step = ai.route[data.route].step[stepNumber]
             local action = step.action[actionNumber]
 
-            if action.type == "action" then
+            -- Change State to "Waiting"
+            ai.unit[data.id].stateCurrent = "Waiting"
 
-                -- Change State to "Waiting"
-                ai.unit[data.id].stateCurrent = "Waiting"
+            if action.type == "action" then
 
                 if action.lookAtRect ~= nil then
                     local x = GetUnitX(unit)
@@ -547,6 +569,8 @@ function INIT_AI()
                 while ai.unit[data.id].stateCurrent == "Waiting" do
                     PolledWait(.5)
                 end
+
+                ai.unit[data.id].stateCurrent = "Moving"
             end
         end
 
@@ -653,29 +677,41 @@ function INIT_AI()
     --  UNIT LOOPS
     --------
 
-    -- ai.trig.UnitLoop = CreateTrigger()
-    -- TriggerRegisterTimerEventPeriodic(ai.TRIGunitLoop, 2)
-    -- TriggerAddAction(ai.TRIGunitLoop, function()
+    -- Loop to get on Unit Intellegence
+    ai.trig.UnitLoop = CreateTrigger()
+    TriggerRegisterTimerEventPeriodic(ai.trig.UnitLoop, (ai.tick / ai.split))
 
-    --     local u, data, handleId
-    --     local g = CreateGroup()
-    --     GroupAddGroup(ai.unitGroup, g)
+    DisableTrigger(ai.trig.UnitLoop)
+    TriggerAddAction(ai.trig.UnitLoop, function()
 
-    --     -- Loop through the Units and check to see if they need anything
-    --     u = FirstOfGroup(g)
-    --     while u ~= nil do
-    --         handleId = GetHandleId(unit)
-    --         data = ai.unit[handleId]
+        -- Set up Local Variables
+        local u, data, handleId
+        local g = CreateGroup()
 
-    --         GroupRemoveUnit(g, u)
-    --         u = FirstOfGroup(g)
-    --     end
-    --     DestroyGroup(g)
+        -- Add all AI units to the group
+        GroupAddGroup(ai.unitGroup, g)
 
-    -- end)
+        -- Loop through the Units and check to see if they need anything
+        u = FirstOfGroup(g)
+        while u ~= nil do
+            data = ai.unit[GetHandleId(u)]
+
+            ai.unit[data.id].loop = data.loop + (ai.tick / ai.split)
+
+            if ai.unit[data.id].loop > (data.tick * ai.town[data.town].tickMultiplier) then
+                ai.unit[data.id].loop = 0
+            end
+
+            GroupRemoveUnit(g, u)
+            u = FirstOfGroup(g)
+        end
+        DestroyGroup(g)
+
+    end)
 
     -- Trigger Unit enters a Rect in a Route
     ai.trig.UnitEntersRegion = CreateTrigger()
+    DisableTrigger(ai.trig.UnitEntersRegion)
     TriggerAddAction(ai.trig.UnitEntersRegion, function()
 
         local unit = GetEnteringUnit()
@@ -751,7 +787,27 @@ function INIT_AI()
     --  INIT
     --------
 
-    -- ai.INIT_triggers()
+    -- Start Running the AI
+    function ai.Start()
+        
+        -- Add Tick Event and Start Unit Loop Inteligence
+        EnableTrigger(ai.trig.UnitLoop)
+
+        -- Enable Unit Route Management
+        EnableTrigger(ai.trig.UnitEntersRegion)
+        
+    end
+
+    -- Stop Running the AI
+    function ai.Stop()
+        
+        -- Stop Unit Intelligence
+        DisableTrigger(ai.trig.UnitLoop)
+        
+        -- Enable Unit Route Management
+        DisableTrigger(ai.trig.UnitEntersRegion)
+        
+    end
 end
 
 --------
@@ -759,7 +815,15 @@ end
 --------
 function INIT_LUA()
     Debugfunc(function()
-        INIT_AI()
+        
+        -- Init AI
+        INIT_AI(2)
+
+        -- Set up AI
         INIT_Config()
+
+        -- Start Running the AI
+        ai.Start()
+
     end, "Init")
 end
