@@ -1,27 +1,81 @@
 function INIT_Config()
     Debugfunc(function()
         -- Add Towns
-        ai.town.New("Farms")
-        ai.town.HostileForce(udg_townVillageForce)
+        ai.town.New("city", 3, 1)
+        ai.town.HostileForce("city", udg_townVillageForce)
 
-        -- Add Routes
-        ai.route.New("Main", "inTown")
-
-        ai.route.Step(gg_rct_R01_01, 100)
-        ai.route.Trigger(gg_trg_Action_Test)
-        ai.route.Action(10, gg_rct_R01_01L, "Attack 1")
-        ai.route.Action(10, gg_rct_R01_02L, "Attack 1", true)
-
-        ai.route.Step(gg_rct_R01_02)
-        ai.route.Action(4, gg_rct_R01_02L, "Stand Victory 1", true)
-
-        ai.route.Step(gg_rct_R01_03)
-        ai.route.Action(3, gg_rct_R01_03L, "Stand Defend")
-
-        ai.route.Step(gg_rct_R01_04, 100)
-        ai.route.Action(5, gg_rct_R01_04L, "Stand Ready")
-
+        -- CounterClockwise Route
+        ai.route.New("city_01", true, "inTown")
+        ai.route.Step(gg_rct_Region_000, 100)
+        ai.route.Step(gg_rct_Region_001, 100)
+        ai.route.Step(gg_rct_Region_002, 100)
+        ai.route.Step(gg_rct_Region_003, 100)
+        ai.route.Step(gg_rct_Region_004, 100)
+        ai.route.Step(gg_rct_Region_005, 100)
+        ai.route.Step(gg_rct_Region_006, 100)
+        ai.route.Step(gg_rct_Region_007, 100)
+        ai.route.Step(gg_rct_Region_008, 100)
+        ai.route.Step(gg_rct_Region_014, 100)
+        ai.route.Action(8, gg_rct_Region_028)
+        ai.route.Step(gg_rct_Region_008, 100)
+        ai.route.Step(gg_rct_Region_009, 100)
+        ai.route.Step(gg_rct_Region_010, 100)
+        ai.route.Action(5)
+        ai.route.Step(gg_rct_Region_011, 100)
+        ai.route.Action(5)
+        ai.route.Step(gg_rct_Region_012, 100)
+        ai.route.Action(8)
+        ai.route.Step(gg_rct_Region_009, 100)
+        ai.route.Step(gg_rct_Region_013, 100)
+        ai.route.Action(9)
+        ai.route.Step(gg_rct_Region_009, 100)
         ai.route.Finish(100)
+
+        -- Clockwise Route
+        ai.route.New("city_02", true, "inTown")
+        ai.route.Step(gg_rct_Region_040, 100)
+        ai.route.Step(gg_rct_Region_039, 100)
+        ai.route.Step(gg_rct_Region_038, 100)
+        ai.route.Step(gg_rct_Region_037, 100)
+        ai.route.Action(4)
+        ai.route.Step(gg_rct_Region_036, 100)
+        ai.route.Step(gg_rct_Region_035, 100)
+        ai.route.Step(gg_rct_Region_034, 100)
+        ai.route.Step(gg_rct_Region_033, 100)
+        ai.route.Step(gg_rct_Region_032, 100)
+        ai.route.Step(gg_rct_Region_031, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_029, 100)
+        ai.route.Finish(100)
+
+        -- To other Town
+        ai.route.New("Out", true, "inTown")
+        ai.route.Step(gg_rct_Region_039, 100)
+        ai.route.Step(gg_rct_Region_040, 100)
+        ai.route.Step(gg_rct_Region_029, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_015, 100)
+        ai.route.Step(gg_rct_Region_016, 100)
+        ai.route.Step(gg_rct_Region_018, 100)
+        ai.route.Step(gg_rct_Region_019, 100)
+        ai.route.Step(gg_rct_Region_020, 100)
+        ai.route.Step(gg_rct_Region_021, 100)
+        ai.route.Step(gg_rct_Region_022, 100)
+        ai.route.Step(gg_rct_Region_023, 100)
+        ai.route.Step(gg_rct_Region_041, 100)
+        ai.route.Step(gg_rct_Region_024, 100)
+        ai.route.Step(gg_rct_Region_026, 100)
+        ai.route.Step(gg_rct_Region_025, 100)
+        ai.route.Step(gg_rct_Region_019, 100)
+        ai.route.Step(gg_rct_Region_018, 100)
+        ai.route.Step(gg_rct_Region_017, 100)
+        ai.route.Step(gg_rct_Region_016, 100)
+        ai.route.Step(gg_rct_Region_015, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_002, 100)
+        ai.route.Step(gg_rct_Region_003, 100)
+        ai.route.Step(gg_rct_Region_004, 100)
+        ai.route.Step(gg_rct_Region_005, 100)
 
         -- Create the Unit
         local g = CreateGroup()
@@ -30,39 +84,16 @@ function INIT_Config()
         local u = FirstOfGroup(g)
         while u ~= nil do
 
-            ai.unit.New("Farms", "villager", u, "Peasant", "day")
-            ai.unit.AddRoute(u, "Main")
+            ai.unit.New("city", "villager", u, "Peasant", "day")
+            ai.unit.AddRoute(u, "city_01")
+            ai.unit.AddRoute(u, "city_02")
+            ai.unit.AddRoute(u, "Out")
 
             GroupRemoveUnit(g, u)
             u = FirstOfGroup(g)
         end
         DestroyGroup(g)
     end, "Testing")
-    print("Working")
-
-    -- Testing Trigger
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 2)
-    TriggerAddAction(t, function()
-
-        -- THIS IS ALL YOU NEED TO MAKE A UNIT GO
-        local g = CreateGroup()
-        g = GetUnitsInRectAll(GetPlayableMapRect())
-
-        local u = FirstOfGroup(g)
-        while u ~= nil do
-
-            Debugfunc(function()
-                ai.unit.State(u, "Move")
-            end, "Testing")
-
-            PolledWait(GetRandomReal(4, 10))
-
-            GroupRemoveUnit(g, u)
-            u = FirstOfGroup(g)
-        end
-        DestroyGroup(g)
-    end)
 
 end
 

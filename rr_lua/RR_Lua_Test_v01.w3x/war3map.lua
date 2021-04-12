@@ -7,17 +7,51 @@ udg_AI_TriggeringStep = 0
 udg_AI_TriggeringAction = 0
 udg_AI_TriggeringState = ""
 udg_AI_TriggeringId = 0
-gg_rct_R01_01 = nil
-gg_rct_R01_02 = nil
-gg_rct_R01_03 = nil
-gg_rct_R01_04 = nil
-gg_rct_R01_01L = nil
-gg_rct_R01_02L = nil
-gg_rct_R01_03L = nil
-gg_rct_R01_04L = nil
 gg_trg_Testing = nil
 gg_trg_Melee_Initialization = nil
 gg_trg_Action_Test = nil
+gg_rct_Region_000 = nil
+gg_rct_Region_001 = nil
+gg_rct_Region_002 = nil
+gg_rct_Region_003 = nil
+gg_rct_Region_004 = nil
+gg_rct_Region_005 = nil
+gg_rct_Region_006 = nil
+gg_rct_Region_007 = nil
+gg_rct_Region_008 = nil
+gg_rct_Region_009 = nil
+gg_rct_Region_010 = nil
+gg_rct_Region_011 = nil
+gg_rct_Region_012 = nil
+gg_rct_Region_013 = nil
+gg_rct_Region_014 = nil
+gg_rct_Region_015 = nil
+gg_rct_Region_016 = nil
+gg_rct_Region_017 = nil
+gg_rct_Region_018 = nil
+gg_rct_Region_019 = nil
+gg_rct_Region_020 = nil
+gg_rct_Region_021 = nil
+gg_rct_Region_022 = nil
+gg_rct_Region_023 = nil
+gg_rct_Region_024 = nil
+gg_rct_Region_025 = nil
+gg_rct_Region_026 = nil
+gg_rct_Region_027 = nil
+gg_rct_Region_028 = nil
+gg_rct_Region_029 = nil
+gg_rct_Region_030 = nil
+gg_rct_Region_031 = nil
+gg_rct_Region_032 = nil
+gg_rct_Region_033 = nil
+gg_rct_Region_034 = nil
+gg_rct_Region_035 = nil
+gg_rct_Region_036 = nil
+gg_rct_Region_037 = nil
+gg_rct_Region_038 = nil
+gg_rct_Region_039 = nil
+gg_rct_Region_040 = nil
+gg_rct_Region_041 = nil
 function InitGlobals()
     udg_townVillageForce = CreateForce()
     udg_TEMP_UnitGroup = CreateGroup()
@@ -31,26 +65,81 @@ end
 function INIT_Config()
     Debugfunc(function()
         -- Add Towns
-        ai.town.New("Farms", udg_townVillageForce)
+        ai.town.New("city", 3, 1)
+        ai.town.HostileForce("city", udg_townVillageForce)
 
-        -- Add Routes
-        ai.route.New("Main", "inTown")
-
-        ai.route.Step(gg_rct_R01_01, 100)
-        ai.route.Trigger(gg_trg_Action_Test)
-        ai.route.Action(10, gg_rct_R01_01L, "Attack 1")
-        ai.route.Action(10, gg_rct_R01_02L, "Attack 1", true)
-
-        ai.route.Step(gg_rct_R01_02)
-        ai.route.Action(4, gg_rct_R01_02L, "Stand Victory 1", true)
-
-        ai.route.Step(gg_rct_R01_03)
-        ai.route.Action(3, gg_rct_R01_03L, "Stand Defend")
-
-        ai.route.Step(gg_rct_R01_04, 100)
-        ai.route.Action(5, gg_rct_R01_04L, "Stand Ready")
-
+        -- CounterClockwise Route
+        ai.route.New("city_01", true, "inTown")
+        ai.route.Step(gg_rct_Region_000, 100)
+        ai.route.Step(gg_rct_Region_001, 100)
+        ai.route.Step(gg_rct_Region_002, 100)
+        ai.route.Step(gg_rct_Region_003, 100)
+        ai.route.Step(gg_rct_Region_004, 100)
+        ai.route.Step(gg_rct_Region_005, 100)
+        ai.route.Step(gg_rct_Region_006, 100)
+        ai.route.Step(gg_rct_Region_007, 100)
+        ai.route.Step(gg_rct_Region_008, 100)
+        ai.route.Step(gg_rct_Region_014, 100)
+        ai.route.Action(8, gg_rct_Region_028)
+        ai.route.Step(gg_rct_Region_008, 100)
+        ai.route.Step(gg_rct_Region_009, 100)
+        ai.route.Step(gg_rct_Region_010, 100)
+        ai.route.Action(5)
+        ai.route.Step(gg_rct_Region_011, 100)
+        ai.route.Action(5)
+        ai.route.Step(gg_rct_Region_012, 100)
+        ai.route.Action(8)
+        ai.route.Step(gg_rct_Region_009, 100)
+        ai.route.Step(gg_rct_Region_013, 100)
+        ai.route.Action(9)
+        ai.route.Step(gg_rct_Region_009, 100)
         ai.route.Finish(100)
+
+        -- Clockwise Route
+        ai.route.New("city_02", true, "inTown")
+        ai.route.Step(gg_rct_Region_040, 100)
+        ai.route.Step(gg_rct_Region_039, 100)
+        ai.route.Step(gg_rct_Region_038, 100)
+        ai.route.Step(gg_rct_Region_037, 100)
+        ai.route.Action(4)
+        ai.route.Step(gg_rct_Region_036, 100)
+        ai.route.Step(gg_rct_Region_035, 100)
+        ai.route.Step(gg_rct_Region_034, 100)
+        ai.route.Step(gg_rct_Region_033, 100)
+        ai.route.Step(gg_rct_Region_032, 100)
+        ai.route.Step(gg_rct_Region_031, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_029, 100)
+        ai.route.Finish(100)
+
+        -- To other Town
+        ai.route.New("Out", true, "inTown")
+        ai.route.Step(gg_rct_Region_039, 100)
+        ai.route.Step(gg_rct_Region_040, 100)
+        ai.route.Step(gg_rct_Region_029, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_015, 100)
+        ai.route.Step(gg_rct_Region_016, 100)
+        ai.route.Step(gg_rct_Region_018, 100)
+        ai.route.Step(gg_rct_Region_019, 100)
+        ai.route.Step(gg_rct_Region_020, 100)
+        ai.route.Step(gg_rct_Region_021, 100)
+        ai.route.Step(gg_rct_Region_022, 100)
+        ai.route.Step(gg_rct_Region_023, 100)
+        ai.route.Step(gg_rct_Region_041, 100)
+        ai.route.Step(gg_rct_Region_024, 100)
+        ai.route.Step(gg_rct_Region_026, 100)
+        ai.route.Step(gg_rct_Region_025, 100)
+        ai.route.Step(gg_rct_Region_019, 100)
+        ai.route.Step(gg_rct_Region_018, 100)
+        ai.route.Step(gg_rct_Region_017, 100)
+        ai.route.Step(gg_rct_Region_016, 100)
+        ai.route.Step(gg_rct_Region_015, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_002, 100)
+        ai.route.Step(gg_rct_Region_003, 100)
+        ai.route.Step(gg_rct_Region_004, 100)
+        ai.route.Step(gg_rct_Region_005, 100)
 
         -- Create the Unit
         local g = CreateGroup()
@@ -59,72 +148,68 @@ function INIT_Config()
         local u = FirstOfGroup(g)
         while u ~= nil do
 
-            ai.unit.New("Farms", "villager", u, "Peasant", "day")
-            ai.unit.AddRoute(u, "Main")
+            ai.unit.New("city", "villager", u, "Peasant", "day")
+            ai.unit.AddRoute(u, "city_01")
+            ai.unit.AddRoute(u, "city_02")
+            ai.unit.AddRoute(u, "Out")
 
             GroupRemoveUnit(g, u)
             u = FirstOfGroup(g)
         end
         DestroyGroup(g)
     end, "Testing")
-    print("Working")
-
-    -- Testing Trigger
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 2)
-    TriggerAddAction(t, function()
-
-        -- THIS IS ALL YOU NEED TO MAKE A UNIT GO
-        local g = CreateGroup()
-        g = GetUnitsInRectAll(GetPlayableMapRect())
-
-        local u = FirstOfGroup(g)
-        while u ~= nil do
-
-            Debugfunc(function()
-                ai.unit.State(u, "Move")
-            end, "Testing")
-
-            PolledWait(GetRandomReal(4, 10))
-
-            GroupRemoveUnit(g, u)
-            u = FirstOfGroup(g)
-        end
-        DestroyGroup(g)
-    end)
 
 end
 
 
+---@diagnostic disable: lowercase-global
 --------------
 -- Village AI
 -- Credit: Mark Wright (KickKing)
 -- v0.1.0
 --------------
+--
+--
+--
+--
+---Init Village AI
+---@param overallTick number
+---@param overallSplit number
+function INIT_AI(overallTick, overallSplit)
 
--- Init the Class
-function INIT_AI()
+    -- Set Overall Tick if a value isn't specified
+    overallTick = overallTick or 2
+    overallSplit = overallSplit or 5
 
-    -- Set up basic Variables
-    ai = {}
-
-    -- Set up Function Bases
-    ai.town = {}
-    ai.unit = {}
-    ai.landmark = {}
-    ai.route = {}
-    ai.trig = {}
-    ai.unitSTATE = {}
-    ai.townSTATE = {}
-    ai.landmarkSTATE = {}
-
-    ai.unitGroup = CreateGroup()
+    -- Set up Table
+    ai = {
+        town = {},
+        townNames = {},
+        unit = {},
+        landmark = {},
+        landmarkNames = {},
+        route = {rects = {}},
+        trig = {},
+        unitSTATE = {},
+        townSTATE = {},
+        landmarkSTATE = {},
+        tick = overallTick,
+        split = overallSplit,
+        unitGroup = CreateGroup()
+    }
 
     --------
-    --  Add new things to the fold
+    --  LANDMARK ACTIONS
     --------
 
-    -- Add a new landmark
+    ---Add a new landmark
+    ---@param town string
+    ---@param name string
+    ---@param rect table
+    ---@param types table
+    ---@param unit table
+    ---@param radius number
+    ---@param maxCapacity number
     function ai.landmark.New(town, name, rect, types, unit, radius, maxCapacity)
         unit = unit or nil
         radius = radius or 600
@@ -160,34 +245,54 @@ function INIT_AI()
     --  TOWN ACTIONS
     --------
 
-    -- Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
-    function ai.town.New(name, hostileForce)
+    ---Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
+    ---@param name string
+    ---@param activityProbability number
+    ---@param tickMultiplier number
+    ---@return boolean
+    function ai.town.New(name, activityProbability, tickMultiplier)
+
+        activityProbability = activityProbability or 5
+        tickMultiplier = tickMultiplier or 1
+
+        -- Add to list of towns
+        table.insert(ai.townNames, name)
 
         -- Init the Town
-        ai.town[name] = {}
-        ai.town[name].name = name
-        ai.town[name].paused = false
-        ai.town[name].state = "auto"
-        ai.town[name].stateCurrent = "normal"
-        ai.town[name].states = {"auto", "normal", "danger", "pause", "abadon", "gather"}
+        ai.town[name] = {
 
-        -- Set Up Unit Group
-        ai.town[name].units = CreateGroup()
-        ai.town[name].unitCount = 0
+            -- Add Town Name
+            name = name,
+            hostileForce = nil,
 
-        -- Set up Landmarks
-        ai.town[name].residence = {}
-        ai.town[name].safehouse = {}
-        ai.town[name].barracks = {}
-        ai.town[name].patrol = {}
-        ai.town[name].gathering = {}
+            -- States
+            state = "Auto",
+            stateCurrent = "Normal",
+            states = {
+                "Auto", "Normal", "Danger", "Pause", "Paused", "Abadon",
+                "Gather"
+            },
 
-        -- Sets the Player group that the town will behave hostily towards
-        ai.town[name].hostileForce = hostileForce
+            -- Units
+            units = CreateGroup(),
+            unitCount = 0,
 
-        -- Set up the regions and rects to be extended
-        ai.town[name].region = CreateRegion()
-        ai.town[name].rects = {}
+            -- AI Activity Probability
+            activityProbability = activityProbability,
+
+            -- AI Intelligence Tick
+            tickMultiplier = tickMultiplier,
+
+            -- Set Up Landmarks
+            residence = {},
+            safehouse = {},
+            barracks = {},
+            gathering = {},
+
+            -- Set Up town Regions
+            region = CreateRegion(),
+            rects = {}
+        }
 
         return true
     end
@@ -239,9 +344,7 @@ function INIT_AI()
             local randInt = GetRandomInt(low, high)
 
             percentLife = percentLife - randInt
-            if not kill and percentLife <= 0 then
-                percentLife = 1
-            end
+            if not kill and percentLife <= 0 then percentLife = 1 end
 
             SetUnitLifePercentBJ(unit, percentLife)
         end)
@@ -265,22 +368,33 @@ function INIT_AI()
     --  ROUTE ACTIONS
     --------
 
-    -- Adds a route that villagers can take when Moving
-    function ai.route.New(name, type)
+    ---Adds a route that villagers can take when Moving
+    ---@param name  string  @Route Name
+    ---@param loop  boolean @Whether or not the route is a loop
+    ---@param type  string  @inTown or outOfTown
+    ---@return      boolean @True if successful
+    function ai.route.New(name, loop, type)
 
         ai.routeSetup = name
         -- Set up the route Vars
-        ai.route[name] = {}
-        ai.route[name].name = name
-        ai.route[name].type = type
-        ai.route[name].step = {}
-        ai.route[name].stepCount = 0
-        ai.route[name].endSpeed = nil
+        ai.route[name] = {
+            name = name,
+            type = type,
+            step = {},
+            stepCount = 0,
+            endSpeed = nil,
+            loop = loop
+        }
 
         return true
     end
 
-    -- Adds at the end of the selected route, a new place for a unit to move to.
+    ---Adds at the end of the selected route, a new place for a unit to move to.
+    ---@param rect          rect    @The Rect (GUI Region) that the unit will walk to
+    ---@param speed         number  @OPTIONAL: Walk/Run speed of unit.  (under 100 will walk) Default is unit default speed
+    ---@param order         number  @OPTIONAL: the order to use to move.  Default of move
+    ---@param animationTag  string  @OPTIONAL: an anim tag to add to the unit while walking
+    ---@return              boolean @True if successful
     function ai.route.Step(rect, speed, order, animationTag)
 
         -- Set default values if one wasn't specified
@@ -288,8 +402,11 @@ function INIT_AI()
         speed = speed or nil
         order = order or oid.move
 
-        -- Add Event to Rect Entering Trigger
-        TriggerRegisterEnterRectSimple(ai.trig.UnitEntersRegion, rect)
+        -- Add Event to Rect Entering Trigger if not already added
+        if not TableContains(ai.route.rects, rect) then
+            table.insert(ai.route.rects, rect)
+            TriggerRegisterEnterRectSimple(ai.trig.UnitEntersRegion, rect)
+        end
 
         -- Update the count of steps in the route
         local stepCount = ai.route[route].stepCount + 1
@@ -297,22 +414,28 @@ function INIT_AI()
         -- Add the step to the route
         ai.route[route].stepCount = stepCount
 
-        ai.route[route].step[stepCount] = {
-            rect = rect,
-            speed = speed,
-            x = GetRectCenterX(rect),
-            y = GetRectCenterY(rect),
-            actionCount = 0,
-            order = order,
-            action = {},
-            animationTag = animationTag
-        }
+        ai.route[route].step[stepCount] =
+            {
+                rect = rect,
+                speed = speed,
+                x = GetRectCenterX(rect),
+                y = GetRectCenterY(rect),
+                actionCount = 0,
+                order = order,
+                action = {},
+                animationTag = animationTag
+            }
 
         return true
 
     end
 
-    -- Adds an additional action to the picked route step
+    ---Adds an additional action to the picked route step
+    ---@param time number
+    ---@param lookAtRect rect
+    ---@param animation string
+    ---@param loop boolean
+    ---@return boolean
     function ai.route.Action(time, lookAtRect, animation, loop)
 
         -- Set default values if one wasn't specified
@@ -349,10 +472,7 @@ function INIT_AI()
         -- Add the action to the Step in the Route
         ai.route[route].step[stepCount].actionCount = actionCount
         ai.route[route].step[stepCount].action[actionCount] =
-            {
-                type = "trigger",
-                trigger = trigger
-            }
+            {type = "trigger", trigger = trigger}
     end
 
     function ai.route.Funct(funct)
@@ -364,10 +484,7 @@ function INIT_AI()
         -- Add the action to the Step in the Route
         ai.route[route].step[stepCount].actionCount = actionCount
         ai.route[route].step[stepCount].action[actionCount] =
-            {
-                type = "function",
-                funct = funct
-            }
+            {type = "function", funct = funct}
 
         return true
     end
@@ -375,14 +492,12 @@ function INIT_AI()
     function ai.route.Finish(speed)
         speed = speed or nil
 
-        ai.route[ai.routeSetup].endSpeed = nil
+        ai.route[ai.routeSetup].endSpeed = speed
 
         return true
     end
 
-    function ai.route.StepCount(route)
-        return ai.route[route].stepCount
-    end
+    function ai.route.StepCount(route) return ai.route[route].stepCount end
 
     function ai.route.ActionCount(route, step)
         return ai.route[route].step[step].actionCount
@@ -393,11 +508,14 @@ function INIT_AI()
     --------
 
     -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
-    function ai.unit.New(town, type, unit, name, shift)
+    function ai.unit.New(town, type, unit, name, shift, radius)
 
         shift = shift or "day"
+        radius = radius or 600
 
         local handleId = GetHandleId(unit)
+        local x = GetUnitX(unit)
+        local y = GetUnitY(unit)
 
         -- Add to Unit groups
         GroupAddUnit(ai.town[town].units, unit)
@@ -415,6 +533,10 @@ function INIT_AI()
             paused = false,
             town = town,
             name = name,
+            enemies = 0,
+            alertedAllies = 0,
+            tick = ai.tick * ai.town[town].tickMultiplier,
+            loop = GetRandomReal(0, ai.tick * ai.town[town].tickMultiplier),
             shift = shift,
             state = "Auto",
             type = type,
@@ -422,18 +544,25 @@ function INIT_AI()
             speed = GetUnitMoveSpeed(unit),
             speedDefault = GetUnitMoveSpeed(unit),
             route = nil,
+            radius = radius,
+            looped = false,
+            stepNumberStart = 0,
             stepNumber = 0,
             actionNumber = 0,
             routes = {},
-            xHome = GetUnitX(unit),
-            yHome = GetUnitY(unit),
+            xHome = x,
+            yHome = y,
+            rectHome = Rect(x - 100, y - 100, x + 100, y + 100),
             facingHome = GetUnitFacing(unit),
             xDest = nil,
             yDest = nil
         }
 
         if type == "villager" then
-            ai.unit[handleId].states = {"Relax", "Move", "Sleep", "ReturnHome", "Moving", "ReturningHome", "Waiting"}
+            ai.unit[handleId].states = {
+                "Relax", "Move", "Sleep", "ReturnHome", "Moving",
+                "ReturningHome", "Waiting"
+            }
             ai.unit[handleId].stateCurrent = "Relax"
 
         end
@@ -465,6 +594,8 @@ function INIT_AI()
         return false
     end
 
+    --- Kill the Unit
+    ---@param unit any
     function ai.unit.Kill(unit)
         local handleId = GetHandleId(unit)
         local data = ai.unit[handleId]
@@ -477,6 +608,8 @@ function INIT_AI()
         return true
     end
 
+    --- Remove the Unit from the AI (Unit will be controlled as if it was an ordinary Unit)
+    ---@param unit any
     function ai.unit.Remove(unit)
         local handleId = GetHandleId(unit)
         local data = ai.unit[handleId]
@@ -487,6 +620,9 @@ function INIT_AI()
         return true
     end
 
+    --- Pause the Unit
+    ---@param unit any
+    ---@param flag boolean @If true the unit will pause, if false the unit will unpause
     function ai.unit.Pause(unit, flag)
         local handleId = GetHandleId(unit)
 
@@ -496,36 +632,64 @@ function INIT_AI()
         return true
     end
 
+    --- Pick a Route from the Units avalable routes and set it up
+    ---@param unit any @REQUIRED The Unit in the AI system
+    ---@param route string @OPTIONAL if you want a specific route chosen else it will pick one
+    ---@param stepNumber integer @OPTIONAL if you want a specific Step chosen else it will start at the beginning
+    ---@param actionNumber integer @OPTIONAL if you want a specific Action chosen else it will start at the beginning
     function ai.unit.PickRoute(unit, route, stepNumber, actionNumber)
         local data = ai.unit[GetHandleId(unit)]
 
-        if #data.routes == 0 and route == nil then
-            return false
-        end
+        if #data.routes == 0 and route == nil then return false end
 
         route = route or data.routes[GetRandomInt(1, #data.routes)]
+
+        local routeData = ai.route[route]
+
+        if stepNumber == nil then
+            if routeData.loop == true then
+                local newDistance = 0
+                local distance = 9999999
+                local x = GetUnitX(unit)
+                local y = GetUnitY(unit)
+
+                for i = 1, routeData.stepCount do
+                    newDistance = DistanceBetweenCoordinates(x, y,
+                                                             routeData.step[i].x,
+                                                             routeData.step[i].y)
+                    if distance > newDistance then
+                        distance = newDistance
+                        stepNumber = i
+                    end
+                end
+            end
+
+            stepNumber = stepNumber - 1
+        end
+
         stepNumber = stepNumber or 0
         actionNumber = actionNumber or 0
 
         ai.unit[data.id].route = route
         ai.unit[data.id].stepNumber = stepNumber
+        ai.unit[data.id].looped = false
+        ai.unit[data.id].stepNumberStart = stepNumber
         ai.unit[data.id].actionNumber = actionNumber
 
         return true
     end
 
-    -- Run next Step in a Units Current Route
+    --- Run next Step in a Units Current Route
+    ---@param unit any
     function ai.unit.NextStep(unit)
         local data = ai.unit[GetHandleId(unit)]
 
         local stepNumber = ai.unit[data.id].stepNumber + 1
 
-        print(stepNumber .. " " .. ai.route[data.route].stepCount)
+        --print(stepNumber .. " " .. ai.route[data.route].stepCount)
 
         -- If there are no more steps, return
-        if stepNumber > ai.route[data.route].stepCount then
-            return false
-        end
+        if stepNumber > ai.route[data.route].stepCount then return false end
 
         -- Set new Unit Step Info || Reset Action Number
         ai.unit[data.id].stateCurrent = "Moving"
@@ -556,6 +720,8 @@ function INIT_AI()
         return true
     end
 
+    --- Run the units next Route Action
+    ---@param unit any
     function ai.unit.NextAction(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -589,11 +755,15 @@ function INIT_AI()
                     local y = GetUnitY(unit)
 
                     -- Get the angle to the rect and find a point 10 units in that direction
-                    local facingAngle = AngleBetweenCoordinates(x, y, GetRectCenterX(action.lookAtRect),
-                                            GetRectCenterY(action.lookAtRect))
+                    local facingAngle = AngleBetweenCoordinates(x, y,
+                                                                GetRectCenterX(
+                                                                    action.lookAtRect),
+                                                                GetRectCenterY(
+                                                                    action.lookAtRect))
 
                     -- Get Position 10 units away in the correct direction
-                    local xNew, yNew = PolarProjectionCoordinates(x, y, 10, facingAngle)
+                    local xNew, yNew = PolarProjectionCoordinates(x, y, 10,
+                                                                  facingAngle)
 
                     -- Move unit to direction
                     IssuePointOrderById(unit, oid.move, xNew, yNew)
@@ -618,6 +788,7 @@ function INIT_AI()
                         end
                     end
 
+                    QueueUnitAnimation(unit, "Stand")
                 end
 
                 PolledWait(action.time)
@@ -653,7 +824,9 @@ function INIT_AI()
         return true
     end
 
-    -- Set the Unit State
+    --- Set the Unit State
+    ---@param unit any @The unit in the AI system
+    ---@param state string @Takes a Unit State
     function ai.unit.State(unit, state)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -668,18 +841,133 @@ function INIT_AI()
         return false
     end
 
+    --- Update the Units intel
+    ---@param unit any @The unit in the AI system
+    function ai.unit.Intel(unit)
+
+        local data = ai.unit[GetHandleId(unit)]
+
+        local u
+
+        local enemies = 0
+        local alertedAllies = 0
+        local g = CreateGroup()
+        local l = GetUnitLoc(unit)
+
+        g = GetUnitsInRangeOfLocAll(data.radius, l)
+
+        u = FirstOfGroup(g)
+        while u ~= nil do
+
+            -- Look for alerted Allies or Enemy units
+            if IsUnitInForce(u, ai.town[data.town].hostileForce) then
+                enemies = enemies + 1
+            elseif IsUnitInGroup(u, ai.unitGroup) and
+                ai.unit[GetHandleId(u)].alerted == true then
+                alertedAllies = alertedAllies + 1
+            end
+
+            GroupRemoveUnit(g, u)
+            u = FirstOfGroup(g)
+        end
+        DestroyGroup(g)
+        RemoveLocation(l)
+
+        ai.unit[data.id].enemies = enemies
+        ai.unit[data.id].alertedAllies = alertedAllies
+    end
+
+    function ai.unit.MoveToNextStep(unit)
+
+        local data = ai.unit[GetHandleId(unit)]
+
+        -- Set Local Variables
+        local success = true
+        local tick = 0.1
+
+        -- Wait until unit stops Moving or 2 seconds
+        local order = oid.move
+        local i = 1
+        while order == oid.move and i < 2 do
+            order = GetUnitCurrentOrder(unit)
+            PolledWait(tick)
+            i = i + tick
+        end
+
+        -- Keep running actions unit finished with step
+        while success do success = ai.unit.NextAction(unit) end
+
+        -- Run next Step
+        if ai.unit[data.id].looped and ai.unit[data.id].stepNumber >
+            data.stepNumberStart then
+
+            local speed = ai.route[data.route].endSpeed or data.speedDefault
+
+            if speed < 100 then
+                BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 100.00)
+                AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
+                ai.unit[data.id].walk = true
+            else
+                BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
+                AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
+                ai.unit[data.id].walk = false
+            end
+
+            SetUnitMoveSpeed(unit, speed)
+
+            ai.unit.State(unit, "ReturnHome")
+        else
+
+            success = ai.unit.NextStep(unit)
+
+            -- If route is finished Send unit Home
+            if not success then
+
+                if ai.route[data.route].loop then
+                    ai.unit[data.id].looped = true
+                    ai.unit[data.id].stepNumber = 0
+                    ai.unit[data.id].actionNumber = 0
+                    success = ai.unit.NextStep(unit)
+                else
+
+                    local speed = ai.route[data.route].endSpeed or
+                                      data.speedDefault
+
+                    if speed < 100 then
+                        BlzSetUnitRealFieldBJ(unit,
+                                              UNIT_RF_ANIMATION_WALK_SPEED,
+                                              100.00)
+                        AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
+                        ai.unit[data.id].walk = true
+                    else
+                        BlzSetUnitRealFieldBJ(unit,
+                                              UNIT_RF_ANIMATION_WALK_SPEED,
+                                              270.00)
+                        AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
+                        ai.unit[data.id].walk = false
+                    end
+
+                    SetUnitMoveSpeed(unit, speed)
+
+                    ai.unit.State(unit, "ReturnHome")
+                end
+            end
+        end
+
+        return true
+    end
+
     --------
     --  UNIT STATES
     --------
 
     --
-    -- MOVE
+    --- MOVE STATE
+    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.Move(unit)
         local data = ai.unit[GetHandleId(unit)]
 
-        if #data.routes == 0 and route == nil then
-            return false
-        end
+        if #data.routes == 0 and data.route == nil then return false end
 
         local route = data.routes[GetRandomInt(1, #data.routes)]
 
@@ -690,7 +978,28 @@ function INIT_AI()
     end
 
     --
-    -- RETURN HOME
+    --- RELAX STATE
+    ---@param unit any @The unit in the AI system
+    function ai.unitSTATE.Relax(unit)
+        local data = ai.unit[GetHandleId(unit)]
+
+        local prob = GetRandomInt(1, 100)
+
+        --print("Trying " .. GetUnitName(unit))
+
+        if ai.town[data.town].activityProbability >= prob then
+
+            -- Order Unit to Move onto one of it's routes
+            if TableContains(data.states, "Move") then
+                ai.unit.State(unit, "Move")
+            end
+
+        end
+
+    end
+
+    --- RETURN HOME
+    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.ReturnHome(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -702,7 +1011,7 @@ function INIT_AI()
         ai.unit[data.id].yDest = nil
         ai.unit[data.id].speed = nil
 
-        print("x:" .. data.xHome .. " y:" .. data.yHome)
+        --print("x:" .. data.xHome .. " y:" .. data.yHome)
         IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
 
         return true
@@ -712,34 +1021,51 @@ function INIT_AI()
     --  UNIT STATES TRANSIENT
     --------
 
-    --
-    -- Moving
+    --- Moving State
+    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.Moving(unit)
         local data = ai.unit[GetHandleId(unit)]
 
         if GetUnitCurrentOrder(unit) ~= oid.move then
-            IssuePointOrderById(unit, oid.move, data.xDest, data.yDest)
+            -- If the Rect isn't the targetted end rect, ignore any future actions
+            if RectContainsUnit(ai.route[data.route].step[data.stepNumber].rect,
+                                unit) then
+                --ai.unit.MoveToNextStep(unit)
+            else
+                IssuePointOrderById(unit, oid.move, data.xDest, data.yDest)
+            end
+
         end
 
         return true
     end
 
-    --
-    -- WAITING
+    --- Waiting State
+    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.Waiting(unit)
 
         -- Do nothing, come on now, what did you think was going to be here??
         return true
     end
 
-    --
-    -- RETURNING HOME
+    --- Returning Home State
+    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.ReturningHome(unit)
         local data = ai.unit[GetHandleId(unit)]
 
-        if GetUnitCurrentOrder(unit) ~= oid.move then
+        local x = GetUnitX(unit)
+        local y = GetUnitY(unit)
 
-            IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
+        if GetUnitCurrentOrder(unit) ~= oid.move then
+            if not RectContainsUnit(data.rectHome, unit) then
+                IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
+
+            else
+                ai.unit[data.id].stateCurrent = "Relax"
+                local xNew, yNew = PolarProjectionCoordinates(x, y, 10,
+                                                              data.facingHome)
+                IssuePointOrderById(unit, oid.move, xNew, yNew)
+            end
         end
 
         return true
@@ -753,29 +1079,48 @@ function INIT_AI()
     --  UNIT LOOPS
     --------
 
-    -- ai.trig.UnitLoop = CreateTrigger()
-    -- TriggerRegisterTimerEventPeriodic(ai.TRIGunitLoop, 2)
-    -- TriggerAddAction(ai.TRIGunitLoop, function()
+    -- Loop to get on Unit Intellegence
+    ai.trig.UnitLoop = CreateTrigger()
+    TriggerRegisterTimerEventPeriodic(ai.trig.UnitLoop, (ai.tick / ai.split))
 
-    --     local u, data, handleId
-    --     local g = CreateGroup()
-    --     GroupAddGroup(ai.unitGroup, g)
+    DisableTrigger(ai.trig.UnitLoop)
+    TriggerAddAction(ai.trig.UnitLoop, function()
 
-    --     -- Loop through the Units and check to see if they need anything
-    --     u = FirstOfGroup(g)
-    --     while u ~= nil do
-    --         handleId = GetHandleId(unit)
-    --         data = ai.unit[handleId]
+        -- Set up Local Variables
+        local u, data, handleId
+        local g = CreateGroup()
 
-    --         GroupRemoveUnit(g, u)
-    --         u = FirstOfGroup(g)
-    --     end
-    --     DestroyGroup(g)
+        -- Add all AI units to the group
+        GroupAddGroup(ai.unitGroup, g)
 
-    -- end)
+        -- Loop through the Units and check to see if they need anything
+        u = FirstOfGroup(g)
+        while u ~= nil do
+            data = ai.unit[GetHandleId(u)]
+
+            ai.unit[data.id].loop = data.loop + (ai.tick / ai.split)
+
+            -- Check to see if it's time to have the Unit Update itself
+            if ai.unit[data.id].loop >
+                (data.tick * ai.town[data.town].tickMultiplier) then
+                ai.unit[data.id].loop = 0
+
+                -- Run the routine for the unit's current state
+                ai.unit.Intel(u)
+                ai.unit.State(u, data.stateCurrent)
+
+            end
+
+            GroupRemoveUnit(g, u)
+            u = FirstOfGroup(g)
+        end
+        DestroyGroup(g)
+
+    end)
 
     -- Trigger Unit enters a Rect in a Route
     ai.trig.UnitEntersRegion = CreateTrigger()
+    DisableTrigger(ai.trig.UnitEntersRegion)
     TriggerAddAction(ai.trig.UnitEntersRegion, function()
 
         local unit = GetEnteringUnit()
@@ -795,54 +1140,15 @@ function INIT_AI()
                 if data.route then
 
                     -- If the Rect isn't the targetted end rect, ignore any future actions
-                    if not RectContainsUnit(ai.route[data.route].step[data.stepNumber].rect, unit) then
+                    if not RectContainsUnit(
+                        ai.route[data.route].step[data.stepNumber].rect, unit) then
                         return false
                     end
                 else
                     return false
                 end
 
-                -- Set Local Variables
-                local success = true
-                local tick = 0.1
-
-                -- Wait until unit stops Moving or 2 seconds
-                local order = oid.move
-                local i = 1
-                while order == oid.move and i < 2 do
-                    order = GetUnitCurrentOrder(unit)
-                    PolledWait(tick)
-                    i = i + tick
-                end
-
-                -- Keep running actions unit finished with step
-                while success do
-                    success = ai.unit.NextAction(unit)
-                end
-
-                -- Run next Step
-                success = ai.unit.NextStep(unit)
-
-                -- If route is finished Send unit Home
-                if not success then
-
-                    local speed = ai.route[data.route].endSpeed or data.speedDefault
-
-                    if speed < 100 then
-                        BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 100.00)
-                        AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
-                        ai.unit[data.id].walk = true
-                    else
-                        BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
-                        AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
-                        ai.unit[data.id].walk = false
-                    end
-
-                    SetUnitMoveSpeed(unit, speed)
-
-                    ai.unit.State(unit, "ReturnHome")
-                end
-
+                ai.unit.MoveToNextStep(unit)
             end
         end, "Entering")
     end)
@@ -851,7 +1157,27 @@ function INIT_AI()
     --  INIT
     --------
 
-    -- ai.INIT_triggers()
+    --- Start Running the AI
+    function ai.Start()
+
+        -- Add Tick Event and Start Unit Loop Inteligence
+        EnableTrigger(ai.trig.UnitLoop)
+
+        -- Enable Unit Route Management
+        EnableTrigger(ai.trig.UnitEntersRegion)
+
+    end
+
+    --- Stop Running the AI
+    function ai.Stop()
+
+        -- Stop Unit Intelligence
+        DisableTrigger(ai.trig.UnitLoop)
+
+        -- Enable Unit Route Management
+        DisableTrigger(ai.trig.UnitEntersRegion)
+
+    end
 end
 
 --------
@@ -859,23 +1185,26 @@ end
 --------
 function INIT_LUA()
     Debugfunc(function()
-        INIT_AI()
+
+        -- Init AI
+        INIT_AI(3, 5)
+
+        -- Set up AI
         INIT_Config()
+
+        -- Start Running the AI
+        ai.Start()
+
     end, "Init")
 end
 
 --
 -- Functions
 --
-
 -- **Credit** KickKing
 -- Returns true if the value is found in the table
 function TableContains(table, element)
-    for _, value in pairs(table) do
-        if value == element then
-            return true
-        end
-    end
+    for _, value in pairs(table) do if value == element then return true end end
     return false
 end
 
@@ -888,11 +1217,7 @@ end
 -- **Credit** KickKing
 -- Find the indext of a value in a table
 function TableFind(tab, el)
-    for index, value in pairs(tab) do
-        if value == el then
-            return index
-        end
-    end
+    for index, value in pairs(tab) do if value == el then return index end end
 end
 
 -- **Credit** KickKing
@@ -904,19 +1229,29 @@ end
 -- **Credit** KickKing
 -- get distance without locations
 function DistanceBetweenUnits(unitA, unitB)
-    return distanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
+    return DistanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA),
+                                      GetUnitX(unitB), GetUnitY(unitB))
 end
 
--- **Credit** KickKing
--- get angle without locations
+--- **Credit** KickKing
+---get angle without locations
+---@param x1 number
+---@param y1 number
+---@param x2 number
+---@param y2 number
+---@return number @angle between 0 and 360
 function AngleBetweenCoordinates(x1, y1, x2, y2)
     return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
 end
 
 -- **Credit** KickKing
--- get angle without locations
+---get angle without locations
+---@param unitA handle @Unit 1
+---@param unitB handle @Unit 2
+---@return number @angle between 0 and 360
 function AngleBetweenUnits(unitA, unitB)
-    return angleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
+    return AngleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA),
+                                   GetUnitX(unitB), GetUnitY(unitB))
 end
 
 -- **Credit** KickKing
@@ -934,9 +1269,7 @@ function Debugfunc(func, name) -- Turn on runtime logging
         func()
         return "func " .. name .. " passed"
     end)
-    if not passed then
-        print("|cffff0000[ERROR]|r" .. name, passed, data)
-    end
+    if not passed then print("|cffff0000[ERROR]|r" .. name, passed, data) end
 end
 
 -- **CREDIT** Taysen
@@ -949,33 +1282,25 @@ end
 -- Timer Utils
 do
     local data = {}
-    function SetTimerData(whichTimer, dat)
-        data[whichTimer] = dat
-    end
+    function SetTimerData(whichTimer, dat) data[whichTimer] = dat end
 
     -- GetData functionality doesn't even require an argument.
     function GetTimerData(whichTimer)
-        if not whichTimer then
-            whichTimer = GetExpiredTimer()
-        end
+        if not whichTimer then whichTimer = GetExpiredTimer() end
         return data[whichTimer]
     end
 
     -- NewTimer functionality includes optional parameter to pass data to timer.
     function NewTimer(dat)
         local t = CreateTimer()
-        if dat then
-            data[t] = dat
-        end
+        if dat then data[t] = dat end
         return t
     end
 
     -- Release functionality doesn't even need for you to pass the expired timer.
     -- as an arg. It also returns the user data passed.
     function ReleaseTimer(whichTimer)
-        if not whichTimer then
-            whichTimer = GetExpiredTimer()
-        end
+        if not whichTimer then whichTimer = GetExpiredTimer() end
         local dat = data[whichTimer]
         data[whichTimer] = nil
         PauseTimer(whichTimer)
@@ -984,8 +1309,13 @@ do
     end
 end
 
--- **Credit** KickKing
--- A system that allow you to duplicate the functionality of auto-filling in the Object Editor
+---Credit KickKing -A system that allow you to duplicate the functionality of auto-filling in the Object Editor
+---@param level number @How many Levels or iterations to use for this
+---@param base number @The number to start with
+---@param previousFactor number @Multiply the previous level by this value
+---@param levelFactor number @This value exponential adds to itself every level
+---@param constant number @This gets added every level
+---@return number @The calculated Value
 function ValueFactor(level, base, previousFactor, levelFactor, constant)
 
     local value = base
@@ -999,383 +1329,381 @@ function ValueFactor(level, base, previousFactor, levelFactor, constant)
     return value
 end
 
-
 -- **Credit** Nestharus (Converted to Lua and turned into object by KickKing)
-do
-    oid = {
-        OFFSET = 851970,
-        absorb = 852529,
-        acidbomb = 852662,
-        acolyteharvest = 852185,
-        AImove = 851988,
-        ambush = 852131,
-        ancestralspirit = 852490,
-        ancestralspirittarget = 852491,
-        animatedead = 852217,
-        antimagicshell = 852186,
-        attack = 851983,
-        attackground = 851984,
-        attackonce = 851985,
-        attributemodskill = 852576,
-        auraunholy = 852215,
-        auravampiric = 852216,
-        autodispel = 852132,
-        autodispeloff = 852134,
-        autodispelon = 852133,
-        autoentangle = 852505,
-        autoentangleinstant = 852506,
-        autoharvestgold = 852021,
-        autoharvestlumber = 852022,
-        avatar = 852086,
-        avengerform = 852531,
-        awaken = 852466,
-        banish = 852486,
-        barkskin = 852135,
-        barkskinoff = 852137,
-        barkskinon = 852136,
-        battleroar = 852099,
-        battlestations = 852099,
-        bearform = 852138,
-        berserk = 852100,
-        blackarrow = 852577,
-        blackarrowoff = 852579,
-        blackarrowon = 852578,
-        blight = 852187,
-        blink = 852525,
-        blizzard = 852089,
-        bloodlust = 852101,
-        bloodlustoff = 852103,
-        bloodluston = 852102,
-        board = 852043,
-        breathoffire = 852580,
-        breathoffrost = 852560,
-        build = 851994,
-        burrow = 852533,
-        cannibalize = 852188,
-        carrionscarabs = 852551,
-        carrionscarabsinstant = 852554,
-        carrionscarabsoff = 852553,
-        carrionscarabson = 852552,
-        carrionswarm = 852218,
-        chainlightning = 852119,
-        channel = 852600,
-        charm = 852581,
-        chemicalrage = 852663,
-        cloudoffog = 852473,
-        clusterrockets = 852652,
-        coldarrows = 852244,
-        coldarrowstarg = 852243,
-        controlmagic = 852474,
-        corporealform = 852493,
-        corrosivebreath = 852140,
-        coupleinstant = 852508,
-        coupletarget = 852507,
-        creepanimatedead = 852246,
-        creepdevour = 852247,
-        creepheal = 852248,
-        creephealoff = 852250,
-        creephealon = 852249,
-        creepthunderbolt = 852252,
-        creepthunderclap = 852253,
-        cripple = 852189,
-        curse = 852190,
-        curseoff = 852192,
-        curseon = 852191,
-        cyclone = 852144,
-        darkconversion = 852228,
-        darkportal = 852229,
-        darkritual = 852219,
-        darksummoning = 852220,
-        deathanddecay = 852221,
-        deathcoil = 852222,
-        deathpact = 852223,
-        decouple = 852509,
-        defend = 852055,
-        detectaoe = 852015,
-        detonate = 852145,
-        devour = 852104,
-        devourmagic = 852536,
-        disassociate = 852240,
-        disenchant = 852495,
-        dismount = 852470,
-        dispel = 852057,
-        divineshield = 852090,
-        doom = 852583,
-        drain = 852487,
-        dreadlordinferno = 852224,
-        dropitem = 852001,
-        drunkenhaze = 852585,
-        earthquake = 852121,
-        eattree = 852146,
-        elementalfury = 852586,
-        ensnare = 852106,
-        ensnareoff = 852108,
-        ensnareon = 852107,
-        entangle = 852147,
-        entangleinstant = 852148,
-        entanglingroots = 852171,
-        etherealform = 852496,
-        evileye = 852105,
-        faeriefire = 852149,
-        faeriefireoff = 852151,
-        faeriefireon = 852150,
-        fanofknives = 852526,
-        farsight = 852122,
-        fingerofdeath = 852230,
-        firebolt = 852231,
-        flamestrike = 852488,
-        flamingarrows = 852174,
-        flamingarrowstarg = 852173,
-        flamingattack = 852540,
-        flamingattacktarg = 852539,
-        flare = 852060,
-        forceboard = 852044,
-        forceofnature = 852176,
-        forkedlightning = 852586,
-        freezingbreath = 852195,
-        frenzy = 852561,
-        frenzyoff = 852563,
-        frenzyon = 852562,
-        frostarmor = 852225,
-        frostarmoroff = 852459,
-        frostarmoron = 852458,
-        frostnova = 852226,
-        getitem = 851981,
-        gold2lumber = 852233,
-        grabtree = 852511,
-        harvest = 852018,
-        heal = 852063,
-        healingspray = 852664,
-        healingward = 852109,
-        healingwave = 852501,
-        healoff = 852065,
-        healon = 852064,
-        hex = 852502,
-        holdposition = 851993,
-        holybolt = 852092,
-        howlofterror = 852588,
-        humanbuild = 851995,
-        immolation = 852177,
-        impale = 852555,
-        incineratearrow = 852670,
-        incineratearrowoff = 852672,
-        incineratearrowon = 852671,
-        inferno = 852232,
-        innerfire = 852066,
-        innerfireoff = 852068,
-        innerfireon = 852067,
-        instant = 852200,
-        invisibility = 852069,
-        itemillusion = 852274,
-        lavamonster = 852667,
-        lightningshield = 852110,
-        load = 852046,
-        loadarcher = 852142,
-        loadcorpse = 852050,
-        loadcorpseinstant = 852053,
-        locustswarm = 852556,
-        lumber2gold = 852234,
-        magicdefense = 852478,
-        magicleash = 852480,
-        magicundefense = 852479,
-        manaburn = 852179,
-        manaflareoff = 852513,
-        manaflareon = 852512,
-        manashieldoff = 852590,
-        manashieldon = 852589,
-        massteleport = 852093,
-        mechanicalcritter = 852564,
-        metamorphosis = 852180,
-        militia = 852072,
-        militiaconvert = 852071,
-        militiaoff = 852073,
-        militiaunconvert = 852651,
-        mindrot = 852565,
-        mirrorimage = 852123,
-        monsoon = 852591,
-        mount = 852469,
-        mounthippogryph = 852143,
-        move = 851986,
-        nagabuild = 852467,
-        neutraldetectaoe = 852023,
-        neutralinteract = 852566,
-        neutralspell = 852630,
-        nightelfbuild = 851997,
-        orcbuild = 851996,
-        parasite = 852601,
-        parasiteoff = 852603,
-        parasiteon = 852602,
-        patrol = 851990,
-        phaseshift = 852514,
-        phaseshiftinstant = 852517,
-        phaseshiftoff = 852516,
-        phaseshifton = 852515,
-        phoenixfire = 852481,
-        phoenixmorph = 852482,
-        poisonarrows = 852255,
-        poisonarrowstarg = 852254,
-        polymorph = 852074,
-        possession = 852196,
-        preservation = 852568,
-        purge = 852111,
-        rainofchaos = 852237,
-        rainoffire = 852238,
-        raisedead = 852197,
-        raisedeadoff = 852199,
-        raisedeadon = 852198,
-        ravenform = 852155,
-        recharge = 852157,
-        rechargeoff = 852159,
-        rechargeon = 852158,
-        rejuvination = 852160,
-        renew = 852161,
-        renewoff = 852163,
-        renewon = 852162,
-        repair = 852024,
-        repairoff = 852026,
-        repairon = 852025,
-        replenish = 852542,
-        replenishlife = 852545,
-        replenishlifeoff = 852547,
-        replenishlifeon = 852546,
-        replenishmana = 852548,
-        replenishmanaoff = 852550,
-        replenishmanaon = 852549,
-        replenishoff = 852544,
-        replenishon = 852543,
-        request_hero = 852239,
-        requestsacrifice = 852201,
-        restoration = 852202,
-        restorationoff = 852204,
-        restorationon = 852203,
-        resumebuild = 851999,
-        resumeharvesting = 852017,
-        resurrection = 852094,
-        returnresources = 852020,
-        revenge = 852241,
-        revive = 852039,
-        reveal = 852270,
-        roar = 852164,
-        robogoblin = 852656,
-        root = 852165,
-        sacrifice = 852205,
-        sanctuary = 852569,
-        scout = 852181,
-        selfdestruct = 852040,
-        selfdestructoff = 852042,
-        selfdestructon = 852041,
-        sentinel = 852182,
-        setrally = 851980,
-        shadowsight = 852570,
-        shadowstrike = 852527,
-        shockwave = 852125,
-        silence = 852592,
-        sleep = 852227,
-        slow = 852075,
-        slowoff = 852077,
-        slowon = 852076,
-        smart = 851971,
-        soulburn = 852668,
-        soulpreservation = 852242,
-        spellshield = 852571,
-        spellshieldaoe = 852572,
-        spellsteal = 852483,
-        spellstealoff = 852485,
-        spellstealon = 852484,
-        spies = 852235,
-        spiritlink = 852499,
-        spiritofvengeance = 852528,
-        spirittroll = 852573,
-        spiritwolf = 852126,
-        stampede = 852593,
-        standdown = 852113,
-        starfall = 852183,
-        stasistrap = 852114,
-        steal = 852574,
-        stomp = 852127,
-        stoneform = 852206,
-        stop = 851972,
-        submerge = 852604,
-        summonfactory = 852658,
-        summongrizzly = 852594,
-        summonphoenix = 852489,
-        summonquillbeast = 852595,
-        summonwareagle = 852596,
-        tankdroppilot = 852079,
-        tankloadpilot = 852080,
-        tankpilot = 852081,
-        taunt = 852520,
-        thunderbolt = 852095,
-        thunderclap = 852096,
-        tornado = 852597,
-        townbelloff = 852083,
-        townbellon = 852082,
-        tranquility = 852184,
-        transmute = 852665,
-        unavatar = 852087,
-        unavengerform = 852532,
-        unbearform = 852139,
-        unburrow = 852534,
-        uncoldarrows = 852245,
-        uncorporealform = 852494,
-        undeadbuild = 851998,
-        undefend = 852056,
-        undivineshield = 852091,
-        unetherealform = 852497,
-        unflamingarrows = 852175,
-        unflamingattack = 852541,
-        unholyfrenzy = 852209,
-        unimmolation = 852178,
-        unload = 852047,
-        unloadall = 852048,
-        unloadallcorpses = 852054,
-        unloadallinstant = 852049,
-        unpoisonarrows = 852256,
-        unravenform = 852156,
-        unrobogoblin = 852657,
-        unroot = 852166,
-        unstableconcoction = 852500,
-        unstoneform = 852207,
-        unsubmerge = 852605,
-        unsummon = 852210,
-        unwindwalk = 852130,
-        vengeance = 852521,
-        vengeanceinstant = 852524,
-        vengeanceoff = 852523,
-        vengeanceon = 852522,
-        volcano = 852669,
-        voodoo = 852503,
-        ward = 852504,
-        waterelemental = 852097,
-        wateryminion = 852598,
-        web = 852211,
-        weboff = 852213,
-        webon = 852212,
-        whirlwind = 852128,
-        windwalk = 852129,
-        wispharvest = 852214,
-        scrollofspeed = 852285,
-        cancel = 851976,
-        moveslot1 = 852002,
-        moveslot2 = 852003,
-        moveslot3 = 852004,
-        moveslot4 = 852005,
-        moveslot5 = 852006,
-        moveslot6 = 852007,
-        useslot1 = 852008,
-        useslot2 = 852009,
-        useslot3 = 852010,
-        useslot4 = 852011,
-        useslot5 = 852012,
-        useslot6 = 852013,
-        skillmenu = 852000,
-        stunned = 851973,
-        instant1 = 851991,
-        instant2 = 851987,
-        instant3 = 851975,
-        instant4 = 852019
-    }
-end
+oid = {
+    OFFSET = 851970,
+    absorb = 852529,
+    acidbomb = 852662,
+    acolyteharvest = 852185,
+    AImove = 851988,
+    ambush = 852131,
+    ancestralspirit = 852490,
+    ancestralspirittarget = 852491,
+    animatedead = 852217,
+    antimagicshell = 852186,
+    attack = 851983,
+    attackground = 851984,
+    attackonce = 851985,
+    attributemodskill = 852576,
+    auraunholy = 852215,
+    auravampiric = 852216,
+    autodispel = 852132,
+    autodispeloff = 852134,
+    autodispelon = 852133,
+    autoentangle = 852505,
+    autoentangleinstant = 852506,
+    autoharvestgold = 852021,
+    autoharvestlumber = 852022,
+    avatar = 852086,
+    avengerform = 852531,
+    awaken = 852466,
+    banish = 852486,
+    barkskin = 852135,
+    barkskinoff = 852137,
+    barkskinon = 852136,
+    battleroar = 852099,
+    battlestations = 852099,
+    bearform = 852138,
+    berserk = 852100,
+    blackarrow = 852577,
+    blackarrowoff = 852579,
+    blackarrowon = 852578,
+    blight = 852187,
+    blink = 852525,
+    blizzard = 852089,
+    bloodlust = 852101,
+    bloodlustoff = 852103,
+    bloodluston = 852102,
+    board = 852043,
+    breathoffire = 852580,
+    breathoffrost = 852560,
+    build = 851994,
+    burrow = 852533,
+    cannibalize = 852188,
+    carrionscarabs = 852551,
+    carrionscarabsinstant = 852554,
+    carrionscarabsoff = 852553,
+    carrionscarabson = 852552,
+    carrionswarm = 852218,
+    chainlightning = 852119,
+    channel = 852600,
+    charm = 852581,
+    chemicalrage = 852663,
+    cloudoffog = 852473,
+    clusterrockets = 852652,
+    coldarrows = 852244,
+    coldarrowstarg = 852243,
+    controlmagic = 852474,
+    corporealform = 852493,
+    corrosivebreath = 852140,
+    coupleinstant = 852508,
+    coupletarget = 852507,
+    creepanimatedead = 852246,
+    creepdevour = 852247,
+    creepheal = 852248,
+    creephealoff = 852250,
+    creephealon = 852249,
+    creepthunderbolt = 852252,
+    creepthunderclap = 852253,
+    cripple = 852189,
+    curse = 852190,
+    curseoff = 852192,
+    curseon = 852191,
+    cyclone = 852144,
+    darkconversion = 852228,
+    darkportal = 852229,
+    darkritual = 852219,
+    darksummoning = 852220,
+    deathanddecay = 852221,
+    deathcoil = 852222,
+    deathpact = 852223,
+    decouple = 852509,
+    defend = 852055,
+    detectaoe = 852015,
+    detonate = 852145,
+    devour = 852104,
+    devourmagic = 852536,
+    disassociate = 852240,
+    disenchant = 852495,
+    dismount = 852470,
+    dispel = 852057,
+    divineshield = 852090,
+    doom = 852583,
+    drain = 852487,
+    dreadlordinferno = 852224,
+    dropitem = 852001,
+    drunkenhaze = 852585,
+    earthquake = 852121,
+    eattree = 852146,
+    elementalfury = 852586,
+    ensnare = 852106,
+    ensnareoff = 852108,
+    ensnareon = 852107,
+    entangle = 852147,
+    entangleinstant = 852148,
+    entanglingroots = 852171,
+    etherealform = 852496,
+    evileye = 852105,
+    faeriefire = 852149,
+    faeriefireoff = 852151,
+    faeriefireon = 852150,
+    fanofknives = 852526,
+    farsight = 852122,
+    fingerofdeath = 852230,
+    firebolt = 852231,
+    flamestrike = 852488,
+    flamingarrows = 852174,
+    flamingarrowstarg = 852173,
+    flamingattack = 852540,
+    flamingattacktarg = 852539,
+    flare = 852060,
+    forceboard = 852044,
+    forceofnature = 852176,
+    forkedlightning = 852586,
+    freezingbreath = 852195,
+    frenzy = 852561,
+    frenzyoff = 852563,
+    frenzyon = 852562,
+    frostarmor = 852225,
+    frostarmoroff = 852459,
+    frostarmoron = 852458,
+    frostnova = 852226,
+    getitem = 851981,
+    gold2lumber = 852233,
+    grabtree = 852511,
+    harvest = 852018,
+    heal = 852063,
+    healingspray = 852664,
+    healingward = 852109,
+    healingwave = 852501,
+    healoff = 852065,
+    healon = 852064,
+    hex = 852502,
+    holdposition = 851993,
+    holybolt = 852092,
+    howlofterror = 852588,
+    humanbuild = 851995,
+    immolation = 852177,
+    impale = 852555,
+    incineratearrow = 852670,
+    incineratearrowoff = 852672,
+    incineratearrowon = 852671,
+    inferno = 852232,
+    innerfire = 852066,
+    innerfireoff = 852068,
+    innerfireon = 852067,
+    instant = 852200,
+    invisibility = 852069,
+    itemillusion = 852274,
+    lavamonster = 852667,
+    lightningshield = 852110,
+    load = 852046,
+    loadarcher = 852142,
+    loadcorpse = 852050,
+    loadcorpseinstant = 852053,
+    locustswarm = 852556,
+    lumber2gold = 852234,
+    magicdefense = 852478,
+    magicleash = 852480,
+    magicundefense = 852479,
+    manaburn = 852179,
+    manaflareoff = 852513,
+    manaflareon = 852512,
+    manashieldoff = 852590,
+    manashieldon = 852589,
+    massteleport = 852093,
+    mechanicalcritter = 852564,
+    metamorphosis = 852180,
+    militia = 852072,
+    militiaconvert = 852071,
+    militiaoff = 852073,
+    militiaunconvert = 852651,
+    mindrot = 852565,
+    mirrorimage = 852123,
+    monsoon = 852591,
+    mount = 852469,
+    mounthippogryph = 852143,
+    move = 851986,
+    nagabuild = 852467,
+    neutraldetectaoe = 852023,
+    neutralinteract = 852566,
+    neutralspell = 852630,
+    nightelfbuild = 851997,
+    orcbuild = 851996,
+    parasite = 852601,
+    parasiteoff = 852603,
+    parasiteon = 852602,
+    patrol = 851990,
+    phaseshift = 852514,
+    phaseshiftinstant = 852517,
+    phaseshiftoff = 852516,
+    phaseshifton = 852515,
+    phoenixfire = 852481,
+    phoenixmorph = 852482,
+    poisonarrows = 852255,
+    poisonarrowstarg = 852254,
+    polymorph = 852074,
+    possession = 852196,
+    preservation = 852568,
+    purge = 852111,
+    rainofchaos = 852237,
+    rainoffire = 852238,
+    raisedead = 852197,
+    raisedeadoff = 852199,
+    raisedeadon = 852198,
+    ravenform = 852155,
+    recharge = 852157,
+    rechargeoff = 852159,
+    rechargeon = 852158,
+    rejuvination = 852160,
+    renew = 852161,
+    renewoff = 852163,
+    renewon = 852162,
+    repair = 852024,
+    repairoff = 852026,
+    repairon = 852025,
+    replenish = 852542,
+    replenishlife = 852545,
+    replenishlifeoff = 852547,
+    replenishlifeon = 852546,
+    replenishmana = 852548,
+    replenishmanaoff = 852550,
+    replenishmanaon = 852549,
+    replenishoff = 852544,
+    replenishon = 852543,
+    request_hero = 852239,
+    requestsacrifice = 852201,
+    restoration = 852202,
+    restorationoff = 852204,
+    restorationon = 852203,
+    resumebuild = 851999,
+    resumeharvesting = 852017,
+    resurrection = 852094,
+    returnresources = 852020,
+    revenge = 852241,
+    revive = 852039,
+    reveal = 852270,
+    roar = 852164,
+    robogoblin = 852656,
+    root = 852165,
+    sacrifice = 852205,
+    sanctuary = 852569,
+    scout = 852181,
+    selfdestruct = 852040,
+    selfdestructoff = 852042,
+    selfdestructon = 852041,
+    sentinel = 852182,
+    setrally = 851980,
+    shadowsight = 852570,
+    shadowstrike = 852527,
+    shockwave = 852125,
+    silence = 852592,
+    sleep = 852227,
+    slow = 852075,
+    slowoff = 852077,
+    slowon = 852076,
+    smart = 851971,
+    soulburn = 852668,
+    soulpreservation = 852242,
+    spellshield = 852571,
+    spellshieldaoe = 852572,
+    spellsteal = 852483,
+    spellstealoff = 852485,
+    spellstealon = 852484,
+    spies = 852235,
+    spiritlink = 852499,
+    spiritofvengeance = 852528,
+    spirittroll = 852573,
+    spiritwolf = 852126,
+    stampede = 852593,
+    standdown = 852113,
+    starfall = 852183,
+    stasistrap = 852114,
+    steal = 852574,
+    stomp = 852127,
+    stoneform = 852206,
+    stop = 851972,
+    submerge = 852604,
+    summonfactory = 852658,
+    summongrizzly = 852594,
+    summonphoenix = 852489,
+    summonquillbeast = 852595,
+    summonwareagle = 852596,
+    tankdroppilot = 852079,
+    tankloadpilot = 852080,
+    tankpilot = 852081,
+    taunt = 852520,
+    thunderbolt = 852095,
+    thunderclap = 852096,
+    tornado = 852597,
+    townbelloff = 852083,
+    townbellon = 852082,
+    tranquility = 852184,
+    transmute = 852665,
+    unavatar = 852087,
+    unavengerform = 852532,
+    unbearform = 852139,
+    unburrow = 852534,
+    uncoldarrows = 852245,
+    uncorporealform = 852494,
+    undeadbuild = 851998,
+    undefend = 852056,
+    undivineshield = 852091,
+    unetherealform = 852497,
+    unflamingarrows = 852175,
+    unflamingattack = 852541,
+    unholyfrenzy = 852209,
+    unimmolation = 852178,
+    unload = 852047,
+    unloadall = 852048,
+    unloadallcorpses = 852054,
+    unloadallinstant = 852049,
+    unpoisonarrows = 852256,
+    unravenform = 852156,
+    unrobogoblin = 852657,
+    unroot = 852166,
+    unstableconcoction = 852500,
+    unstoneform = 852207,
+    unsubmerge = 852605,
+    unsummon = 852210,
+    unwindwalk = 852130,
+    vengeance = 852521,
+    vengeanceinstant = 852524,
+    vengeanceoff = 852523,
+    vengeanceon = 852522,
+    volcano = 852669,
+    voodoo = 852503,
+    ward = 852504,
+    waterelemental = 852097,
+    wateryminion = 852598,
+    web = 852211,
+    weboff = 852213,
+    webon = 852212,
+    whirlwind = 852128,
+    windwalk = 852129,
+    wispharvest = 852214,
+    scrollofspeed = 852285,
+    cancel = 851976,
+    moveslot1 = 852002,
+    moveslot2 = 852003,
+    moveslot3 = 852004,
+    moveslot4 = 852005,
+    moveslot5 = 852006,
+    moveslot6 = 852007,
+    useslot1 = 852008,
+    useslot2 = 852009,
+    useslot3 = 852010,
+    useslot4 = 852011,
+    useslot5 = 852012,
+    useslot6 = 852013,
+    skillmenu = 852000,
+    stunned = 851973,
+    instant1 = 851991,
+    instant2 = 851987,
+    instant3 = 851975,
+    instant4 = 852019
+}
+
 
 function CreateUnitsForPlayer0()
     local p = Player(0)
@@ -1383,6 +1711,10 @@ function CreateUnitsForPlayer0()
     local unitID
     local t
     local life
+    u = BlzCreateUnitWithSkin(p, FourCC("hkni"), -468.1, 0.5, 181.379, FourCC("hkni"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hrif"), -368.0, -291.0, 180.511, FourCC("hrif"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -354.2, 351.1, 194.662, FourCC("hpea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hsor"), 106.4, -116.8, 195.057, FourCC("hsor"))
     u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 341.0, -161.7, 261.603, FourCC("hfoo"))
 end
 
@@ -1392,11 +1724,26 @@ function CreateNeutralPassive()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("nvk2"), -56.8, 135.6, 109.834, FourCC("nvk2"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -481.7, -658.2, 196.046, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), -362.7, 506.7, 62.646, FourCC("nvl2"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlk"), -296.2, -170.4, 72.699, FourCC("nvlk"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), 3.6, 579.1, 188.180, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -756.3, 1050.3, 341.784, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -287.0, 1563.9, 69.161, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), 172.6, 1580.8, 300.101, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), 874.0, 1093.0, 293.937, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), 1842.1, 599.2, 184.444, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), 1394.7, -555.4, 296.574, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -861.0, -566.5, 318.328, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlk"), -1214.8, -213.4, 253.748, FourCC("nvlk"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvk2"), -844.2, 574.5, 65.140, FourCC("nvk2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 59.3, 263.4, 87.718, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 503.1, 394.4, 52.615, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 522.6, -66.8, 119.963, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -1599.4, -358.4, 342.663, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -1453.5, -711.9, 212.878, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -1058.6, -794.8, 150.177, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 421.5, -797.5, 60.548, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 681.0, -871.0, 336.994, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 1605.5, -323.3, 161.427, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 0.7, 779.5, 300.628, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 470.9, 831.1, 188.366, FourCC("nvlw"))
 end
 
 function CreatePlayerBuildings()
@@ -1414,14 +1761,48 @@ end
 
 function CreateRegions()
     local we
-    gg_rct_R01_01 = Rect(1024.0, -480.0, 1568.0, 64.0)
-    gg_rct_R01_02 = Rect(224.0, 544.0, 928.0, 1216.0)
-    gg_rct_R01_03 = Rect(-960.0, 160.0, -384.0, 832.0)
-    gg_rct_R01_04 = Rect(-1216.0, -2048.0, -384.0, -1152.0)
-    gg_rct_R01_01L = Rect(576.0, -608.0, 704.0, -480.0)
-    gg_rct_R01_02L = Rect(576.0, 160.0, 704.0, 288.0)
-    gg_rct_R01_03L = Rect(-1472.0, 96.0, -1344.0, 224.0)
-    gg_rct_R01_04L = Rect(-192.0, -416.0, -64.0, -288.0)
+    gg_rct_Region_000 = Rect(192.0, -768.0, 448.0, -512.0)
+    gg_rct_Region_001 = Rect(1216.0, -832.0, 1440.0, -576.0)
+    gg_rct_Region_002 = Rect(1440.0, -256.0, 1664.0, -64.0)
+    gg_rct_Region_003 = Rect(1664.0, 384.0, 1856.0, 576.0)
+    gg_rct_Region_004 = Rect(1504.0, 864.0, 1728.0, 1088.0)
+    gg_rct_Region_005 = Rect(864.0, 928.0, 1152.0, 1184.0)
+    gg_rct_Region_006 = Rect(320.0, 1440.0, 576.0, 1632.0)
+    gg_rct_Region_007 = Rect(-160.0, 1440.0, 32.0, 1632.0)
+    gg_rct_Region_008 = Rect(-832.0, 736.0, -544.0, 1024.0)
+    gg_rct_Region_009 = Rect(-1056.0, -32.0, -768.0, 224.0)
+    gg_rct_Region_010 = Rect(-1120.0, -800.0, -896.0, -576.0)
+    gg_rct_Region_011 = Rect(-1504.0, -416.0, -1312.0, -256.0)
+    gg_rct_Region_012 = Rect(-1408.0, -832.0, -1216.0, -672.0)
+    gg_rct_Region_013 = Rect(-1376.0, 128.0, -1184.0, 288.0)
+    gg_rct_Region_014 = Rect(96.0, 224.0, 352.0, 512.0)
+    gg_rct_Region_015 = Rect(1088.0, -1504.0, 1280.0, -1344.0)
+    gg_rct_Region_016 = Rect(1280.0, -2912.0, 1504.0, -2688.0)
+    gg_rct_Region_017 = Rect(928.0, -3296.0, 1152.0, -3072.0)
+    gg_rct_Region_018 = Rect(96.0, -3424.0, 288.0, -3264.0)
+    gg_rct_Region_019 = Rect(-608.0, -3264.0, -416.0, -3072.0)
+    gg_rct_Region_020 = Rect(-1792.0, -3072.0, -1600.0, -2912.0)
+    gg_rct_Region_021 = Rect(-2208.0, -2848.0, -2016.0, -2624.0)
+    gg_rct_Region_022 = Rect(-2560.0, -2848.0, -2304.0, -2592.0)
+    gg_rct_Region_023 = Rect(-2400.0, -3232.0, -2176.0, -3008.0)
+    gg_rct_Region_024 = Rect(-1216.0, -2592.0, -1056.0, -2368.0)
+    gg_rct_Region_025 = Rect(-928.0, -2272.0, -736.0, -2048.0)
+    gg_rct_Region_026 = Rect(-1440.0, -2240.0, -1280.0, -2048.0)
+    gg_rct_Region_027 = Rect(-1376.0, -2816.0, -1216.0, -2592.0)
+    gg_rct_Region_028 = Rect(384.0, 512.0, 640.0, 736.0)
+    gg_rct_Region_029 = Rect(192.0, -512.0, 416.0, -320.0)
+    gg_rct_Region_030 = Rect(992.0, -736.0, 1248.0, -512.0)
+    gg_rct_Region_031 = Rect(1344.0, -160.0, 1568.0, 96.0)
+    gg_rct_Region_032 = Rect(1568.0, 320.0, 1792.0, 576.0)
+    gg_rct_Region_033 = Rect(1408.0, 736.0, 1632.0, 992.0)
+    gg_rct_Region_034 = Rect(736.0, 800.0, 1024.0, 1056.0)
+    gg_rct_Region_035 = Rect(192.0, 1312.0, 480.0, 1568.0)
+    gg_rct_Region_036 = Rect(-160.0, 1280.0, 64.0, 1504.0)
+    gg_rct_Region_037 = Rect(-640.0, 1568.0, -416.0, 1792.0)
+    gg_rct_Region_038 = Rect(-608.0, 1120.0, -352.0, 1344.0)
+    gg_rct_Region_039 = Rect(-576.0, 576.0, -288.0, 800.0)
+    gg_rct_Region_040 = Rect(-768.0, -128.0, -576.0, 96.0)
+    gg_rct_Region_041 = Rect(-1408.0, -3200.0, -1184.0, -2976.0)
 end
 
 function Trig_Testing_Actions()
@@ -1437,12 +1818,13 @@ end
 function InitTrig_Testing()
     gg_trg_Testing = CreateTrigger()
     DisableTrigger(gg_trg_Testing)
-    TriggerRegisterEnterRectSimple(gg_trg_Testing, gg_rct_R01_01)
     TriggerAddAction(gg_trg_Testing, Trig_Testing_Actions)
 end
 
 function Trig_Melee_Initialization_Actions()
     MeleeStartingVisibility()
+    FogEnableOff()
+    FogMaskEnableOff()
         INIT_LUA()
 end
 
