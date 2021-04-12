@@ -48,7 +48,7 @@ function INIT_Config()
         ai.route.Step(gg_rct_Region_029, 100)
         ai.route.Finish(100)
 
-        -- To other Town
+        -- Go To the other Town
         ai.route.New("Out", true, "inTown")
         ai.route.Step(gg_rct_Region_039, 100)
         ai.route.Step(gg_rct_Region_040, 100)
