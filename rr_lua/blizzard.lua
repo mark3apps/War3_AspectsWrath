@@ -1437,3 +1437,7 @@ function BlzSetUnitWeaponBooleanFieldBJ(whichUnit, whichField, index, value) end
 function BlzSetUnitWeaponIntegerFieldBJ(whichUnit, whichField, index, value) end
 function BlzSetUnitWeaponRealFieldBJ(whichUnit, whichField, index, value) end
 function BlzSetUnitWeaponStringFieldBJ(whichUnit, whichField, index) end
+
+-- Added Functions
+function BlzCreateUnitWithSkin(player, unitId, x, y, facing, skinID) end
+function FourCC(unitString) end
