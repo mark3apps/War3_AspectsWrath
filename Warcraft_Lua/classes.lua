@@ -26,7 +26,6 @@ function init_locationClass()
             self[name].rect = rect
             self[name].name = name
 
-            self[name].direction = direction
             self.regions[GetHandleId(self[name].rect)] = name
             self.regions[GetHandleId(self[name].reg)] = name
 
@@ -1000,6 +999,7 @@ function init_aiClass()
 
                 -- Custom Intel
                 local g = CreateGroup()
+                local gUnits = CreateGroup()
                 local gIllusions = CreateGroup()
                 local u, uTemp, unitsNearby
                 local illusionsNearby = 0
@@ -1930,7 +1930,6 @@ function init_spawnClass()
                     endPoint = fedEnd,
                     condition = fedCondition
                 },
-                destination = destination,
                 units = {}
             }
             table.insert(self.bases, baseName)
