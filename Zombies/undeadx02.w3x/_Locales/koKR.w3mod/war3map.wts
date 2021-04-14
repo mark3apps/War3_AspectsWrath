@@ -1,0 +1,555 @@
+STRING 1
+{
+UndeadX02
+}
+
+STRING 2
+{
+1
+}
+
+STRING 3
+{
+제2장: 로데론 탈출
+}
+
+STRING 4
+{
+블리자드 엔터테인먼트
+}
+
+STRING 12
+{
+패배!
+}
+
+STRING 13
+{
+왕의 탈출
+}
+
+STRING 14
+{
+공포의 군주가 이끄는 병력이 포위망을 좁혀오며, 아서스는 한시라도 빨리 도시에서 퇴각해야 합니다.
+}
+
+STRING 15
+{
+아서스를 도시 출구로 데려와야 합니다.
+}
+
+STRING 16
+{
+|cffffcc00주 퀘스트|r
+왕의 탈출
+ - 아서스를 도시 출구로 데려와야 합니다.
+ - 아서스가 생존해야 합니다.
+}
+
+STRING 17
+{
+|cffffcc00주 퀘스트 완료|r
+왕의 탈출
+}
+
+STRING 25
+{
+|cffffcc00임무 실패|r
+아서스가 사망했습니다.
+}
+
+STRING 27
+{
+|cff32cd32힌트|r - 마약은 금물입니다.
+}
+
+STRING 29
+{
+패배!
+}
+
+STRING 33
+{
+제2장
+}
+
+STRING 36
+{
+로데론 탈출
+}
+
+STRING 38
+{
+좀비 지배자
+}
+
+STRING 39
+{
+하급 좀비
+}
+
+STRING 40
+{
+켈투자드
+}
+
+STRING 41
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad01.mp3
+{
+발작이 점점 더 심해집니까?
+}
+
+STRING 42
+{
+벽천 길 없음
+}
+
+STRING 46
+{
+아치 길(도시) 길 없음
+}
+
+STRING 49
+{
+기울어진 긴 담장
+}
+
+STRING 50
+{
+피탐식자
+}
+
+STRING 52
+{
+왕 아서스
+}
+
+STRING 53
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas02.mp3
+{
+그래. 이제는 힘이 소진되어 전사들을 통제할 수도 없을 지경이다. 리치 왕께서도 어서 노스렌드에 가지 못하면 모든 게 끝장이라고 경고하셨다.
+}
+
+STRING 55
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad03.mp3
+{
+걱정 마십시오, 폐하. 떠날 준비를 마쳤습니다. 배도 해안에 대기하고 있으니...
+}
+
+STRING 56
+{
+데서록
+}
+
+STRING 57
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Detheroc04.mp3
+{
+계획이 변경되었다, 아서스 국왕. 너는 아무 데도 못 간다.
+}
+
+STRING 59
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad05.mp3
+{
+암살자라니! 함정입니다!
+}
+
+STRING 60
+{
+발나자르
+}
+
+STRING 61
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Balnazzar06.mp3
+{
+넌 여기에 돌아오지 말았어야 했다. 네가 그렇게 약해진 덕분에 우리가 네 전사의 대다수를 지배할 수 있게 되었지. 네 통치는 오늘로 끝이다.
+}
+
+STRING 63
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad07.mp3
+{
+주군이시여, 적이 너무 많습니다! 어서 이 도시를 떠나십시오. 저도 어떻게든 빠져나간 후 황야에서 기다리고 있겠습니다.
+}
+
+STRING 65
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas08.mp3
+{
+알았다, 리치. 행운을 빈다.
+}
+
+STRING 81
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas16.mp3
+{
+너희들이 필요하다. 함께 가자.
+}
+
+STRING 87
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas19.mp3
+{
+네 능력이 필요하다, 망령이여. 날 돕겠느냐?
+}
+
+STRING 88
+{
+망령
+}
+
+STRING 89
+{
+저는 폐하를 섬기기 위해 존재합니다.
+}
+
+STRING 124
+{
+지하마귀
+}
+
+STRING 125
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend38.mp3
+{
+네룹이여, 반란군에게 죽을 뻔했습니다, 아서스 폐하.
+}
+
+STRING 127
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas39.mp3
+{
+내 부하들이 폭도에게 학살당하도록 내버려 둘 수는 없지.
+}
+
+STRING 129
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend40.mp3
+{
+저희도 최후까지 폐하 곁을 지키겠습니다.
+}
+
+STRING 151
+{
+아서스가 생존해야 합니다.
+}
+
+STRING 162
+{
+시체 수레 급습
+}
+
+STRING 163
+{
+큰 희생을 치르지 않고선 늘어선 탑들을 지나칠 수 없습니다. 무기고에 침입해 시체 수레를 확보하여 신속하게 탑을 파괴해야 합니다.
+}
+
+STRING 164
+{
+무기고 경비병을 처치해야 합니다.
+}
+
+STRING 165
+{
+시체 수레를 확보해야 합니다.
+}
+
+STRING 166
+{
+|cffffcc00선택 퀘스트|r
+시체 수레 급습
+  - 무기고 경비병을 처치해야 합니다.
+  - 시체 수레를 확보해야 합니다.
+}
+
+STRING 167
+{
+|cffffcc00선택 퀘스트 완료|r
+시체 수레 급습
+}
+
+STRING 168
+{
+|cffffcc00선택 퀘스트 업데이트|r
+시체 수레 급습
+  - |cff808080무기고 경비병을 처치해야 합니다. (완료)|r
+  - 시체 수레를 확보해야 합니다.
+}
+
+STRING 182
+{
+다음 날 아침, 궁정에서 왕 아서스와 청지기 켈투자드가 리치 왕의 중대한 경고에 관해 논의를 나눕니다.
+}
+
+STRING 192
+{
+강령술사
+}
+
+STRING 193
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Necromancer11.mp3
+{
+켈투자드 주인님의 명을 받들어 도와드리러 왔습니다. 저희가 새롭게 부리는 해골 마법사들이 반란군을 물리칠 것입니다.
+}
+
+STRING 194
+{
+왕 아서스
+}
+
+STRING 195
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas12.mp3
+{
+좋아. 빨리 여기를 벗어나서 여전히 내게 충성하는 다른 자들을 찾아 보자. 지금은 모든 병력을 동원해야 한다.
+}
+
+STRING 197
+{
+낮은 벽(수직) 도보 가능
+}
+
+STRING 199
+{
+|cffffcc00비밀 발견|r
+}
+
+STRING 200
+{
+언데드 스컬지
+}
+
+STRING 201
+{
+실바나스의 병력
+}
+
+STRING 202
+{
+공포의 군주 반란군
+}
+
+STRING 203
+{
+병력 1
+}
+
+STRING 204
+{
+병력 2
+}
+
+STRING 207
+{
+왕 아서스
+}
+
+STRING 208
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas24.mp3
+{
+드디어 제대로 된 화력을 확보했군. 이제 정문의 방어 병력을 돌파할 수 있을 것이다!
+}
+
+STRING 209
+{
+왕 아서스
+}
+
+STRING 210
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas23.mp3
+{
+공포의 군주의 경비병이 무기고를 지키고 있군! 저들을 돌파할 수 있으면 무기고 안의 시체 수레를 탈취할 수 있을 것이다.
+}
+
+STRING 211
+{
+망령의 룬
+}
+
+STRING 212
+{
+망령의 룬 구매
+}
+
+STRING 237
+{
+소형 살덩어리 골렘
+}
+
+STRING 238
+{
+|cffffcc00선택 퀘스트 업데이트|r
+시체 수레 급습
+  - 무기고 경비병을 처치해야 합니다.
+  - |cff808080시체 수레를 확보해야 합니다. (완료)|r
+}
+
+STRING 239
+{
+왕 아서스
+}
+
+STRING 240
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas18.mp3
+{
+이 시체 더미들도 도움이 되겠군. 사체를 되살리면 병력을 증강할 수 있을 것이다.
+}
+
+STRING 241
+{
+(사용자 정의)
+}
+
+STRING 242
+{
+(사용자 정의)
+}
+
+STRING 243
+{
+대강령술사
+}
+
+STRING 244
+{
+(사용자 정의 경로 없음)
+}
+
+STRING 245
+{
+(사용자 정의 캔)
+}
+
+STRING 246
+{
+도시 관문
+}
+
+STRING 247
+{
+왕 아서스
+}
+
+STRING 248
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas37.mp3
+{
+지체할 시간이 없다! 어서 탈출로를 찾아야 한다!
+}
+
+STRING 249
+{
+왕 아서스
+}
+
+STRING 250
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas26.mp3
+{
+다들 정말 고맙다. 그런데 여군주는 어디 있지? 실바나스는 어디 있느냐?
+}
+
+STRING 251
+{
+밴시
+}
+
+STRING 252
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Banshee27.mp3
+{
+폐하를 찾으라며 저희를 보냈습니다. 저희가 강을 건널 때까지 안내해 드리겠습니다. 강만 건너면 황야에 몸을 숨길 수 있을 것입니다.
+}
+
+STRING 261
+{
+피탐식자
+}
+
+STRING 262
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Abomination25.mp3
+{
+작은 왕, 도망칠 곳 없다. 죽여! 찢어! 먹어!
+}
+
+STRING 263
+{
+(수평) 경로 없음
+}
+
+STRING 264
+{
+도시 출구
+}
+
+STRING 269
+{
+왕 아서스
+}
+
+STRING 270
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas14.mp3
+{
+병사들이여, 국왕과 함께 싸우지 않겠느냐?
+}
+
+STRING 273
+{
+왕 아서스
+}
+
+STRING 274
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas15.mp3
+{
+네 충성심을 증명하라. 나를 섬기겠느냐?
+}
+
+STRING 276
+{
+돌 단상
+}
+
+
+
+STRING 285
+{
+도시 관문
+}
+
+STRING 286
+{
+도시 관문
+}
+
+STRING 277
+{
+(사용자 정의)
+}
+
+STRING 278
+{
+(사용자 정의)
+}
+
+STRING 279
+{
+(사용자 정의)
+}
+
+STRING 280
+{
+(사용자 정의 경로 없음)
+}
+
+STRING 281
+{
+(사용자 정의)
+}
+
+STRING 282
+{
+(사용자 정의)
+}
+
+STRING 283
+{
+(사용자 정의)
+}
+
+STRING 284
+{
+(사용자 정의)
+}
+
+STRING 288
+{
+도시 관문
+}

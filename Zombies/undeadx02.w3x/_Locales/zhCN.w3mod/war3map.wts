@@ -1,0 +1,555 @@
+STRING 1
+{
+UndeadX02
+}
+
+STRING 2
+{
+1
+}
+
+STRING 3
+{
+第二章：离开洛丹伦
+}
+
+STRING 4
+{
+暴雪娱乐
+}
+
+STRING 12
+{
+战败！
+}
+
+STRING 13
+{
+国王的离开
+}
+
+STRING 14
+{
+恐惧魔王的部队不断逼近，阿尔萨斯必须迅速撤离城市。
+}
+
+STRING 15
+{
+将阿尔萨斯带到城市出口处
+}
+
+STRING 16
+{
+|cffffcc00主要任务|r
+国王的离开
+  - 将阿尔萨斯带到城市出口处
+  - 阿尔萨斯必须存活
+}
+
+STRING 17
+{
+|cffffcc00主要任务完成|r
+国王的离开
+}
+
+STRING 25
+{
+|cffffcc00任务失败|r
+阿尔萨斯阵亡。
+}
+
+STRING 27
+{
+|cff32cd32提示|r - 别嗑药。
+}
+
+STRING 29
+{
+战败！
+}
+
+STRING 33
+{
+第二章
+}
+
+STRING 36
+{
+离开洛丹伦
+}
+
+STRING 38
+{
+僵尸之主
+}
+
+STRING 39
+{
+小型僵尸
+}
+
+STRING 40
+{
+克尔苏加德
+}
+
+STRING 41
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad01.mp3
+{
+剧痛发作得越来越严重了吗？
+}
+
+STRING 42
+{
+墙之泉水 无路径
+}
+
+STRING 46
+{
+拱门 (城市)无路径
+}
+
+STRING 49
+{
+倾斜的长栅栏
+}
+
+STRING 50
+{
+血饕餮
+}
+
+STRING 52
+{
+阿尔萨斯国王
+}
+
+STRING 53
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas02.mp3
+{
+是的，随着力量的流逝，我快要失去对亡灵士兵的控制力了。巫妖王警告说，如果不尽快赶到诺森德，我们就会失去一切。
+}
+
+STRING 55
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad03.mp3
+{
+无须担心，陛下。一切都已就绪，您随时可以动身。船就停在海岸边——
+}
+
+STRING 56
+{
+迪瑟洛克
+}
+
+STRING 57
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Detheroc04.mp3
+{
+计划不如变化快，阿尔萨斯国王。你哪里都别想去。
+}
+
+STRING 59
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad05.mp3
+{
+有刺客！这是圈套！
+}
+
+STRING 60
+{
+巴纳扎尔
+}
+
+STRING 61
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Balnazzar06.mp3
+{
+你不该回来的，人类。看你虚弱成这幅模样，我们就只好接管了你的大军。看来你的统治也只不过是昙花一现。
+}
+
+STRING 63
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad07.mp3
+{
+敌人太多了，陛下！快逃，到城外去。我会自己想办法出去，然后跟你在野外会合。
+}
+
+STRING 65
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas08.mp3
+{
+好的，巫妖。祝你好运。
+}
+
+STRING 81
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas16.mp3
+{
+战士们，我需要你们的力量。跟我来。
+}
+
+STRING 87
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas19.mp3
+{
+我需要你的能力，小影魔。来帮我吧。
+}
+
+STRING 88
+{
+影魔
+}
+
+STRING 89
+{
+我为侍奉您而生，阿尔萨斯国王。
+}
+
+STRING 124
+{
+地穴恶魔
+}
+
+STRING 125
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend38.mp3
+{
+尼鲁布在上，我们差点被叛党干掉了，阿尔萨斯国王。
+}
+
+STRING 127
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas39.mp3
+{
+我可不会让这些杂碎杀了我的臣民。
+}
+
+STRING 129
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend40.mp3
+{
+那我们就誓死跟随你。
+}
+
+STRING 151
+{
+阿尔萨斯必须存活
+}
+
+STRING 162
+{
+清道夫奇袭
+}
+
+STRING 163
+{
+如果直接攻击这些防御塔，必然会付出惨重的代价。攻入军械库，夺取清道夫，用它们迅速解决防御塔。
+}
+
+STRING 164
+{
+消灭军械库卫兵
+}
+
+STRING 165
+{
+营救清道夫
+}
+
+STRING 166
+{
+|cffffcc00可选任务|r
+清道夫奇袭
+  - 消灭军械库卫兵
+  - 夺取清道夫
+}
+
+STRING 167
+{
+|cffffcc00可选任务完成|r
+清道夫奇袭
+}
+
+STRING 168
+{
+|cffffcc00可选任务更新|r
+清道夫奇袭
+  - |cff808080消灭军械库卫兵(已完成)|r
+  - 夺取清道夫
+}
+
+STRING 182
+{
+次日早晨，王宫之中，阿尔萨斯国王和他的总管克尔苏加德讨论着巫妖王的可怕警告。
+}
+
+STRING 192
+{
+通灵师
+}
+
+STRING 193
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Necromancer11.mp3
+{
+克尔苏加德主人派我们来协助您。这些新来的骷髅法师可以干净利落地解决叛军。
+}
+
+STRING 194
+{
+阿尔萨斯国王
+}
+
+STRING 195
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas12.mp3
+{
+非常好。我们得加快脚步，召集依然忠于我的部队。我们现在需要尽可能多的援助。
+}
+
+STRING 197
+{
+矮墙(垂直)可通过
+}
+
+STRING 199
+{
+|cffffcc00发现隐藏内容|r
+}
+
+STRING 200
+{
+亡灵天灾
+}
+
+STRING 201
+{
+希尔瓦娜斯的部队
+}
+
+STRING 202
+{
+恐惧魔王叛军
+}
+
+STRING 203
+{
+势力1
+}
+
+STRING 204
+{
+势力2
+}
+
+STRING 207
+{
+阿尔萨斯国王
+}
+
+STRING 208
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas24.mp3
+{
+终于找到重型火力了。它们能攻破大门的防线！
+}
+
+STRING 209
+{
+阿尔萨斯国王
+}
+
+STRING 210
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas23.mp3
+{
+恐惧魔王的卫兵驻守在军械库门外！如果能杀开一条血路，里面的清道夫就将为我们所用。
+}
+
+STRING 211
+{
+亡魂符文
+}
+
+STRING 212
+{
+购买亡魂符文
+}
+
+STRING 237
+{
+小型血肉魔像
+}
+
+STRING 238
+{
+|cffffcc00可选任务更新|r
+清道夫奇袭
+  - 消灭军械库卫兵
+  - |cff808080夺取清道夫(已完成)|r
+}
+
+STRING 239
+{
+阿尔萨斯国王
+}
+
+STRING 240
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas18.mp3
+{
+这堆尸体可以派上用场。我们可以复活亡者来加强兵力。
+}
+
+STRING 241
+{
+(自定义的)
+}
+
+STRING 242
+{
+(自定义的)
+}
+
+STRING 243
+{
+大通灵师
+}
+
+STRING 244
+{
+(自定义的没有通道)
+}
+
+STRING 245
+{
+(自定义的能够)
+}
+
+STRING 246
+{
+城门
+}
+
+STRING 247
+{
+阿尔萨斯国王
+}
+
+STRING 248
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas37.mp3
+{
+没时间了！我们必须快点找到出去的路！
+}
+
+STRING 249
+{
+阿尔萨斯国王
+}
+
+STRING 250
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas26.mp3
+{
+谢谢你们。不过你们的女主人希尔瓦娜斯在哪？
+}
+
+STRING 251
+{
+女妖
+}
+
+STRING 252
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Banshee27.mp3
+{
+是她派我们来找您的，国王陛下。我们来护送您过河，之后就带您到野外避难。
+}
+
+STRING 261
+{
+血饕餮
+}
+
+STRING 262
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Abomination25.mp3
+{
+小国王别跑。杀！割肉！吃肉！
+}
+
+STRING 263
+{
+(水平的) 没有通道
+}
+
+STRING 264
+{
+城市出口
+}
+
+STRING 269
+{
+阿尔萨斯国王
+}
+
+STRING 270
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas14.mp3
+{
+你们几个，还不快来为国王尽忠！
+}
+
+STRING 273
+{
+阿尔萨斯国王
+}
+
+STRING 274
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas15.mp3
+{
+你尽忠的时候到了。你会效忠我吗？
+}
+
+STRING 276
+{
+石质底座
+}
+
+
+
+STRING 285
+{
+城门
+}
+
+STRING 286
+{
+城门
+}
+
+STRING 277
+{
+(自定义的)
+}
+
+STRING 278
+{
+(自定义的)
+}
+
+STRING 279
+{
+(自定义的)
+}
+
+STRING 280
+{
+(自定义的没有通道)
+}
+
+STRING 281
+{
+(自定义的)
+}
+
+STRING 282
+{
+(自定义的)
+}
+
+STRING 283
+{
+(自定义的)
+}
+
+STRING 284
+{
+(自定义的)
+}
+
+STRING 288
+{
+城门
+}

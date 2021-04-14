@@ -1,0 +1,555 @@
+ï»¿STRING 1
+{
+Non Morti 02
+}
+
+STRING 2
+{
+1
+}
+
+STRING 3
+{
+Capitolo Due: Fuga da Lordaeron
+}
+
+STRING 4
+{
+Blizzard Entertainment
+}
+
+STRING 12
+{
+Sconfitta!
+}
+
+STRING 13
+{
+La fuga del Re
+}
+
+STRING 14
+{
+Con l'avvicinarsi delle armate dei Signori del Terrore, Arthas è costretto ad abbandonare rapidamente la città.
+}
+
+STRING 15
+{
+Porta Arthas all'uscita della città
+}
+
+STRING 16
+{
+|cffffcc00MISSIONE PRINCIPALE|r
+La fuga del Re
+ - Porta Arthas all'uscita della città
+ - Arthas deve sopravvivere
+}
+
+STRING 17
+{
+|cffffcc00MISSIONE PRINCIPALE COMPIUTA|r
+La fuga del Re
+}
+
+STRING 25
+{
+|cffffcc00MISSIONE FALLITA|r
+Arthas è stato ucciso.
+}
+
+STRING 27
+{
+|cff32cd32SUGGERIMENTO|r - Non prendere droghe.
+}
+
+STRING 29
+{
+Sconfitta!
+}
+
+STRING 33
+{
+Capitolo Due
+}
+
+STRING 36
+{
+Fuga da Lordaeron
+}
+
+STRING 38
+{
+Maestro Zombi
+}
+
+STRING 39
+{
+Zombi Inferiore
+}
+
+STRING 40
+{
+Kel'Thuzad
+}
+
+STRING 41
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad01.mp3
+{
+E così le crisi si sono intensificate?
+}
+
+STRING 42
+{
+Fontana a muro NESSUNA AGIBILITÀ
+}
+
+STRING 46
+{
+Passaggio ad arco (Città) NESSUNA AGIBILITÀ
+}
+
+STRING 49
+{
+TILTING recinto lungo
+}
+
+STRING 50
+{
+Sgorgasangue
+}
+
+STRING 52
+{
+Re Arthas
+}
+
+STRING 53
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas02.mp3
+{
+Sì. Con i miei poteri prosciugati, riesco a malapena a comandare i miei guerrieri. Il Re dei Lich mi aveva messo in guardia, dicendomi che se non avessi raggiunto Nordania al più presto, tutto sarebbe stato perduto.
+}
+
+STRING 55
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad03.mp3
+{
+Non temete, mio Re. Tutto è pronto per la partenza. Le navi attendono sulla costa, e...
+}
+
+STRING 56
+{
+Detheroc
+}
+
+STRING 57
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Detheroc04.mp3
+{
+C'è stato un cambiamento di programma, Re Arthas. Non andrai da nessuna parte.
+}
+
+STRING 59
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad05.mp3
+{
+Assassini! È una trappola!
+}
+
+STRING 60
+{
+Balnazzar
+}
+
+STRING 61
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Balnazzar06.mp3
+{
+Non saresti mai dovuto tornare qui, Umano. Approfittando della tua debolezza, abbiamo assunto il controllo della maggior parte dei tuoi guerrieri. Sembra che il tuo regno abbia avuto vita breve.
+}
+
+STRING 63
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad07.mp3
+{
+Sono troppi, mio Re! Andate, fuggite dalla città. Troverò il modo di cavarmela e verrò a cercarvi nei boschi.
+}
+
+STRING 65
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas08.mp3
+{
+Va bene, Lich. Buona fortuna.
+}
+
+STRING 81
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas16.mp3
+{
+Ho bisogno di voi, guerrieri. Venite con me.
+}
+
+STRING 87
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas19.mp3
+{
+Ho bisogno delle tue abilità, piccola Ombra. Mi aiuterai?
+}
+
+STRING 88
+{
+Ombra
+}
+
+STRING 89
+{
+Vivo solo per servirvi, Re Arthas.
+}
+
+STRING 124
+{
+Ragno delle Cripte
+}
+
+STRING 125
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend38.mp3
+{
+C'è mancato poco che i ribelli ci prendessero, Re Arthas.
+}
+
+STRING 127
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas39.mp3
+{
+Non permetterei a questa marmaglia di massacrare i miei sudditi.
+}
+
+STRING 129
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend40.mp3
+{
+Allora resteremo al vostro fianco fino alla fine.
+}
+
+STRING 151
+{
+Arthas deve sopravvivere
+}
+
+STRING 162
+{
+Carri a sorpresa
+}
+
+STRING 163
+{
+Le torri si stanno rivelando piuttosto difficili da superare senza ingenti perdite. Irrompi nell'Armeria e impadronisciti dei Carri dei Morti per accelerare la distruzione delle torri.
+}
+
+STRING 164
+{
+Uccidi le guardie dell'Armeria
+}
+
+STRING 165
+{
+Recupera i Carri dei Morti
+}
+
+STRING 166
+{
+|cffffcc00MISSIONE FACOLTATIVA|r
+Carri a sorpresa
+ - Uccidi le guardie dell'Armeria
+ - Recupera i Carri dei Morti
+}
+
+STRING 167
+{
+|cffffcc00MISSIONE FACOLTATIVA COMPIUTA|r
+Carri a sorpresa
+}
+
+STRING 168
+{
+|cffffcc00MISSIONE FACOLTATIVA AGGIORNATA|r
+Carri a sorpresa
+ - |cff808080Uccidi le guardie dell'Armeria (compiuta)|r
+ - Recupera i Carri dei Morti
+}
+
+STRING 182
+{
+Il mattino seguente, a palazzo, Re Arthas e il suo maggiordomo Kel'Thuzad discutono degli avvertimenti del Re dei Lich.
+}
+
+STRING 192
+{
+Negromante
+}
+
+STRING 193
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Necromancer11.mp3
+{
+Il nostro maestro, Kel'Thuzad, ci ha mandati ad aiutarvi. I nostri nuovi maghi scheletrici annienteranno i ribelli in men che non si dica.
+}
+
+STRING 194
+{
+Re Arthas
+}
+
+STRING 195
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas12.mp3
+{
+Bene. Dovremo agire con rapidità e trovare altri che mi siano leali. Ci servirà tutto l'aiuto che riusciremo a trovare.
+}
+
+STRING 197
+{
+Muro basso (Verticale) PERCORRIBILE
+}
+
+STRING 199
+{
+|cffffcc00SEGRETO SCOPERTO|r
+}
+
+STRING 200
+{
+Flagello dei Non Morti
+}
+
+STRING 201
+{
+Forze di Sylvanas
+}
+
+STRING 202
+{
+Insorti dei Signori del Terrore
+}
+
+STRING 203
+{
+Armata 1
+}
+
+STRING 204
+{
+Armata 2
+}
+
+STRING 207
+{
+Re Arthas
+}
+
+STRING 208
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas24.mp3
+{
+Finalmente, un po' di potenza di fuoco. Queste armi ci aiuteranno con le difese dell'ingresso principale.
+}
+
+STRING 209
+{
+Re Arthas
+}
+
+STRING 210
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas23.mp3
+{
+Le guardie dei Signori del Terrore sono appostate fuori dall'armeria! Se riusciamo a superarle, potremo impadronirci dei Carri dei Morti all'interno.
+}
+
+STRING 211
+{
+Runa dello Spettro
+}
+
+STRING 212
+{
+Acquista Runa dello Spettro
+}
+
+STRING 237
+{
+Golem di Carne Minore
+}
+
+STRING 238
+{
+|cffffcc00MISSIONE FACOLTATIVA AGGIORNATA|r
+Carri a sorpresa
+ - Uccidi le guardie dell'Armeria
+ - |cff808080Recupera i Carri dei Morti (compiuta)|r
+}
+
+STRING 239
+{
+Re Arthas
+}
+
+STRING 240
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas18.mp3
+{
+Questi mucchi di cadaveri ci faranno comodo. Strada facendo, potremo rianimarli e ingrossare le nostre schiere.
+}
+
+STRING 241
+{
+(PERSONALIZZATO)
+}
+
+STRING 242
+{
+(Personalizzato)
+}
+
+STRING 243
+{
+Arcinegromante
+}
+
+STRING 244
+{
+(Personalizzato nessuna agibilità)
+}
+
+STRING 245
+{
+(Personalizzato)
+}
+
+STRING 246
+{
+Porta della città
+}
+
+STRING 247
+{
+Re Arthas
+}
+
+STRING 248
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas37.mp3
+{
+Non c'è tempo! Dobbiamo trovare al più presto il modo per andarcene!
+}
+
+STRING 249
+{
+Re Arthas
+}
+
+STRING 250
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas26.mp3
+{
+Vi ringrazio, signore, ma dov'è la vostra padrona?
+}
+
+STRING 251
+{
+Banshee
+}
+
+STRING 252
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Banshee27.mp3
+{
+Ci ha mandate a cercarvi, grande Re. Siamo venute per scortarvi oltre il fiume. Una volta che l'avremo attraversato, ci rifugeremo nei boschi.
+}
+
+STRING 261
+{
+Sgorgasangue
+}
+
+STRING 262
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Abomination25.mp3
+{
+Piccolo Re no fuggire. Uccidere! Dilaniare! Banchettare!
+}
+
+STRING 263
+{
+(Orizzontale) NESSUNA AGIBILITÀ
+}
+
+STRING 264
+{
+Uscita della città
+}
+
+STRING 269
+{
+Re Arthas
+}
+
+STRING 270
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas14.mp3
+{
+E voi? Non resterete al fianco del vostro Re?
+}
+
+STRING 273
+{
+Re Arthas
+}
+
+STRING 274
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas15.mp3
+{
+Faccio appello alla vostra lealtà! Mi servirete?
+}
+
+STRING 276
+{
+Piedistallo di pietra
+}
+
+
+
+STRING 277
+{
+(Personalizzato)
+}
+
+STRING 278
+{
+(Personalizzato)
+}
+
+STRING 279
+{
+(Personalizzato)
+}
+
+STRING 281
+{
+(Personalizzato)
+}
+
+STRING 282
+{
+(Personalizzato)
+}
+
+STRING 283
+{
+(Personalizzato)
+}
+
+STRING 284
+{
+(Personalizzato)
+}
+
+STRING 280
+{
+(Personalizzato nessuna agibilità)
+}
+
+STRING 285
+{
+Porta della città
+}
+
+STRING 286
+{
+Porta della città
+}
+
+STRING 288
+{
+Porta della città
+}

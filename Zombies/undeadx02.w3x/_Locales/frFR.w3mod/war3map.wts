@@ -1,0 +1,550 @@
+ï»¿STRING 1
+{
+Mort-vivant X02
+}
+
+STRING 2
+{
+1
+}
+
+STRING 3
+{
+Chapitre II : La fuite de Lordaeron
+}
+
+STRING 4
+{
+Blizzard Entertainment
+}
+
+STRING 12
+{
+Défaite !
+}
+
+STRING 13
+{
+Le départ du roi
+}
+
+STRING 14
+{
+Les troupes du seigneur de l’effroi se rapprochant dangereusement, Arthas doit quitter la ville rapidement.
+}
+
+STRING 15
+{
+Conduire Arthas à la sortie de la ville
+}
+
+STRING 16
+{
+|cffffcc00QUÊTE PRINCIPALE|r
+Le départ du roi
+  - Conduire Arthas à la sortie de la ville
+  - Arthas doit survivre
+}
+
+STRING 17
+{
+|cffffcc00QUÊTE PRINCIPALE TERMINÉE|r
+Le départ du roi
+}
+
+STRING 25
+{
+|cffffcc00ÉCHEC DE LA MISSION|r
+Arthas a été tué
+}
+
+STRING 27
+{
+|cff32cd32CONSEIL :|r pensez à faire des pauses.
+}
+
+STRING 29
+{
+Défaite !
+}
+
+STRING 33
+{
+Chapitre II
+}
+
+STRING 36
+{
+La fuite de Lordaeron
+}
+
+STRING 38
+{
+Chef des zombies
+}
+
+STRING 39
+{
+Zombie inférieur
+}
+
+STRING 40
+{
+Kel’Thuzad
+}
+
+STRING 41
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad01.mp3
+{
+Ainsi, les crises ont encore empiré ?
+}
+
+STRING 42
+{
+Fontaine sur mur PAS DE CHEMIN
+}
+
+STRING 46
+{
+Voûte (Ville) PAS DE CHEMIN
+}
+
+STRING 49
+{
+Longue barrière RENVERSEE
+}
+
+STRING 50
+{
+Festin de sang
+}
+
+STRING 52
+{
+Roi Arthas
+}
+
+STRING 53
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas02.mp3
+{
+Oui. Mes pouvoirs diminués me permettent à peine de diriger mes guerriers. Le roi-liche m’a averti que si je n’atteignais pas rapidement le Norfendre, tout serait peut-être perdu.
+}
+
+STRING 55
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad03.mp3
+{
+N’ayez crainte, mon roi. Tout est prêt pour votre départ. Les vaisseaux attendent sur la côte et…
+}
+
+STRING 56
+{
+Detheroc
+}
+
+STRING 57
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Detheroc04.mp3
+{
+Désolé de contrarier vos plans, roi Arthas, mais vous n’allez nulle part.
+}
+
+STRING 59
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad05.mp3
+{
+Des assassins ! C’est un piège !
+}
+
+STRING 60
+{
+Balnazzar
+}
+
+STRING 61
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Balnazzar06.mp3
+{
+Vous n’auriez pas dû revenir, Humain. Profitant de votre faiblesse, nous avons pris le contrôle de la plupart de vos guerriers. Il semble bien que votre règne ne fût qu’un vulgaire feu de paille.
+}
+
+STRING 63
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad07.mp3
+{
+Ils sont trop nombreux, mon roi ! Fuyez… Quittez la cité. Je vous retrouverai plus tard à l’extérieur.
+}
+
+STRING 65
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas08.mp3
+{
+Très bien, liche. Bonne chance.
+}
+
+STRING 81
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas16.mp3
+{
+J’ai besoin de vous, guerriers. Venez avec moi.
+}
+
+STRING 87
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas19.mp3
+{
+J’aurais besoin de vos capacités, petite ombre. Puis-je compter sur vous ?
+}
+
+STRING 88
+{
+Ombre
+}
+
+STRING 89
+{
+Je ne vis que pour vous servir, roi Arthas.
+}
+
+STRING 124
+{
+Démon des cryptes
+}
+
+STRING 125
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend38.mp3
+{
+Par Nérub, les rebelles ont bien failli nous avoir, roi Arthas.
+}
+
+STRING 127
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas39.mp3
+{
+Je ne laisserai pas mes sujets se faire massacrer.
+}
+
+STRING 129
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend40.mp3
+{
+Dans ce cas, nous vous serons fidèles quoi qu’il arrive.
+}
+
+STRING 151
+{
+Arthas doit survivre
+}
+
+STRING 162
+{
+Chariot à viande surprise
+}
+
+STRING 163
+{
+Difficile de franchir les tours sans subir de lourdes pertes. Pénétrez dans l’armurerie et emparez-vous des Chariots à viande pour accélérer la destruction des tours.
+}
+
+STRING 164
+{
+Tuer les gardes de l’armurerie
+}
+
+STRING 165
+{
+S’emparer des Chariots à viande
+}
+
+STRING 166
+{
+|cffffcc00QUÊTE ANNEXE|r
+Chariot à viande surprise
+  - Tuer les gardes de l’armurerie
+  - S’emparer des Chariots à viande
+}
+
+STRING 167
+{
+|cffffcc00QUÊTE ANNEXE TERMINÉE|r
+Chariot à viande surprise
+}
+
+STRING 168
+{
+|cffffcc00QUÊTE ANNEXE MISE À JOUR|r
+Chariot à viande surprise
+  - |cff808080Tuer les gardes de l’armurerie (terminé)|r
+  - S’emparer des Chariots à viande
+}
+
+STRING 182
+{
+Le lendemain matin, dans l’enceinte du palais, le roi Arthas et Kel’Thuzad, son serviteur, évoquent les sinistres avertissements du roi-liche.
+}
+
+STRING 192
+{
+Nécromancien
+}
+
+STRING 193
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Necromancer11.mp3
+{
+Notre maître, Kel’Thuzad, nous envoie vous aider. Nos nouveaux mages squelettes ne feront qu’une bouchée des rebelles.
+}
+
+STRING 194
+{
+Roi Arthas
+}
+
+STRING 195
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas12.mp3
+{
+Parfait. Nous allons devoir agir rapidement et trouver tous ceux qui me restent loyaux. Nous aurons besoin de toute l’aide disponible.
+}
+
+STRING 197
+{
+Petit mur (Vertical) PASSABLE
+}
+
+STRING 199
+{
+|cffffcc00SECRET DÉCOUVERT|r
+}
+
+STRING 200
+{
+Fléau mort-vivant
+}
+
+STRING 201
+{
+Troupes de Sylvanas
+}
+
+STRING 202
+{
+Insurgés du seigneur de l’effroi
+}
+
+STRING 203
+{
+Troupe 1
+}
+
+STRING 204
+{
+Troupe 2
+}
+
+STRING 207
+{
+Roi Arthas
+}
+
+STRING 208
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas24.mp3
+{
+Enfin, une puissance de feu digne de ce nom. Ils vont nous aider à franchir la porte principale !
+}
+
+STRING 209
+{
+Roi Arthas
+}
+
+STRING 210
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas23.mp3
+{
+Les soldats des seigneurs de l’effroi montent la garde ! Si nous parvenons à les vaincre, nous pourrons nous emparer des chariots à viande qui sont à l’intérieur.
+}
+
+STRING 211
+{
+Rune de revenant
+}
+
+STRING 212
+{
+Acheter une Rune de revenant
+}
+
+STRING 237
+{
+Golem de chair inférieur
+}
+
+STRING 238
+{
+|cffffcc00QUÊTE ANNEXE MISE À JOUR|r
+Chariot à viande surprise
+  - Tuer les gardes de l’armurerie
+  - |cff808080S’emparer des Chariots à viande (terminé)|r
+}
+
+STRING 239
+{
+Roi Arthas
+}
+
+STRING 240
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas18.mp3
+{
+Ces tas de carcasses nous seront bien utiles. Nous pouvons réanimer les cadavres et ainsi renforcer nos rangs.
+}
+
+STRING 241
+{
+(PERSONNALISE)
+}
+
+STRING 242
+{
+(Personnalisée)
+}
+
+STRING 243
+{
+Archi-nécromancien
+}
+
+STRING 244
+{
+(Personnalisé Pasdechemin)
+}
+
+STRING 245
+{
+(Pot personnalisé)
+}
+
+STRING 246
+{
+Porte de la ville
+}
+
+STRING 247
+{
+Roi Arthas
+}
+
+STRING 248
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas37.mp3
+{
+Nous n’avons pas de temps à perdre ! Nous devons trouver rapidement le moyen de sortir !
+}
+
+STRING 249
+{
+Roi Arthas
+}
+
+STRING 250
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas26.mp3
+{
+Je vous remercie, mesdames. Mais où est votre maîtresse ? Où est Sylvanas ?
+}
+
+STRING 251
+{
+Banshee
+}
+
+STRING 252
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Banshee27.mp3
+{
+Elle nous a envoyées vous trouver, grand roi. Nous sommes venues vous escorter pour traverser la rivière. Une fois de l’autre côté, nous nous réfugierons dans les bois.
+}
+
+STRING 261
+{
+Festin de sang
+}
+
+STRING 262
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Abomination25.mp3
+{
+Petit roi pas partir. Massacrer ! Écorcher ! Dévorer !
+}
+
+STRING 263
+{
+(Horizontal) PAS DE CHEMIN
+}
+
+STRING 264
+{
+Sortie de la ville
+}
+
+STRING 269
+{
+Roi Arthas
+}
+
+STRING 270
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas14.mp3
+{
+Vous, là… Allez-vous refuser d’aider votre roi ?
+}
+
+STRING 273
+{
+Roi Arthas
+}
+
+STRING 274
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas15.mp3
+{
+J’en appelle à votre loyauté. Me servirez-vous ?
+}
+
+STRING 276
+{
+Piédestal de pierre
+}
+
+
+
+STRING 277
+{
+(Personnalisée)
+}
+
+STRING 278
+{
+(Personnalisée)
+}
+
+STRING 279
+{
+(Personnalisée)
+}
+
+STRING 281
+{
+(Personnalisée)
+}
+
+STRING 282
+{
+(Personnalisée)
+}
+
+STRING 283
+{
+(Personnalisée)
+}
+
+STRING 284
+{
+(Personnalisée)
+}
+
+STRING 285
+{
+Porte de la ville
+}
+
+STRING 286
+{
+Porte de la ville
+}
+
+STRING 288
+{
+Porte de la ville
+}

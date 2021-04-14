@@ -1,0 +1,555 @@
+ï»¿STRING 1
+{
+UntoteX02
+}
+
+STRING 2
+{
+1
+}
+
+STRING 3
+{
+Kapitel 2: Die Flucht aus Lordaeron
+}
+
+STRING 4
+{
+Blizzard Entertainment
+}
+
+STRING 12
+{
+Niederlage!
+}
+
+STRING 13
+{
+Des Königs Abgang
+}
+
+STRING 14
+{
+Während die Streitkräfte der Schreckenslords sich nähern, muss sich Arthas schnell aus der Stadt zurückziehen.
+}
+
+STRING 15
+{
+Bringt Arthas zum Ausgang der Stadt
+}
+
+STRING 16
+{
+|cffffcc00HAUPTQUEST|r
+Des Königs Abgang
+ - Bringt Arthas zum Ausgang der Stadt
+ - Arthas muss überleben
+}
+
+STRING 17
+{
+|cffffcc00HAUPTQUEST ABGESCHLOSSEN|r
+Des Königs Abgang
+}
+
+STRING 25
+{
+|cffffcc00MISSION FEHLGESCHLAGEN|r
+Arthas wurde getötet.
+}
+
+STRING 27
+{
+|cff32cd32TIPP|r - Nehmt keine Drogen.
+}
+
+STRING 29
+{
+Niederlage!
+}
+
+STRING 33
+{
+Kapitel 2
+}
+
+STRING 36
+{
+Die Flucht aus Lordaeron
+}
+
+STRING 38
+{
+Zombiemeister
+}
+
+STRING 39
+{
+Geringer Zombie
+}
+
+STRING 40
+{
+Kel'Thuzad
+}
+
+STRING 41
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad01.mp3
+{
+Die Anfälle sind also schlimmer geworden?
+}
+
+STRING 42
+{
+Mauerbrunnen KEIN VERLAUF
+}
+
+STRING 46
+{
+Bogengang (Stadt) KEIN VERLAUF
+}
+
+STRING 49
+{
+Zaun, lang, GEKIPPT
+}
+
+STRING 50
+{
+Blutschmaus
+}
+
+STRING 52
+{
+König Arthas
+}
+
+STRING 53
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas02.mp3
+{
+Ja. Meine Kraft ist erschöpft, ich kann kaum meine eigenen Krieger befehligen. Der Lichkönig warnte mich, wenn ich Nordend nicht bald erreiche, könnte alles verloren sein.
+}
+
+STRING 55
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad03.mp3
+{
+Keine Angst, mein König. Die Vorbereitungen für Eure Abreise sind abgeschlossen. Die Schiffe warten an der Küste und...
+}
+
+STRING 56
+{
+Detheroc
+}
+
+STRING 57
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Detheroc04.mp3
+{
+Wir haben eine kleine Planänderung für Euch, König Arthas. Die Reise muss ausfallen.
+}
+
+STRING 59
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad05.mp3
+{
+Mörder! Eine Falle!
+}
+
+STRING 60
+{
+Balnazzar
+}
+
+STRING 61
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Balnazzar06.mp3
+{
+Ihr hättet nicht zurückkehren sollen, Mensch. Dank Eures geschwächten Zustands haben wir die Kontrolle über die Mehrzahl Eurer Krieger übernommen. Eure Herrschaft war wohl nur von kurzer Dauer.
+}
+
+STRING 63
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02KelThuzad07.mp3
+{
+Es sind zu viele, mein König! Flieht! Verlasst die Stadt! Ich suche meinen eigenen Weg. Wir treffen uns in der Wildnis.
+}
+
+STRING 65
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas08.mp3
+{
+Nun gut, Lich. Viel Glück.
+}
+
+STRING 81
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas16.mp3
+{
+Ich brauche Euch, Krieger. Kommt mit mir.
+}
+
+STRING 87
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas19.mp3
+{
+Ich brauche Eure Fähigkeiten, kleiner Schemen. Werdet Ihr mir helfen?
+}
+
+STRING 88
+{
+Schemen
+}
+
+STRING 89
+{
+Ich lebe nur, um Euch zu dienen, König Arthas.
+}
+
+STRING 124
+{
+Gruftbestie
+}
+
+STRING 125
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend38.mp3
+{
+Bei Nerub, die Rebellen hätten uns fast erwischt, König Arthas.
+}
+
+STRING 127
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas39.mp3
+{
+Ich kann nicht zulassen, dass meine Untertanen von diesem Gesindel ermordet werden.
+}
+
+STRING 129
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02CryptFiend40.mp3
+{
+Dann bleiben wir bis zum Ende bei Euch.
+}
+
+STRING 151
+{
+Arthas muss überleben
+}
+
+STRING 162
+{
+Fleisch und Blut
+}
+
+STRING 163
+{
+Die Türme stellen ein Hindernis dar, das sich nicht ohne größere Verluste überwinden lässt. Brecht in die Waffenkammer ein und konfisziert die Fleischwagen dort, um die Zerstörung der Türme zu beschleunigen.
+}
+
+STRING 164
+{
+Tötet die Wachen der Waffenkammer
+}
+
+STRING 165
+{
+Rettet die Fleischwagen
+}
+
+STRING 166
+{
+|cffffcc00OPTIONALE QUEST|r
+Fleisch und Blut
+ - Tötet die Wachen der Waffenkammer
+ - Rettet die Fleischwagen
+}
+
+STRING 167
+{
+|cffffcc00OPTIONALE QUEST ABGESCHLOSSEN|r
+Fleisch und Blut
+}
+
+STRING 168
+{
+|cffffcc00OPTIONALE QUEST AKTUALISIERT|r
+Fleisch und Blut
+ - |cff808080Tötet die Wachen der Waffenkammer (Abgeschlossen)|r
+ - Rettet die Fleischwagen
+}
+
+STRING 182
+{
+Am nächsten Morgen sprechen König Arthas und sein Majordomus Kel'Thuzad auf dem Palastgelände über die düsteren Warnungen des Lichkönigs.
+}
+
+STRING 192
+{
+Totenbeschwörer
+}
+
+STRING 193
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Necromancer11.mp3
+{
+Kel'Thuzad, unser Meister, hat uns zu Eurer Unterstützung geschickt. Unsere neuen Skelettmagier machen kurzen Prozess mit den Rebellen.
+}
+
+STRING 194
+{
+König Arthas
+}
+
+STRING 195
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas12.mp3
+{
+Sehr gut. Wir müssen uns beeilen und alle finden, die mir treu ergeben sind. Unterstützung können wir gar nicht genug haben.
+}
+
+STRING 197
+{
+Niedrige Wand (vertikal) BEGEHBAR
+}
+
+STRING 199
+{
+|cffffcc00GEHEIMNIS GEFUNDEN|r
+}
+
+STRING 200
+{
+Geißel der Untoten
+}
+
+STRING 201
+{
+Sylvanas' Streitkräfte
+}
+
+STRING 202
+{
+Aufständische Schreckenslords
+}
+
+STRING 203
+{
+Streitmacht 1
+}
+
+STRING 204
+{
+Streitmacht 2
+}
+
+STRING 207
+{
+König Arthas
+}
+
+STRING 208
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas24.mp3
+{
+Endlich mehr Feuerkraft. Die werden uns beim Haupttor gute Dienste leisten.
+}
+
+STRING 209
+{
+König Arthas
+}
+
+STRING 210
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas23.mp3
+{
+Die Schreckenslords lassen diese Waffenkammer bewachen. Wenn wir an den Wachen vorbeikommen, könnten wir uns die dortigen Fleischwagen holen.
+}
+
+STRING 211
+{
+Rune des Klagegeists
+}
+
+STRING 212
+{
+Rune des Klagegeists kaufen
+}
+
+STRING 237
+{
+Niederer Fleischgolem
+}
+
+STRING 238
+{
+|cffffcc00OPTIONALE QUEST AKTUALISIERT|r
+Fleisch und Blut
+ - Tötet die Wachen der Waffenkammer
+ - |cff808080Rettet die Fleischwagen (Abgeschlossen)|r
+}
+
+STRING 239
+{
+König Arthas
+}
+
+STRING 240
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas18.mp3
+{
+Dieser Haufen Leichen kommt wie gerufen. Wir können sie wiedererwecken und damit unsere Streitkräfte verstärken.
+}
+
+STRING 241
+{
+(EIGENE)
+}
+
+STRING 242
+{
+(Benutzerdefiniert)
+}
+
+STRING 243
+{
+Erztotenbeschwörer
+}
+
+STRING 244
+{
+(Eigene, kein Verlauf)
+}
+
+STRING 245
+{
+(Eigene Kann)
+}
+
+STRING 246
+{
+Stadttor
+}
+
+STRING 247
+{
+König Arthas
+}
+
+STRING 248
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas37.mp3
+{
+Dafür haben wir keine Zeit! Wir müssen schnellstens hier raus.
+}
+
+STRING 249
+{
+König Arthas
+}
+
+STRING 250
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas26.mp3
+{
+Ich danke Euch, meine Damen. Doch wo ist Eure Herrin? Wo ist Sylvanas?
+}
+
+STRING 251
+{
+Banshee
+}
+
+STRING 252
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Banshee27.mp3
+{
+Sie hat uns auf die Suche nach Euch geschickt, großer König. Wir sollen Euch über den Fluss geleiten. Auf der anderen Seite suchen wir Schutz in der Wildnis.
+}
+
+STRING 261
+{
+Blutschmaus
+}
+
+STRING 262
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Abomination25.mp3
+{
+Kleines König nix entkommen. Schlachten! Metzeln! Fressen!
+}
+
+STRING 263
+{
+(Horizontal) KEIN VERLAUF
+}
+
+STRING 264
+{
+Ausgang der Stadt
+}
+
+STRING 269
+{
+König Arthas
+}
+
+STRING 270
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas14.mp3
+{
+Ihr da! Wollt Ihr Eurem König nicht beistehen?
+}
+
+STRING 273
+{
+König Arthas
+}
+
+STRING 274
+// Sound\Dialogue\UndeadExpCamp\Undead02x\L02Arthas15.mp3
+{
+Ich fordere Eure Treue ein. Werdet Ihr mir dienen?
+}
+
+STRING 276
+{
+Steinsockel
+}
+
+
+
+STRING 277
+{
+(Benutzerdefiniert)
+}
+
+STRING 278
+{
+(Benutzerdefiniert)
+}
+
+STRING 279
+{
+(Benutzerdefiniert)
+}
+
+STRING 281
+{
+(Benutzerdefiniert)
+}
+
+STRING 282
+{
+(Benutzerdefiniert)
+}
+
+STRING 283
+{
+(Benutzerdefiniert)
+}
+
+STRING 284
+{
+(Benutzerdefiniert)
+}
+
+STRING 280
+{
+(Eigene, kein Verlauf)
+}
+
+STRING 285
+{
+Stadttor
+}
+
+STRING 286
+{
+Stadttor
+}
+
+STRING 288
+{
+Stadttor
+}
