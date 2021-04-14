@@ -179,7 +179,7 @@ function startHeroPicker()
     HeroSelector.initHeroes()
 
     for i = 1, 8 do
-        HeroSelector.show(true, player(i))
+        HeroSelector.show(true, Player(i))
     end
 end
 

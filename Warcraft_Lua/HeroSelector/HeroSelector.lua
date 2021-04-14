@@ -713,6 +713,7 @@ function HeroSelector.forceRandom(who)
     --this is a wrapper for doRandom allowing different dataTypes
     if not who then
         for index= 0, GetBJMaxPlayers() - 1,1 do
+            local player = Player(index)
             if GetPlayerSlotState(player) == PLAYER_SLOT_STATE_PLAYING then
                 HeroSelector.doRandom(Player(index)) 
             end

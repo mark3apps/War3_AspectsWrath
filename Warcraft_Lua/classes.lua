@@ -2303,6 +2303,8 @@ function init_baseClass()
                 GroupAddUnit(base[teamName].gHealing, unit)
             end
 
+            CreateCorpse()
+
         else
             if unitsEnemy > 0 then
                 GroupAddUnit(base[teamName].gDanger, unit)
