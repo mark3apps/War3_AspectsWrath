@@ -198,7 +198,10 @@
         "GetEnumPlayer",
         "ForceAddPlayerSimple",
         "GetPlayerSlotState",
-        "PLAYER_SLOT_STATE_PLAYING"
+        "PLAYER_SLOT_STATE_PLAYING",
+        "BlzCreateUnitWithSkin",
+        "SetEnemyStartLocPrio",
+        "SetEnemyStartLocPrioCount"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global"
