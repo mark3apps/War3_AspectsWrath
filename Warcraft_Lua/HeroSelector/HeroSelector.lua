@@ -421,6 +421,8 @@ function HeroSelector.addCategory(icon, text)
         local button = BlzCreateFrame("HeroSelectorCategoryButton", box, 0, 0)
         local icon = BlzGetFrameByName("HeroSelectorCategoryButtonIcon", 0)
         local iconPushed = BlzGetFrameByName("HeroSelectorCategoryButtonIconPushed", 0)
+        
+        
         local tooltip = BlzCreateFrame("HeroSelectorText", box, 0, buttonIndex)
         BlzFrameSetText(tooltip, GetLocalizedString(text))
         newObject.Text = tooltip --when this is reached overwritte textframe with the tooltip
