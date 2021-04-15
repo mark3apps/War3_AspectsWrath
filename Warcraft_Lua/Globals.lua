@@ -10,8 +10,6 @@ function init_triggers()
     Trig_baseLoop = CreateTrigger()
 end
 
-
-
 function addRegions()
 
     -- End Rects
@@ -84,7 +82,7 @@ function addRegions()
     loc:add("cTidesLeft", gg_rct_Murloc_Left, "topRight", true)
     loc:add("cTidesRight", gg_rct_Murloc_Right, "bottomLeft", false)
     loc:add("cDeathMidLeft", gg_rct_Zombie_Mid_Left, "cDeathLeft", true)
-    loc:add("cDeathLeft", gg_rct_Zombie_End_Left , "middleRight", true)
+    loc:add("cDeathLeft", gg_rct_Zombie_End_Left, "middleRight", true)
     loc:add("cDeathMidRight", gg_rct_Zombie_Mid_Right, "cDeathRight", false)
     loc:add("cDeathRight", gg_rct_Zombie_End_Right, "middleLeft", false)
     loc:add("cStormLeft", gg_rct_Left_Elemental_Start, "bottomRight", true)
@@ -121,58 +119,58 @@ function addBases()
 
     base.add(gg_unit_hars_0355, 1, false, true, true, false) -- Allied Arcane Top
     base.add(gg_unit_hars_0293, 1, false, true, true, false) -- Federation
-    
+
     base.add(gg_unit_hars_0292, 1, false, true, true, false) -- Allied Arcane Bottom
     base.add(gg_unit_hars_0303, 1, false, true, true, false) -- Federation
-    
+
     base.add(gg_unit_n00K_0802, 2, false, true, true, true) -- Allied Blacksmith
     base.add(gg_unit_n00K_0477, 2, false, true, true, true) -- Federation
-    
+
     base.add(gg_unit_h00E_0033, 8, true, true, true, true) -- Allied Castle
     base.add(gg_unit_h00E_0081, 8, true, true, true, true) -- Federation
-    
+
     base.add(gg_unit_hvlt_0207, 2, false, true, true, true) -- Allied City Elves
     base.add(gg_unit_hvlt_0406, 2, false, true, true, true) -- Federation
-    
+
     base.add(gg_unit_n00B_0364, 1, false, true, true, true) -- Allied City Front
     base.add(gg_unit_n00B_0399, 1, false, true, true, true) -- Federation
-    
+
     base.add(gg_unit_n00B_0102, 1, false, true, true, true) -- Allied City Side
     base.add(gg_unit_n00B_0038, 1, false, true, true, true) -- Federation
-    
+
     base.add(gg_unit_ngt2_0525, 1, false, true, true, true) -- Allied Kobold
     base.add(gg_unit_ngt2_0455, 1, false, true, true, true) -- Federation
-    
+
     base.add(gg_unit_nheb_0109, 3, false, true, true, true) -- Allied High Elves
     base.add(gg_unit_nheb_0036, 3, false, true, true, true) -- Federation
-    
+
     base.add(gg_unit_n001_0048, 2, false, true, true, true) -- Allied Merc Camp
     base.add(gg_unit_n001_0049, 2, false, true, true, true) -- Federation
-        
+
     base.add(gg_unit_h006_0074, 2, false, true, true, true) -- Allied Mine
     base.add(gg_unit_h006_0055, 2, false, true, true, true) -- Federation
-        
+
     base.add(gg_unit_nmh1_0735, 1, false, true, true, false) -- Allied Murloc
     base.add(gg_unit_nmh1_0783, 1, false, true, true, false) -- Federation
-        
+
     base.add(gg_unit_nntt_0135, 2, false, true, true, true) -- Allied Naga
     base.add(gg_unit_nntt_0132, 2, false, true, true, true) -- Federation
-        
+
     base.add(gg_unit_e003_0058, 3, false, true, true, true) -- Allied Night Elves
     base.add(gg_unit_e003_0014, 3, false, true, true, true) -- Federation
-            
+
     base.add(gg_unit_o001_0075, 2, false, true, true, true) -- Allied Orcs
     base.add(gg_unit_o001_0078, 2, false, true, true, true) -- Federation
-            
+
     base.add(gg_unit_eshy_0120, 1, false, true, true, false) -- Allied Night Elf Shipyard
     base.add(gg_unit_eshy_0047, 1, false, true, true, false) -- Federation
-            
+
     base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
     base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
-            
+
     base.add(gg_unit_h00F_0029, 2, false, true, true, true) -- Allied Town
     base.add(gg_unit_h00F_0066, 2, false, true, true, true) -- Federation
-                
+
     base.add(gg_unit_u001_0262, 2, false, true, true, true) -- Federation Undead
     base.add(gg_unit_u001_0264, 2, false, true, true, true) -- Federation
 end
@@ -602,51 +600,66 @@ end
 function spawnAddBases()
     -- addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
 
-    spawn:addBase("arcane", "sArcaneLeft", "bottomRight", gg_unit_h003_0015, "sArcaneRight", "topLeft",
-        gg_unit_h003_0007)
-    spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormRight",
-        gg_unit_h003_0007)
-    spawn:addBase("arcaneHero", "sArcaneHeroLeft", "bottomRight", gg_unit_h014_0017, "sArcaneHeroRight", "topLeft",
-        gg_unit_h014_0158)
-    spawn:addBase("arcaneTop", "sElementalTopLeft", "bottomRight", gg_unit_hars_0355, "sElementalTopRight", "topLeft",
-        gg_unit_hars_0293)
-    spawn:addBase("arcaneBottom", "sElementalBottomLeft", "bottomRight", gg_unit_hars_0292, "sElementalBottomRight",
-        "topLeft", gg_unit_hars_0303)
-    spawn:addBase("blacksmith", "sCityBlacksmithLeft", "everythingRight", gg_unit_n00K_0802, "sCityBlacksmithRight",
-        "everythingLeft", gg_unit_n00K_0477)
-    spawn:addBase("blacksmithCreep", "sCityBlacksmithLeft", "cDeathMidLeft", gg_unit_n00K_0802, "sCityBlacksmithRight",
-        "cDeathMidRight", gg_unit_n00K_0477)
-    spawn:addBase("castle", "sHeroLeft", "everythingRight", gg_unit_h00E_0033, "sHeroRight", "everythingLeft",
-        gg_unit_h00E_0081)
-    spawn:addBase("cityElves", "sCityElfLeft", "everythingRight", gg_unit_hvlt_0207, "sCityElfRight", "everythingLeft",
-        gg_unit_hvlt_0406)
-    spawn:addBase("cityFront", "sCityFrontLeft", "middleRight", gg_unit_n00B_0364, "sCityFrontRight", "middleLeft",
-        gg_unit_n00B_0399)
-    spawn:addBase("citySide", "sCitySideLeft", "bottomRight", gg_unit_n00B_0102, "sCitySideRight", "topLeft",
-        gg_unit_n00B_0038)
-    spawn:addBase("kobold", "sKolboldLeft", "topRight", gg_unit_ngt2_0525, "sKolboldRight", "bottomLeft",
-        gg_unit_ngt2_0455)
-    spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109, "sElfRight", "bottomLeft", gg_unit_nheb_0036)
-    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft", gg_unit_nheb_0109, "sElfRight", "cForestRight",
-        gg_unit_nheb_0036)
-    spawn:addBase("merc", "sCampLeft", "bottomRight", gg_unit_n001_0048, "sCampRight", "topLeft", gg_unit_n001_0049)
-    spawn:addBase("mine", "sWorkshopLeft", "bottomRight", gg_unit_h006_0074, "sWorkshopRight", "topLeft",
-        gg_unit_h006_0055)
-    spawn:addBase("naga", "sNagaLeft", "topRight", gg_unit_nntt_0135, "sNagaRight", "bottomLeft", gg_unit_nntt_0132)
-    spawn:addBase("murloc", "sMurlocLeft", "topRight", gg_unit_nmh1_0735, "sMurlocRight", "bottomLeft",
-        gg_unit_nmh1_0783)
-    spawn:addBase("nagaCreep", "sNagaLeft", "cTidesLeft", gg_unit_nntt_0135, "sNagaRight", "cTidesRight",
-        gg_unit_nntt_0132)
-    spawn:addBase("nightElves", "sTreeLeft", "topRight", gg_unit_e003_0058, "sTreeRight", "bottomLeft",
-        gg_unit_e003_0014)
-    spawn:addBase("orc", "sOrcLeft", "topRight", gg_unit_o001_0075, "sOrcRight", "bottomLeft", gg_unit_o001_0078)
-    spawn:addBase("shipyard", "sElfShipyardLeft", "sHumanShipyardRight", gg_unit_eshy_0120, "sElfShipyardRight",
-        "sHumanShipyardLeft", gg_unit_eshy_0047)
-    spawn:addBase("hshipyard", "sHumanShipyardLeft", "sHumanShipyardRight", gg_unit_hshy_0011, "sHumanShipyardRight",
-        "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
-    spawn:addBase("town", "sTownLeft", "bottomRight", gg_unit_h00F_0029, "sTownRight", "topLeft", gg_unit_h00F_0066)
-    spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0262, "sUndeadRight", "middleLeft",
-        gg_unit_u001_0264)
+    spawn:addBase("arcane", "sArcaneLeft", "bottomRight", gg_unit_h003_0015,
+                  "sArcaneRight", "topLeft", gg_unit_h003_0007)
+    spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015,
+                  "sArcaneRight", "cStormRight", gg_unit_h003_0007)
+    spawn:addBase("arcaneHero", "sArcaneHeroLeft", "bottomRight",
+                  gg_unit_h014_0017, "sArcaneHeroRight", "topLeft",
+                  gg_unit_h014_0158)
+    spawn:addBase("arcaneTop", "sElementalTopLeft", "bottomRight",
+                  gg_unit_hars_0355, "sElementalTopRight", "topLeft",
+                  gg_unit_hars_0293)
+    spawn:addBase("arcaneBottom", "sElementalBottomLeft", "bottomRight",
+                  gg_unit_hars_0292, "sElementalBottomRight", "topLeft",
+                  gg_unit_hars_0303)
+    spawn:addBase("blacksmith", "sCityBlacksmithLeft", "everythingRight",
+                  gg_unit_n00K_0802, "sCityBlacksmithRight", "everythingLeft",
+                  gg_unit_n00K_0477)
+    spawn:addBase("blacksmithCreep", "sCityBlacksmithLeft", "cDeathMidLeft",
+                  gg_unit_n00K_0802, "sCityBlacksmithRight", "cDeathMidRight",
+                  gg_unit_n00K_0477)
+    spawn:addBase("castle", "sHeroLeft", "everythingRight", gg_unit_h00E_0033,
+                  "sHeroRight", "everythingLeft", gg_unit_h00E_0081)
+    spawn:addBase("cityElves", "sCityElfLeft", "everythingRight",
+                  gg_unit_hvlt_0207, "sCityElfRight", "everythingLeft",
+                  gg_unit_hvlt_0406)
+    spawn:addBase("cityFront", "sCityFrontLeft", "middleRight",
+                  gg_unit_n00B_0364, "sCityFrontRight", "middleLeft",
+                  gg_unit_n00B_0399)
+    spawn:addBase("citySide", "sCitySideLeft", "middleRight", gg_unit_n00B_0102,
+                  "sCitySideRight", "middleLeft", gg_unit_n00B_0038)
+    spawn:addBase("kobold", "sKolboldLeft", "topRight", gg_unit_ngt2_0525,
+                  "sKolboldRight", "bottomLeft", gg_unit_ngt2_0455)
+    spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109,
+                  "sElfRight", "bottomLeft", gg_unit_nheb_0036)
+    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft",
+                  gg_unit_nheb_0109, "sElfRight", "cForestRight",
+                  gg_unit_nheb_0036)
+    spawn:addBase("merc", "sCampLeft", "bottomRight", gg_unit_n001_0048,
+                  "sCampRight", "topLeft", gg_unit_n001_0049)
+    spawn:addBase("mine", "sWorkshopLeft", "bottomRight", gg_unit_h006_0074,
+                  "sWorkshopRight", "topLeft", gg_unit_h006_0055)
+    spawn:addBase("naga", "sNagaLeft", "topRight", gg_unit_nntt_0135,
+                  "sNagaRight", "bottomLeft", gg_unit_nntt_0132)
+    spawn:addBase("murloc", "sMurlocLeft", "topRight", gg_unit_nmh1_0735,
+                  "sMurlocRight", "bottomLeft", gg_unit_nmh1_0783)
+    spawn:addBase("nagaCreep", "sNagaLeft", "cTidesLeft", gg_unit_nntt_0135,
+                  "sNagaRight", "cTidesRight", gg_unit_nntt_0132)
+    spawn:addBase("nightElves", "sTreeLeft", "topRight", gg_unit_e003_0058,
+                  "sTreeRight", "bottomLeft", gg_unit_e003_0014)
+    spawn:addBase("orc", "sOrcLeft", "topRight", gg_unit_o001_0075, "sOrcRight",
+                  "bottomLeft", gg_unit_o001_0078)
+    spawn:addBase("shipyard", "sElfShipyardLeft", "sHumanShipyardRight",
+                  gg_unit_eshy_0120, "sElfShipyardRight", "sHumanShipyardLeft",
+                  gg_unit_eshy_0047)
+    spawn:addBase("hshipyard", "sHumanShipyardLeft", "sHumanShipyardRight",
+                  gg_unit_hshy_0011, "sHumanShipyardRight",
+                  "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
+    spawn:addBase("town", "sTownLeft", "bottomRight", gg_unit_h00F_0029,
+                  "sTownRight", "topLeft", gg_unit_h00F_0066)
+    spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0262,
+                  "sUndeadRight", "middleLeft", gg_unit_u001_0264)
 end
 
 function spawnAddUnits()
@@ -675,14 +688,6 @@ function spawnAddUnits()
     spawn:addUnit("arcaneBottom", "narg", 4, {1, 2, 3}, 2, 12) -- Battle Golem
     spawn:addUnit("arcaneBottom", "hwt2", 1, {1, 2, 3}, 4, 12) -- Water Elemental (Level 2)
     spawn:addUnit("arcaneBottom", "hwt3", 1, {2, 3}, 8, 12) -- Water Elemental (Level 3)
-
-    -- Blacksmith Spawn
-    spawn:addUnit("blacksmith", "hfoo", 1, {1, 2, 3, 4, 5}, 3, 12) -- Footman 1
-    spawn:addUnit("blacksmith", "h00L", 1, {1, 2, 3, 4}, 4, 12) -- Knight
-    spawn:addUnit("blacksmith", "h00L", 1, {1, 2, 3, 4}, 5, 12) -- Knight
-    spawn:addUnit("blacksmith", "h017", 1, {1, 2, 3}, 6, 12) -- Scarlet Commander
-    spawn:addUnit("blacksmith", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
-    spawn:addUnit("blacksmith", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
     -- Blacksmith Creep Spawn
     spawn:addUnit("blacksmithCreep", "h007", 4, {1, 2, 3, 4}, 1, 6) -- Militia
@@ -713,6 +718,14 @@ function spawnAddUnits()
     spawn:addUnit("citySide", "h015", 1, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
     spawn:addUnit("citySide", "hfoo", 2, {6, 7, 8, 9, 10}, 2, 12) -- Footman 1
     spawn:addUnit("citySide", "h015", 2, {1, 2, 3, 4, 6}, 3, 12) -- Militia 1
+
+    -- Blacksmith Spawn
+    spawn:addUnit("citySide", "hfoo", 1, {1, 2, 3, 4, 5}, 3, 12) -- Footman 1
+    spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 4, 12) -- Knight
+    spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 5, 12) -- Knight
+    spawn:addUnit("citySide", "h017", 1, {1, 2, 3}, 6, 12) -- Scarlet Commander
+    spawn:addUnit("citySide", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
+    spawn:addUnit("citySide", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
     -- Kobold Spawn
     spawn:addUnit("kobold", "nkob", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Kobold
