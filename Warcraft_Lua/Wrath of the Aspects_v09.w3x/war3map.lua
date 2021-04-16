@@ -396,6 +396,8 @@ gg_unit_u001_0262 = nil
 gg_unit_ngt2_0525 = nil
 gg_unit_hars_0293 = nil
 gg_unit_hars_0303 = nil
+gg_rct_Aspect_of_Forest_Left_Mid = nil
+gg_rct_Aspect_of_Forest_Left_Mid_Copy = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -8257,6 +8259,8 @@ function CreateRegions()
     gg_rct_Region_043 = Rect(-28128.0, 1888.0, -28096.0, 1920.0)
     gg_rct_Zombie_Mid_Left = Rect(-24704.0, -2624.0, -24128.0, -1984.0)
     gg_rct_Zombie_Mid_Right = Rect(320.0, -7136.0, 640.0, -6624.0)
+    gg_rct_Aspect_of_Forest_Left_Mid = Rect(-25088.0, 4160.0, -24544.0, 4736.0)
+    gg_rct_Aspect_of_Forest_Left_Mid_Copy = Rect(1696.0, -13792.0, 2240.0, -13216.0)
 end
 
 function CreateCameras()
@@ -12406,7 +12410,7 @@ function main()
     SetCameraBounds(-29184.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), -16256.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM), 6144.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), 7040.0 - GetCameraMargin(CAMERA_MARGIN_TOP), -29184.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), 7040.0 - GetCameraMargin(CAMERA_MARGIN_TOP), 6144.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), -16256.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
     SetDayNightModels("Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl", "Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl")
     SetTerrainFogEx(0, 2000.0, 7600.0, 0.500, 0.373, 0.471, 0.588)
-    NewSoundEnvironment("psychotic")
+    NewSoundEnvironment("Default")
     SetAmbientDaySound("CityScapeDay")
     SetAmbientNightSound("CityScapeNight")
     SetMapMusic("Music", true, 0)
