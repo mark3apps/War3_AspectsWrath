@@ -1155,24 +1155,6 @@ function INIT_AI(overallTick, overallSplit)
     end
 end
 
---------
---  Main -- This runs everything
---------
-function INIT_LUA()
-    Debugfunc(function()
-
-        -- Init AI
-        INIT_AI(3, 5)
-
-        -- Set up AI
-        INIT_Config()
-
-        -- Start Running the AI
-        ai.Start()
-
-    end, "Init")
-end
-
 --
 -- Functions
 --
@@ -1747,8 +1729,10 @@ function INIT_Config()
         ai.route.Step(gg_rct_Region_008, 100)
         ai.route.Step(gg_rct_Region_014, 100, "random")
 
-        -- Unit will pause for 7 seconds and look at a region
+        -- Unit will pause for 25 seconds and look at a region
         ai.route.Action(25, gg_rct_Region_028)
+
+        -- After that, it will run this trigger for the unit
         ai.route.Trigger(gg_trg_Action_Test)
 
         ai.route.Step(gg_rct_Region_008, 100)
@@ -1787,11 +1771,26 @@ function INIT_Config()
         ai.route.Step(gg_rct_Region_031, 100)
         ai.route.Step(gg_rct_Region_030, 100)
         ai.route.Step(gg_rct_Region_029, 100)
+        ai.route.Step(gg_rct_Region_014, 100, "random")
+
+        -- Unit will pause for 25 seconds and look at a region
+        ai.route.Action(25, gg_rct_Region_028)
+
+        -- After that, it will run this trigger for the unit
+        ai.route.Trigger(gg_trg_Action_Test)
+        ai.route.Step(gg_rct_Region_029, 100)
         ai.route.Finish(100)
 
         --
         -- Go To the other Town
         ai.route.New("Out", true, "inTown")
+        ai.route.Step(gg_rct_Region_031, 100)
+        ai.route.Step(gg_rct_Region_032, 100)
+        ai.route.Step(gg_rct_Region_033, 100)
+        ai.route.Step(gg_rct_Region_034, 100)
+        ai.route.Step(gg_rct_Region_035, 100)
+        ai.route.Step(gg_rct_Region_036, 100)
+        ai.route.Step(gg_rct_Region_038, 100)
         ai.route.Step(gg_rct_Region_039, 100)
         ai.route.Step(gg_rct_Region_040, 100)
         ai.route.Step(gg_rct_Region_029, 100)

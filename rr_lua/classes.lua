@@ -1091,21 +1091,3 @@ function INIT_AI(overallTick, overallSplit)
 
     end
 end
-
---------
---  Main -- This runs everything
---------
-function INIT_LUA()
-    Debugfunc(function()
-
-        -- Init AI
-        INIT_AI(3, 5)
-
-        -- Set up AI
-        INIT_Config()
-
-        -- Start Running the AI
-        ai.Start()
-
-    end, "Init")
-end
