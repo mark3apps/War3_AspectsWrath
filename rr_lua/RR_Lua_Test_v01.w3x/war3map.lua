@@ -7,9 +7,6 @@ udg_AI_TriggeringStep = 0
 udg_AI_TriggeringAction = 0
 udg_AI_TriggeringState = ""
 udg_AI_TriggeringId = 0
-gg_trg_Testing = nil
-gg_trg_Melee_Initialization = nil
-gg_trg_Action_Test = nil
 gg_rct_Region_000 = nil
 gg_rct_Region_001 = nil
 gg_rct_Region_002 = nil
@@ -52,6 +49,9 @@ gg_rct_Region_038 = nil
 gg_rct_Region_039 = nil
 gg_rct_Region_040 = nil
 gg_rct_Region_041 = nil
+gg_trg_Testing = nil
+gg_trg_Melee_Initialization = nil
+gg_trg_Action_Test = nil
 function InitGlobals()
     udg_townVillageForce = CreateForce()
     udg_TEMP_UnitGroup = CreateGroup()
@@ -1308,6 +1308,15 @@ do
         return dat
     end
 end
+
+--- Get a random xy in the specified rect
+---@param rect any
+---@return any
+---@return any
+function GetRandomCoordinatesInRect(rect)
+    return GetRandomReal(GetRectMinX(rect), GetRectMaxX(rect)), GetRandomReal(GetRectMinY(rect), GetRectMaxY(rect))
+end
+
 
 ---Credit KickKing -A system that allow you to duplicate the functionality of auto-filling in the Object Editor
 ---@param level number @How many Levels or iterations to use for this

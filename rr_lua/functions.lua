@@ -109,6 +109,15 @@ do
     end
 end
 
+--- Get a random xy in the specified rect
+---@param rect any
+---@return any
+---@return any
+function GetRandomCoordinatesInRect(rect)
+    return GetRandomReal(GetRectMinX(rect), GetRectMaxX(rect)), GetRandomReal(GetRectMinY(rect), GetRectMaxY(rect))
+end
+
+
 ---Credit KickKing -A system that allow you to duplicate the functionality of auto-filling in the Object Editor
 ---@param level number @How many Levels or iterations to use for this
 ---@param base number @The number to start with
