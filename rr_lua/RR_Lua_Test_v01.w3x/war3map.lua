@@ -1,5 +1,4 @@
 udg_townVillageForce = nil
-udg_TEMP_UnitGroup = nil
 udg_AI_TriggeringUnit = nil
 udg_AI_TriggeringRegion = nil
 udg_AI_TriggeringRoute = ""
@@ -49,139 +48,18 @@ gg_rct_Region_038 = nil
 gg_rct_Region_039 = nil
 gg_rct_Region_040 = nil
 gg_rct_Region_041 = nil
-gg_trg_Testing = nil
 gg_trg_Melee_Initialization = nil
 gg_trg_Action_Test = nil
+gg_trg_Gather_Units = nil
+gg_trg_Send_Home = nil
 function InitGlobals()
     udg_townVillageForce = CreateForce()
-    udg_TEMP_UnitGroup = CreateGroup()
     udg_AI_TriggeringRoute = ""
     udg_AI_TriggeringStep = 0
     udg_AI_TriggeringAction = 0
     udg_AI_TriggeringState = ""
     udg_AI_TriggeringId = 0
 end
-
-function INIT_Config()
-
-    -- Add Towns
-    -- Set up the town, set activity probabiliy per tick and the AI tick Multipler (3, 1x)
-    ai.town.New("city", 3, 1)
-
-    -- Set the player group that the town finds Hostile
-    ai.town.HostileForce("city", udg_townVillageForce)
-
-    -- CounterClockwise Route (Listed as a looping route,
-    -- meaning units will start at the step closest to their
-    -- location and then finish on that same step by looping
-    -- through all of the steps)
-    ai.route.New("city_01", true, "inTown")
-    ai.route.Step(gg_rct_Region_000, 100)
-    ai.route.Step(gg_rct_Region_001, 100)
-    ai.route.Step(gg_rct_Region_002, 100)
-    ai.route.Step(gg_rct_Region_003, 100)
-    ai.route.Step(gg_rct_Region_004, 100)
-    ai.route.Step(gg_rct_Region_005, 100)
-    ai.route.Step(gg_rct_Region_006, 100)
-    ai.route.Step(gg_rct_Region_007, 100)
-    ai.route.Step(gg_rct_Region_008, 100)
-    ai.route.Step(gg_rct_Region_014, 100, "random")
-
-    -- Unit will pause for 7 seconds and look at a region
-    ai.route.Action(8, gg_rct_Region_028)
-    ai.route.Step(gg_rct_Region_008, 100)
-    ai.route.Step(gg_rct_Region_009, 100)
-    ai.route.Step(gg_rct_Region_010, 100, "random")
-
-    -- Unit will pause for 5 seconds
-    ai.route.Action(5)
-    ai.route.Step(gg_rct_Region_011, 100, "random")
-    ai.route.Action(5)
-    ai.route.Step(gg_rct_Region_012, 100, "random")
-    ai.route.Action(8)
-    ai.route.Step(gg_rct_Region_009, 100)
-    ai.route.Step(gg_rct_Region_013, 100, "random")
-    ai.route.Action(9)
-    ai.route.Step(gg_rct_Region_009, 100)
-
-    -- What to do at the end of the unit's route (Speed to have them go to their home position at)
-    ai.route.Finish(100)
-
-    --
-    -- Clockwise Route
-    ai.route.New("city_02", true, "inTown")
-    ai.route.Step(gg_rct_Region_040, 100)
-    ai.route.Step(gg_rct_Region_039, 100)
-    ai.route.Step(gg_rct_Region_038, 100)
-    ai.route.Step(gg_rct_Region_037, 100, "random")
-    ai.route.Action(4)
-    ai.route.Step(gg_rct_Region_036, 100)
-    ai.route.Step(gg_rct_Region_035, 100)
-    ai.route.Step(gg_rct_Region_034, 100)
-    ai.route.Step(gg_rct_Region_033, 100)
-    ai.route.Step(gg_rct_Region_032, 100)
-    ai.route.Step(gg_rct_Region_031, 100)
-    ai.route.Step(gg_rct_Region_030, 100)
-    ai.route.Step(gg_rct_Region_029, 100)
-    ai.route.Finish(100)
-
-    --
-    -- Go To the other Town
-    ai.route.New("Out", true, "inTown")
-    ai.route.Step(gg_rct_Region_039, 100)
-    ai.route.Step(gg_rct_Region_040, 100)
-    ai.route.Step(gg_rct_Region_029, 100)
-    ai.route.Step(gg_rct_Region_030, 100)
-    ai.route.Step(gg_rct_Region_015, 100)
-    ai.route.Step(gg_rct_Region_016, 100)
-    ai.route.Step(gg_rct_Region_018, 100)
-    ai.route.Step(gg_rct_Region_019, 100)
-    ai.route.Step(gg_rct_Region_020, 100)
-    ai.route.Step(gg_rct_Region_021, 100)
-    ai.route.Step(gg_rct_Region_022, 100)
-    ai.route.Step(gg_rct_Region_023, 100)
-    ai.route.Step(gg_rct_Region_041, 100)
-    ai.route.Step(gg_rct_Region_024, 100)
-    ai.route.Step(gg_rct_Region_026, 100)
-    ai.route.Step(gg_rct_Region_025, 100)
-    ai.route.Step(gg_rct_Region_019, 100)
-    ai.route.Step(gg_rct_Region_018, 100)
-    ai.route.Step(gg_rct_Region_017, 100)
-    ai.route.Step(gg_rct_Region_016, 100)
-    ai.route.Step(gg_rct_Region_015, 100)
-    ai.route.Step(gg_rct_Region_030, 100)
-    ai.route.Step(gg_rct_Region_002, 100)
-    ai.route.Step(gg_rct_Region_003, 100)
-    ai.route.Step(gg_rct_Region_004, 100)
-    ai.route.Step(gg_rct_Region_005, 100)
-    ai.route.Finish(100)
-
-    --
-    -- Add all units on the map to AI
-    local g = CreateGroup()
-
-    -- Find all units
-    g = GetUnitsInRectAll(GetPlayableMapRect())
-
-    -- Loop through the units
-    local u = FirstOfGroup(g)
-    while u ~= nil do
-
-        -- Add Unit (Will rename unit to the unit name specified)
-        ai.unit.New("city", "villager", u, GetUnitName(u), "day")
-
-        -- Add the routes that this unit has available to it when in the relax state
-        ai.unit.AddRoute(u, "city_01")
-        ai.unit.AddRoute(u, "city_02")
-        ai.unit.AddRoute(u, "Out")
-
-        GroupRemoveUnit(g, u)
-        u = FirstOfGroup(g)
-    end
-    DestroyGroup(g)
-
-end
-
 
 ---@diagnostic disable: lowercase-global
 --------------
@@ -358,6 +236,27 @@ function INIT_AI(overallTick, overallSplit)
 
     end
 
+    function ai.town.UnitsSetRoute(town, route)
+        ForGroup(ai.town[town].units, function()
+            local unit = GetEnumUnit()
+
+            print("Gather")
+            Debugfunc(function()
+                ai.unit.PickRoute(unit, route)
+                ai.unit.MoveToNextStep(unit, true)
+            end, "Gather")
+            print("Gathering")
+        end)
+    end
+
+    function ai.town.UnitsSetState(town, state)
+        ForGroup(ai.town[town].units, function()
+            local unit = GetEnumUnit()
+
+            ai.unit.State(unit, state)
+        end)
+    end
+
     function ai.town.UnitsHurt(town, low, high, kill)
 
         ForGroup(ai.town[town].units, function()
@@ -384,6 +283,57 @@ function INIT_AI(overallTick, overallSplit)
         end)
 
         return true
+    end
+
+    --------
+    --  REGION ACTIONS
+    --------
+
+    function ai.region.New(rect)
+
+        local id = GetHandleId(rect)
+
+        if ai.region[id] == nil then
+            ai.region[id] = {
+                xMin = GetRectMinX(rect),
+                xMax = GetRectMaxX(rect),
+                yMin = GetRectMinY(rect),
+                yMax = GetRectMaxY(rect),
+                x = GetRectCenterX(rect),
+                y = GetRectCenterY(rect),
+                id = id,
+                region = CreateRegion()
+            }
+
+            -- Set up Region
+            RegionAddRect(ai.region[id].region, rect)
+
+            -- Add Event to AI Region Enter Trigger
+            TriggerRegisterEnterRegionSimple(ai.trig.UnitEntersRegion,
+                                             ai.region[id].region)
+        end
+
+    end
+
+    function ai.region.GetRandom(id)
+        local data = ai.region[id]
+
+        return GetRandomReal(data.xMin, data.xMax),
+               GetRandomReal(data.yMin, data.yMax)
+    end
+
+    function ai.region.GetCenter(id) return ai.region[id].x, ai.region[id].y end
+
+    function ai.region.ContainsUnit(id, unit)
+        local data = ai.region[id]
+        local x = GetUnitX(unit)
+        local y = GetUnitY(unit)
+
+        if data.xMin < x and data.xMax > x and data.yMin < y and data.yMax > y then
+            return true
+        else
+            return false
+        end
     end
 
     --------
@@ -421,18 +371,16 @@ function INIT_AI(overallTick, overallSplit)
     function ai.route.Step(rect, speed, point, order, animationTag)
 
         -- Set default values if one wasn't specified
-        local route = ai.routeSetup
         point = point or "center"
         speed = speed or nil
         order = order or oid.move
-        
-        local handleId = GetHandleId(rect)
+
+        -- Set Bas Vars
+        local route = ai.routeSetup
+        local regionId = GetHandleId(rect)
 
         -- Add Event to Rect Entering Trigger if not already added
-        if not TableContains(ai.region, rect) then
-            table.insert(ai.route.rects, rect)
-            TriggerRegisterEnterRectSimple(ai.trig.UnitEntersRegion, rect)
-        end
+        ai.region.New(rect)
 
         -- Update the count of steps in the route
         local stepCount = ai.route[route].stepCount + 1
@@ -442,10 +390,8 @@ function INIT_AI(overallTick, overallSplit)
 
         ai.route[route].step[stepCount] =
             {
-                rect = rect,
+                regionId = regionId,
                 speed = speed,
-                x = GetRectCenterX(rect),
-                y = GetRectCenterY(rect),
                 actionCount = 0,
                 point = point,
                 order = order,
@@ -567,6 +513,7 @@ function INIT_AI(overallTick, overallSplit)
             shift = shift,
             state = "Auto",
             type = type,
+            regionId = nil,
             walking = false,
             speed = GetUnitMoveSpeed(unit),
             speedDefault = GetUnitMoveSpeed(unit),
@@ -576,6 +523,7 @@ function INIT_AI(overallTick, overallSplit)
             stepNumberStart = 0,
             stepNumber = 0,
             actionNumber = 0,
+            orderLast = nil,
             routes = {},
             xHome = x,
             yHome = y,
@@ -680,18 +628,25 @@ function INIT_AI(overallTick, overallSplit)
                 local x = GetUnitX(unit)
                 local y = GetUnitY(unit)
 
+                local regionX, regionY
+
                 for i = 1, routeData.stepCount do
-                    newDistance = DistanceBetweenCoordinates(x, y,
-                                                             routeData.step[i].x,
-                                                             routeData.step[i].y)
-                    if distance > newDistance then
+                    regionX, regionY = ai.region.GetCenter(
+                                           routeData.step[i].regionId)
+
+                    newDistance = DistanceBetweenCoordinates(x, y, regionX,
+                                                             regionY)
+
+                    if distance > newDistance and
+                        not ai.region.ContainsUnit(routeData.step[i].regionId,
+                                                   unit) then
                         distance = newDistance
                         stepNumber = i
                     end
                 end
-            end
 
-            stepNumber = stepNumber - 1
+                stepNumber = stepNumber - 1
+            end
         end
 
         stepNumber = stepNumber or 0
@@ -707,34 +662,34 @@ function INIT_AI(overallTick, overallSplit)
     end
 
     --- Run next Step in a Units Current Route
-    ---@param unit any
     function ai.unit.NextStep(unit)
         local data = ai.unit[GetHandleId(unit)]
 
         local stepNumber = ai.unit[data.id].stepNumber + 1
 
-        --print(stepNumber .. " " .. ai.route[data.route].stepCount)
-
         -- If there are no more steps, return
         if stepNumber > ai.route[data.route].stepCount then return false end
+
+        local step = ai.route[data.route].step[stepNumber]
+        local speed = step.speed or data.speedDefault
 
         -- Set new Unit Step Info || Reset Action Number
         ai.unit[data.id].stateCurrent = "Moving"
         ai.unit[data.id].stepNumber = stepNumber
         ai.unit[data.id].actionNumber = 0
-
-        local step = ai.route[data.route].step[stepNumber]
-        local speed = step.speed or data.speedDefault
+        ai.unit[data.id].regionId = step.regionId
+        ai.unit[data.id].speed = speed
 
         -- Get new Destination for unit
         if step.point == "random" then
-            ai.unit[data.id].xDest, ai.unit[data.id].yDest = GetRandomCoordinatesInRect(step.rect)
+            ai.unit[data.id].xDest, ai.unit[data.id].yDest =
+                ai.region.GetRandom(step.regionId)
         else
-            ai.unit[data.id].xDest = step.x
-            ai.unit[data.id].yDest = step.y
+            ai.unit[data.id].xDest, ai.unit[data.id].yDest =
+                ai.region.GetCenter(step.regionId)
         end
-        ai.unit[data.id].speed = speed
 
+        -- Set whether unit should run or walk.
         if speed <= 100 then
             BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 120.00)
             AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
@@ -746,13 +701,15 @@ function INIT_AI(overallTick, overallSplit)
         end
 
         SetUnitMoveSpeed(unit, speed)
-        IssuePointOrderById(unit, step.order, step.x, step.y)
+
+        -- Issue Move Order
+        IssuePointOrderById(unit, step.order, ai.unit[data.id].xDest,
+                            ai.unit[data.id].yDest)
 
         return true
     end
 
     --- Run the units next Route Action
-    ---@param unit any
     function ai.unit.NextAction(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -760,7 +717,13 @@ function INIT_AI(overallTick, overallSplit)
         local tick = 0.1
 
         local stepNumber = data.stepNumber
-        local actionNumber = ai.unit[data.id].actionNumber + 1
+        local actionNumber = data.actionNumber + 1
+
+        -- If There doesn't exist the current step cancel
+        if stepNumber == nil then return end
+        if stepNumber > ai.route[data.route].stepCount or stepNumber == 0 then
+            return false
+        end
 
         -- If there are no more actions, return
         if actionNumber > ai.route[data.route].step[stepNumber].actionCount then
@@ -800,13 +763,7 @@ function INIT_AI(overallTick, overallSplit)
                     IssuePointOrderById(unit, oid.move, xNew, yNew)
 
                     -- Wait for unit to stop Moving or 2 seconds
-                    local order = oid.move
-                    local i = 1
-                    while order == oid.move and i < 2 do
-                        order = GetUnitCurrentOrder(unit)
-                        PolledWait(tick)
-                        i = i + tick
-                    end
+                    WaitWhileOrder(unit, 4)
                 end
 
                 if action.animation ~= nil then
@@ -856,8 +813,6 @@ function INIT_AI(overallTick, overallSplit)
     end
 
     --- Set the Unit State
-    ---@param unit any @The unit in the AI system
-    ---@param state string @Takes a Unit State
     function ai.unit.State(unit, state)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -873,7 +828,6 @@ function INIT_AI(overallTick, overallSplit)
     end
 
     --- Update the Units intel
-    ---@param unit any @The unit in the AI system
     function ai.unit.Intel(unit)
 
         local data = ai.unit[GetHandleId(unit)]
@@ -885,106 +839,116 @@ function INIT_AI(overallTick, overallSplit)
         local g = CreateGroup()
         local l = GetUnitLoc(unit)
 
-        g = GetUnitsInRangeOfLocAll(data.radius, l)
+        -- g = GetUnitsInRangeOfLocAll(data.radius, l)
 
-        u = FirstOfGroup(g)
-        while u ~= nil do
+        -- u = FirstOfGroup(g)
+        -- while u ~= nil do
 
-            -- Look for alerted Allies or Enemy units
-            if IsUnitInForce(u, ai.town[data.town].hostileForce) then
-                enemies = enemies + 1
-            elseif IsUnitInGroup(u, ai.unitGroup) and
-                ai.unit[GetHandleId(u)].alerted == true then
-                alertedAllies = alertedAllies + 1
-            end
+        --     -- Look for alerted Allies or Enemy units
+        --     if IsUnitInForce(u, ai.town[data.town].hostileForce) then
+        --         enemies = enemies + 1
+        --     elseif IsUnitInGroup(u, ai.unitGroup) and
+        --         ai.unit[GetHandleId(u)].alerted == true then
+        --         alertedAllies = alertedAllies + 1
+        --     end
 
-            GroupRemoveUnit(g, u)
-            u = FirstOfGroup(g)
-        end
-        DestroyGroup(g)
-        RemoveLocation(l)
+        --     GroupRemoveUnit(g, u)
+        --     u = FirstOfGroup(g)
+        -- end
+        -- DestroyGroup(g)
+        -- RemoveLocation(l)
 
-        ai.unit[data.id].enemies = enemies
-        ai.unit[data.id].alertedAllies = alertedAllies
+        -- ai.unit[data.id].enemies = enemies
+        -- ai.unit[data.id].alertedAllies = alertedAllies
     end
 
-    function ai.unit.MoveToNextStep(unit)
-
+    function ai.unit.Post(unit)
         local data = ai.unit[GetHandleId(unit)]
 
-        -- Set Local Variables
-        local success = true
-        local tick = 0.1
+        ai.unit[data.id].orderLast = GetUnitCurrentOrder(unit)
+        return true
 
-        -- Wait until unit stops Moving or 2 seconds
-        local order = oid.move
-        local i = 1
-        while order == oid.move and i < 2 do
-            order = GetUnitCurrentOrder(unit)
-            PolledWait(tick)
-            i = i + tick
-        end
+    end
 
-        -- Keep running actions unit finished with step
-        while success do success = ai.unit.NextAction(unit) end
+    function ai.unit.MoveToNextStep(unit, immediately)
 
-        -- Run next Step
-        if ai.unit[data.id].looped and ai.unit[data.id].stepNumber >
-            data.stepNumberStart then
+        immediately = immediately or false
 
-            local speed = ai.route[data.route].endSpeed or data.speedDefault
+        Debugfunc(function()
+            local data = ai.unit[GetHandleId(unit)]
 
-            if speed < 100 then
-                BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 100.00)
-                AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
-                ai.unit[data.id].walk = true
-            else
-                BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
-                AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
-                ai.unit[data.id].walk = false
-            end
+            -- Set Local Variables
+            local success = true
+            local tick = 0.1
 
-            SetUnitMoveSpeed(unit, speed)
+            -- Wait until unit stops Moving or 2 seconds
+            if not immediately then WaitWhileOrder(unit, 4) end
 
-            ai.unit.State(unit, "ReturnHome")
-        else
+            -- Order Unit to stop
+            IssueImmediateOrder(unit, oid.stop)
 
-            success = ai.unit.NextStep(unit)
+            -- Keep running actions unit finished with step
+            while success do success = ai.unit.NextAction(unit) end
 
-            -- If route is finished Send unit Home
-            if not success then
+            -- Run next Step
+            if ai.unit[data.id].looped and ai.unit[data.id].stepNumber >
+                data.stepNumberStart then
 
-                if ai.route[data.route].loop then
-                    ai.unit[data.id].looped = true
-                    ai.unit[data.id].stepNumber = 0
-                    ai.unit[data.id].actionNumber = 0
-                    success = ai.unit.NextStep(unit)
+                local speed = ai.route[data.route].endSpeed or data.speedDefault
+
+                if speed < 100 then
+                    BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED,
+                                          100.00)
+                    AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
+                    ai.unit[data.id].walk = true
                 else
+                    BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED,
+                                          270.00)
+                    AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
+                    ai.unit[data.id].walk = false
+                end
 
-                    local speed = ai.route[data.route].endSpeed or
-                                      data.speedDefault
+                SetUnitMoveSpeed(unit, speed)
 
-                    if speed < 100 then
-                        BlzSetUnitRealFieldBJ(unit,
-                                              UNIT_RF_ANIMATION_WALK_SPEED,
-                                              100.00)
-                        AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
-                        ai.unit[data.id].walk = true
+                ai.unit.State(unit, "ReturnHome")
+            else
+                success = ai.unit.NextStep(unit)
+
+                -- If route is finished Send unit Home
+                if not success then
+
+                    if ai.route[data.route].loop then
+                        ai.unit[data.id].looped = true
+                        ai.unit[data.id].stepNumber = 0
+                        ai.unit[data.id].actionNumber = 0
+                        success = ai.unit.NextStep(unit)
                     else
-                        BlzSetUnitRealFieldBJ(unit,
-                                              UNIT_RF_ANIMATION_WALK_SPEED,
-                                              270.00)
-                        AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
-                        ai.unit[data.id].walk = false
+
+                        local speed = ai.route[data.route].endSpeed or
+                                          data.speedDefault
+
+                        if speed < 100 then
+                            BlzSetUnitRealFieldBJ(unit,
+                                                  UNIT_RF_ANIMATION_WALK_SPEED,
+                                                  100.00)
+                            AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
+                            ai.unit[data.id].walk = true
+                        else
+                            BlzSetUnitRealFieldBJ(unit,
+                                                  UNIT_RF_ANIMATION_WALK_SPEED,
+                                                  270.00)
+                            AddUnitAnimationPropertiesBJ(false, "cinematic",
+                                                         unit)
+                            ai.unit[data.id].walk = false
+                        end
+
+                        SetUnitMoveSpeed(unit, speed)
+
+                        ai.unit.State(unit, "ReturnHome")
                     end
-
-                    SetUnitMoveSpeed(unit, speed)
-
-                    ai.unit.State(unit, "ReturnHome")
                 end
             end
-        end
-
+        end, "Test")
         return true
     end
 
@@ -994,7 +958,6 @@ function INIT_AI(overallTick, overallSplit)
 
     --
     --- MOVE STATE
-    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.Move(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -1003,20 +966,17 @@ function INIT_AI(overallTick, overallSplit)
         local route = data.routes[GetRandomInt(1, #data.routes)]
 
         ai.unit.PickRoute(unit)
-        ai.unit.NextStep(unit)
+        ai.unit.MoveToNextStep(unit)
 
         return true
     end
 
     --
     --- RELAX STATE
-    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.Relax(unit)
         local data = ai.unit[GetHandleId(unit)]
 
         local prob = GetRandomInt(1, 100)
-
-        --print("Trying " .. GetUnitName(unit))
 
         if ai.town[data.town].activityProbability >= prob then
 
@@ -1030,19 +990,17 @@ function INIT_AI(overallTick, overallSplit)
     end
 
     --- RETURN HOME
-    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.ReturnHome(unit)
         local data = ai.unit[GetHandleId(unit)]
 
         ai.unit[data.id].stateCurrent = "ReturningHome"
         ai.unit[data.id].route = nil
-        ai.unit[data.id].stepNumber = nil
-        ai.unit[data.id].actionNumber = nil
+        ai.unit[data.id].stepNumber = 0
+        ai.unit[data.id].actionNumber = 0
         ai.unit[data.id].xDest = nil
         ai.unit[data.id].yDest = nil
         ai.unit[data.id].speed = nil
 
-        --print("x:" .. data.xHome .. " y:" .. data.yHome)
         IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
 
         return true
@@ -1053,26 +1011,17 @@ function INIT_AI(overallTick, overallSplit)
     --------
 
     --- Moving State
-    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.Moving(unit)
         local data = ai.unit[GetHandleId(unit)]
 
-        if GetUnitCurrentOrder(unit) ~= oid.move then
-            -- If the Rect isn't the targetted end rect, ignore any future actions
-            if RectContainsUnit(ai.route[data.route].step[data.stepNumber].rect,
-                                unit) then
-                --ai.unit.MoveToNextStep(unit)
-            else
-                IssuePointOrderById(unit, oid.move, data.xDest, data.yDest)
-            end
-
+        if GetUnitCurrentOrder(unit) ~= oid.move and data.orderLast ~= oid.Move then
+            ai.unit.MoveToNextStep(unit)
         end
 
         return true
     end
 
     --- Waiting State
-    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.Waiting(unit)
 
         -- Do nothing, come on now, what did you think was going to be here??
@@ -1080,7 +1029,6 @@ function INIT_AI(overallTick, overallSplit)
     end
 
     --- Returning Home State
-    ---@param unit any @The unit in the AI system
     function ai.unitSTATE.ReturningHome(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -1118,7 +1066,7 @@ function INIT_AI(overallTick, overallSplit)
     TriggerAddAction(ai.trig.UnitLoop, function()
 
         -- Set up Local Variables
-        local u, data, handleId
+        local u, data
         local g = CreateGroup()
 
         -- Add all AI units to the group
@@ -1139,6 +1087,7 @@ function INIT_AI(overallTick, overallSplit)
                 -- Run the routine for the unit's current state
                 ai.unit.Intel(u)
                 ai.unit.State(u, data.stateCurrent)
+                ai.unit.Post(u)
 
             end
 
@@ -1155,33 +1104,28 @@ function INIT_AI(overallTick, overallSplit)
     TriggerAddAction(ai.trig.UnitEntersRegion, function()
 
         local unit = GetEnteringUnit()
-
+        local region = GetTriggeringRegion()
         Debugfunc(function()
-
             -- If Unit is an AI Unit
             if IsUnitInGroup(unit, ai.unitGroup) then
 
                 -- Get Unit Data
                 local data = ai.unit[GetHandleId(unit)]
 
-                -- This helps to verify unit will show up as in the target rect
-                PolledWait(0.5)
-
                 -- If usit it on a route
                 if data.route then
 
                     -- If the Rect isn't the targetted end rect, ignore any future actions
-                    if not RectContainsUnit(
-                        ai.route[data.route].step[data.stepNumber].rect, unit) then
-                        return false
+                    if region == ai.region[data.regionId].region then
+                        ai.unit.MoveToNextStep(unit)
+
+                        return true
                     end
-                else
-                    return false
                 end
 
-                ai.unit.MoveToNextStep(unit)
             end
-        end, "Entering")
+        end, "Loop")
+        return false
     end)
 
     --------
@@ -1348,14 +1292,46 @@ function GetRandomCoordinatesInRect(rect)
     return GetRandomReal(GetRectMinX(rect), GetRectMaxX(rect)), GetRandomReal(GetRectMinY(rect), GetRectMaxY(rect))
 end
 
+---Get a random xy in the specified datapoints
+---@param xMin number
+---@param xMax number
+---@param yMin number
+---@param yMax number
+---@return number
+---@return number
+function GetRandomCoordinatesInPoints(xMin, xMax, yMin, yMax)
+    return GetRandomReal(xMin, xMax), GetRandomReal(yMin, yMax)
+end
+
+--- Wait until Order ends or until the amount of time specified
+function WaitWhileOrder(unit, time, order, tick)
+
+    -- Set Defaults
+    time = time or 2
+    order = order or oid.move
+    tick = tick or 0.1
+
+    -- Set Local Variables
+    local i = 1
+    local unitOrder = GetUnitCurrentOrder(unit)
+
+    -- Loop
+    while unitOrder == oid.move and i < time do
+        unitOrder = GetUnitCurrentOrder(unit)
+        PolledWait(tick)
+        i = i + tick
+    end
+
+    return true
+end
 
 ---Credit KickKing -A system that allow you to duplicate the functionality of auto-filling in the Object Editor
----@param level number @How many Levels or iterations to use for this
----@param base number @The number to start with
----@param previousFactor number @Multiply the previous level by this value
----@param levelFactor number @This value exponential adds to itself every level
----@param constant number @This gets added every level
----@return number @The calculated Value
+---@param level             number @How many Levels or iterations to use for this
+---@param base              number @The number to start with
+---@param previousFactor    number @Multiply the previous level by this value
+---@param levelFactor       number @This value exponential adds to itself every level
+---@param constant          number @This gets added every level
+---@return                  number @The calculated Value
 function ValueFactor(level, base, previousFactor, levelFactor, constant)
 
     local value = base
@@ -1745,17 +1721,155 @@ oid = {
 }
 
 
+function INIT_Config()
+
+    Debugfunc(function()
+        -- Add Towns
+        -- Set up the town, set activity probabiliy per tick and the AI tick Multipler (3, 1x)
+        ai.town.New("city", 3, 1)
+
+        -- Set the player group that the town finds Hostile
+        ai.town.HostileForce("city", udg_townVillageForce)
+
+        -- CounterClockwise Route (Listed as a looping route,
+        -- meaning units will start at the step closest to their
+        -- location and then finish on that same step by looping
+        -- through all of the steps)
+        ai.route.New("city_01", true, "inTown")
+        ai.route.Step(gg_rct_Region_000, 100)
+        ai.route.Step(gg_rct_Region_001, 100)
+        ai.route.Step(gg_rct_Region_002, 100)
+        ai.route.Step(gg_rct_Region_003, 100)
+        ai.route.Step(gg_rct_Region_004, 100)
+        ai.route.Step(gg_rct_Region_005, 100)
+        ai.route.Step(gg_rct_Region_006, 100)
+        ai.route.Step(gg_rct_Region_007, 100)
+        ai.route.Step(gg_rct_Region_008, 100)
+        ai.route.Step(gg_rct_Region_014, 100, "random")
+
+        -- Unit will pause for 7 seconds and look at a region
+        ai.route.Action(25, gg_rct_Region_028)
+        ai.route.Trigger(gg_trg_Action_Test)
+
+        ai.route.Step(gg_rct_Region_008, 100)
+        ai.route.Step(gg_rct_Region_009, 100)
+        ai.route.Step(gg_rct_Region_010, 100, "random")
+
+        -- Unit will pause for 5 seconds
+        ai.route.Action(10)
+        ai.route.Trigger(gg_trg_Action_Test)
+        ai.route.Step(gg_rct_Region_011, 100, "random")
+        ai.route.Action(15)
+        ai.route.Step(gg_rct_Region_012, 100, "random")
+        ai.route.Action(15)
+        ai.route.Step(gg_rct_Region_009, 100)
+        ai.route.Step(gg_rct_Region_013, 100, "random")
+        ai.route.Action(9)
+        ai.route.Step(gg_rct_Region_009, 100)
+
+        -- What to do at the end of the unit's route (Speed to have them go to their home position at)
+        ai.route.Finish(100)
+
+        --
+        -- Clockwise Route
+        ai.route.New("city_02", true, "inTown")
+        ai.route.Step(gg_rct_Region_040, 100)
+        ai.route.Step(gg_rct_Region_039, 100)
+        ai.route.Step(gg_rct_Region_038, 100)
+        ai.route.Step(gg_rct_Region_037, 100, "random")
+        ai.route.Action(7)
+        ai.route.Trigger(gg_trg_Action_Test)
+        ai.route.Step(gg_rct_Region_036, 100)
+        ai.route.Step(gg_rct_Region_035, 100)
+        ai.route.Step(gg_rct_Region_034, 100)
+        ai.route.Step(gg_rct_Region_033, 100)
+        ai.route.Step(gg_rct_Region_032, 100)
+        ai.route.Step(gg_rct_Region_031, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_029, 100)
+        ai.route.Finish(100)
+
+        --
+        -- Go To the other Town
+        ai.route.New("Out", true, "inTown")
+        ai.route.Step(gg_rct_Region_039, 100)
+        ai.route.Step(gg_rct_Region_040, 100)
+        ai.route.Step(gg_rct_Region_029, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_015, 100)
+        ai.route.Step(gg_rct_Region_016, 100)
+        ai.route.Step(gg_rct_Region_018, 100)
+        ai.route.Step(gg_rct_Region_019, 100)
+        ai.route.Step(gg_rct_Region_020, 100)
+        ai.route.Step(gg_rct_Region_021, 100)
+        ai.route.Step(gg_rct_Region_022, 100)
+        ai.route.Step(gg_rct_Region_023, 100)
+        ai.route.Step(gg_rct_Region_041, 100)
+        ai.route.Step(gg_rct_Region_024, 100)
+        ai.route.Step(gg_rct_Region_026, 100)
+        ai.route.Step(gg_rct_Region_025, 100)
+        ai.route.Step(gg_rct_Region_019, 100)
+        ai.route.Step(gg_rct_Region_018, 100)
+        ai.route.Step(gg_rct_Region_017, 100)
+        ai.route.Step(gg_rct_Region_016, 100)
+        ai.route.Step(gg_rct_Region_015, 100)
+        ai.route.Step(gg_rct_Region_030, 100)
+        ai.route.Step(gg_rct_Region_002, 100)
+        ai.route.Step(gg_rct_Region_003, 100)
+        ai.route.Step(gg_rct_Region_004, 100)
+        ai.route.Step(gg_rct_Region_005, 100)
+        ai.route.Finish(100)
+
+
+
+        -- Gather Units Together
+        ai.route.New("gather", false, "inTown")
+        ai.route.Step(gg_rct_Region_014, 100, "random")
+        ai.route.Action(90, gg_rct_Region_028)
+        ai.route.Finish(100)
+        --
+        -- Add all units on the map to AI
+        local g = CreateGroup()
+
+        -- Find all units
+        g = GetUnitsInRectAll(GetPlayableMapRect())
+
+        -- Loop through the units
+        local u = FirstOfGroup(g)
+        while u ~= nil do
+
+            -- Add Unit (Will rename unit to the unit name specified)
+            ai.unit.New("city", "villager", u, GetUnitName(u), "day")
+
+            -- Add the routes that this unit has available to it when in the relax state
+            ai.unit.AddRoute(u, "city_01")
+            ai.unit.AddRoute(u, "city_02")
+            ai.unit.AddRoute(u, "Out")
+
+            GroupRemoveUnit(g, u)
+            u = FirstOfGroup(g)
+        end
+        DestroyGroup(g)
+
+    end, "Setup")
+end
+
+
 function CreateUnitsForPlayer0()
     local p = Player(0)
     local u
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("hkni"), -468.1, 0.5, 181.379, FourCC("hkni"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hrif"), -368.0, -291.0, 180.511, FourCC("hrif"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -354.2, 351.1, 194.662, FourCC("hpea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hsor"), 106.4, -116.8, 195.057, FourCC("hsor"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 341.0, -161.7, 261.603, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hkni"), 25.9, -326.9, 91.112, FourCC("hkni"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hkni"), 1099.9, -399.0, 126.621, FourCC("hkni"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hpea"), 677.2, -606.0, 272.392, FourCC("hpea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hpea"), 1272.1, 145.3, 71.534, FourCC("hpea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1005.5, 160.6, 36.948, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 923.4, -346.7, 144.387, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1476.3, -1598.1, 313.614, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hfoo"), 1185.4, -2129.8, 54.878, FourCC("hfoo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hspt"), -811.7, -581.3, 185.389, FourCC("hspt"))
 end
 
 function CreateNeutralPassive()
@@ -1764,26 +1878,30 @@ function CreateNeutralPassive()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -756.3, 1050.3, 341.784, FourCC("nvil"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -287.0, 1563.9, 69.161, FourCC("nvil"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), 172.6, 1580.8, 300.101, FourCC("nvil"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), 874.0, 1093.0, 293.937, FourCC("nvl2"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), 1842.1, 599.2, 184.444, FourCC("nvl2"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), 1394.7, -555.4, 296.574, FourCC("nvl2"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -861.0, -566.5, 318.328, FourCC("nvil"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlk"), -1214.8, -213.4, 253.748, FourCC("nvlk"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvk2"), -844.2, 574.5, 65.140, FourCC("nvk2"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 59.3, 263.4, 87.718, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 503.1, 394.4, 52.615, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 522.6, -66.8, 119.963, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -1599.4, -358.4, 342.663, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -1453.5, -711.9, 212.878, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -1058.6, -794.8, 150.177, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 421.5, -797.5, 60.548, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 681.0, -871.0, 336.994, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 1605.5, -323.3, 161.427, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 0.7, 779.5, 300.628, FourCC("nvlw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 470.9, 831.1, 188.366, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvk2"), 1431.1, 224.5, 184.851, FourCC("nvk2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvk2"), 1218.9, -154.0, 39.167, FourCC("nvk2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvk2"), 1781.5, -62.3, 279.050, FourCC("nvk2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 739.2, 1194.3, 150.737, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 400.7, 1227.9, 170.601, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), 1122.7, 701.0, 128.236, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), -278.5, 926.8, 350.090, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), -711.1, 1183.0, 290.707, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), 1712.0, 444.8, 184.444, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -339.8, -97.5, 6.185, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -798.8, 512.6, 317.844, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), -1082.9, -124.7, 289.466, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvil"), 547.3, -525.3, 174.611, FourCC("nvil"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), -821.2, -873.5, 176.764, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), -1615.0, -342.6, 282.994, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvl2"), -1239.8, 295.7, 163.460, FourCC("nvl2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -1372.7, 172.2, 196.507, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -829.8, 855.3, 275.436, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), -439.1, 1740.9, 237.169, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 265.6, 1671.2, 37.805, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 568.5, 1499.4, 194.640, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 24.4, 177.2, 21.325, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 384.0, -721.4, 249.628, FourCC("nvlw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nvlw"), 1417.1, -655.0, 193.288, FourCC("nvlw"))
 end
 
 function CreatePlayerBuildings()
@@ -1804,18 +1922,18 @@ function CreateRegions()
     gg_rct_Region_000 = Rect(192.0, -768.0, 448.0, -512.0)
     gg_rct_Region_001 = Rect(1216.0, -832.0, 1440.0, -576.0)
     gg_rct_Region_002 = Rect(1440.0, -256.0, 1664.0, -64.0)
-    gg_rct_Region_003 = Rect(1664.0, 384.0, 1856.0, 576.0)
+    gg_rct_Region_003 = Rect(1664.0, 320.0, 1856.0, 512.0)
     gg_rct_Region_004 = Rect(1504.0, 864.0, 1728.0, 1088.0)
     gg_rct_Region_005 = Rect(864.0, 928.0, 1152.0, 1184.0)
     gg_rct_Region_006 = Rect(320.0, 1440.0, 576.0, 1632.0)
     gg_rct_Region_007 = Rect(-160.0, 1440.0, 32.0, 1632.0)
     gg_rct_Region_008 = Rect(-832.0, 736.0, -544.0, 1024.0)
     gg_rct_Region_009 = Rect(-1056.0, -32.0, -768.0, 224.0)
-    gg_rct_Region_010 = Rect(-1120.0, -800.0, -896.0, -576.0)
-    gg_rct_Region_011 = Rect(-1504.0, -416.0, -1312.0, -256.0)
-    gg_rct_Region_012 = Rect(-1408.0, -832.0, -1216.0, -672.0)
-    gg_rct_Region_013 = Rect(-1376.0, 128.0, -1184.0, 288.0)
-    gg_rct_Region_014 = Rect(96.0, 224.0, 352.0, 512.0)
+    gg_rct_Region_010 = Rect(-1184.0, -832.0, -896.0, -576.0)
+    gg_rct_Region_011 = Rect(-1568.0, -512.0, -1312.0, -256.0)
+    gg_rct_Region_012 = Rect(-1472.0, -832.0, -1216.0, -544.0)
+    gg_rct_Region_013 = Rect(-1408.0, 64.0, -1088.0, 384.0)
+    gg_rct_Region_014 = Rect(-32.0, 96.0, 448.0, 640.0)
     gg_rct_Region_015 = Rect(1088.0, -1504.0, 1280.0, -1344.0)
     gg_rct_Region_016 = Rect(1280.0, -2912.0, 1504.0, -2688.0)
     gg_rct_Region_017 = Rect(928.0, -3296.0, 1152.0, -3072.0)
@@ -1829,7 +1947,7 @@ function CreateRegions()
     gg_rct_Region_025 = Rect(-928.0, -2272.0, -736.0, -2048.0)
     gg_rct_Region_026 = Rect(-1440.0, -2240.0, -1280.0, -2048.0)
     gg_rct_Region_027 = Rect(-1376.0, -2816.0, -1216.0, -2592.0)
-    gg_rct_Region_028 = Rect(384.0, 512.0, 640.0, 736.0)
+    gg_rct_Region_028 = Rect(320.0, 480.0, 576.0, 704.0)
     gg_rct_Region_029 = Rect(192.0, -512.0, 416.0, -320.0)
     gg_rct_Region_030 = Rect(992.0, -736.0, 1248.0, -512.0)
     gg_rct_Region_031 = Rect(1344.0, -160.0, 1568.0, 96.0)
@@ -1838,34 +1956,20 @@ function CreateRegions()
     gg_rct_Region_034 = Rect(736.0, 800.0, 1024.0, 1056.0)
     gg_rct_Region_035 = Rect(192.0, 1312.0, 480.0, 1568.0)
     gg_rct_Region_036 = Rect(-160.0, 1280.0, 64.0, 1504.0)
-    gg_rct_Region_037 = Rect(-640.0, 1568.0, -416.0, 1792.0)
+    gg_rct_Region_037 = Rect(-640.0, 1536.0, -352.0, 1792.0)
     gg_rct_Region_038 = Rect(-608.0, 1120.0, -352.0, 1344.0)
     gg_rct_Region_039 = Rect(-576.0, 576.0, -288.0, 800.0)
     gg_rct_Region_040 = Rect(-768.0, -128.0, -576.0, 96.0)
     gg_rct_Region_041 = Rect(-1408.0, -3200.0, -1184.0, -2976.0)
 end
 
-function Trig_Testing_Actions()
-    SetUnitAnimation(GetEnumUnit(), "stand")
-    TriggerSleepAction(2)
-    TriggerExecute(gg_trg_Action_Test)
-    BlzSetUnitRealFieldBJ(BlzGetEventDamageTarget(), UNIT_RF_ANIMATION_WALK_SPEED, 100.00)
-    AddUnitAnimationPropertiesBJ(true, "cinematic", GetFilterUnit())
-    AddUnitAnimationPropertiesBJ(false, "cinematic", GetFilterUnit())
-    AddUnitAnimationPropertiesBJ(false, "cinematic", GetFilterUnit())
-end
-
-function InitTrig_Testing()
-    gg_trg_Testing = CreateTrigger()
-    DisableTrigger(gg_trg_Testing)
-    TriggerAddAction(gg_trg_Testing, Trig_Testing_Actions)
-end
-
 function Trig_Melee_Initialization_Actions()
     MeleeStartingVisibility()
     FogEnableOff()
     FogMaskEnableOff()
-        INIT_LUA()
+        INIT_AI(3, 5)
+        INIT_Config()
+        ai.Start()
 end
 
 function InitTrig_Melee_Initialization()
@@ -1877,8 +1981,9 @@ function Trig_Action_Test_Actions()
         local id = udg_AI_TriggeringId
     DisplayTextToForce(GetPlayersAll(), GetUnitName(udg_AI_TriggeringUnit))
     SetUnitLifePercentBJ(udg_AI_TriggeringUnit, 50.00)
+    AddSpecialEffectTargetUnitBJ("overhead", udg_AI_TriggeringUnit, "Abilities\\Spells\\Other\\TalkToMe\\TalkToMe.mdl")
+    DestroyEffectBJ(GetLastCreatedEffectBJ())
     TriggerSleepAction(2)
-    DisplayTextToForce(GetPlayersAll(), "TRIGSTR_007")
         ai.unit[id].stateCurrent = "TriggerFinished"
 end
 
@@ -1887,10 +1992,31 @@ function InitTrig_Action_Test()
     TriggerAddAction(gg_trg_Action_Test, Trig_Action_Test_Actions)
 end
 
+function Trig_Send_Home_Actions()
+        ai.town.UnitsSetState("city", "ReturnHome")
+end
+
+function InitTrig_Send_Home()
+    gg_trg_Send_Home = CreateTrigger()
+    TriggerRegisterPlayerChatEvent(gg_trg_Send_Home, Player(0), "-home", true)
+    TriggerAddAction(gg_trg_Send_Home, Trig_Send_Home_Actions)
+end
+
+function Trig_Gather_Units_Actions()
+        ai.town.UnitsSetRoute("city", "gather")
+end
+
+function InitTrig_Gather_Units()
+    gg_trg_Gather_Units = CreateTrigger()
+    TriggerRegisterPlayerChatEvent(gg_trg_Gather_Units, Player(0), "-gather", true)
+    TriggerAddAction(gg_trg_Gather_Units, Trig_Gather_Units_Actions)
+end
+
 function InitCustomTriggers()
-    InitTrig_Testing()
     InitTrig_Melee_Initialization()
     InitTrig_Action_Test()
+    InitTrig_Send_Home()
+    InitTrig_Gather_Units()
 end
 
 function RunInitializationTriggers()
@@ -1930,7 +2056,7 @@ function config()
     SetPlayers(1)
     SetTeams(1)
     SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
-    DefineStartLocation(0, 1024.0, -192.0)
+    DefineStartLocation(0, -1280.0, -640.0)
     InitCustomPlayerSlots()
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
     InitGenericPlayerSlots()

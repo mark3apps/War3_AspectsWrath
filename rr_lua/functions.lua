@@ -117,14 +117,46 @@ function GetRandomCoordinatesInRect(rect)
     return GetRandomReal(GetRectMinX(rect), GetRectMaxX(rect)), GetRandomReal(GetRectMinY(rect), GetRectMaxY(rect))
 end
 
+---Get a random xy in the specified datapoints
+---@param xMin number
+---@param xMax number
+---@param yMin number
+---@param yMax number
+---@return number
+---@return number
+function GetRandomCoordinatesInPoints(xMin, xMax, yMin, yMax)
+    return GetRandomReal(xMin, xMax), GetRandomReal(yMin, yMax)
+end
+
+--- Wait until Order ends or until the amount of time specified
+function WaitWhileOrder(unit, time, order, tick)
+
+    -- Set Defaults
+    time = time or 2
+    order = order or oid.move
+    tick = tick or 0.1
+
+    -- Set Local Variables
+    local i = 1
+    local unitOrder = GetUnitCurrentOrder(unit)
+
+    -- Loop
+    while unitOrder == oid.move and i < time do
+        unitOrder = GetUnitCurrentOrder(unit)
+        PolledWait(tick)
+        i = i + tick
+    end
+
+    return true
+end
 
 ---Credit KickKing -A system that allow you to duplicate the functionality of auto-filling in the Object Editor
----@param level number @How many Levels or iterations to use for this
----@param base number @The number to start with
----@param previousFactor number @Multiply the previous level by this value
----@param levelFactor number @This value exponential adds to itself every level
----@param constant number @This gets added every level
----@return number @The calculated Value
+---@param level             number @How many Levels or iterations to use for this
+---@param base              number @The number to start with
+---@param previousFactor    number @Multiply the previous level by this value
+---@param levelFactor       number @This value exponential adds to itself every level
+---@param constant          number @This gets added every level
+---@return                  number @The calculated Value
 function ValueFactor(level, base, previousFactor, levelFactor, constant)
 
     local value = base
