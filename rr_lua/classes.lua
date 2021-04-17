@@ -28,6 +28,7 @@ function INIT_AI(overallTick, overallSplit)
         trig = {},
         unitSTATE = {},
         townSTATE = {},
+        region = {},
         landmarkSTATE = {},
         tick = overallTick,
         split = overallSplit,
@@ -228,18 +229,22 @@ function INIT_AI(overallTick, overallSplit)
     ---Adds at the end of the selected route, a new place for a unit to move to.
     ---@param rect          rect    @The Rect (GUI Region) that the unit will walk to
     ---@param speed         number  @OPTIONAL: Walk/Run speed of unit.  (under 100 will walk) Default is unit default speed
+    ---@param point         string  @OPTIONAL: [center, random] Picks either the center of the Rect or a random point in the rect. (Default Center)
     ---@param order         number  @OPTIONAL: the order to use to move.  Default of move
     ---@param animationTag  string  @OPTIONAL: an anim tag to add to the unit while walking
     ---@return              boolean @True if successful
-    function ai.route.Step(rect, speed, order, animationTag)
+    function ai.route.Step(rect, speed, point, order, animationTag)
 
         -- Set default values if one wasn't specified
         local route = ai.routeSetup
+        point = point or "center"
         speed = speed or nil
         order = order or oid.move
+        
+        local handleId = GetHandleId(rect)
 
         -- Add Event to Rect Entering Trigger if not already added
-        if not TableContains(ai.route.rects, rect) then
+        if not TableContains(ai.region, rect) then
             table.insert(ai.route.rects, rect)
             TriggerRegisterEnterRectSimple(ai.trig.UnitEntersRegion, rect)
         end
@@ -257,6 +262,7 @@ function INIT_AI(overallTick, overallSplit)
                 x = GetRectCenterX(rect),
                 y = GetRectCenterY(rect),
                 actionCount = 0,
+                point = point,
                 order = order,
                 action = {},
                 animationTag = animationTag
