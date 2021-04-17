@@ -542,8 +542,12 @@ function INIT_AI(overallTick, overallSplit)
         local speed = step.speed or data.speedDefault
 
         -- Get new Destination for unit
-        ai.unit[data.id].xDest = step.x
-        ai.unit[data.id].yDest = step.y
+        if step.point == "random" then
+            ai.unit[data.id].xDest, ai.unit[data.id].yDest = GetRandomCoordinatesInRect(step.rect)
+        else
+            ai.unit[data.id].xDest = step.x
+            ai.unit[data.id].yDest = step.y
+        end
         ai.unit[data.id].speed = speed
 
         if speed <= 100 then
