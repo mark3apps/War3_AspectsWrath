@@ -33,6 +33,15 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+<li><a href="#Landmark_Actions">Landmark Actions </a></li>
+<li><a href="#Town_Actions">Town Actions </a></li>
+<li><a href="#Region_Actions">Region Actions </a></li>
+<li><a href="#Route_Actions">Route Actions </a></li>
+<li><a href="#Unit_Actions">Unit Actions </a></li>
+<li><a href="#Unit_States">Unit States </a></li>
+<li><a href="#Unit_States_Transient">Unit States Transient </a></li>
+<li><a href="#AI_Control">AI Control </a></li>
 </ul>
 
 
@@ -49,6 +58,10 @@
 <h1>Module <code>classes</code></h1>
 <p>This Contains all of the Functions that you'll need to run and set up the AI.</p>
 <p>  Most of the functions won't need to be used.  as they're used for internal purposes.</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Author</strong>: KickKing</li>
+    </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
@@ -57,10 +70,23 @@
 	<td class="name" nowrap><a href="#ai.Init">ai.Init (overallTick, overallSplit)</a></td>
 	<td class="summary">This is the first command that need to be run before anything else.</td>
 	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai">ai</a></td>
+	<td class="summary">This Table contains all of the functions and data for the Village</td>
+	</tr>
+</table>
+<h2><a href="#Landmark_Actions">Landmark Actions </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.landmark.New">ai.landmark.New (town, name, rect, types, unit, radius, maxCapacity)</a></td>
 	<td class="summary">Creates a New Landmark and Adds it.</td>
 	</tr>
+</table>
+<h2><a href="#Town_Actions">Town Actions </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.town.New">ai.town.New (name, activityProbability, tickMultiplier)</a></td>
 	<td class="summary">Adds a new town to the map.</td>
@@ -68,6 +94,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#ai.town.Extend">ai.town.Extend (name, rect)</a></td>
 	<td class="summary">Extend the town coverage to include the region</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.State">ai.town.State (town, state)</a></td>
+	<td class="summary">Change the State of the Town.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.town.HostileForce">ai.town.HostileForce (town, force)</a></td>
@@ -93,6 +123,9 @@
 	<td class="name" nowrap><a href="#ai.town.UnitsSetLife">ai.town.UnitsSetLife (town, low, high)</a></td>
 	<td class="summary">Set the life of all units in a town to a random percent from low to high.</td>
 	</tr>
+</table>
+<h2><a href="#Region_Actions">Region Actions </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.region.New">ai.region.New (rect)</a></td>
 	<td class="summary">Set up a new region (Internal Function)</td>
@@ -109,6 +142,9 @@
 	<td class="name" nowrap><a href="#ai.region.ContainsUnit">ai.region.ContainsUnit (id, unit)</a></td>
 	<td class="summary">Check to see if region contains a unit</td>
 	</tr>
+</table>
+<h2><a href="#Route_Actions">Route Actions </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.route.New">ai.route.New (name, loop, type)</a></td>
 	<td class="summary">Creates a new route that villagers can take when Moving.</td>
@@ -141,6 +177,9 @@
 	<td class="name" nowrap><a href="#ai.route.ActionCount">ai.route.ActionCount (route, step)</a></td>
 	<td class="summary">Get the Count of Actions in a Step</td>
 	</tr>
+</table>
+<h2><a href="#Unit_Actions">Unit Actions </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.New">ai.unit.New (town, type, unit, name, shift, radius)</a></td>
 	<td class="summary">Adds a unit that exists into the fold to be controlled by the AI.</td>
@@ -197,6 +236,9 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 	<td class="name" nowrap><a href="#ai.unit.MoveToNextStep">ai.unit.MoveToNextStep (unit, immediately)</a></td>
 	<td class="summary">Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)</td>
 	</tr>
+</table>
+<h2><a href="#Unit_States">Unit States </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Move">ai.unitSTATE.Move (unit)</a></td>
 	<td class="summary">This runs when a unit's state is changed to Move.</td>
@@ -209,6 +251,9 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 	<td class="name" nowrap><a href="#ai.unitSTATE.ReturnHome">ai.unitSTATE.ReturnHome (unit)</a></td>
 	<td class="summary">This runs when a Unit's state is changed to ReturnHome.</td>
 	</tr>
+</table>
+<h2><a href="#Unit_States_Transient">Unit States Transient </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Moving">ai.unitSTATE.Moving (unit)</a></td>
 	<td class="summary">This is an inbetween state.</td>
@@ -221,6 +266,9 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 	<td class="name" nowrap><a href="#ai.unitSTATE.ReturningHome">ai.unitSTATE.ReturningHome (unit)</a></td>
 	<td class="summary">This is an inbetween state.</td>
 	</tr>
+</table>
+<h2><a href="#AI_Control">AI Control </a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#ai.Start">ai.Start ()</a></td>
 	<td class="summary">Start Running the AI</td>
@@ -249,10 +297,10 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">overallTick</span>
-         number    @OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions
+         number    OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions
         </li>
         <li><span class="parameter">overallSplit</span>
-         number   @OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
+         number   OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
         </li>
     </ul>
 
@@ -261,6 +309,40 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai"></a>
+    <strong>ai</strong>
+    </dt>
+    <dd>
+    This Table contains all of the functions and data for the Village
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         All of the town Functions and Variables
+        </li>
+        <li><span class="parameter">townNames</span>
+         All of the Town Names
+        </li>
+        <li><span class="parameter">unit</span>
+         All of the Unit Functions and variables
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Landmark_Actions"></a>Landmark Actions </h2>
+
+    <dl class="function">
     <dt>
     <a name = "ai.landmark.New"></a>
     <strong>ai.landmark.New (town, name, rect, types, unit, radius, maxCapacity)</strong>
@@ -284,13 +366,13 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
          table
         </li>
         <li><span class="parameter">unit</span>
-         table @OPTIONAL nil |
+         table OPTIONAL nil |
         </li>
         <li><span class="parameter">radius</span>
-         number @OPTIONAL 600 |
+         number OPTIONAL 600 |
         </li>
         <li><span class="parameter">maxCapacity</span>
-         number @OPTIONAL Unlimited |
+         number OPTIONAL Unlimited |
         </li>
     </ul>
 
@@ -299,6 +381,10 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="Town_Actions"></a>Town Actions </h2>
+
+    <dl class="function">
     <dt>
     <a name = "ai.town.New"></a>
     <strong>ai.town.New (name, activityProbability, tickMultiplier)</strong>
@@ -310,13 +396,13 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">name</span>
-         string   @This is the name of the town.  This is used to reference the town in other functions
+         string   This is the name of the town.  This is used to reference the town in other functions
         </li>
         <li><span class="parameter">activityProbability</span>
-         number @Specifies the percentage chance that a unit will run down an activity per unit tick
+         number Specifies the percentage chance that a unit will run down an activity per unit tick
         </li>
         <li><span class="parameter">tickMultiplier</span>
-         number @multiples the AI Tick by this value for every unit contained in this town.  If the tick is set to 3 seconds and the multiplier is set to 2, the tick for this town's unit will be 6 seconds.
+         number multiples the AI Tick by this value for every unit contained in this town.  If the tick is set to 3 seconds and the multiplier is set to 2, the tick for this town's unit will be 6 seconds.
         </li>
     </ul>
 
@@ -359,6 +445,34 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 
 </dd>
     <dt>
+    <a name = "ai.town.State"></a>
+    <strong>ai.town.State (town, state)</strong>
+    </dt>
+    <dd>
+    Change the State of the Town.  (Currently doesn't do anything)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">state</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "ai.town.HostileForce"></a>
     <strong>ai.town.HostileForce (town, force)</strong>
     </dt>
@@ -379,7 +493,7 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Returns:</h3>
     <ol>
 
-        boolean @True is no error
+        boolean
     </ol>
 
 
@@ -525,6 +639,10 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="Region_Actions"></a>Region Actions </h2>
+
+    <dl class="function">
     <dt>
     <a name = "ai.region.New"></a>
     <strong>ai.region.New (rect)</strong>
@@ -556,16 +674,16 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         number @Handle Id of soure Rect
+         number Handle Id of soure Rect
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
         <li>
-        number @x</li>
+        number x</li>
         <li>
-        number @y</li>
+        number y</li>
     </ol>
 
 
@@ -583,16 +701,16 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         number @Handle Id of soure Rect
+         number Handle Id of soure Rect
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
         <li>
-        number @x</li>
+        number x</li>
         <li>
-        number @y</li>
+        number y</li>
     </ol>
 
 
@@ -610,7 +728,7 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         number @Handle Id of soure Rect
+         number Handle Id of soure Rect
         </li>
         <li><span class="parameter">unit</span>
          any
@@ -627,6 +745,10 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="Route_Actions"></a>Route Actions </h2>
+
+    <dl class="function">
     <dt>
     <a name = "ai.route.New"></a>
     <strong>ai.route.New (name, loop, type)</strong>
@@ -638,20 +760,20 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">name</span>
-          string  @Route Name
+          string  Route Name
         </li>
         <li><span class="parameter">loop</span>
-          boolean @Whether or not the route is a loop
+          boolean Whether or not the route is a loop
         </li>
         <li><span class="parameter">type</span>
-          string  @inTown or outOfTown
+          string  inTown or outOfTown
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        boolean @True if successful
+        boolean
     </ol>
 
 
@@ -669,26 +791,26 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">rect</span>
-                  rect    @The Rect (GUI Region) that the unit will walk to
+                  rect    The Rect (GUI Region) that the unit will walk to
         </li>
         <li><span class="parameter">speed</span>
-                 number  @OPTIONAL | Unit Speed | Walk/Run speed of unit.  (under 100 will walk)
+                 number  OPTIONAL | Unit Speed | Walk/Run speed of unit.  (under 100 will walk)
         </li>
         <li><span class="parameter">point</span>
-                 string  @OPTIONAL | "center" | [center, random] Picks either the center of the Rect or a random point in the rect.
+                 string  OPTIONAL | "center" | [center, random] Picks either the center of the Rect or a random point in the rect.
         </li>
         <li><span class="parameter">order</span>
-                 number  @OPTIONAL | oid.move |  the order to use to move.
+                 number  OPTIONAL | oid.move |  the order to use to move.
         </li>
         <li><span class="parameter">animationTag</span>
-          string  @OPTIONAL | nil | an anim tag to add to the unit while walking
+          string  OPTIONAL | nil | an anim tag to add to the unit while walking
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-        boolean @True if successful
+        boolean
     </ol>
 
 
@@ -706,16 +828,16 @@ Current list of states are {"Move", "Relax", "ReturnHome"}</td>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">time</span>
-         number @The amount of time the unit will stop for before continueing on to the next action / step / trigger
+         number The amount of time the unit will stop for before continueing on to the next action / step / trigger
         </li>
         <li><span class="parameter">lookAtRect</span>
-         rect @OPTIONAL | nil | The rect that the unit will need to look at
+         rect OPTIONAL | nil | The rect that the unit will need to look at
         </li>
         <li><span class="parameter">animation</span>
-         string @OPTIONAL | nil | The string of the animation you want the unit to play at this action
+         string OPTIONAL | nil | The string of the animation you want the unit to play at this action
         </li>
         <li><span class="parameter">loop</span>
-         boolean @OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
+         boolean OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
         </li>
     </ul>
 
@@ -858,6 +980,10 @@ The trigger needs to have the first and last line of the trigger be exactly as d
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="Unit_Actions"></a>Unit Actions </h2>
+
+    <dl class="function">
     <dt>
     <a name = "ai.unit.New"></a>
     <strong>ai.unit.New (town, type, unit, name, shift, radius)</strong>
@@ -869,22 +995,22 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">town</span>
-         string @This is the town that will control aspects of the Unit
+         string This is the town that will control aspects of the Unit
         </li>
         <li><span class="parameter">type</span>
-         string @This specifies the state the unit has access to see States for more info
+         string This specifies the state the unit has access to see States for more info
         </li>
         <li><span class="parameter">unit</span>
-         any @The unit that will be added to the AI
+         any The unit that will be added to the AI
         </li>
         <li><span class="parameter">name</span>
-         string @OPTIONAL | Default Name of Unit | The name of the unit. (This will rename the unit in game to this)
+         string OPTIONAL | Default Name of Unit | The name of the unit. (This will rename the unit in game to this)
         </li>
         <li><span class="parameter">shift</span>
-         string @OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
+         string OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
         </li>
         <li><span class="parameter">radius</span>
-         number @OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
+         number OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
         </li>
     </ul>
 
@@ -1011,7 +1137,7 @@ The trigger needs to have the first and last line of the trigger be exactly as d
          any
         </li>
         <li><span class="parameter">flag</span>
-         boolean @If true the unit will pause, if false the unit will unpause
+         boolean If true the unit will pause, if false the unit will unpause
         </li>
     </ul>
 
@@ -1031,16 +1157,16 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-         any @REQUIRED The Unit in the AI system
+         any REQUIRED The Unit in the AI system
         </li>
         <li><span class="parameter">route</span>
-         string @OPTIONAL if you want a specific route chosen else it will pick one
+         string OPTIONAL if you want a specific route chosen else it will pick one
         </li>
         <li><span class="parameter">stepNumber</span>
-         integer @OPTIONAL if you want a specific Step chosen else it will start at the beginning
+         integer OPTIONAL if you want a specific Step chosen else it will start at the beginning
         </li>
         <li><span class="parameter">actionNumber</span>
-         integer @OPTIONAL if you want a specific Action chosen else it will start at the beginning
+         integer OPTIONAL if you want a specific Action chosen else it will start at the beginning
         </li>
     </ul>
 
@@ -1190,7 +1316,7 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
          any
         </li>
         <li><span class="parameter">immediately</span>
-         any @OPTIONAL | false | If set to true the function will wait to issue the next step until after the unit has stopped moving
+         any OPTIONAL | false | If set to true the function will wait to issue the next step until after the unit has stopped moving
         </li>
     </ul>
 
@@ -1204,6 +1330,10 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="Unit_States"></a>Unit States </h2>
+
+    <dl class="function">
     <dt>
     <a name = "ai.unitSTATE.Move"></a>
     <strong>ai.unitSTATE.Move (unit)</strong>
@@ -1274,6 +1404,10 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="Unit_States_Transient"></a>Unit States Transient </h2>
+
+    <dl class="function">
     <dt>
     <a name = "ai.unitSTATE.Moving"></a>
     <strong>ai.unitSTATE.Moving (unit)</strong>
@@ -1349,6 +1483,10 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
 
 
 </dd>
+</dl>
+    <h2 class="section-header "><a name="AI_Control"></a>AI Control </h2>
+
+    <dl class="function">
     <dt>
     <a name = "ai.Start"></a>
     <strong>ai.Start ()</strong>
@@ -1394,7 +1532,7 @@ Current list of states are {"Move", "Relax", "ReturnHome"}
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-18 13:57:40 </i>
+<i style="float:right;">Last updated 2021-04-18 15:09:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

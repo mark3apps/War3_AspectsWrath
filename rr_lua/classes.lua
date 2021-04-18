@@ -1,41 +1,44 @@
 ---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  as they're used for internal purposes.
 ---@diagnostic disable: lowercase-global
---
--- Village AI
--- Credit: Mark Wright (KickKing)
--- v0.1.0
---
---
---
+---@author KickKing
+
+
 ---This Table contains all of the functions and data for the Village
-ai = {}
+---@table ai Contains all of the Towns
+--@field town All of the town Functions and Variables
+--@field townNames All of the Town Names
+--@field unit All of the Unit Functions and variables
+ai = {
+    town = {},
+    townNames = {},
+    unit = {},
+    landmark = {},
+    landmarkNames = {},
+    route = {},
+    trig = {},
+    unitSTATE = {},
+    townSTATE = {},
+    region = {},
+    landmarkSTATE = {},
+    tick = 2,
+    split = 5,
+    unitGroup = CreateGroup()
+}
 
 ---This is the first command that need to be run before anything else.  Initializes everything that's needed.
----@param overallTick number    @OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
----@param overallSplit number   @OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
+---@param overallTick number    OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
+---@param overallSplit number   OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
 function ai.Init(overallTick, overallSplit)
 
     -- Set Overall Tick if a value isn't specified
-    overallTick = overallTick or 2
-    overallSplit = overallSplit or 5
+    overallTick = overallTick or ai.tick
+    overallSplit = overallSplit or ai.split
 
-    ai.town = {}
-    ai.townNames = {}
-    ai.unit = {}
-    ai.landmark = {}
-    ai.landmarkNames = {}
-    ai.route = {}
-    ai.trig = {}
-    ai.unitSTATE = {}
-    ai.townSTATE = {}
-    ai.region = {}
-    ai.landmarkSTATE = {}
     ai.tick = overallTick
     ai.split = overallSplit
-    ai.unitGroup = CreateGroup()
 
-    --
-    --  LANDMARK ACTIONS
+    ---Landmark Actions
+    -- @section landmark
     --
 
     ---Creates a New Landmark and Adds it.
@@ -43,9 +46,9 @@ function ai.Init(overallTick, overallSplit)
     ---@param name string
     ---@param rect table
     ---@param types table
-    ---@param unit table @OPTIONAL nil |
-    ---@param radius number @OPTIONAL 600 |
-    ---@param maxCapacity number @OPTIONAL Unlimited |
+    ---@param unit table OPTIONAL nil |
+    ---@param radius number OPTIONAL 600 |
+    ---@param maxCapacity number OPTIONAL Unlimited |
     function ai.landmark.New(town, name, rect, types, unit, radius, maxCapacity)
         unit = unit or nil
         radius = radius or 600
@@ -77,14 +80,14 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
-    --
-    --  TOWN ACTIONS
+    --- Town Actions
+    --  @section town
     --
 
     ---Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
-    ---@param name string   @This is the name of the town.  This is used to reference the town in other functions
-    ---@param activityProbability number @Specifies the percentage chance that a unit will run down an activity per unit tick
-    ---@param tickMultiplier number @multiples the AI Tick by this value for every unit contained in this town.  If the tick is set to 3 seconds and the multiplier is set to 2, the tick for this town's unit will be 6 seconds.
+    ---@param name string   This is the name of the town.  This is used to reference the town in other functions
+    ---@param activityProbability number Specifies the percentage chance that a unit will run down an activity per unit tick
+    ---@param tickMultiplier number multiples the AI Tick by this value for every unit contained in this town.  If the tick is set to 3 seconds and the multiplier is set to 2, the tick for this town's unit will be 6 seconds.
     ---@return boolean
     function ai.town.New(name, activityProbability, tickMultiplier)
 
@@ -143,6 +146,10 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
+    ---Change the State of the Town. (Currently doesn't do anything)
+    ---@param town string
+    ---@param state string
+    ---@return boolean
     function ai.town.State(town, state)
 
         if TableContains(ai.town[town].states, state) then
@@ -160,7 +167,7 @@ function ai.Init(overallTick, overallSplit)
     ---Sets the Hostile force for the selected town
     ---@param town string
     ---@param force any
-    ---@return boolean @True is no error
+    ---@return boolean
     function ai.town.HostileForce(town, force)
 
         ai.town[town].force = force
@@ -250,8 +257,8 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --
-    --  REGION ACTIONS
+    ---Region Actions
+    -- @section Region
     --
 
     ---Set up a new region (Internal Function)
@@ -283,9 +290,9 @@ function ai.Init(overallTick, overallSplit)
     end
 
     ---Get Random point in the specified region.
-    ---@param id number @Handle Id of soure Rect
-    ---@return number @x
-    ---@return number @y
+    ---@param id number Handle Id of soure Rect
+    ---@return number x
+    ---@return number y
     function ai.region.GetRandom(id)
         local data = ai.region[id]
 
@@ -294,13 +301,13 @@ function ai.Init(overallTick, overallSplit)
     end
 
     ---Get Center point in the specified region  
-    ---@param id number @Handle Id of soure Rect
-    ---@return number @x
-    ---@return number @y
+    ---@param id number Handle Id of soure Rect
+    ---@return number x
+    ---@return number y
     function ai.region.GetCenter(id) return ai.region[id].x, ai.region[id].y end
 
     ---Check to see if region contains a unit
-    ---@param id number @Handle Id of soure Rect
+    ---@param id number Handle Id of soure Rect
     ---@param unit any
     ---@return boolean
     function ai.region.ContainsUnit(id, unit)
@@ -315,15 +322,15 @@ function ai.Init(overallTick, overallSplit)
         end
     end
 
-    --
-    --  ROUTE ACTIONS
+    ---Route Actions
+    -- @section route
     --
 
     ---Creates a new route that villagers can take when Moving.  Make sure to specify all Steps, Actions and Triggers before creating an additional route
-    ---@param name  string  @Route Name
-    ---@param loop  boolean @Whether or not the route is a loop
-    ---@param type  string  @inTown or outOfTown
-    ---@return      boolean @True if successful
+    ---@param name  string  Route Name
+    ---@param loop  boolean Whether or not the route is a loop
+    ---@param type  string  inTown or outOfTown
+    ---@return      boolean
     function ai.route.New(name, loop, type)
 
         ai.routeSetup = name
@@ -340,13 +347,14 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
+
     ---Adds at the end of the selected route, a new place for a unit to move to.
-    ---@param rect          rect    @The Rect (GUI Region) that the unit will walk to
-    ---@param speed         number  @OPTIONAL | Unit Speed | Walk/Run speed of unit.  (under 100 will walk)
-    ---@param point         string  @OPTIONAL | "center" | [center, random] Picks either the center of the Rect or a random point in the rect.
-    ---@param order         number  @OPTIONAL | oid.move |  the order to use to move.
-    ---@param animationTag  string  @OPTIONAL | nil | an anim tag to add to the unit while walking
-    ---@return              boolean @True if successful
+    ---@param rect          rect    The Rect (GUI Region) that the unit will walk to
+    ---@param speed         number  OPTIONAL | Unit Speed | Walk/Run speed of unit.  (under 100 will walk)
+    ---@param point         string  OPTIONAL | "center" | [center, random] Picks either the center of the Rect or a random point in the rect.
+    ---@param order         number  OPTIONAL | oid.move |  the order to use to move.
+    ---@param animationTag  string  OPTIONAL | nil | an anim tag to add to the unit while walking
+    ---@return              boolean 
     function ai.route.Step(rect, speed, point, order, animationTag)
 
         -- Set default values if one wasn't specified
@@ -383,10 +391,10 @@ function ai.Init(overallTick, overallSplit)
     end
 
     ---Adds an additional action to the picked route step  Applies to the latest defined Route
-    ---@param time number @The amount of time the unit will stop for before continueing on to the next action / step / trigger
-    ---@param lookAtRect rect @OPTIONAL | nil | The rect that the unit will need to look at
-    ---@param animation string @OPTIONAL | nil | The string of the animation you want the unit to play at this action
-    ---@param loop boolean @OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
+    ---@param time number The amount of time the unit will stop for before continueing on to the next action / step / trigger
+    ---@param lookAtRect rect OPTIONAL | nil | The rect that the unit will need to look at
+    ---@param animation string OPTIONAL | nil | The string of the animation you want the unit to play at this action
+    ---@param loop boolean OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
     ---@return boolean
     function ai.route.Action(time, lookAtRect, animation, loop)
 
@@ -474,17 +482,17 @@ function ai.Init(overallTick, overallSplit)
         return ai.route[route].step[step].actionCount
     end
 
-    --
-    --  UNIT ACTIONS
+    ---Unit Actions
+    --@section unit
     --
 
     ---Adds a unit that exists into the fold to be controlled by the AI.
-    ---@param town string @This is the town that will control aspects of the Unit
-    ---@param type string @This specifies the state the unit has access to see States for more info
-    ---@param unit any @The unit that will be added to the AI
-    ---@param name string @OPTIONAL | Default Name of Unit | The name of the unit. (This will rename the unit in game to this)
-    ---@param shift string @OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
-    ---@param radius number @OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
+    ---@param town string This is the town that will control aspects of the Unit
+    ---@param type string This specifies the state the unit has access to see States for more info
+    ---@param unit any The unit that will be added to the AI
+    ---@param name string OPTIONAL | Default Name of Unit | The name of the unit. (This will rename the unit in game to this)
+    ---@param shift string OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
+    ---@param radius number OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
     ---@return boolean
     ---@see states
     function ai.unit.New(town, type, unit, name, shift, radius)
@@ -611,7 +619,7 @@ function ai.Init(overallTick, overallSplit)
 
     --- Pause the Unit
     ---@param unit any
-    ---@param flag boolean @If true the unit will pause, if false the unit will unpause
+    ---@param flag boolean If true the unit will pause, if false the unit will unpause
     function ai.unit.Pause(unit, flag)
         local handleId = GetHandleId(unit)
 
@@ -622,10 +630,10 @@ function ai.Init(overallTick, overallSplit)
     end
 
     --- Pick a Route from the Units avalable routes and set it up (Unit will not start moving down the route, this ONLY gets it ready to)
-    ---@param unit any @REQUIRED The Unit in the AI system
-    ---@param route string @OPTIONAL if you want a specific route chosen else it will pick one
-    ---@param stepNumber integer @OPTIONAL if you want a specific Step chosen else it will start at the beginning
-    ---@param actionNumber integer @OPTIONAL if you want a specific Action chosen else it will start at the beginning
+    ---@param unit any REQUIRED The Unit in the AI system
+    ---@param route string OPTIONAL if you want a specific route chosen else it will pick one
+    ---@param stepNumber integer OPTIONAL if you want a specific Step chosen else it will start at the beginning
+    ---@param actionNumber integer OPTIONAL if you want a specific Action chosen else it will start at the beginning
     function ai.unit.PickRoute(unit, route, stepNumber, actionNumber)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -901,7 +909,7 @@ function ai.Init(overallTick, overallSplit)
 
     ---Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)
     ---@param unit any
-    ---@param immediately any @OPTIONAL | false | If set to true the function will wait to issue the next step until after the unit has stopped moving
+    ---@param immediately any OPTIONAL | false | If set to true the function will wait to issue the next step until after the unit has stopped moving
     ---@return boolean
     function ai.unit.MoveToNextStep(unit, immediately)
 
@@ -985,9 +993,8 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --
-    --  UNIT STATES
-    --
+    ---Unit States
+    -- @section unitStates
 
     ---This runs when a unit's state is changed to Move.  Will pick a route from the units available routes and send them on the quest
     ---@param unit any
@@ -1042,8 +1049,8 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --
-    --  UNIT STATES TRANSIENT
+    ---Unit States Transient
+    --@section unitStates Transient
     --
 
     ---This is an inbetween state.  Don't manually set it's state to this.
@@ -1093,8 +1100,8 @@ function ai.Init(overallTick, overallSplit)
     end
 
     --
-    --  TRIGGERS
-    --
+    ---TRIGGERS
+    --@section triggers
 
     --
     --  UNIT LOOPS
@@ -1171,6 +1178,8 @@ function ai.Init(overallTick, overallSplit)
         return false
     end)
 
+    --- AI Control
+    --@section control
 
     ---Start Running the AI
     ---@return boolean

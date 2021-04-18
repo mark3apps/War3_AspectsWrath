@@ -91,41 +91,11 @@ function Debugfunc(func, name) -- Turn on runtime logging
     if not passed then print("|cffff0000[ERROR]|r" .. name, passed, data) end
 end
 
--- **CREDIT** Taysen
--- Converts integer formated types into the 4 digit strings (Opposite of FourCC())
+---Converts integer formated types into the 4 digit strings (Opposite of FourCC()) Author: Taysen
+---@param num any
+---@return any
 function CC2Four(num) -- Convert from Handle ID to Four Char
     return string.pack(">I4", num)
-end
-
--- **CREDIT** Bribe
--- Timer Utils
-do
-    local data = {}
-    function SetTimerData(whichTimer, dat) data[whichTimer] = dat end
-
-    -- GetData functionality doesn't even require an argument.
-    function GetTimerData(whichTimer)
-        if not whichTimer then whichTimer = GetExpiredTimer() end
-        return data[whichTimer]
-    end
-
-    -- NewTimer functionality includes optional parameter to pass data to timer.
-    function NewTimer(dat)
-        local t = CreateTimer()
-        if dat then data[t] = dat end
-        return t
-    end
-
-    -- Release functionality doesn't even need for you to pass the expired timer.
-    -- as an arg. It also returns the user data passed.
-    function ReleaseTimer(whichTimer)
-        if not whichTimer then whichTimer = GetExpiredTimer() end
-        local dat = data[whichTimer]
-        data[whichTimer] = nil
-        PauseTimer(whichTimer)
-        DestroyTimer(whichTimer)
-        return dat
-    end
 end
 
 --- Get a random xy in the specified rect
@@ -147,7 +117,12 @@ function GetRandomCoordinatesInPoints(xMin, xMax, yMin, yMax)
     return GetRandomReal(xMin, xMax), GetRandomReal(yMin, yMax)
 end
 
---- Wait until Order ends or until the amount of time specified
+---Wait until Order ends or until the amount of time specified
+---@param unit any @This is the Unit to watch
+---@param time any @OPTIONAL | 2 | The max amount of time to wait
+---@param order any @OPTIONAL | oid.move | The order the continue to wait until it's no longer what the unit is doing
+---@param tick any @OPTIONAL | 0.1 | The amount of time to wait between checks
+---@return boolean
 function WaitWhileOrder(unit, time, order, tick)
 
     -- Set Defaults
@@ -169,7 +144,7 @@ function WaitWhileOrder(unit, time, order, tick)
     return true
 end
 
----Credit KickKing -A system that allow you to duplicate the functionality of auto-filling in the Object Editor
+---A system that allow you to duplicate the functionality of auto-filling in the Object Editor
 ---@param level             number @How many Levels or iterations to use for this
 ---@param base              number @The number to start with
 ---@param previousFactor    number @Multiply the previous level by this value
@@ -189,7 +164,7 @@ function ValueFactor(level, base, previousFactor, levelFactor, constant)
     return value
 end
 
--- **Credit** Nestharus (Converted to Lua and turned into object by KickKing)
+--- A table of all of the Order ID's that exist in Warcraft 3 Author Nestharus (converted to LUA by KickKing)
 oid = {
     OFFSET = 851970,
     absorb = 852529,
