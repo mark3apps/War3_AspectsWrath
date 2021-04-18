@@ -13,7 +13,7 @@ function INIT_Config()
 		-- meaning units will start at the step closest to their
 		-- location and then finish on that same step by looping
 		-- through all of the steps)
-		ai.route.New("city_01", true, "inTown")
+	    ai.route.New("city_01", true, "inTown")
 		ai.route.Step(gg_rct_Region_000, 100)
 		ai.route.Step(gg_rct_Region_001, 100)
 		ai.route.Step(gg_rct_Region_002, 100)
