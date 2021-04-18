@@ -2,6 +2,7 @@
 --
 -- INIT_ai() -- This needs to be run at Map initialization as a custom script
 --
+
 -----------
 -- FUNCTIONS
 --  * means optional variable

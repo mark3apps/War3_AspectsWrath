@@ -1,8 +1,14 @@
 function INIT_Config()
 
     Debugfunc(function()
+
+        -- ai.town.New(TownName, ActivityProbability, TickMultiplier
+        -- ai.town.HostileForce(TownName, PlayerForce)
+        -- ai.route.New(RouteName, LoopBool, Type)
+        
+
         -- Add Towns
-        -- Set up the town, set activity probabiliy per tick and the AI tick Multipler (3%, 1x)
+        -- Set up the town, set activity probabiliy per tick and the AI tick Multipler (3% chance to start moving, 1x)
         ai.town.New("city", 3, 1)
 
         -- Set the player group that the town finds Hostile
@@ -114,13 +120,12 @@ function INIT_Config()
         ai.route.Step(gg_rct_Region_005, 100)
         ai.route.Finish(100)
 
-
-
         -- Gather Units Together
         ai.route.New("gather", false, "inTown")
         ai.route.Step(gg_rct_Region_014, 100, "random")
         ai.route.Action(90, gg_rct_Region_028)
         ai.route.Finish(100)
+
         --
         -- Add all units on the map to AI
         local g = CreateGroup()
@@ -131,6 +136,9 @@ function INIT_Config()
         -- Loop through the units
         local u = FirstOfGroup(g)
         while u ~= nil do
+
+            -- ai.unit.New(townName, AIType, Unit, UnitName, Shift)
+            -- ai.unit.AddRoute(Unit, RouteName)
 
             -- Add Unit (Will rename unit to the unit name specified)
             ai.unit.New("city", "villager", u, GetUnitName(u), "day")

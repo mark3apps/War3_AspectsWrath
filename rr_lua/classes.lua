@@ -7,46 +7,45 @@
 --
 --
 --
---
----Init Village AI
----@param overallTick number
----@param overallSplit number
-function INIT_AI(overallTick, overallSplit)
+-- Set up Table
+ai = {}
+
+---This is the first command that need to be run before anything else.  Initializes everything that's needed.
+---@param overallTick number    @OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions   
+---@param overallSplit number   @OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
+function ai.Init(overallTick, overallSplit)
 
     -- Set Overall Tick if a value isn't specified
     overallTick = overallTick or 2
     overallSplit = overallSplit or 5
 
-    -- Set up Table
-    ai = {
-        town = {},
-        townNames = {},
-        unit = {},
-        landmark = {},
-        landmarkNames = {},
-        route = {rects = {}},
-        trig = {},
-        unitSTATE = {},
-        townSTATE = {},
-        region = {},
-        landmarkSTATE = {},
-        tick = overallTick,
-        split = overallSplit,
-        unitGroup = CreateGroup()
-    }
+    ai.town = {}
+    ai.townNames = {}
+    ai.unit = {}
+    ai.landmark = {}
+    ai.landmarkNames = {}
+    ai.route = {}
+    ai.trig = {}
+    ai.unitSTATE = {}
+    ai.townSTATE = {}
+    ai.region = {}
+    ai.landmarkSTATE = {}
+    ai.tick = overallTick
+    ai.split = overallSplit
+    ai.unitGroup = CreateGroup()
 
     --------
     --  LANDMARK ACTIONS
     --------
 
-    ---Add a new landmark
+    ---Creates a New Landmark and Adds it.
     ---@param town string
     ---@param name string
     ---@param rect table
     ---@param types table
-    ---@param unit table
-    ---@param radius number
-    ---@param maxCapacity number
+    ---@param unit table @OPTIONAL nil |
+    ---@param radius number @OPTIONAL 600 |
+    ---@param maxCapacity number @OPTIONAL Unlimited |
     function ai.landmark.New(town, name, rect, types, unit, radius, maxCapacity)
         unit = unit or nil
         radius = radius or 600
@@ -83,9 +82,9 @@ function INIT_AI(overallTick, overallSplit)
     --------
 
     ---Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
-    ---@param name string
-    ---@param activityProbability number
-    ---@param tickMultiplier number
+    ---@param name string   @This is the name of the town.  This is used to reference the town in other functions
+    ---@param activityProbability number @Specifies the percentage chance that a unit will run down an activity per unit tick
+    ---@param tickMultiplier number @multiples the AI Tick by this value for every unit contained in this town.  If the tick is set to 3 seconds and the multiplier is set to 2, the tick for this town's unit will be 6 seconds.
     ---@return boolean
     function ai.town.New(name, activityProbability, tickMultiplier)
 
