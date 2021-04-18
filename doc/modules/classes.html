@@ -1,0 +1,657 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>classes</strong></li>
+  <li><a href="../modules/functions.html">functions</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>classes</code></h1>
+<p></p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ai.Init">ai.Init (overallTick, overallSplit)</a></td>
+	<td class="summary">Init AI needs to be run first</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.landmark.New">ai.landmark.New (town, name, rect, types, unit, radius, maxCapacity)</a></td>
+	<td class="summary">Add a new landmark</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.New">ai.town.New (name, activityProbability, tickMultiplier)</a></td>
+	<td class="summary">Adds a new town to the map.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.New">ai.region.New (rect)</a></td>
+	<td class="summary">REGION ACTIONS</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.New">ai.route.New (name, loop, type)</a></td>
+	<td class="summary">Adds a route that villagers can take when Moving</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Step">ai.route.Step (rect, speed, point, order, animationTag)</a></td>
+	<td class="summary">Adds at the end of the selected route, a new place for a unit to move to.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Action">ai.route.Action (time, lookAtRect, animation, loop)</a></td>
+	<td class="summary">Adds an additional action to the picked route step</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.Kill">ai.unit.Kill (unit)</a></td>
+	<td class="summary">Kill the Unit</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.Remove">ai.unit.Remove (unit)</a></td>
+	<td class="summary">Remove the Unit from the AI (Unit will be controlled as if it was an ordinary Unit)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.Pause">ai.unit.Pause (unit, flag)</a></td>
+	<td class="summary">Pause the Unit</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.PickRoute">ai.unit.PickRoute (unit, route, stepNumber, actionNumber)</a></td>
+	<td class="summary">Pick a Route from the Units avalable routes and set it up</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.NextStep">ai.unit.NextStep (unit)</a></td>
+	<td class="summary">Run next Step in a Units Current Route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.NextAction">ai.unit.NextAction (unit)</a></td>
+	<td class="summary">Run the units next Route Action</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.State">ai.unit.State (unit, state)</a></td>
+	<td class="summary">Set the Unit State</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.Intel">ai.unit.Intel (unit)</a></td>
+	<td class="summary">Update the Units intel</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.ReturnHome">ai.unitSTATE.ReturnHome (unit)</a></td>
+	<td class="summary">RETURN HOME</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Moving">ai.unitSTATE.Moving (unit)</a></td>
+	<td class="summary">Moving State</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Waiting">ai.unitSTATE.Waiting (unit)</a></td>
+	<td class="summary">Waiting State</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.ReturningHome">ai.unitSTATE.ReturningHome (unit)</a></td>
+	<td class="summary">Returning Home State</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.Start">ai.Start ()</a></td>
+	<td class="summary">Start Running the AI</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.Stop">ai.Stop ()</a></td>
+	<td class="summary">Stop Running the AI</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ai.Init"></a>
+    <strong>ai.Init (overallTick, overallSplit)</strong>
+    </dt>
+    <dd>
+    Init AI needs to be run first
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">overallTick</span>
+         number    @OPTIONAL 2 | The interval at which each unit added to AI will update it's intelligence and make decisions
+        </li>
+        <li><span class="parameter">overallSplit</span>
+         number   @OPTIONAL 5 | The amount of splits that the Ticks will process Unit intelligence at.  1 means all AI ticks will be processed at the same time, 3 means processing will be split into 3 groups.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.landmark.New"></a>
+    <strong>ai.landmark.New (town, name, rect, types, unit, radius, maxCapacity)</strong>
+    </dt>
+    <dd>
+    Add a new landmark
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">name</span>
+         string
+        </li>
+        <li><span class="parameter">rect</span>
+         table
+        </li>
+        <li><span class="parameter">types</span>
+         table
+        </li>
+        <li><span class="parameter">unit</span>
+         table
+        </li>
+        <li><span class="parameter">radius</span>
+         number
+        </li>
+        <li><span class="parameter">maxCapacity</span>
+         number
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.New"></a>
+    <strong>ai.town.New (name, activityProbability, tickMultiplier)</strong>
+    </dt>
+    <dd>
+    Adds a new town to the map.   (NEEDS to be extended with additional RECTs)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         string
+        </li>
+        <li><span class="parameter">activityProbability</span>
+         number
+        </li>
+        <li><span class="parameter">tickMultiplier</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.region.New"></a>
+    <strong>ai.region.New (rect)</strong>
+    </dt>
+    <dd>
+    REGION ACTIONS
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">rect</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.New"></a>
+    <strong>ai.route.New (name, loop, type)</strong>
+    </dt>
+    <dd>
+    Adds a route that villagers can take when Moving
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+          string  @Route Name
+        </li>
+        <li><span class="parameter">loop</span>
+          boolean @Whether or not the route is a loop
+        </li>
+        <li><span class="parameter">type</span>
+          string  @inTown or outOfTown
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean @True if successful
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Step"></a>
+    <strong>ai.route.Step (rect, speed, point, order, animationTag)</strong>
+    </dt>
+    <dd>
+    Adds at the end of the selected route, a new place for a unit to move to.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">rect</span>
+                  rect    @The Rect (GUI Region) that the unit will walk to
+        </li>
+        <li><span class="parameter">speed</span>
+                 number  @OPTIONAL: Walk/Run speed of unit.  (under 100 will walk) Default is unit default speed
+        </li>
+        <li><span class="parameter">point</span>
+                 string  @OPTIONAL: [center, random] Picks either the center of the Rect or a random point in the rect. (Default Center)
+        </li>
+        <li><span class="parameter">order</span>
+                 number  @OPTIONAL: the order to use to move.  Default of move
+        </li>
+        <li><span class="parameter">animationTag</span>
+          string  @OPTIONAL: an anim tag to add to the unit while walking
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean @True if successful
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Action"></a>
+    <strong>ai.route.Action (time, lookAtRect, animation, loop)</strong>
+    </dt>
+    <dd>
+    Adds an additional action to the picked route step
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">time</span>
+         number
+        </li>
+        <li><span class="parameter">lookAtRect</span>
+         rect
+        </li>
+        <li><span class="parameter">animation</span>
+         string
+        </li>
+        <li><span class="parameter">loop</span>
+         boolean
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.Kill"></a>
+    <strong>ai.unit.Kill (unit)</strong>
+    </dt>
+    <dd>
+    Kill the Unit
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.Remove"></a>
+    <strong>ai.unit.Remove (unit)</strong>
+    </dt>
+    <dd>
+    Remove the Unit from the AI (Unit will be controlled as if it was an ordinary Unit)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.Pause"></a>
+    <strong>ai.unit.Pause (unit, flag)</strong>
+    </dt>
+    <dd>
+    Pause the Unit
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">flag</span>
+         boolean @If true the unit will pause, if false the unit will unpause
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.PickRoute"></a>
+    <strong>ai.unit.PickRoute (unit, route, stepNumber, actionNumber)</strong>
+    </dt>
+    <dd>
+    Pick a Route from the Units avalable routes and set it up
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any @REQUIRED The Unit in the AI system
+        </li>
+        <li><span class="parameter">route</span>
+         string @OPTIONAL if you want a specific route chosen else it will pick one
+        </li>
+        <li><span class="parameter">stepNumber</span>
+         integer @OPTIONAL if you want a specific Step chosen else it will start at the beginning
+        </li>
+        <li><span class="parameter">actionNumber</span>
+         integer @OPTIONAL if you want a specific Action chosen else it will start at the beginning
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.NextStep"></a>
+    <strong>ai.unit.NextStep (unit)</strong>
+    </dt>
+    <dd>
+    Run next Step in a Units Current Route
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.NextAction"></a>
+    <strong>ai.unit.NextAction (unit)</strong>
+    </dt>
+    <dd>
+    Run the units next Route Action
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.State"></a>
+    <strong>ai.unit.State (unit, state)</strong>
+    </dt>
+    <dd>
+    Set the Unit State
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+
+        </li>
+        <li><span class="parameter">state</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.Intel"></a>
+    <strong>ai.unit.Intel (unit)</strong>
+    </dt>
+    <dd>
+    Update the Units intel
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.ReturnHome"></a>
+    <strong>ai.unitSTATE.ReturnHome (unit)</strong>
+    </dt>
+    <dd>
+    RETURN HOME
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Moving"></a>
+    <strong>ai.unitSTATE.Moving (unit)</strong>
+    </dt>
+    <dd>
+    Moving State
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Waiting"></a>
+    <strong>ai.unitSTATE.Waiting (unit)</strong>
+    </dt>
+    <dd>
+    Waiting State
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+        Do nothing, come on now, what did you think was going to be here??
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.ReturningHome"></a>
+    <strong>ai.unitSTATE.ReturningHome (unit)</strong>
+    </dt>
+    <dd>
+    Returning Home State
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.Start"></a>
+    <strong>ai.Start ()</strong>
+    </dt>
+    <dd>
+    Start Running the AI
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.Stop"></a>
+    <strong>ai.Stop ()</strong>
+    </dt>
+    <dd>
+    Stop Running the AI
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2021-04-18 09:52:28 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
