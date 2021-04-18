@@ -1,6 +1,8 @@
 ---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  as they're used for internal purposes.
 ---@diagnostic disable: lowercase-global
 ---@author KickKing
+blank = nil
+
 ---This Table contains all of the functions and data for the Village
 ---@table ai Contains all of the Towns
 -- @field town All of the town Functions and Variables
@@ -47,9 +49,7 @@ function ai.Init(overallTick, overallSplit)
 	---@param unit table OPTIONAL nil |
 	---@param radius number OPTIONAL 600 |
 	---@param maxCapacity number OPTIONAL Unlimited |
-	function ai.landmark.New(town, name, rect, types,
-																										unit, radius,
-																										maxCapacity)
+	function ai.landmark.New(town, name, rect, types, unit, radius, maxCapacity)
 		unit = unit or nil
 		radius = radius or 600
 		maxCapacity = maxCapacity or 500
@@ -74,9 +74,7 @@ function ai.Init(overallTick, overallSplit)
 		}
 
 		-- Add Landmark information to the town
-		for i = 1, #ai.landmark[name].types do
-			ai.town[town][ai.landmark[name].type[i]] = name
-		end
+		for i = 1, #ai.landmark[name].types do ai.town[town][ai.landmark[name].type[i]] = name end
 
 	end
 
@@ -89,8 +87,7 @@ function ai.Init(overallTick, overallSplit)
 	---@param activityProbability number Specifies the percentage chance that a unit will run down an activity per unit tick
 	---@param tickMultiplier number multiples the AI Tick by this value for every unit contained in this town.  If the tick is set to 3 seconds and the multiplier is set to 2, the tick for this town's unit will be 6 seconds.
 	---@return boolean
-	function ai.town.New(name, activityProbability,
-																						tickMultiplier)
+	function ai.town.New(name, activityProbability, tickMultiplier)
 
 		activityProbability = activityProbability or 5
 		tickMultiplier = tickMultiplier or 1
@@ -108,10 +105,7 @@ function ai.Init(overallTick, overallSplit)
 			-- States
 			state = "Auto",
 			stateCurrent = "Normal",
-			states = {
-				"Auto", "Normal", "Danger", "Pause", "Paused",
-    "Abadon", "Gather"
-			},
+			states = {"Auto", "Normal", "Danger", "Pause", "Paused", "Abadon", "Gather"},
 
 			-- Units
 			units = CreateGroup(),
@@ -231,9 +225,7 @@ function ai.Init(overallTick, overallSplit)
 			local randInt = GetRandomInt(low, high)
 
 			percentLife = percentLife - randInt
-			if not kill and percentLife <= 0 then
-				percentLife = 1
-			end
+			if not kill and percentLife <= 0 then percentLife = 1 end
 
 			SetUnitLifePercentBJ(unit, percentLife)
 		end)
@@ -284,9 +276,7 @@ function ai.Init(overallTick, overallSplit)
 			RegionAddRect(ai.region[id].region, rect)
 
 			-- Add Event to AI Region Enter Trigger
-			TriggerRegisterEnterRegionSimple(
-							ai.trig.UnitEntersRegion,
-							ai.region[id].region)
+			TriggerRegisterEnterRegionSimple(ai.trig.UnitEntersRegion, ai.region[id].region)
 		end
 
 	end
@@ -298,17 +288,14 @@ function ai.Init(overallTick, overallSplit)
 	function ai.region.GetRandom(id)
 		local data = ai.region[id]
 
-		return GetRandomReal(data.xMin, data.xMax),
-       		GetRandomReal(data.yMin, data.yMax)
+		return GetRandomReal(data.xMin, data.xMax), GetRandomReal(data.yMin, data.yMax)
 	end
 
 	---Get Center point in the specified region  
 	---@param id number Handle Id of soure Rect
 	---@return number x
 	---@return number y
-	function ai.region.GetCenter(id)
-		return ai.region[id].x, ai.region[id].y
-	end
+	function ai.region.GetCenter(id) return ai.region[id].x, ai.region[id].y end
 
 	---Check to see if region contains a unit
 	---@param id number Handle Id of soure Rect
@@ -319,8 +306,7 @@ function ai.Init(overallTick, overallSplit)
 		local x = GetUnitX(unit)
 		local y = GetUnitY(unit)
 
-		if data.xMin < x and data.xMax > x and data.yMin <
-						y and data.yMax > y then
+		if data.xMin < x and data.xMax > x and data.yMin < y and data.yMax > y then
 			return true
 		else
 			return false
@@ -340,14 +326,7 @@ function ai.Init(overallTick, overallSplit)
 
 		ai.routeSetup = name
 		-- Set up the route Vars
-		ai.route[name] = {
-			name = name,
-			type = type,
-			step = {},
-			stepCount = 0,
-			endSpeed = nil,
-			loop = loop
-		}
+		ai.route[name] = {name = name, type = type, step = {}, stepCount = 0, endSpeed = nil, loop = loop}
 
 		return true
 	end
@@ -359,8 +338,7 @@ function ai.Init(overallTick, overallSplit)
 	---@param order         number  OPTIONAL | oid.move |  the order to use to move.
 	---@param animationTag  string  OPTIONAL | nil | an anim tag to add to the unit while walking
 	---@return              boolean 
-	function ai.route.Step(rect, speed, point, order,
-																								animationTag)
+	function ai.route.Step(rect, speed, point, order, animationTag)
 
 		-- Set default values if one wasn't specified
 		point = point or "center"
@@ -380,16 +358,15 @@ function ai.Init(overallTick, overallSplit)
 		-- Add the step to the route
 		ai.route[route].stepCount = stepCount
 
-		ai.route[route].step[stepCount] =
-						{
-							regionId = regionId,
-							speed = speed,
-							actionCount = 0,
-							point = point,
-							order = order,
-							action = {},
-							animationTag = animationTag
-						}
+		ai.route[route].step[stepCount] = {
+			regionId = regionId,
+			speed = speed,
+			actionCount = 0,
+			point = point,
+			order = order,
+			action = {},
+			animationTag = animationTag
+		}
 
 		return true
 
@@ -401,8 +378,7 @@ function ai.Init(overallTick, overallSplit)
 	---@param animation string OPTIONAL | nil | The string of the animation you want the unit to play at this action
 	---@param loop boolean OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
 	---@return boolean
-	function ai.route.Action(time, lookAtRect,
-																										animation, loop)
+	function ai.route.Action(time, lookAtRect, animation, loop)
 
 		-- Set default values if one wasn't specified
 		local route = ai.routeSetup
@@ -412,21 +388,17 @@ function ai.Init(overallTick, overallSplit)
 
 		-- Update the action Count for the Route
 		local stepCount = ai.route.StepCount(route)
-		local actionCount = ai.route.ActionCount(route,
-                                         		stepCount) +
-                    						1
+		local actionCount = ai.route.ActionCount(route, stepCount) + 1
 
 		-- Add the action to the Step in the Route
-		ai.route[route].step[stepCount].actionCount =
-						actionCount
-		ai.route[route].step[stepCount].action[actionCount] =
-						{
-							type = "action",
-							time = time,
-							lookAtRect = lookAtRect,
-							animation = animation,
-							loop = loop
-						}
+		ai.route[route].step[stepCount].actionCount = actionCount
+		ai.route[route].step[stepCount].action[actionCount] = {
+			type = "action",
+			time = time,
+			lookAtRect = lookAtRect,
+			animation = animation,
+			loop = loop
+		}
 
 		return true
 
@@ -440,15 +412,11 @@ function ai.Init(overallTick, overallSplit)
 		-- Update the action Count for the Route
 		local route = ai.routeSetup
 		local stepCount = ai.route.StepCount(route)
-		local actionCount = ai.route.ActionCount(route,
-                                         		stepCount) +
-                    						1
+		local actionCount = ai.route.ActionCount(route, stepCount) + 1
 
 		-- Add the action to the Step in the Route
-		ai.route[route].step[stepCount].actionCount =
-						actionCount
-		ai.route[route].step[stepCount].action[actionCount] =
-						{type = "trigger", trigger = trigger}
+		ai.route[route].step[stepCount].actionCount = actionCount
+		ai.route[route].step[stepCount].action[actionCount] = {type = "trigger", trigger = trigger}
 
 		return true
 	end
@@ -460,15 +428,11 @@ function ai.Init(overallTick, overallSplit)
 		-- Update the action Count for the Route
 		local route = ai.routeSetup
 		local stepCount = ai.route.StepCount(route)
-		local actionCount = ai.route.ActionCount(route,
-                                         		stepCount) +
-                    						1
+		local actionCount = ai.route.ActionCount(route, stepCount) + 1
 
 		-- Add the action to the Step in the Route
-		ai.route[route].step[stepCount].actionCount =
-						actionCount
-		ai.route[route].step[stepCount].action[actionCount] =
-						{type = "function", funct = funct}
+		ai.route[route].step[stepCount].actionCount = actionCount
+		ai.route[route].step[stepCount].action[actionCount] = {type = "function", funct = funct}
 
 		return true
 	end
@@ -487,17 +451,13 @@ function ai.Init(overallTick, overallSplit)
 	---Get the Count of steps in a route
 	---@param route string
 	---@return any
-	function ai.route.StepCount(route)
-		return ai.route[route].stepCount
-	end
+	function ai.route.StepCount(route) return ai.route[route].stepCount end
 
 	---Get the Count of Actions in a Step
 	---@param route string
 	---@param step string
 	---@return any
-	function ai.route.ActionCount(route, step)
-		return ai.route[route].step[step].actionCount
-	end
+	function ai.route.ActionCount(route, step) return ai.route[route].step[step].actionCount end
 
 	---Unit Actions
 	-- @section unit
@@ -512,8 +472,7 @@ function ai.Init(overallTick, overallSplit)
 	---@param radius number OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
 	---@return boolean
 	---@see states
-	function ai.unit.New(town, type, unit, name,
-																						shift, radius)
+	function ai.unit.New(town, type, unit, name, shift, radius)
 
 		shift = shift or "day"
 		radius = radius or 600
@@ -527,8 +486,7 @@ function ai.Init(overallTick, overallSplit)
 		GroupAddUnit(ai.unitGroup, unit)
 
 		-- Update Unit Count
-		ai.town[town].unitCount =
-						CountUnitsInGroup(ai.town[town].units)
+		ai.town[town].unitCount = CountUnitsInGroup(ai.town[town].units)
 		ai.unit.count = CountUnitsInGroup(ai.unitGroup)
 
 		ai.unit[handleId] = {}
@@ -542,9 +500,7 @@ function ai.Init(overallTick, overallSplit)
 			enemies = 0,
 			alertedAllies = 0,
 			tick = ai.tick * ai.town[town].tickMultiplier,
-			loop = GetRandomReal(0, ai.tick *
-                     							ai.town[town]
-                     											.tickMultiplier),
+			loop = GetRandomReal(0, ai.tick * ai.town[town].tickMultiplier),
 			shift = shift,
 			state = "Auto",
 			type = type,
@@ -562,19 +518,14 @@ function ai.Init(overallTick, overallSplit)
 			routes = {},
 			xHome = x,
 			yHome = y,
-			rectHome = Rect(x - 100, y - 100, x + 100,
-                			y + 100),
+			rectHome = Rect(x - 100, y - 100, x + 100, y + 100),
 			facingHome = GetUnitFacing(unit),
 			xDest = nil,
 			yDest = nil
 		}
 
 		if type == "villager" then
-			ai.unit[handleId].states =
-							{
-								"Relax", "Move", "Sleep", "ReturnHome",
-        "Moving", "ReturningHome", "Waiting"
-							}
+			ai.unit[handleId].states = {"Relax", "Move", "Sleep", "ReturnHome", "Moving", "ReturningHome", "Waiting"}
 			ai.unit[handleId].stateCurrent = "Relax"
 
 		end
@@ -607,8 +558,7 @@ function ai.Init(overallTick, overallSplit)
 		local routes = ai.unit[handleId].routes
 
 		if TableContains(routes, route) then
-			ai.unit[handleId].routes =
-							TableRemoveValue(routes, route)
+			ai.unit[handleId].routes = TableRemoveValue(routes, route)
 			return true
 		end
 
@@ -658,18 +608,12 @@ function ai.Init(overallTick, overallSplit)
 	---@param route string OPTIONAL if you want a specific route chosen else it will pick one
 	---@param stepNumber integer OPTIONAL if you want a specific Step chosen else it will start at the beginning
 	---@param actionNumber integer OPTIONAL if you want a specific Action chosen else it will start at the beginning
-	function ai.unit.PickRoute(unit, route,
-																												stepNumber,
-																												actionNumber)
+	function ai.unit.PickRoute(unit, route, stepNumber, actionNumber)
 		local data = ai.unit[GetHandleId(unit)]
 
-		if #data.routes == 0 and route == nil then
-			return false
-		end
+		if #data.routes == 0 and route == nil then return false end
 
-		route = route or
-        						data.routes[GetRandomInt(1,
-                                 						#data.routes)]
+		route = route or data.routes[GetRandomInt(1, #data.routes)]
 
 		local routeData = ai.route[route]
 
@@ -683,18 +627,11 @@ function ai.Init(overallTick, overallSplit)
 				local regionX, regionY
 
 				for i = 1, routeData.stepCount do
-					regionX, regionY = ai.region.GetCenter(
-                   									routeData.step[i]
-                   													.regionId)
+					regionX, regionY = ai.region.GetCenter(routeData.step[i].regionId)
 
-					newDistance = DistanceBetweenCoordinates(x,
-                                         					y,
-                                         					regionX,
-                                         					regionY)
+					newDistance = DistanceBetweenCoordinates(x, y, regionX, regionY)
 
-					if distance > newDistance and
-									not ai.region.ContainsUnit(
-													routeData.step[i].regionId, unit) then
+					if distance > newDistance and not ai.region.ContainsUnit(routeData.step[i].regionId, unit) then
 						distance = newDistance
 						stepNumber = i
 					end
@@ -723,16 +660,12 @@ function ai.Init(overallTick, overallSplit)
 	function ai.unit.NextStep(unit)
 		local data = ai.unit[GetHandleId(unit)]
 
-		local stepNumber = ai.unit[data.id].stepNumber +
-                   						1
+		local stepNumber = ai.unit[data.id].stepNumber + 1
 
 		-- If there are no more steps, return
-		if stepNumber > ai.route[data.route].stepCount then
-			return false
-		end
+		if stepNumber > ai.route[data.route].stepCount then return false end
 
-		local step =
-						ai.route[data.route].step[stepNumber]
+		local step = ai.route[data.route].step[stepNumber]
 		local speed = step.speed or data.speedDefault
 
 		-- Set new Unit Step Info || Reset Action Number
@@ -744,36 +677,26 @@ function ai.Init(overallTick, overallSplit)
 
 		-- Get new Destination for unit
 		if step.point == "random" then
-			ai.unit[data.id].xDest, ai.unit[data.id].yDest =
-							ai.region.GetRandom(step.regionId)
+			ai.unit[data.id].xDest, ai.unit[data.id].yDest = ai.region.GetRandom(step.regionId)
 		else
-			ai.unit[data.id].xDest, ai.unit[data.id].yDest =
-							ai.region.GetCenter(step.regionId)
+			ai.unit[data.id].xDest, ai.unit[data.id].yDest = ai.region.GetCenter(step.regionId)
 		end
 
 		-- Set whether unit should run or walk.
 		if speed <= 100 then
-			BlzSetUnitRealFieldBJ(unit,
-                      			UNIT_RF_ANIMATION_WALK_SPEED,
-                      			120.00)
-			AddUnitAnimationPropertiesBJ(true, "cinematic",
-                             			unit)
+			BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 120.00)
+			AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
 			ai.unit[data.id].walk = true
 		else
-			BlzSetUnitRealFieldBJ(unit,
-                      			UNIT_RF_ANIMATION_WALK_SPEED,
-                      			270.00)
-			AddUnitAnimationPropertiesBJ(false,
-                             			"cinematic", unit)
+			BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
+			AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
 			ai.unit[data.id].walk = false
 		end
 
 		SetUnitMoveSpeed(unit, speed)
 
 		-- Issue Move Order
-		IssuePointOrderById(unit, step.order,
-                    		ai.unit[data.id].xDest,
-                    		ai.unit[data.id].yDest)
+		IssuePointOrderById(unit, step.order, ai.unit[data.id].xDest, ai.unit[data.id].yDest)
 
 		return true
 	end
@@ -793,13 +716,10 @@ function ai.Init(overallTick, overallSplit)
 
 		-- If There doesn't exist the current step cancel
 		if stepNumber == nil then return end
-		if stepNumber > ai.route[data.route].stepCount or
-						stepNumber == 0 then return false end
+		if stepNumber > ai.route[data.route].stepCount or stepNumber == 0 then return false end
 
 		-- If there are no more actions, return
-		if actionNumber >
-						ai.route[data.route].step[stepNumber]
-										.actionCount then return false end
+		if actionNumber > ai.route[data.route].step[stepNumber].actionCount then return false end
 
 		ai.unit[data.id].actionNumber = actionNumber
 
@@ -807,8 +727,7 @@ function ai.Init(overallTick, overallSplit)
 		if data.stateCurrent == "Moving" then
 
 			-- Get Next Action
-			local step =
-							ai.route[data.route].step[stepNumber]
+			local step = ai.route[data.route].step[stepNumber]
 			local action = step.action[actionNumber]
 
 			-- Change State to "Waiting"
@@ -821,21 +740,14 @@ function ai.Init(overallTick, overallSplit)
 					local y = GetUnitY(unit)
 
 					-- Get the angle to the rect and find a point 10 units in that direction
-					local facingAngle = AngleBetweenCoordinates(
-                    									x, y,
-                    									GetRectCenterX(
-                    													action.lookAtRect),
-                    									GetRectCenterY(
-                    													action.lookAtRect))
+					local facingAngle = AngleBetweenCoordinates(x, y, GetRectCenterX(action.lookAtRect),
+                                            					GetRectCenterY(action.lookAtRect))
 
 					-- Get Position 10 units away in the correct direction
-					local xNew, yNew =
-									PolarProjectionCoordinates(x, y, 10,
-                           									facingAngle)
+					local xNew, yNew = PolarProjectionCoordinates(x, y, 10, facingAngle)
 
 					-- Move unit to direction
-					IssuePointOrderById(unit, oid.move, xNew,
-                    					yNew)
+					IssuePointOrderById(unit, oid.move, xNew, yNew)
 
 					-- Wait for unit to stop Moving or 2 seconds
 					WaitWhileOrder(unit, 4)
@@ -845,11 +757,7 @@ function ai.Init(overallTick, overallSplit)
 					SetUnitAnimation(unit, action.animation)
 
 					-- Loop Animation if checked
-					if action.loop then
-						for i = 1, math.floor(action.time) do
-							QueueUnitAnimation(unit, action.animation)
-						end
-					end
+					if action.loop then for i = 1, math.floor(action.time) do QueueUnitAnimation(unit, action.animation) end end
 
 					QueueUnitAnimation(unit, "Stand")
 				end
@@ -876,8 +784,7 @@ function ai.Init(overallTick, overallSplit)
 				-- Run the trigger (Ignoring Conditions)
 				TriggerExecute(action.trigger)
 
-				while ai.unit[data.id].stateCurrent ==
-								"Waiting" do PolledWait(.5) end
+				while ai.unit[data.id].stateCurrent == "Waiting" do PolledWait(.5) end
 
 				ai.unit[data.id].stateCurrent = "Moving"
 			end
@@ -948,8 +855,7 @@ function ai.Init(overallTick, overallSplit)
 	function ai.unit.IntelPost(unit)
 		local data = ai.unit[GetHandleId(unit)]
 
-		ai.unit[data.id].orderLast =
-						GetUnitCurrentOrder(unit)
+		ai.unit[data.id].orderLast = GetUnitCurrentOrder(unit)
 		return true
 
 	end
@@ -970,41 +876,26 @@ function ai.Init(overallTick, overallSplit)
 			local tick = 0.1
 
 			-- Wait until unit stops Moving or 2 seconds
-			if not immediately then
-				WaitWhileOrder(unit, 4)
-			end
+			if not immediately then WaitWhileOrder(unit, 4) end
 
 			-- Order Unit to stop
 			IssueImmediateOrder(unit, oid.stop)
 
 			-- Keep running actions unit finished with step
-			while success do
-				success = ai.unit.NextAction(unit)
-			end
+			while success do success = ai.unit.NextAction(unit) end
 
 			-- Run next Step
-			if ai.unit[data.id].looped and
-							ai.unit[data.id].stepNumber >
-							data.stepNumberStart then
+			if ai.unit[data.id].looped and ai.unit[data.id].stepNumber > data.stepNumberStart then
 
-				local speed = ai.route[data.route].endSpeed or
-              								data.speedDefault
+				local speed = ai.route[data.route].endSpeed or data.speedDefault
 
 				if speed < 100 then
-					BlzSetUnitRealFieldBJ(unit,
-                      					UNIT_RF_ANIMATION_WALK_SPEED,
-                      					100.00)
-					AddUnitAnimationPropertiesBJ(true,
-                             					"cinematic",
-                             					unit)
+					BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 100.00)
+					AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
 					ai.unit[data.id].walk = true
 				else
-					BlzSetUnitRealFieldBJ(unit,
-                      					UNIT_RF_ANIMATION_WALK_SPEED,
-                      					270.00)
-					AddUnitAnimationPropertiesBJ(false,
-                             					"cinematic",
-                             					unit)
+					BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
+					AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
 					ai.unit[data.id].walk = false
 				end
 
@@ -1024,25 +915,15 @@ function ai.Init(overallTick, overallSplit)
 						success = ai.unit.NextStep(unit)
 					else
 
-						local speed =
-										ai.route[data.route].endSpeed or
-														data.speedDefault
+						local speed = ai.route[data.route].endSpeed or data.speedDefault
 
 						if speed < 100 then
-							BlzSetUnitRealFieldBJ(unit,
-                      							UNIT_RF_ANIMATION_WALK_SPEED,
-                      							100.00)
-							AddUnitAnimationPropertiesBJ(true,
-                             							"cinematic",
-                             							unit)
+							BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 100.00)
+							AddUnitAnimationPropertiesBJ(true, "cinematic", unit)
 							ai.unit[data.id].walk = true
 						else
-							BlzSetUnitRealFieldBJ(unit,
-                      							UNIT_RF_ANIMATION_WALK_SPEED,
-                      							270.00)
-							AddUnitAnimationPropertiesBJ(false,
-                             							"cinematic",
-                             							unit)
+							BlzSetUnitRealFieldBJ(unit, UNIT_RF_ANIMATION_WALK_SPEED, 270.00)
+							AddUnitAnimationPropertiesBJ(false, "cinematic", unit)
 							ai.unit[data.id].walk = false
 						end
 
@@ -1065,12 +946,9 @@ function ai.Init(overallTick, overallSplit)
 	function ai.unitSTATE.Move(unit)
 		local data = ai.unit[GetHandleId(unit)]
 
-		if #data.routes == 0 and data.route == nil then
-			return false
-		end
+		if #data.routes == 0 and data.route == nil then return false end
 
-		local route = data.routes[GetRandomInt(1,
-                                       		#data.routes)]
+		local route = data.routes[GetRandomInt(1, #data.routes)]
 
 		ai.unit.PickRoute(unit)
 		ai.unit.MoveToNextStep(unit)
@@ -1085,13 +963,10 @@ function ai.Init(overallTick, overallSplit)
 
 		local prob = GetRandomInt(1, 100)
 
-		if ai.town[data.town].activityProbability >=
-						prob then
+		if ai.town[data.town].activityProbability >= prob then
 
 			-- Order Unit to Move onto one of it's routes
-			if TableContains(data.states, "Move") then
-				ai.unit.State(unit, "Move")
-			end
+			if TableContains(data.states, "Move") then ai.unit.State(unit, "Move") end
 
 		end
 
@@ -1111,8 +986,7 @@ function ai.Init(overallTick, overallSplit)
 		ai.unit[data.id].yDest = nil
 		ai.unit[data.id].speed = nil
 
-		IssuePointOrderById(unit, oid.move, data.xHome,
-                    		data.yHome)
+		IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
 
 		return true
 	end
@@ -1127,10 +1001,7 @@ function ai.Init(overallTick, overallSplit)
 	function ai.unitSTATE.Moving(unit)
 		local data = ai.unit[GetHandleId(unit)]
 
-		if GetUnitCurrentOrder(unit) ~= oid.move and
-						data.orderLast ~= oid.Move then
-			ai.unit.MoveToNextStep(unit)
-		end
+		if GetUnitCurrentOrder(unit) ~= oid.move and data.orderLast ~= oid.Move then ai.unit.MoveToNextStep(unit) end
 
 		return true
 	end
@@ -1155,14 +1026,11 @@ function ai.Init(overallTick, overallSplit)
 
 		if GetUnitCurrentOrder(unit) ~= oid.move then
 			if not RectContainsUnit(data.rectHome, unit) then
-				IssuePointOrderById(unit, oid.move,
-                    				data.xHome, data.yHome)
+				IssuePointOrderById(unit, oid.move, data.xHome, data.yHome)
 
 			else
 				ai.unit[data.id].stateCurrent = "Relax"
-				local xNew, yNew = PolarProjectionCoordinates(
-                   								x, y, 10,
-                   								data.facingHome)
+				local xNew, yNew = PolarProjectionCoordinates(x, y, 10, data.facingHome)
 				IssuePointOrderById(unit, oid.move, xNew, yNew)
 			end
 		end
@@ -1180,8 +1048,7 @@ function ai.Init(overallTick, overallSplit)
 
 	-- Loop to get on Unit Intellegence
 	ai.trig.UnitLoop = CreateTrigger()
-	TriggerRegisterTimerEventPeriodic(
-					ai.trig.UnitLoop, (ai.tick / ai.split))
+	TriggerRegisterTimerEventPeriodic(ai.trig.UnitLoop, (ai.tick / ai.split))
 
 	DisableTrigger(ai.trig.UnitLoop)
 
@@ -1199,13 +1066,10 @@ function ai.Init(overallTick, overallSplit)
 		while u ~= nil do
 			data = ai.unit[GetHandleId(u)]
 
-			ai.unit[data.id].loop =
-							data.loop + (ai.tick / ai.split)
+			ai.unit[data.id].loop = data.loop + (ai.tick / ai.split)
 
 			-- Check to see if it's time to have the Unit Update itself
-			if ai.unit[data.id].loop >
-							(data.tick *
-											ai.town[data.town].tickMultiplier) then
+			if ai.unit[data.id].loop > (data.tick * ai.town[data.town].tickMultiplier) then
 				ai.unit[data.id].loop = 0
 
 				-- Run the routine for the unit's current state
@@ -1225,8 +1089,7 @@ function ai.Init(overallTick, overallSplit)
 	-- Trigger Unit enters a Rect in a Route
 	ai.trig.UnitEntersRegion = CreateTrigger()
 	DisableTrigger(ai.trig.UnitEntersRegion)
-	TriggerAddAction(ai.trig.UnitEntersRegion,
-                 	function()
+	TriggerAddAction(ai.trig.UnitEntersRegion, function()
 
 		local unit = GetEnteringUnit()
 		local region = GetTriggeringRegion()

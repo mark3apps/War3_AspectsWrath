@@ -4,9 +4,7 @@
 ---@param element any
 ---@return boolean @true if found, false if not
 function TableContains(table, element)
-	for _, value in pairs(table) do
-		if value == element then return true end
-	end
+	for _, value in pairs(table) do if value == element then return true end end
 	return false
 end
 
@@ -14,20 +12,13 @@ end
 ---@param table table
 ---@param value any
 ---@return boolean @true if successful
-function TableRemoveValue(table, value)
-	return table.remove(table,
-                    	TableFind(table, value))
-end
+function TableRemoveValue(table, value) return table.remove(table, TableFind(table, value)) end
 
 ---Find the index of a value in a table.
 ---@param tab table
 ---@param el any
 ---@return number @Returns the index
-function TableFind(tab, el)
-	for index, value in pairs(tab) do
-		if value == el then return index end
-	end
-end
+function TableFind(tab, el) for index, value in pairs(tab) do if value == el then return index end end end
 
 ---Get the distance between 2 sets of Coordinates (Not handles used)
 ---@param x1 number
@@ -35,10 +26,7 @@ end
 ---@param x2 number
 ---@param y2 number
 ---@return number
-function DistanceBetweenCoordinates(x1, y1, x2, y2)
-	return SquareRoot(((x2 - x1) * (x2 - x1)) +
-                  					((y2 - y1) * (y2 - y1)))
-end
+function DistanceBetweenCoordinates(x1, y1, x2, y2) return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))) end
 
 -- **Credit** KickKing
 -- get distance without locations
@@ -47,9 +35,7 @@ end
 ---@param unitB any
 ---@return number
 function DistanceBetweenUnits(unitA, unitB)
-	return DistanceBetweenCoordinates(
-       					GetUnitX(unitA), GetUnitY(unitA),
-       					GetUnitX(unitB), GetUnitY(unitB))
+	return DistanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
 --- get angle between two sets of coordinates without locations
@@ -58,19 +44,14 @@ end
 ---@param x2 number
 ---@param y2 number
 ---@return number @angle between 0 and 360
-function AngleBetweenCoordinates(x1, y1, x2, y2)
-	return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
-end
+function AngleBetweenCoordinates(x1, y1, x2, y2) return bj_RADTODEG * Atan2(y2 - y1, x2 - x1) end
 
 ---get angle between two units without locations
 ---@param unitA handle @Unit 1
 ---@param unitB handle @Unit 2
 ---@return number @angle between 0 and 360
 function AngleBetweenUnits(unitA, unitB)
-	return AngleBetweenCoordinates(GetUnitX(unitA),
-                               	GetUnitY(unitA),
-                               	GetUnitX(unitB),
-                               	GetUnitY(unitB))
+	return AngleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
 ---Polar projection from point (Doesn't Leak)
@@ -80,8 +61,7 @@ end
 ---@param angle number
 ---@return number @x
 ---@return number @y
-function PolarProjectionCoordinates(x, y, dist,
-																																				angle)
+function PolarProjectionCoordinates(x, y, dist, angle)
 	local newX = x + dist * Cos(angle * bj_DEGTORAD)
 	local newY = y + dist * Sin(angle * bj_DEGTORAD)
 	return newX, newY
@@ -91,15 +71,11 @@ end
 ---@param func any
 ---@param name string @Name the same as your function name
 function Debugfunc(func, name) -- Turn on runtime logging
-	local passed, data = pcall(
-                     					function()
-						func()
-						return "func " .. name .. " passed"
-					end)
-	if not passed then
-		print("|cffff0000[ERROR]|r" .. name, passed,
-      		data)
-	end
+	local passed, data = pcall(function()
+		func()
+		return "func " .. name .. " passed"
+	end)
+	if not passed then print("|cffff0000[ERROR]|r" .. name, passed, data) end
 end
 
 ---Converts integer formated types into the 4 digit strings (Opposite of FourCC()) Author: Taysen
@@ -114,10 +90,7 @@ end
 ---@return any
 ---@return any
 function GetRandomCoordinatesInRect(rect)
-	return GetRandomReal(GetRectMinX(rect),
-                     	GetRectMaxX(rect)),
-       	GetRandomReal(GetRectMinY(rect),
-                     	GetRectMaxY(rect))
+	return GetRandomReal(GetRectMinX(rect), GetRectMaxX(rect)), GetRandomReal(GetRectMinY(rect), GetRectMaxY(rect))
 end
 
 ---Get a random xy in the specified datapoints
@@ -127,11 +100,8 @@ end
 ---@param yMax number
 ---@return number
 ---@return number
-function GetRandomCoordinatesInPoints(xMin, xMax,
-																																						yMin, yMax)
-	return GetRandomReal(xMin, xMax),
-       	GetRandomReal(yMin, yMax)
-end
+function GetRandomCoordinatesInPoints(xMin, xMax, yMin, yMax) return GetRandomReal(xMin, xMax),
+                                                                     GetRandomReal(yMin, yMax) end
 
 ---Wait until Order ends or until the amount of time specified
 ---@param unit any @This is the Unit to watch
@@ -167,17 +137,11 @@ end
 ---@param levelFactor       number @This value exponential adds to itself every level
 ---@param constant          number @This gets added every level
 ---@return                  number @The calculated Value
-function ValueFactor(level, base, previousFactor,
-																					levelFactor, constant)
+function ValueFactor(level, base, previousFactor, levelFactor, constant)
 
 	local value = base
 
-	if level > 1 then
-		for i = 2, level do
-			value = (value * previousFactor) +
-        							(i * levelFactor) + (constant)
-		end
-	end
+	if level > 1 then for i = 2, level do value = (value * previousFactor) + (i * levelFactor) + (constant) end end
 
 	return value
 end

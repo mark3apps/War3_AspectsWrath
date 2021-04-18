@@ -7,8 +7,7 @@ function INIT_Config()
 		ai.town.New("city", 3, 1)
 
 		-- Set the player group that the town finds Hostile
-		ai.town.HostileForce("city",
-                     		udg_townVillageForce)
+		ai.town.HostileForce("city", udg_townVillageForce)
 
 		-- CounterClockwise Route (Listed as a looping route,
 		-- meaning units will start at the step closest to their
@@ -137,8 +136,7 @@ function INIT_Config()
 			-- ai.unit.AddRoute(Unit, RouteName)
 
 			-- Add Unit (Will rename unit to the unit name specified)
-			ai.unit.New("city", "villager", u,
-            			GetUnitName(u), "day")
+			ai.unit.New("city", "villager", u, GetUnitName(u), "day")
 
 			-- Add the routes that this unit has available to it when in the relax state
 			ai.unit.AddRoute(u, "city_01")
