@@ -1,40 +1,54 @@
---
--- Functions
---
--- **Credit** KickKing
--- Returns true if the value is found in the table
+---This contains all of the generic functions that can be used.  A lot of it is to make handlefree versions of normal blizzard commands 
+
+
+---Returns true if the value is found in the table. Author: KickKing
+---@param table table
+---@param element any
+---@return boolean @true if found, false if not
 function TableContains(table, element)
     for _, value in pairs(table) do if value == element then return true end end
     return false
 end
 
--- **Credit** KickKing
--- Remove a value from a table
+---Remove a value from a table
+---@param table table
+---@param value any
+---@return boolean @true if successful
 function TableRemoveValue(table, value)
     return table.remove(table, TableFind(table, value))
 end
 
--- **Credit** KickKing
--- Find the indext of a value in a table
+---Find the index of a value in a table.
+---@param tab table
+---@param el any
+---@return number @Returns the index
 function TableFind(tab, el)
     for index, value in pairs(tab) do if value == el then return index end end
 end
 
--- **Credit** KickKing
--- get distance without locations
+---Get the distance between 2 sets of Coordinates (Not handles used)
+---@param x1 number
+---@param y1 number
+---@param x2 number
+---@param y2 number
+---@return number
 function DistanceBetweenCoordinates(x1, y1, x2, y2)
     return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
 end
 
 -- **Credit** KickKing
 -- get distance without locations
+---Get Distance between two units.  (Doesn't leak)
+---@param unitA any
+---@param unitB any
+---@return number
 function DistanceBetweenUnits(unitA, unitB)
     return DistanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA),
                                       GetUnitX(unitB), GetUnitY(unitB))
 end
 
---- **Credit** KickKing
----get angle without locations
+
+--- get angle between two sets of coordinates without locations
 ---@param x1 number
 ---@param y1 number
 ---@param x2 number
@@ -44,8 +58,7 @@ function AngleBetweenCoordinates(x1, y1, x2, y2)
     return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
 end
 
--- **Credit** KickKing
----get angle without locations
+---get angle between two units without locations
 ---@param unitA handle @Unit 1
 ---@param unitB handle @Unit 2
 ---@return number @angle between 0 and 360
@@ -54,16 +67,22 @@ function AngleBetweenUnits(unitA, unitB)
                                    GetUnitX(unitB), GetUnitY(unitB))
 end
 
--- **Credit** KickKing
--- Polar projection with Locations
+---Polar projection from point (Doesn't Leak)
+---@param x number
+---@param y number
+---@param dist number
+---@param angle number
+---@return number @x
+---@return number @y
 function PolarProjectionCoordinates(x, y, dist, angle)
     local newX = x + dist * Cos(angle * bj_DEGTORAD)
     local newY = y + dist * Sin(angle * bj_DEGTORAD)
     return newX, newY
 end
 
--- ** Credit** Planetary
--- Wraps your code in a "Try" loop so you can see errors printed in the log at runtime
+---raps your code in a "Try" loop so you can see errors printed in the log at runtime.  Author: Planetary
+---@param func any
+---@param name string @Name the same as your function name
 function Debugfunc(func, name) -- Turn on runtime logging
     local passed, data = pcall(function()
         func()

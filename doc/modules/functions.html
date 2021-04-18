@@ -47,16 +47,43 @@
 <div id="content">
 
 <h1>Module <code>functions</code></h1>
-<p>**Credit** KickKing
-get angle without locations</p>
-<p></p>
+<p>This contains all of the generic functions that can be used.</p>
+<p>  A lot of it is to make handlefree versions of normal blizzard commands </p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#TableContains">TableContains (table, element)</a></td>
+	<td class="summary">Returns true if the value is found in the table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#TableRemoveValue">TableRemoveValue (table, value)</a></td>
+	<td class="summary">Remove a value from a table</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#TableFind">TableFind (tab, el)</a></td>
+	<td class="summary">Find the index of a value in a table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DistanceBetweenCoordinates">DistanceBetweenCoordinates (x1, y1, x2, y2)</a></td>
+	<td class="summary">Get the distance between 2 sets of Coordinates (Not handles used)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AngleBetweenCoordinates">AngleBetweenCoordinates (x1, y1, x2, y2)</a></td>
+	<td class="summary">get angle between two sets of coordinates without locations</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#AngleBetweenUnits">AngleBetweenUnits (unitA, unitB)</a></td>
-	<td class="summary">get angle without locations</td>
+	<td class="summary">get angle between two units without locations</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#PolarProjectionCoordinates">PolarProjectionCoordinates (x, y, dist, angle)</a></td>
+	<td class="summary">Polar projection from point (Doesn't Leak)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Debugfunc">Debugfunc (func, name)</a></td>
+	<td class="summary">raps your code in a "Try" loop so you can see errors printed in the log at runtime.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#GetRandomCoordinatesInRect">GetRandomCoordinatesInRect (rect)</a></td>
@@ -84,11 +111,163 @@ get angle without locations</p>
 
     <dl class="function">
     <dt>
+    <a name = "TableContains"></a>
+    <strong>TableContains (table, element)</strong>
+    </dt>
+    <dd>
+    Returns true if the value is found in the table.  Author: KickKing
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">table</span>
+         table
+        </li>
+        <li><span class="parameter">element</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean @true if found, false if not
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "TableRemoveValue"></a>
+    <strong>TableRemoveValue (table, value)</strong>
+    </dt>
+    <dd>
+    Remove a value from a table
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">table</span>
+         table
+        </li>
+        <li><span class="parameter">value</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean @true if successful
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "TableFind"></a>
+    <strong>TableFind (tab, el)</strong>
+    </dt>
+    <dd>
+    Find the index of a value in a table.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tab</span>
+         table
+        </li>
+        <li><span class="parameter">el</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number @Returns the index
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DistanceBetweenCoordinates"></a>
+    <strong>DistanceBetweenCoordinates (x1, y1, x2, y2)</strong>
+    </dt>
+    <dd>
+    Get the distance between 2 sets of Coordinates (Not handles used)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x1</span>
+         number
+        </li>
+        <li><span class="parameter">y1</span>
+         number
+        </li>
+        <li><span class="parameter">x2</span>
+         number
+        </li>
+        <li><span class="parameter">y2</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AngleBetweenCoordinates"></a>
+    <strong>AngleBetweenCoordinates (x1, y1, x2, y2)</strong>
+    </dt>
+    <dd>
+    get angle between two sets of coordinates without locations
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x1</span>
+         number
+        </li>
+        <li><span class="parameter">y1</span>
+         number
+        </li>
+        <li><span class="parameter">x2</span>
+         number
+        </li>
+        <li><span class="parameter">y2</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number @angle between 0 and 360
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "AngleBetweenUnits"></a>
     <strong>AngleBetweenUnits (unitA, unitB)</strong>
     </dt>
     <dd>
-    get angle without locations
+    get angle between two units without locations
 
 
     <h3>Parameters:</h3>
@@ -106,6 +285,65 @@ get angle without locations</p>
 
         number @angle between 0 and 360
     </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "PolarProjectionCoordinates"></a>
+    <strong>PolarProjectionCoordinates (x, y, dist, angle)</strong>
+    </dt>
+    <dd>
+    Polar projection from point (Doesn't Leak)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         number
+        </li>
+        <li><span class="parameter">y</span>
+         number
+        </li>
+        <li><span class="parameter">dist</span>
+         number
+        </li>
+        <li><span class="parameter">angle</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        number @x</li>
+        <li>
+        number @y</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Debugfunc"></a>
+    <strong>Debugfunc (func, name)</strong>
+    </dt>
+    <dd>
+    raps your code in a "Try" loop so you can see errors printed in the log at runtime.   Author: Planetary
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">func</span>
+         any
+        </li>
+        <li><span class="parameter">name</span>
+         string @Name the same as your function name
+        </li>
+    </ul>
+
 
 
 
@@ -247,7 +485,7 @@ get angle without locations</p>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-18 10:22:36 </i>
+<i style="float:right;">Last updated 2021-04-18 10:40:01 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
