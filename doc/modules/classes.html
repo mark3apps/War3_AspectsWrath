@@ -67,12 +67,52 @@
 	<td class="summary">Adds a new town to the map.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#ai.town.Extend">ai.town.Extend (name, rect)</a></td>
+	<td class="summary">Extend the town coverage to include the region</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.HostileForce">ai.town.HostileForce (town, force)</a></td>
+	<td class="summary">Sets the Hostile force for the selected town</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.VulnerableUnits">ai.town.VulnerableUnits (town, flag)</a></td>
+	<td class="summary">Sets All units to be Vulnerable / Invulnerable in the selected town</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.UnitsSetRoute">ai.town.UnitsSetRoute (town, route)</a></td>
+	<td class="summary">Sets the route for every unit in the selected town to the chosen route whether it's in their list of routes or not immediately</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.UnitsSetState">ai.town.UnitsSetState (town, state)</a></td>
+	<td class="summary">Sets All units in a town to the specified state</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.UnitsHurt">ai.town.UnitsHurt (town, low, high, kill)</a></td>
+	<td class="summary">Hurt all units in the town by a random percent of their health from the low number to the high number, If kill is false, units won't be killed by this, but their health will be set to 1 percent</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.town.UnitsSetLife">ai.town.UnitsSetLife (town, low, high)</a></td>
+	<td class="summary">Set the life of all units in a town to a random percent from low to high.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#ai.region.New">ai.region.New (rect)</a></td>
-	<td class="summary">REGION ACTIONS</td>
+	<td class="summary">Set up a new region (Internal Function)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.GetRandom">ai.region.GetRandom (id)</a></td>
+	<td class="summary">Get Random point in the specified region.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.GetCenter">ai.region.GetCenter (id)</a></td>
+	<td class="summary">Get Center point in the specified region</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.region.ContainsUnit">ai.region.ContainsUnit (id, unit)</a></td>
+	<td class="summary">Check to see if region contains a unit</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.route.New">ai.route.New (name, loop, type)</a></td>
-	<td class="summary">Adds a route that villagers can take when Moving</td>
+	<td class="summary">Creates a new route that villagers can take when Moving.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.route.Step">ai.route.Step (rect, speed, point, order, animationTag)</a></td>
@@ -80,7 +120,31 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.route.Action">ai.route.Action (time, lookAtRect, animation, loop)</a></td>
-	<td class="summary">Adds an additional action to the picked route step</td>
+	<td class="summary">Adds an additional action to the picked route step  Applies to the latest defined Route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Trigger">ai.route.Trigger (trigger)</a></td>
+	<td class="summary">Add a trigger to the step as the next action.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Funct">ai.route.Funct (funct)</a></td>
+	<td class="summary">Adds a Function to the Route (NOT FINISHED)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.Finish">ai.route.Finish (speed)</a></td>
+	<td class="summary">Finish out the route and specify the speed at which units should use to go back to their home positions</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.StepCount">ai.route.StepCount (route)</a></td>
+	<td class="summary">Get the Count of steps in a route</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.route.ActionCount">ai.route.ActionCount (route, step)</a></td>
+	<td class="summary">Get the Count of Actions in a Step</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.New">ai.unit.New (town, type, unit, name, shift, radius)</a></td>
+	<td class="summary">Adds a unit that exists into the fold to be controlled by the AI.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.Kill">ai.unit.Kill (unit)</a></td>
@@ -247,20 +311,297 @@
 
 </dd>
     <dt>
+    <a name = "ai.town.Extend"></a>
+    <strong>ai.town.Extend (name, rect)</strong>
+    </dt>
+    <dd>
+    Extend the town coverage to include the region
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+        <li><span class="parameter">rect</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.HostileForce"></a>
+    <strong>ai.town.HostileForce (town, force)</strong>
+    </dt>
+    <dd>
+    Sets the Hostile force for the selected town
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">force</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean @True is no error
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.VulnerableUnits"></a>
+    <strong>ai.town.VulnerableUnits (town, flag)</strong>
+    </dt>
+    <dd>
+    Sets All units to be Vulnerable / Invulnerable in the selected town
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">flag</span>
+         boolean
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.UnitsSetRoute"></a>
+    <strong>ai.town.UnitsSetRoute (town, route)</strong>
+    </dt>
+    <dd>
+    Sets the route for every unit in the selected town to the chosen route whether it's in their list of routes or not immediately
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.UnitsSetState"></a>
+    <strong>ai.town.UnitsSetState (town, state)</strong>
+    </dt>
+    <dd>
+    Sets All units in a town to the specified state
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         any
+        </li>
+        <li><span class="parameter">state</span>
+         any
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.UnitsHurt"></a>
+    <strong>ai.town.UnitsHurt (town, low, high, kill)</strong>
+    </dt>
+    <dd>
+    Hurt all units in the town by a random percent of their health from the low number to the high number, If kill is false, units won't be killed by this, but their health will be set to 1 percent
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">low</span>
+         number
+        </li>
+        <li><span class="parameter">high</span>
+         number
+        </li>
+        <li><span class="parameter">kill</span>
+         boolean
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.town.UnitsSetLife"></a>
+    <strong>ai.town.UnitsSetLife (town, low, high)</strong>
+    </dt>
+    <dd>
+    Set the life of all units in a town to a random percent from low to high.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         string
+        </li>
+        <li><span class="parameter">low</span>
+         number
+        </li>
+        <li><span class="parameter">high</span>
+         number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "ai.region.New"></a>
     <strong>ai.region.New (rect)</strong>
     </dt>
     <dd>
-    REGION ACTIONS
+    Set up a new region (Internal Function)
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">rect</span>
-
+         any
         </li>
     </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.region.GetRandom"></a>
+    <strong>ai.region.GetRandom (id)</strong>
+    </dt>
+    <dd>
+    Get Random point in the specified region.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         number @Handle Id of soure Rect
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        number @x</li>
+        <li>
+        number @y</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.region.GetCenter"></a>
+    <strong>ai.region.GetCenter (id)</strong>
+    </dt>
+    <dd>
+    Get Center point in the specified region
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         number @Handle Id of soure Rect
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        number @x</li>
+        <li>
+        number @y</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.region.ContainsUnit"></a>
+    <strong>ai.region.ContainsUnit (id, unit)</strong>
+    </dt>
+    <dd>
+    Check to see if region contains a unit
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         number @Handle Id of soure Rect
+        </li>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -271,7 +612,7 @@
     <strong>ai.route.New (name, loop, type)</strong>
     </dt>
     <dd>
-    Adds a route that villagers can take when Moving
+    Creates a new route that villagers can take when Moving.   Make sure to specify all Steps, Actions and Triggers before creating an additional route
 
 
     <h3>Parameters:</h3>
@@ -311,16 +652,16 @@
                   rect    @The Rect (GUI Region) that the unit will walk to
         </li>
         <li><span class="parameter">speed</span>
-                 number  @OPTIONAL: Walk/Run speed of unit.  (under 100 will walk) Default is unit default speed
+                 number  @OPTIONAL | Unit Speed | Walk/Run speed of unit.  (under 100 will walk)
         </li>
         <li><span class="parameter">point</span>
-                 string  @OPTIONAL: [center, random] Picks either the center of the Rect or a random point in the rect. (Default Center)
+                 string  @OPTIONAL | "center" | [center, random] Picks either the center of the Rect or a random point in the rect.
         </li>
         <li><span class="parameter">order</span>
-                 number  @OPTIONAL: the order to use to move.  Default of move
+                 number  @OPTIONAL | oid.move |  the order to use to move.
         </li>
         <li><span class="parameter">animationTag</span>
-          string  @OPTIONAL: an anim tag to add to the unit while walking
+          string  @OPTIONAL | nil | an anim tag to add to the unit while walking
         </li>
     </ul>
 
@@ -339,22 +680,22 @@
     <strong>ai.route.Action (time, lookAtRect, animation, loop)</strong>
     </dt>
     <dd>
-    Adds an additional action to the picked route step
+    Adds an additional action to the picked route step  Applies to the latest defined Route
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">time</span>
-         number
+         number @The amount of time the unit will stop for before continueing on to the next action / step / trigger
         </li>
         <li><span class="parameter">lookAtRect</span>
-         rect
+         rect @OPTIONAL | nil | The rect that the unit will need to look at
         </li>
         <li><span class="parameter">animation</span>
-         string
+         string @OPTIONAL | nil | The string of the animation you want the unit to play at this action
         </li>
         <li><span class="parameter">loop</span>
-         boolean
+         boolean @OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
         </li>
     </ul>
 
@@ -365,6 +706,178 @@
     </ol>
 
 
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Trigger"></a>
+    <strong>ai.route.Trigger (trigger)</strong>
+    </dt>
+    <dd>
+    Add a trigger to the step as the next action.   (Needs to be a GUI Defined trigger)
+The trigger needs to have the first and last line of the trigger be exactly as definitely in the test action in the test project or it will break the GUI
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">trigger</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Funct"></a>
+    <strong>ai.route.Funct (funct)</strong>
+    </dt>
+    <dd>
+    Adds a Function to the Route (NOT FINISHED)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">funct</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.Finish"></a>
+    <strong>ai.route.Finish (speed)</strong>
+    </dt>
+    <dd>
+    Finish out the route and specify the speed at which units should use to go back to their home positions
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">speed</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.StepCount"></a>
+    <strong>ai.route.StepCount (route)</strong>
+    </dt>
+    <dd>
+    Get the Count of steps in a route
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        any
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.route.ActionCount"></a>
+    <strong>ai.route.ActionCount (route, step)</strong>
+    </dt>
+    <dd>
+    Get the Count of Actions in a Step
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+        <li><span class="parameter">step</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        any
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.New"></a>
+    <strong>ai.unit.New (town, type, unit, name, shift, radius)</strong>
+    </dt>
+    <dd>
+    Adds a unit that exists into the fold to be controlled by the AI.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">town</span>
+         any @This is the town that will control aspects of the Unit
+        </li>
+        <li><span class="parameter">type</span>
+         any @This specifies the state the unit has access to
+        </li>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">name</span>
+         any
+        </li>
+        <li><span class="parameter">shift</span>
+         any
+        </li>
+        <li><span class="parameter">radius</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+    </ul>
 
 
 </dd>
@@ -676,7 +1189,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-18 10:40:01 </i>
+<i style="float:right;">Last updated 2021-04-18 12:30:29 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -135,7 +135,7 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    ---Extend 
+    ---Extend the town coverage to include the region
     ---@param name any
     ---@param rect any
     ---@return boolean
@@ -159,6 +159,10 @@ function ai.Init(overallTick, overallSplit)
         return false
     end
 
+    ---Sets the Hostile force for the selected town
+    ---@param town string
+    ---@param force any
+    ---@return boolean @True is no error
     function ai.town.HostileForce(town, force)
 
         ai.town[town].force = force
@@ -166,6 +170,10 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
+    ---Sets All units to be Vulnerable / Invulnerable in the selected town
+    ---@param town string
+    ---@param flag boolean
+    ---@return boolean
     function ai.town.VulnerableUnits(town, flag)
 
         ForGroup(ai.town[town].units, function()
@@ -178,6 +186,9 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
+    ---Sets the route for every unit in the selected town to the chosen route whether it's in their list of routes or not immediately
+    ---@param town string
+    ---@param route string
     function ai.town.UnitsSetRoute(town, route)
         ForGroup(ai.town[town].units, function()
             local unit = GetEnumUnit()
@@ -191,6 +202,9 @@ function ai.Init(overallTick, overallSplit)
         end)
     end
 
+    ---Sets All units in a town to the specified state
+    ---@param town any
+    ---@param state any
     function ai.town.UnitsSetState(town, state)
         ForGroup(ai.town[town].units, function()
             local unit = GetEnumUnit()
@@ -199,6 +213,12 @@ function ai.Init(overallTick, overallSplit)
         end)
     end
 
+    ---Hurt all units in the town by a random percent of their health from the low number to the high number, If kill is false, units won't be killed by this, but their health will be set to 1 percent
+    ---@param town string
+    ---@param low number
+    ---@param high number
+    ---@param kill boolean
+    ---@return boolean
     function ai.town.UnitsHurt(town, low, high, kill)
 
         ForGroup(ai.town[town].units, function()
@@ -215,6 +235,11 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
+    ---Set the life of all units in a town to a random percent from low to high.
+    ---@param town string
+    ---@param low number
+    ---@param high number
+    ---@return boolean
     function ai.town.UnitsSetLife(town, low, high)
 
         ForGroup(ai.town[town].units, function()
@@ -231,6 +256,8 @@ function ai.Init(overallTick, overallSplit)
     --  REGION ACTIONS
     --------
 
+    ---Set up a new region (Internal Function)
+    ---@param rect any
     function ai.region.New(rect)
 
         local id = GetHandleId(rect)
@@ -257,6 +284,10 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
+    ---Get Random point in the specified region.
+    ---@param id number @Handle Id of soure Rect
+    ---@return number @x
+    ---@return number @y
     function ai.region.GetRandom(id)
         local data = ai.region[id]
 
@@ -264,8 +295,16 @@ function ai.Init(overallTick, overallSplit)
                GetRandomReal(data.yMin, data.yMax)
     end
 
+    ---Get Center point in the specified region  
+    ---@param id number @Handle Id of soure Rect
+    ---@return number @x
+    ---@return number @y
     function ai.region.GetCenter(id) return ai.region[id].x, ai.region[id].y end
 
+    ---Check to see if region contains a unit
+    ---@param id number @Handle Id of soure Rect
+    ---@param unit any
+    ---@return boolean
     function ai.region.ContainsUnit(id, unit)
         local data = ai.region[id]
         local x = GetUnitX(unit)
@@ -282,7 +321,7 @@ function ai.Init(overallTick, overallSplit)
     --  ROUTE ACTIONS
     --------
 
-    ---Adds a route that villagers can take when Moving
+    ---Creates a new route that villagers can take when Moving.  Make sure to specify all Steps, Actions and Triggers before creating an additional route
     ---@param name  string  @Route Name
     ---@param loop  boolean @Whether or not the route is a loop
     ---@param type  string  @inTown or outOfTown
@@ -305,10 +344,10 @@ function ai.Init(overallTick, overallSplit)
 
     ---Adds at the end of the selected route, a new place for a unit to move to.
     ---@param rect          rect    @The Rect (GUI Region) that the unit will walk to
-    ---@param speed         number  @OPTIONAL: Walk/Run speed of unit.  (under 100 will walk) Default is unit default speed
-    ---@param point         string  @OPTIONAL: [center, random] Picks either the center of the Rect or a random point in the rect. (Default Center)
-    ---@param order         number  @OPTIONAL: the order to use to move.  Default of move
-    ---@param animationTag  string  @OPTIONAL: an anim tag to add to the unit while walking
+    ---@param speed         number  @OPTIONAL | Unit Speed | Walk/Run speed of unit.  (under 100 will walk)
+    ---@param point         string  @OPTIONAL | "center" | [center, random] Picks either the center of the Rect or a random point in the rect.
+    ---@param order         number  @OPTIONAL | oid.move |  the order to use to move.
+    ---@param animationTag  string  @OPTIONAL | nil | an anim tag to add to the unit while walking
     ---@return              boolean @True if successful
     function ai.route.Step(rect, speed, point, order, animationTag)
 
@@ -345,11 +384,11 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
-    ---Adds an additional action to the picked route step
-    ---@param time number
-    ---@param lookAtRect rect
-    ---@param animation string
-    ---@param loop boolean
+    ---Adds an additional action to the picked route step  Applies to the latest defined Route
+    ---@param time number @The amount of time the unit will stop for before continueing on to the next action / step / trigger
+    ---@param lookAtRect rect @OPTIONAL | nil | The rect that the unit will need to look at
+    ---@param animation string @OPTIONAL | nil | The string of the animation you want the unit to play at this action
+    ---@param loop boolean @OPTIONAL | false | Whether or not the animation specified should loop until the end or play once and pause
     ---@return boolean
     function ai.route.Action(time, lookAtRect, animation, loop)
 
@@ -378,6 +417,10 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
+    ---Add a trigger to the step as the next action.  (Needs to be a GUI Defined trigger)
+    ---The trigger needs to have the first and last line of the trigger be exactly as definitely in the test action in the test project or it will break the GUI
+    ---@param trigger any
+    ---@return boolean
     function ai.route.Trigger(trigger)
         -- Update the action Count for the Route
         local route = ai.routeSetup
@@ -388,8 +431,13 @@ function ai.Init(overallTick, overallSplit)
         ai.route[route].step[stepCount].actionCount = actionCount
         ai.route[route].step[stepCount].action[actionCount] =
             {type = "trigger", trigger = trigger}
+
+            return true
     end
 
+    ---Adds a Function to the Route (NOT FINISHED)
+    ---@param funct any
+    ---@return boolean
     function ai.route.Funct(funct)
         -- Update the action Count for the Route
         local route = ai.routeSetup
@@ -404,6 +452,9 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
+    ---Finish out the route and specify the speed at which units should use to go back to their home positions
+    ---@param speed any
+    ---@return boolean
     function ai.route.Finish(speed)
         speed = speed or nil
 
@@ -412,8 +463,15 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
+    ---Get the Count of steps in a route
+    ---@param route string
+    ---@return any
     function ai.route.StepCount(route) return ai.route[route].stepCount end
 
+    ---Get the Count of Actions in a Step
+    ---@param route string
+    ---@param step string
+    ---@return any
     function ai.route.ActionCount(route, step)
         return ai.route[route].step[step].actionCount
     end
@@ -422,7 +480,15 @@ function ai.Init(overallTick, overallSplit)
     --  UNIT ACTIONS
     --------
 
-    -- Adds a unit that exists into the fold to be controlled by the AI. Defaults to Day shift.
+    ---Adds a unit that exists into the fold to be controlled by the AI.
+    ---@param town any @This is the town that will control aspects of the Unit
+    ---@param type any @This specifies the state the unit has access to
+    ---@param unit any
+    ---@param name any
+    ---@param shift any
+    ---@param radius any
+    ---@return boolean
+    ---@see state
     function ai.unit.New(town, type, unit, name, shift, radius)
 
         shift = shift or "day"
