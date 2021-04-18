@@ -1,4 +1,6 @@
+---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  as they're used for internal purposes.
 ---@diagnostic disable: lowercase-global
+
 --------------
 -- Village AI
 -- Credit: Mark Wright (KickKing)
@@ -6,8 +8,8 @@
 --------------
 --
 --
---
--- Set up Table
+
+---This Table contains all of the functions and data for the Village
 ai = {}
 
 ---This is the first command that need to be run before anything else.  Initializes everything that's needed.
@@ -133,6 +135,10 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
+    ---Extend 
+    ---@param name any
+    ---@param rect any
+    ---@return boolean
     function ai.town.Extend(name, rect)
         RegionAddRect(ai.town[name].region, rect)
 
