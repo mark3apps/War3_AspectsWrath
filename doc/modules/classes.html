@@ -33,7 +33,6 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#Functions">Functions</a></li>
-<li><a href="#Tables">Tables</a></li>
 </ul>
 
 
@@ -147,8 +146,16 @@
 	<td class="summary">Adds a unit that exists into the fold to be controlled by the AI.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#ai.unit.AddRoute">ai.unit.AddRoute (unit, route)</a></td>
+	<td class="summary">Adds a route to a unit.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.RemoveRoute">ai.unit.RemoveRoute (unit, route)</a></td>
+	<td class="summary">Removes the route from the units list of routes</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#ai.unit.Kill">ai.unit.Kill (unit)</a></td>
-	<td class="summary">Kill the Unit</td>
+	<td class="summary">Kills the Unit and removes it from AI</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.Remove">ai.unit.Remove (unit)</a></td>
@@ -160,39 +167,59 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.PickRoute">ai.unit.PickRoute (unit, route, stepNumber, actionNumber)</a></td>
-	<td class="summary">Pick a Route from the Units avalable routes and set it up</td>
+	<td class="summary">Pick a Route from the Units avalable routes and set it up (Unit will not start moving down the route, this ONLY gets it ready to)</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.NextStep">ai.unit.NextStep (unit)</a></td>
-	<td class="summary">Run next Step in a Units Current Route</td>
+	<td class="summary">Run next Step in a Units Current Route
+Run the next Step in the Unit's current Route</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.NextAction">ai.unit.NextAction (unit)</a></td>
-	<td class="summary">Run the units next Route Action</td>
+	<td class="summary">Run the units next Route Action
+Run the Next Action in the Units Current Step in its current Route</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.State">ai.unit.State (unit, state)</a></td>
-	<td class="summary">Set the Unit State</td>
+	<td class="summary">Set the Unit State
+Set the Unit's Current state (This is an active step that will change the state and run a set of commands for that state)
+Current list of states are {"Move", "Relax", "ReturnHome"}</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unit.Intel">ai.unit.Intel (unit)</a></td>
-	<td class="summary">Update the Units intel</td>
+	<td class="summary">Update the Units Intel (Will run automatically at the unit's tick)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.PostIntel">ai.unit.PostIntel (unit)</a></td>
+	<td class="summary">Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unit.MoveToNextStep">ai.unit.MoveToNextStep (unit, immediately)</a></td>
+	<td class="summary">Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Move">ai.unitSTATE.Move (unit)</a></td>
+	<td class="summary">This runs when a unit's state is changed to Move.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ai.unitSTATE.Relax">ai.unitSTATE.Relax (unit)</a></td>
+	<td class="summary">This runs when a unit's state is changed to Relax.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.ReturnHome">ai.unitSTATE.ReturnHome (unit)</a></td>
-	<td class="summary">RETURN HOME</td>
+	<td class="summary">This runs when a Unit's state is changed to ReturnHome.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Moving">ai.unitSTATE.Moving (unit)</a></td>
-	<td class="summary">Moving State</td>
+	<td class="summary">This is an inbetween state.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.Waiting">ai.unitSTATE.Waiting (unit)</a></td>
-	<td class="summary">Waiting State</td>
+	<td class="summary">This is an inbetween state.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.unitSTATE.ReturningHome">ai.unitSTATE.ReturningHome (unit)</a></td>
-	<td class="summary">Returning Home State</td>
+	<td class="summary">This is an inbetween state.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ai.Start">ai.Start ()</a></td>
@@ -201,13 +228,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#ai.Stop">ai.Stop ()</a></td>
 	<td class="summary">Stop Running the AI</td>
-	</tr>
-</table>
-<h2><a href="#Tables">Tables</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#ai">ai</a></td>
-	<td class="summary">This Table contains all of the functions and data for the Village</td>
 	</tr>
 </table>
 
@@ -849,22 +869,22 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">town</span>
-         any @This is the town that will control aspects of the Unit
+         string @This is the town that will control aspects of the Unit
         </li>
         <li><span class="parameter">type</span>
-         any @This specifies the state the unit has access to
+         string @This specifies the state the unit has access to see States for more info
         </li>
         <li><span class="parameter">unit</span>
-         any
+         any @The unit that will be added to the AI
         </li>
         <li><span class="parameter">name</span>
-         any
+         string @OPTIONAL | Default Name of Unit | The name of the unit. (This will rename the unit in game to this)
         </li>
         <li><span class="parameter">shift</span>
-         any
+         string @OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
         </li>
         <li><span class="parameter">radius</span>
-         any
+         number @OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
         </li>
     </ul>
 
@@ -882,11 +902,67 @@ The trigger needs to have the first and last line of the trigger be exactly as d
 
 </dd>
     <dt>
+    <a name = "ai.unit.AddRoute"></a>
+    <strong>ai.unit.AddRoute (unit, route)</strong>
+    </dt>
+    <dd>
+    Adds a route to a unit.  (Unit must already be in the AI or else this will fail)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.RemoveRoute"></a>
+    <strong>ai.unit.RemoveRoute (unit, route)</strong>
+    </dt>
+    <dd>
+    Removes the route from the units list of routes
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">route</span>
+         string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "ai.unit.Kill"></a>
     <strong>ai.unit.Kill (unit)</strong>
     </dt>
     <dd>
-    Kill the Unit
+    Kills the Unit and removes it from AI
 
 
     <h3>Parameters:</h3>
@@ -949,7 +1025,7 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <strong>ai.unit.PickRoute (unit, route, stepNumber, actionNumber)</strong>
     </dt>
     <dd>
-    Pick a Route from the Units avalable routes and set it up
+    Pick a Route from the Units avalable routes and set it up (Unit will not start moving down the route, this ONLY gets it ready to)
 
 
     <h3>Parameters:</h3>
@@ -979,15 +1055,21 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     </dt>
     <dd>
     Run next Step in a Units Current Route
+Run the next Step in the Unit's current Route
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-
+         any
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -999,15 +1081,21 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     </dt>
     <dd>
     Run the units next Route Action
+Run the Next Action in the Units Current Step in its current Route
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-
+         any
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1019,18 +1107,25 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     </dt>
     <dd>
     Set the Unit State
+Set the Unit's Current state (This is an active step that will change the state and run a set of commands for that state)
+Current list of states are {"Move", "Relax", "ReturnHome"}
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-
+         any
         </li>
         <li><span class="parameter">state</span>
-
+         string
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1041,13 +1136,111 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <strong>ai.unit.Intel (unit)</strong>
     </dt>
     <dd>
-    Update the Units intel
+    Update the Units Intel (Will run automatically at the unit's tick)
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
 
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.PostIntel"></a>
+    <strong>ai.unit.PostIntel (unit)</strong>
+    </dt>
+    <dd>
+    Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unit.MoveToNextStep"></a>
+    <strong>ai.unit.MoveToNextStep (unit, immediately)</strong>
+    </dt>
+    <dd>
+    Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+        <li><span class="parameter">immediately</span>
+         any @OPTIONAL | false | If set to true the function will wait to issue the next step until after the unit has stopped moving
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Move"></a>
+    <strong>ai.unitSTATE.Move (unit)</strong>
+    </dt>
+    <dd>
+    This runs when a unit's state is changed to Move.   Will pick a route from the units available routes and send them on the quest
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ai.unitSTATE.Relax"></a>
+    <strong>ai.unitSTATE.Relax (unit)</strong>
+    </dt>
+    <dd>
+    This runs when a unit's state is changed to Relax.   Unit is not moving or doing anything.  Just standing.  At unit's tick, has a chance to tell the unit to go into another state.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">unit</span>
+         any
         </li>
     </ul>
 
@@ -1061,16 +1254,21 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <strong>ai.unitSTATE.ReturnHome (unit)</strong>
     </dt>
     <dd>
-    RETURN HOME
+    This runs when a Unit's state is changed to ReturnHome.   The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-
+         any
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1081,16 +1279,21 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <strong>ai.unitSTATE.Moving (unit)</strong>
     </dt>
     <dd>
-    Moving State
+    This is an inbetween state.   Don't manually set it's state to this.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-
+         any
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1101,16 +1304,21 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <strong>ai.unitSTATE.Waiting (unit)</strong>
     </dt>
     <dd>
-    Waiting State
+    This is an inbetween state.   Don't manually set it's state to this.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-        Do nothing, come on now, what did you think was going to be here??
+         any
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1121,16 +1329,21 @@ The trigger needs to have the first and last line of the trigger be exactly as d
     <strong>ai.unitSTATE.ReturningHome (unit)</strong>
     </dt>
     <dd>
-    Returning Home State
+    This is an inbetween state.   Don't manually set it's state to this.
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">unit</span>
-
+         any
         </li>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1145,6 +1358,11 @@ The trigger needs to have the first and last line of the trigger be exactly as d
 
 
 
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean
+    </ol>
 
 
 
@@ -1159,24 +1377,11 @@ The trigger needs to have the first and last line of the trigger be exactly as d
 
 
 
+    <h3>Returns:</h3>
+    <ol>
 
-
-
-
-</dd>
-</dl>
-    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
-
-    <dl class="function">
-    <dt>
-    <a name = "ai"></a>
-    <strong>ai</strong>
-    </dt>
-    <dd>
-    This Table contains all of the functions and data for the Village
-
-
-
+        boolean
+    </ol>
 
 
 
@@ -1189,7 +1394,7 @@ The trigger needs to have the first and last line of the trigger be exactly as d
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-18 12:30:29 </i>
+<i style="float:right;">Last updated 2021-04-18 13:53:27 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

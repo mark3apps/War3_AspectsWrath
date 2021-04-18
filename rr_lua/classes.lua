@@ -1,14 +1,12 @@
 ---This Contains all of the Functions that you'll need to run and set up the AI.  Most of the functions won't need to be used.  as they're used for internal purposes.
 ---@diagnostic disable: lowercase-global
-
---------------
+--
 -- Village AI
 -- Credit: Mark Wright (KickKing)
 -- v0.1.0
---------------
 --
 --
-
+--
 ---This Table contains all of the functions and data for the Village
 ai = {}
 
@@ -36,9 +34,9 @@ function ai.Init(overallTick, overallSplit)
     ai.split = overallSplit
     ai.unitGroup = CreateGroup()
 
-    --------
+    --
     --  LANDMARK ACTIONS
-    --------
+    --
 
     ---Creates a New Landmark and Adds it.
     ---@param town string
@@ -79,9 +77,9 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
-    --------
+    --
     --  TOWN ACTIONS
-    --------
+    --
 
     ---Adds a new town to the map.  (NEEDS to be extended with additional RECTs)
     ---@param name string   @This is the name of the town.  This is used to reference the town in other functions
@@ -252,9 +250,9 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --------
+    --
     --  REGION ACTIONS
-    --------
+    --
 
     ---Set up a new region (Internal Function)
     ---@param rect any
@@ -317,9 +315,9 @@ function ai.Init(overallTick, overallSplit)
         end
     end
 
-    --------
+    --
     --  ROUTE ACTIONS
-    --------
+    --
 
     ---Creates a new route that villagers can take when Moving.  Make sure to specify all Steps, Actions and Triggers before creating an additional route
     ---@param name  string  @Route Name
@@ -432,7 +430,7 @@ function ai.Init(overallTick, overallSplit)
         ai.route[route].step[stepCount].action[actionCount] =
             {type = "trigger", trigger = trigger}
 
-            return true
+        return true
     end
 
     ---Adds a Function to the Route (NOT FINISHED)
@@ -476,19 +474,19 @@ function ai.Init(overallTick, overallSplit)
         return ai.route[route].step[step].actionCount
     end
 
-    --------
+    --
     --  UNIT ACTIONS
-    --------
+    --
 
     ---Adds a unit that exists into the fold to be controlled by the AI.
-    ---@param town any @This is the town that will control aspects of the Unit
-    ---@param type any @This specifies the state the unit has access to
-    ---@param unit any
-    ---@param name any
-    ---@param shift any
-    ---@param radius any
+    ---@param town string @This is the town that will control aspects of the Unit
+    ---@param type string @This specifies the state the unit has access to see States for more info
+    ---@param unit any @The unit that will be added to the AI
+    ---@param name string @OPTIONAL | Default Name of Unit | The name of the unit. (This will rename the unit in game to this)
+    ---@param shift string @OPTIONAL | "day" | ["day", "night", "all"] Specifies when the unit will be active
+    ---@param radius number @OPTIONAL | 600 | Specifies the units vision radius it uses to detect actions.
     ---@return boolean
-    ---@see state
+    ---@see states
     function ai.unit.New(town, type, unit, name, shift, radius)
 
         shift = shift or "day"
@@ -553,6 +551,10 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
+    ---Adds a route to a unit. (Unit must already be in the AI or else this will fail)
+    ---@param unit any
+    ---@param route string
+    ---@return boolean
     function ai.unit.AddRoute(unit, route)
         local handleId = GetHandleId(unit)
 
@@ -565,6 +567,10 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
+    ---Removes the route from the units list of routes
+    ---@param unit any
+    ---@param route string
+    ---@return boolean
     function ai.unit.RemoveRoute(unit, route)
         local handleId = GetHandleId(unit)
         local routes = ai.unit[handleId].routes
@@ -577,7 +583,7 @@ function ai.Init(overallTick, overallSplit)
         return false
     end
 
-    --- Kill the Unit
+    --- Kills the Unit and removes it from AI
     ---@param unit any
     function ai.unit.Kill(unit)
         local handleId = GetHandleId(unit)
@@ -615,7 +621,7 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --- Pick a Route from the Units avalable routes and set it up
+    --- Pick a Route from the Units avalable routes and set it up (Unit will not start moving down the route, this ONLY gets it ready to)
     ---@param unit any @REQUIRED The Unit in the AI system
     ---@param route string @OPTIONAL if you want a specific route chosen else it will pick one
     ---@param stepNumber integer @OPTIONAL if you want a specific Step chosen else it will start at the beginning
@@ -670,6 +676,9 @@ function ai.Init(overallTick, overallSplit)
     end
 
     --- Run next Step in a Units Current Route
+    ---Run the next Step in the Unit's current Route
+    ---@param unit any
+    ---@return boolean
     function ai.unit.NextStep(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -718,6 +727,9 @@ function ai.Init(overallTick, overallSplit)
     end
 
     --- Run the units next Route Action
+    ---Run the Next Action in the Units Current Step in its current Route
+    ---@param unit any
+    ---@return boolean
     function ai.unit.NextAction(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -821,6 +833,11 @@ function ai.Init(overallTick, overallSplit)
     end
 
     --- Set the Unit State
+    ---Set the Unit's Current state (This is an active step that will change the state and run a set of commands for that state)
+    ---Current list of states are {"Move", "Relax", "ReturnHome"}
+    ---@param unit any
+    ---@param state string
+    ---@return boolean
     function ai.unit.State(unit, state)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -835,7 +852,8 @@ function ai.Init(overallTick, overallSplit)
         return false
     end
 
-    --- Update the Units intel
+    ---Update the Units Intel (Will run automatically at the unit's tick)
+    ---@param unit any
     function ai.unit.Intel(unit)
 
         local data = ai.unit[GetHandleId(unit)]
@@ -870,7 +888,10 @@ function ai.Init(overallTick, overallSplit)
         -- ai.unit[data.id].alertedAllies = alertedAllies
     end
 
-    function ai.unit.Post(unit)
+    ---Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick
+    ---@param unit any
+    ---@return boolean
+    function ai.unit.PostIntel(unit)
         local data = ai.unit[GetHandleId(unit)]
 
         ai.unit[data.id].orderLast = GetUnitCurrentOrder(unit)
@@ -878,6 +899,10 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
+    ---Goes to either the Units next Step, Action or Ends the route  (Use this in GUI 99% of the time)
+    ---@param unit any
+    ---@param immediately any @OPTIONAL | false | If set to true the function will wait to issue the next step until after the unit has stopped moving
+    ---@return boolean
     function ai.unit.MoveToNextStep(unit, immediately)
 
         immediately = immediately or false
@@ -960,12 +985,13 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --------
-    --  UNIT STATES
-    --------
-
     --
-    --- MOVE STATE
+    --  UNIT STATES
+    --
+
+    ---This runs when a unit's state is changed to Move.  Will pick a route from the units available routes and send them on the quest
+    ---@param unit any
+    ---@return boolean
     function ai.unitSTATE.Move(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -979,8 +1005,8 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --
-    --- RELAX STATE
+    ---This runs when a unit's state is changed to Relax.  Unit is not moving or doing anything.  Just standing.  At unit's tick, has a chance to tell the unit to go into another state.
+    ---@param unit any
     function ai.unitSTATE.Relax(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -997,7 +1023,9 @@ function ai.Init(overallTick, overallSplit)
 
     end
 
-    --- RETURN HOME
+    ---This runs when a Unit's state is changed to ReturnHome.  The unit will stop what it's doing, clear out it's current route and begin to walk back to it's home position and facing angle
+    ---@param unit any
+    ---@return boolean
     function ai.unitSTATE.ReturnHome(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -1014,11 +1042,13 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --------
+    --
     --  UNIT STATES TRANSIENT
-    --------
+    --
 
-    --- Moving State
+    ---This is an inbetween state.  Don't manually set it's state to this.
+    ---@param unit any
+    ---@return boolean
     function ai.unitSTATE.Moving(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -1029,14 +1059,18 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --- Waiting State
+    ---This is an inbetween state.  Don't manually set it's state to this.
+    ---@param unit any
+    ---@return boolean
     function ai.unitSTATE.Waiting(unit)
 
         -- Do nothing, come on now, what did you think was going to be here??
         return true
     end
 
-    --- Returning Home State
+    ---This is an inbetween state.  Don't manually set it's state to this.
+    ---@param unit any
+    ---@return boolean
     function ai.unitSTATE.ReturningHome(unit)
         local data = ai.unit[GetHandleId(unit)]
 
@@ -1058,19 +1092,20 @@ function ai.Init(overallTick, overallSplit)
         return true
     end
 
-    --------
+    --
     --  TRIGGERS
-    --------
+    --
 
-    --------
+    --
     --  UNIT LOOPS
-    --------
+    --
 
     -- Loop to get on Unit Intellegence
     ai.trig.UnitLoop = CreateTrigger()
     TriggerRegisterTimerEventPeriodic(ai.trig.UnitLoop, (ai.tick / ai.split))
 
     DisableTrigger(ai.trig.UnitLoop)
+
     TriggerAddAction(ai.trig.UnitLoop, function()
 
         -- Set up Local Variables
@@ -1136,11 +1171,9 @@ function ai.Init(overallTick, overallSplit)
         return false
     end)
 
-    --------
-    --  INIT
-    --------
 
-    --- Start Running the AI
+    ---Start Running the AI
+    ---@return boolean
     function ai.Start()
 
         -- Add Tick Event and Start Unit Loop Inteligence
@@ -1149,9 +1182,12 @@ function ai.Init(overallTick, overallSplit)
         -- Enable Unit Route Management
         EnableTrigger(ai.trig.UnitEntersRegion)
 
+        return true
+
     end
 
-    --- Stop Running the AI
+    ---Stop Running the AI
+    ---@return boolean
     function ai.Stop()
 
         -- Stop Unit Intelligence
@@ -1160,5 +1196,6 @@ function ai.Init(overallTick, overallSplit)
         -- Enable Unit Route Management
         DisableTrigger(ai.trig.UnitEntersRegion)
 
+        return true
     end
 end
