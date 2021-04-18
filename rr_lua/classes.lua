@@ -854,7 +854,7 @@ function ai.Init(overallTick, overallSplit)
 
     ---Update the Units Intel (Will run automatically at the unit's tick)
     ---@param unit any
-    function ai.unit.Intel(unit)
+    function ai.unit.IntelPre(unit)
 
         local data = ai.unit[GetHandleId(unit)]
 
@@ -891,7 +891,7 @@ function ai.Init(overallTick, overallSplit)
     ---Runs a post check of intel after all states and Intel have been gathered at the end of a unit's tick
     ---@param unit any
     ---@return boolean
-    function ai.unit.PostIntel(unit)
+    function ai.unit.IntelPost(unit)
         local data = ai.unit[GetHandleId(unit)]
 
         ai.unit[data.id].orderLast = GetUnitCurrentOrder(unit)
@@ -1128,9 +1128,9 @@ function ai.Init(overallTick, overallSplit)
                 ai.unit[data.id].loop = 0
 
                 -- Run the routine for the unit's current state
-                ai.unit.Intel(u)
+                ai.unit.IntelPre(u)
                 ai.unit.State(u, data.stateCurrent)
-                ai.unit.Post(u)
+                ai.unit.IntelPost(u)
 
             end
 
