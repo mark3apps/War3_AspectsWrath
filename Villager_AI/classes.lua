@@ -604,7 +604,7 @@ function ai.Init(overallTick, overallSplit)
 	end
 
 	--- Pick a Route from the Units avalable routes and set it up (Unit will not start moving down the route, this ONLY gets it ready to)
-	---@param unit any REQUIRED The Unit in the AI system
+	---@param unit any The Unit in the AI system
 	---@param route string OPTIONAL if you want a specific route chosen else it will pick one
 	---@param stepNumber integer OPTIONAL if you want a specific Step chosen else it will start at the beginning
 	---@param actionNumber integer OPTIONAL if you want a specific Action chosen else it will start at the beginning
