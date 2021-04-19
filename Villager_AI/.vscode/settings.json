@@ -1,7 +1,0 @@
-{
-    "Lua.diagnostics.disable": [
-        "lowercase-global",
-        "undefined-doc-name"
-    ],
-    "Lua.hint.enable": true
-}
