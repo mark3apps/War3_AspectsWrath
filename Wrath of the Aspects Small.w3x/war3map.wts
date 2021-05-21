@@ -8111,12 +8111,6 @@ STRING 3276
 Arcane Institute
 }
 
-STRING 3277
-// Units: h006 (Smelt), Name (Name)
-{
-Smelt
-}
-
 STRING 3278
 // Units: n00K (Keep), Name (Name)
 {
@@ -13960,5 +13954,71 @@ STRING 4652
 // Doodads: D01Q (Human Archway), Name (Name)
 {
 Human Archway
+}
+
+STRING 4653
+// Doodads: D01R (Dwarf Tower Main), Name (Name)
+{
+Dwarf Tower Main
+}
+
+STRING 4654
+// Doodads: D01S (Dwarf Tower Fat), Name (Name)
+{
+Dwarf Tower Fat
+}
+
+STRING 4655
+// Doodads: D01T (Dwarf Tower Rimmed), Name (Name)
+{
+Dwarf Tower Rimmed
+}
+
+STRING 4656
+// Doodads: D01U (Dwarf Tower Thin), Name (Name)
+{
+Dwarf Tower Thin
+}
+
+STRING 4657
+// Units: h006 (Fortress), Name (Name)
+{
+Fortress
+}
+
+STRING 4658
+// Units: h01N (Bunker), Name (Name)
+{
+Bunker
+}
+
+STRING 4659
+// Units: h01J (Temple), Name (Name)
+{
+Temple
+}
+
+STRING 4660
+// Units: h01K (Forge), Name (Name)
+{
+Forge
+}
+
+STRING 4661
+// Units: h01L (Arcane Tower), Name (Name)
+{
+Arcane Tower
+}
+
+STRING 4662
+// Units: h01I (Rocket Bunker), Name (Name)
+{
+Rocket Bunker
+}
+
+STRING 4663
+// Units: h01M (Mine), Name (Name)
+{
+Mine
 }
 
