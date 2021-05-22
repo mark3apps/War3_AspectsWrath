@@ -67,8 +67,6 @@ function addRegions()
     loc:add("sNagaRight", gg_rct_Naga_Right)
     loc:add("sOrcLeft", gg_rct_Left_Orc)
     loc:add("sOrcRight", gg_rct_Right_Orc)
-    loc:add("sTownLeft", gg_rct_Left_Forward_Camp)
-    loc:add("sTownRight", gg_rct_Right_Forward)
     loc:add("sTreeLeft", gg_rct_Left_Tree)
     loc:add("sTreeRight", gg_rct_Right_Tree)
     loc:add("sWorkshopLeft", gg_rct_Left_Workshop)
@@ -167,9 +165,6 @@ function addBases()
 
     base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
     base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
-
-    base.add(gg_unit_h00F_0029, 2, false, true, true, true) -- Allied Town
-    base.add(gg_unit_h00F_0066, 2, false, true, true, true) -- Federation
 
     base.add(gg_unit_u001_0262, 2, false, true, true, true) -- Federation Undead
     base.add(gg_unit_u001_0264, 2, false, true, true, true) -- Federation
@@ -656,8 +651,6 @@ function spawnAddBases()
     spawn:addBase("hshipyard", "sHumanShipyardLeft", "sHumanShipyardRight",
                   gg_unit_hshy_0011, "sHumanShipyardRight",
                   "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
-    spawn:addBase("town", "sTownLeft", "bottomRight", gg_unit_h00F_0029,
-                  "sTownRight", "topLeft", gg_unit_h00F_0066)
     spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0262,
                   "sUndeadRight", "middleLeft", gg_unit_u001_0264)
 end
@@ -808,12 +801,12 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
 
     -- Town Spawn
-    spawn:addUnit("town", "h007", 3, {1, 2, 3, 4, 5}, 1, 5) -- Militia
-    spawn:addUnit("town", "h007", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3, 12) -- Militia
-    spawn:addUnit("town", "hcth", 1, {1, 2, 3, 4}, 2, 12) -- Captian
-    spawn:addUnit("town", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
-    spawn:addUnit("town", "hfoo", 5, {1, 2, 5, 6, 8}, 5, 12) -- Footman
-    spawn:addUnit("town", "h00L", 2, {1, 3, 7, 9}, 4, 12) -- Knight
+    -- spawn:addUnit("town", "h007", 3, {1, 2, 3, 4, 5}, 1, 5) -- Militia
+    -- spawn:addUnit("town", "h007", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3, 12) -- Militia
+    -- spawn:addUnit("town", "hcth", 1, {1, 2, 3, 4}, 2, 12) -- Captian
+    -- spawn:addUnit("town", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
+    -- spawn:addUnit("town", "hfoo", 5, {1, 2, 5, 6, 8}, 5, 12) -- Footman
+    -- spawn:addUnit("town", "h00L", 2, {1, 3, 7, 9}, 4, 12) -- Knight
 
     -- Undead Spawn
     spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul

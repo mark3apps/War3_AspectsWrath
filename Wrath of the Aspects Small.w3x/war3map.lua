@@ -388,6 +388,7 @@ gg_unit_h014_0158 = nil
 gg_unit_nmh1_0735 = nil
 gg_unit_u001_0098 = nil
 gg_unit_u001_0097 = nil
+gg_rct_Aspect_of_Forest_Right = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -1613,9 +1614,7 @@ function HeroSelector.addCategory(icon, text)
         local button = BlzCreateFrame("HeroSelectorCategoryButton", box, 0, 0)
         local icon = BlzGetFrameByName("HeroSelectorCategoryButtonIcon", 0)
         local iconPushed = BlzGetFrameByName("HeroSelectorCategoryButtonIconPushed", 0)
-        
-        
-        local tooltip = BlzCreateFrame("HeroSelectorText", box, 0, buttonIndex)
+        local tooltip = BlzCreateFrame("HeroSelectorText", box, 0, 0)
         BlzFrameSetText(tooltip, GetLocalizedString(text))
         newObject.Text = tooltip --when this is reached overwritte textframe with the tooltip
         BlzFrameSetTooltip(button, tooltip)
@@ -5683,8 +5682,6 @@ function addRegions()
     loc:add("sNagaRight", gg_rct_Naga_Right)
     loc:add("sOrcLeft", gg_rct_Left_Orc)
     loc:add("sOrcRight", gg_rct_Right_Orc)
-    loc:add("sTownLeft", gg_rct_Left_Forward_Camp)
-    loc:add("sTownRight", gg_rct_Right_Forward)
     loc:add("sTreeLeft", gg_rct_Left_Tree)
     loc:add("sTreeRight", gg_rct_Right_Tree)
     loc:add("sWorkshopLeft", gg_rct_Left_Workshop)
@@ -5783,9 +5780,6 @@ function addBases()
 
     base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
     base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
-
-    base.add(gg_unit_h00F_0029, 2, false, true, true, true) -- Allied Town
-    base.add(gg_unit_h00F_0066, 2, false, true, true, true) -- Federation
 
     base.add(gg_unit_u001_0262, 2, false, true, true, true) -- Federation Undead
     base.add(gg_unit_u001_0264, 2, false, true, true, true) -- Federation
@@ -6272,8 +6266,6 @@ function spawnAddBases()
     spawn:addBase("hshipyard", "sHumanShipyardLeft", "sHumanShipyardRight",
                   gg_unit_hshy_0011, "sHumanShipyardRight",
                   "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
-    spawn:addBase("town", "sTownLeft", "bottomRight", gg_unit_h00F_0029,
-                  "sTownRight", "topLeft", gg_unit_h00F_0066)
     spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0262,
                   "sUndeadRight", "middleLeft", gg_unit_u001_0264)
 end
@@ -6424,12 +6416,12 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
 
     -- Town Spawn
-    spawn:addUnit("town", "h007", 3, {1, 2, 3, 4, 5}, 1, 5) -- Militia
-    spawn:addUnit("town", "h007", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3, 12) -- Militia
-    spawn:addUnit("town", "hcth", 1, {1, 2, 3, 4}, 2, 12) -- Captian
-    spawn:addUnit("town", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
-    spawn:addUnit("town", "hfoo", 5, {1, 2, 5, 6, 8}, 5, 12) -- Footman
-    spawn:addUnit("town", "h00L", 2, {1, 3, 7, 9}, 4, 12) -- Knight
+    -- spawn:addUnit("town", "h007", 3, {1, 2, 3, 4, 5}, 1, 5) -- Militia
+    -- spawn:addUnit("town", "h007", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3, 12) -- Militia
+    -- spawn:addUnit("town", "hcth", 1, {1, 2, 3, 4}, 2, 12) -- Captian
+    -- spawn:addUnit("town", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
+    -- spawn:addUnit("town", "hfoo", 5, {1, 2, 5, 6, 8}, 5, 12) -- Footman
+    -- spawn:addUnit("town", "h00L", 2, {1, 3, 7, 9}, 4, 12) -- Knight
 
     -- Undead Spawn
     spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul
@@ -7198,6 +7190,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17856.0, -3520.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -17408.0, -11776.0, 270.000, FourCC("h01C"))
     gg_unit_u001_0097 = BlzCreateUnitWithSkin(p, FourCC("u001"), -16576.0, -3392.0, 270.000, FourCC("u001"))
+    gg_unit_u001_0098 = BlzCreateUnitWithSkin(p, FourCC("u001"), -12416.0, -5888.0, 270.000, FourCC("u001"))
     u = BlzCreateUnitWithSkin(p, FourCC("o005"), -19072.0, -1472.0, 270.000, FourCC("o005"))
     gg_unit_n00B_0102 = BlzCreateUnitWithSkin(p, FourCC("n00B"), -20352.0, -6912.0, 270.000, FourCC("n00B"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20224.0, -4992.0, 270.000, FourCC("hgtw"))
@@ -7380,7 +7373,6 @@ function CreateBuildingsForPlayer23()
     SetUnitState(gg_unit_h006_0055, UNIT_STATE_MANA, 100)
     gg_unit_o001_0078 = BlzCreateUnitWithSkin(p, FourCC("o001"), -9856.0, -8384.0, 270.000, FourCC("o001"))
     gg_unit_h00E_0081 = BlzCreateUnitWithSkin(p, FourCC("h00E"), -5312.0, -4544.0, 270.000, FourCC("h00E"))
-    gg_unit_u001_0098 = BlzCreateUnitWithSkin(p, FourCC("u001"), -12416.0, -5888.0, 270.000, FourCC("u001"))
     gg_unit_nntt_0132 = BlzCreateUnitWithSkin(p, FourCC("nntt"), -8000.0, -11264.0, 270.000, FourCC("nntt"))
     gg_unit_h014_0158 = BlzCreateUnitWithSkin(p, FourCC("h014"), -8960.0, 1856.0, 270.000, FourCC("h014"))
     gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -10592.0, -1888.0, 270.000, FourCC("hshy"))
@@ -7619,6 +7611,7 @@ function CreateRegions()
     gg_rct_Zombie_Mid_Right = Rect(-2880.0, -7168.0, -2560.0, -6656.0)
     gg_rct_Aspect_of_Forest_Left_Mid = Rect(-25088.0, 4160.0, -24544.0, 4736.0)
     gg_rct_Aspect_of_Forest_Left_Mid_Copy = Rect(-4544.0, -14048.0, -4000.0, -13472.0)
+    gg_rct_Aspect_of_Forest_Right = Rect(-2592.0, -9024.0, -2048.0, -8576.0)
 end
 
 function CreateCameras()
