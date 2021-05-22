@@ -3139,3 +3139,9 @@ function BlzSetUnitWeaponBooleanField(whichUnit, whichField, index, value) end
 function BlzSetUnitWeaponIntegerField(whichUnit, whichField, index, value) end
 function BlzSetUnitWeaponRealField(whichUnit, whichField, index, value) end
 function BlzSetUnitWeaponStringField(whichUnit, whichField, index, value) end
+function BlzCreateUnitWithSkin(player, id, x, y, facing, skin) end
+function FourCC(value) end
+function BlzFrameAddText(frame, text) end
+function __jarray(value) end
+function SetEnemyStartLocPrio(x, y, player, priority) end
+function SetEnemyStartLocPrioCount(x, y) end
