@@ -166,8 +166,8 @@ function addBases()
     base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
     base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
 
-    base.add(gg_unit_u001_0262, 2, false, true, true, true) -- Federation Undead
-    base.add(gg_unit_u001_0264, 2, false, true, true, true) -- Federation
+    base.add(gg_unit_u001_0097, 2, false, true, true, true) -- Federation Undead
+    base.add(gg_unit_u001_0098, 2, false, true, true, true) -- Federation
 end
 
 function Init_luaGlobals()
@@ -622,8 +622,8 @@ function spawnAddBases()
     spawn:addBase("cityFront", "sCityFrontLeft", "middleRight",
                   gg_unit_n00B_0364, "sCityFrontRight", "middleLeft",
                   gg_unit_n00B_0399)
-    spawn:addBase("citySide", "sCitySideLeft", "middleRight", gg_unit_n00B_0102,
-                  "sCitySideRight", "middleLeft", gg_unit_n00B_0038)
+    spawn:addBase("citySide", "sCitySideLeft", "bottomRight", gg_unit_n00B_0102,
+                  "sCitySideRight", "topLeft", gg_unit_n00B_0038)
     spawn:addBase("kobold", "sKolboldLeft", "topRight", gg_unit_ngt2_0525,
                   "sKolboldRight", "bottomLeft", gg_unit_ngt2_0455)
     spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109,
@@ -651,8 +651,8 @@ function spawnAddBases()
     spawn:addBase("hshipyard", "sHumanShipyardLeft", "sHumanShipyardRight",
                   gg_unit_hshy_0011, "sHumanShipyardRight",
                   "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
-    spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0262,
-                  "sUndeadRight", "middleLeft", gg_unit_u001_0264)
+    spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0097,
+                  "sUndeadRight", "middleLeft", gg_unit_u001_0098)
 end
 
 function spawnAddUnits()
@@ -708,13 +708,10 @@ function spawnAddUnits()
     spawn:addUnit("cityFront", "hcth", 2, {2, 3, 4, 5, 6}, 6, 12) -- Captian
 
     -- City Side Spawn
-    spawn:addUnit("citySide", "h015", 1, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
-    spawn:addUnit("citySide", "hfoo", 2, {6, 7, 8, 9, 10}, 2, 12) -- Footman 1
-    spawn:addUnit("citySide", "h015", 2, {1, 2, 3, 4, 6}, 3, 12) -- Militia 1
-
-    -- Blacksmith Spawn
+    spawn:addUnit("citySide", "h015", 2, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
+    spawn:addUnit("citySide", "hfoo", 3, {6, 7, 8, 9, 10}, 2, 12) -- Footman 1
     spawn:addUnit("citySide", "hfoo", 1, {1, 2, 3, 4, 5}, 3, 12) -- Footman 1
-    spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 4, 12) -- Knight
+    spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 3, 12) -- Knight
     spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 5, 12) -- Knight
     spawn:addUnit("citySide", "h017", 1, {1, 2, 3}, 6, 12) -- Scarlet Commander
     spawn:addUnit("citySide", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
@@ -748,12 +745,15 @@ function spawnAddUnits()
     spawn:addUnit("merc", "n005", 1, {7, 8, 9, 10}, 6, 12) -- Bandit Lord
 
     -- Mine Spawn
+    spawn:addUnit("mine", "h01O", 3, {2, 3, 4, 5, 6}, 1, 12) -- Dwarven Soldiers
+    spawn:addUnit("mine", "h01O", 2, {4, 5, 6, 7, 8}, 2, 12) -- Dwarven Soldiers
     spawn:addUnit("mine", "h001", 1, {2, 3, 4, 5, 6}, 2, 12) -- Morter Team
     spawn:addUnit("mine", "h008", 2, {1, 2, 3, 4, 5, 6, 7, 8}, 3, 12) -- Rifleman
+    spawn:addUnit("mine", "h01O", 1, {2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Mountianeer
+    spawn:addUnit("mine", "h01O", 1, {2, 3, 4, 5, 6, 7, 8}, 5, 12) -- Dwarven Armored Captians
     spawn:addUnit("mine", "h013", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Rifleman Long
-    spawn:addUnit("mine", "ncg2", 2, {1, 2, 3, 4, 5, 6, 7}, 4, 12) -- Clockwerk Goblin
-    spawn:addUnit("mine", "hmtt", 1, {1, 3, 5, 7}, 5, 12) -- Seige Engine
-    spawn:addUnit("mine", "n00F", 1, {2, 3, 4, 5, 6, 7}, 6, 12) -- Automaton
+    spawn:addUnit("mine", "hmtt", 1, {1, 3, 5, 7}, 6, 12) -- Seige Engine
+    spawn:addUnit("mine", "n00F", 1, {2, 3, 4, 5, 6, 7}, 7, 12) -- Automaton
 
     -- Murloc Spawn
     spawn:addUnit("murloc", "nmcf", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Mur'gul Cliffrunner
@@ -809,9 +809,9 @@ function spawnAddUnits()
     -- spawn:addUnit("town", "h00L", 2, {1, 3, 7, 9}, 4, 12) -- Knight
 
     -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul
-    spawn:addUnit("undead", "uskm", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
-    spawn:addUnit("undead", "unec", 1, {1, 2, 3, 4, 5, 6, 7}, 3, 12) -- Necromancer
-    spawn:addUnit("undead", "nerw", 1, {1, 6}, 4, 12) -- Warlock
-    spawn:addUnit("undead", "nfgl", 1, {2, 5, 8}, 5, 12) -- Giant Skeleton
+    spawn:addUnit("undead", "ugho", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "uskm", 2, {1, 2, 3, 4, 5, 6, 7}, 2, 12) -- Skeleton Mage
+    spawn:addUnit("undead", "unec", 1, {1, 3, 5}, 4, 12) -- Necromancer
+    spawn:addUnit("undead", "nerw", 1, {1, 6}, 6, 12) -- Warlock
+    spawn:addUnit("undead", "nfgl", 1, {2, 5, 8}, 8, 12) -- Giant Skeleton
 end

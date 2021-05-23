@@ -14022,3 +14022,45 @@ STRING 4663
 Mine
 }
 
+STRING 4664
+// Units: h01O (Dwarven Soldier), Name (Name)
+{
+Dwarven Soldier
+}
+
+STRING 4665
+// Units: h01P (Dwarven Armored Captian), Name (Name)
+{
+Dwarven Armored Captian
+}
+
+STRING 4666
+// Units: h01Q (Dwarven Musketeer), Name (Name)
+{
+Dwarven Musketeer
+}
+
+STRING 4667
+// Abilities: A014 (Hardened Armor), Name (Name)
+{
+Hardened Armor
+}
+
+STRING 4668
+// Abilities: A016 (Defend Dwarves), Name (Name)
+{
+Defend Dwarves
+}
+
+STRING 4669
+// Abilities: A017 (Shoot Gun), Name (Name)
+{
+Shoot Gun
+}
+
+STRING 4670
+// Abilities: A02B (Skatter Shot), Name (Name)
+{
+Skatter Shot
+}
+
