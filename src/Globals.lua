@@ -736,19 +736,19 @@ function spawnAddUnits()
     spawn:addUnit("highElvesCreep", "h010", 2, {1, 2, 3, 4, 5}, 5, 12) -- Elven Guardian
 
     -- Merc Spawn
-    spawn:addUnit("merc", "n00L", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Rogue
+    spawn:addUnit("merc", "n00L", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Rogue
     spawn:addUnit("merc", "n003", 2, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Merc Archer
     spawn:addUnit("merc", "n002", 3, {2, 3, 4, 7, 8, 9, 10}, 3, 12) -- Merc
-    spawn:addUnit("merc", "n008", 1, {1, 2, 3, 4, 5, 6, 8, 9, 10}, 4, 12) -- Enforcer
+    spawn:addUnit("merc", "n008", 1, {2, 4, 5, 8, 9}, 4, 12) -- Enforcer
     spawn:addUnit("merc", "nass", 1, {6, 7, 8, 9, 10}, 5, 12) -- Assasin
     spawn:addUnit("merc", "n004", 1, {7, 8, 9, 10}, 1, 12) -- Wizard Warrior
     spawn:addUnit("merc", "n005", 1, {7, 8, 9, 10}, 6, 12) -- Bandit Lord
 
     -- Mine Spawn
     spawn:addUnit("mine", "h01O", 3, {2, 3, 4, 5, 6}, 1, 12) -- Dwarven Soldiers
-    spawn:addUnit("mine", "h01O", 2, {4, 5, 6, 7, 8}, 2, 12) -- Dwarven Soldiers
+    spawn:addUnit("mine", "h01O", 2, {3, 4, 5, 6, 7}, 2, 12) -- Dwarven Soldiers
     spawn:addUnit("mine", "h001", 1, {2, 3, 4, 5, 6}, 2, 12) -- Morter Team
-    spawn:addUnit("mine", "h008", 2, {1, 2, 3, 4, 5, 6, 7, 8}, 3, 12) -- Rifleman
+    spawn:addUnit("mine", "h008", 2, {1, 2, 3, 4, 5}, 3, 12) -- Rifleman
     spawn:addUnit("mine", "h01Q", 1, {2, 3, 4, 5, 6, 7, 8}, 1, 12) -- Mountianeer
     spawn:addUnit("mine", "h01P", 1, {2, 3, 4, 5, 6, 7, 8}, 1, 12) -- Dwarven Armored Captians
     spawn:addUnit("mine", "h013", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Rifleman Long

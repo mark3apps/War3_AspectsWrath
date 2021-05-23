@@ -919,12 +919,6 @@ STRING 325
 Mana Generator
 }
 
-STRING 328
-// Units: n006 (Boulder Tower), Name (Name)
-{
-Boulder Tower
-}
-
 STRING 331
 // Abilities: A00L (Summon Treants), Name (Name)
 {
@@ -1175,12 +1169,6 @@ STRING 400
 // Abilities: A012 (Siphon Mana), Ubertip (Tooltip - Normal - Extended)
 {
 This Unit convert 5% of it's remaining health into that amount of Mana.
-}
-
-STRING 401
-// Units: n00C (Hero Picker), Name (Name)
-{
-Hero Picker
 }
 
 STRING 403
@@ -2208,12 +2196,6 @@ STRING 806
 // Abilities: A02Y (Fel Form), Researchhotkey (Hotkey - Learn)
 {
 E
-}
-
-STRING 807
-// Units: N00I (Fire Focuser), Name (Name)
-{
-Fire Focuser
 }
 
 STRING 808
@@ -8099,12 +8081,6 @@ STRING 3270
 The Shifter Moves Forward leaving a Shade of himself behind that continues to fight.
 }
 
-STRING 3275
-// Doodads: D005 (Barn No Pathing), Name (Name)
-{
-Barn No Pathing
-}
-
 STRING 3276
 // Units: h003 (Arcane Institute), Name (Name)
 {
@@ -10698,24 +10674,6 @@ STRING 3965
  (3)
 }
 
-STRING 3966
-// Doodads: D00B (Nerubeon Citidel), Name (Name)
-{
-Nerubeon Citidel
-}
-
-STRING 3967
-// Doodads: D00S (Nerub Wall Short), Name (Name)
-{
-Nerub Wall Short
-}
-
-STRING 3968
-// Doodads: D00T (Nerub Tower), Name (Name)
-{
-Nerub Tower
-}
-
 STRING 3969
 // Doodads: D00U (Gold Mine Enterence), Name (Name)
 {
@@ -10726,24 +10684,6 @@ STRING 3970
 // Doodads: D00V (Sub Wall Arch), Name (Name)
 {
 Sub Wall Arch
-}
-
-STRING 3971
-// Doodads: D00W (Sub Wall Garrison), Name (Name)
-{
-Sub Wall Garrison
-}
-
-STRING 3972
-// Doodads: D00X (Sub Wall Flat Short), Name (Name)
-{
-Sub Wall Flat Short
-}
-
-STRING 3973
-// Doodads: D00Y (Sub Wall Buttress), Name (Name)
-{
-Sub Wall Buttress
 }
 
 STRING 3974
@@ -13332,18 +13272,6 @@ STRING 4531
 Gives a <A056,DataA6,%>% chance to avoid an attack.
 }
 
-STRING 4532
-// Doodads: D00L (Broken Wall), Name (Name)
-{
-Broken Wall
-}
-
-STRING 4533
-// Doodads: D011 (Foundation), Name (Name)
-{
-Foundation
-}
-
 STRING 4534
 // Abilities: A027 (Tower Heal Hero - Normal), Tip (Tooltip - Normal)
 {
@@ -13704,12 +13632,6 @@ STRING 4594
  (two story, southwest facing Tall)
 }
 
-STRING 4595
-// Doodads: D01P (Human Tower), Name (Name)
-{
-Human Tower
-}
-
 STRING 4596
 // Units: nemi (Elven Mystic), Name (Name)
 {
@@ -14034,12 +13956,6 @@ STRING 4665
 Dwarven Armored Captian
 }
 
-STRING 4666
-// Units: h01Q (Dwarven Musketeer), Name (Name)
-{
-Dwarven Musketeer
-}
-
 STRING 4667
 // Abilities: A014 (Hardened Armor), Name (Name)
 {
@@ -14062,5 +13978,35 @@ STRING 4670
 // Abilities: A02B (Skatter Shot), Name (Name)
 {
 Skatter Shot
+}
+
+STRING 4671
+// Units: o004 (Merc Lookout), Name (Name)
+{
+Merc Lookout
+}
+
+STRING 4673
+// Abilities: A05A (Spawn Mercs), Name (Name)
+{
+Spawn Mercs
+}
+
+STRING 4674
+// Abilities: A05B (Spawn Assassins), Name (Name)
+{
+Spawn Assassins
+}
+
+STRING 4675
+// Units: h01Q (Dwarven Mountianeer), Name (Name)
+{
+Dwarven Mountianeer
+}
+
+STRING 4676
+// Units: h01R (Baracade), Name (Name)
+{
+Baracade
 }
 
