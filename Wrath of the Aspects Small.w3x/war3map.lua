@@ -7066,6 +7066,20 @@ function CreateBuildingsForPlayer0()
     u = BlzCreateUnitWithSkin(p, FourCC("halt"), -24992.0, -4576.0, 270.000, FourCC("halt"))
 end
 
+function CreateUnitsForPlayer0()
+    local p = Player(0)
+    local u
+    local unitID
+    local t
+    local life
+    u = BlzCreateUnitWithSkin(p, FourCC("h016"), -13682.4, -4655.1, 97.880, FourCC("h016"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h010"), -13429.8, -4789.4, 14.338, FourCC("h010"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00S"), -13480.6, -4452.8, 10.921, FourCC("h00S"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h018"), -13551.8, -4248.8, 151.990, FourCC("h018"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h011"), -14087.8, -4560.7, 45.177, FourCC("h011"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h012"), -14012.3, -4576.7, 90.596, FourCC("h012"))
+end
+
 function CreateBuildingsForPlayer1()
     local p = Player(1)
     local u
@@ -7556,6 +7570,7 @@ function CreatePlayerBuildings()
 end
 
 function CreatePlayerUnits()
+    CreateUnitsForPlayer0()
     CreateUnitsForPlayer20()
     CreateUnitsForPlayer23()
 end
