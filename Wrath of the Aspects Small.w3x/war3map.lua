@@ -389,6 +389,8 @@ gg_unit_u001_0098 = nil
 gg_rct_Left_Start_Middle = nil
 gg_rct_Big_Middle_Left_Center = nil
 gg_rct_Region_043 = nil
+gg_snd_GateEpicDeath = nil
+gg_rct_Region_068 = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -2719,52 +2721,52 @@ end
 -----------------
 function init_locationClass()
 
-    loc_Class = {}
+	loc_Class = {}
 
-    loc_Class.new = function()
-        local self = {}
-        self.regions = {}
+	loc_Class.new = function()
+		local self = {}
+		self.regions = {}
 
-        function self:add(name, rect, nextRect, allied)
-            nextRect = nextRect or ""
-            allied = allied or false
-            self[name] = {
-                centerX = GetRectCenterX(rect),
-                centerY = GetRectCenterY(rect),
-                minX = GetRectMinX(rect),
-                maxX = GetRectMaxX(rect),
-                minY = GetRectMinY(rect),
-                maxY = GetRectMaxY(rect)
-            }
-            self[name].reg = CreateRegion()
-            RegionAddRect(self[name].reg, rect)
+		function self:add(name, rect, nextRect, allied)
+			nextRect = nextRect or ""
+			allied = allied or false
+			self[name] = {
+				centerX = GetRectCenterX(rect),
+				centerY = GetRectCenterY(rect),
+				minX = GetRectMinX(rect),
+				maxX = GetRectMaxX(rect),
+				minY = GetRectMinY(rect),
+				maxY = GetRectMaxY(rect)
+			}
+			self[name].reg = CreateRegion()
+			RegionAddRect(self[name].reg, rect)
 
-            self[name].rect = rect
-            self[name].name = name
+			self[name].rect = rect
+			self[name].name = name
 
-            self.regions[GetHandleId(self[name].rect)] = name
-            self.regions[GetHandleId(self[name].reg)] = name
+			self.regions[GetHandleId(self[name].rect)] = name
+			self.regions[GetHandleId(self[name].reg)] = name
 
-            if nextRect ~= "" then
-                TriggerRegisterEnterRegionSimple(Trig_moveToNext, self[name].reg)
-                self[name].next = nextRect
-                self[name].allied = allied
-                self[name].fed = not allied
-            end
-        end
+			if nextRect ~= "" then
+				TriggerRegisterEnterRegionSimple(Trig_moveToNext, self[name].reg)
+				self[name].next = nextRect
+				self[name].allied = allied
+				self[name].fed = not allied
+			end
+		end
 
-        function self:getRandomXY(name)
-            local region = self[name]
-            return GetRandomReal(region.minX, region.maxX), GetRandomReal(region.minY, region.maxY)
-        end
+		function self:getRandomXY(name)
+			local region = self[name]
+			return GetRandomReal(region.minX, region.maxX), GetRandomReal(region.minY, region.maxY)
+		end
 
-        function self:getRegion(region)
-            local regionName = self.regions[GetHandleId(region)]
-            return self[regionName]
-        end
+		function self:getRegion(region)
+			local regionName = self.regions[GetHandleId(region)]
+			return self[regionName]
+		end
 
-        return self
-    end
+		return self
+	end
 
 end
 
@@ -2772,2644 +2774,2490 @@ end
 -- AI Classes
 -----------------
 function init_aiClass()
-    -- Create the table for the class definition
-    ai_Class = {}
-
-    -- Define the new() function
-    ai_Class.new = function()
-        local self = {}
-
-        self.heroes = {}
-        self.heroGroup = CreateGroup()
-        self.heroOptions = {"heroA", "heroB", "heroC", "heroD", "heroE", "heroF", "heroG", "heroH", "heroI", "heroJ",
-                            "heroK", "heroL"}
-        self.count = 0
-        self.loop = 1
-        self.tick = 1
-
-        function self:isAlive(i)
-            return self[i].alive
-        end
-
-        function self:countOfHeroes()
-            return self.count
-        end
-
-        function self:initHero(heroUnit)
-            self.count = self.count + 1
-            self.tick = (1.00 + (self.count * 0.1)) / self.count
-
-            local i = self.heroOptions[self.count]
-            print("Name: " .. i)
-
-            table.insert(self.heroes, i)
-
-            self[i] = {}
-
-            self[i].unit = heroUnit
-            GroupAddUnit(self.heroGroup, self[i].unit)
-
-            self[i].id = GetUnitTypeId(heroUnit)
-            self[i].four = CC2Four(self[i].id)
-            self[i].name = hero[self[i].four]
-
-            self[i].player = GetOwningPlayer(heroUnit)
-            self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
-
-            if self[i].playerNumber > 6 then
-                self[i].teamNumber = 2
-                self[i].teamName = "federation"
-                self[i].teamNameEnemy = "allied"
-            else
-                self[i].teamNumber = 1
-                self[i].teamName = "allied"
-                self[i].teamNameEnemy = "federation"
-            end
-
-            print("Team Number: " .. self[i].teamNumber)
-
-            self[i].heroesFriend = CreateGroup()
-            self[i].heroesEnemy = CreateGroup()
-            self[i].lifeHistory = {0.00, 0.00, 0.00}
-
-            indexer:add(self[i].unit)
-            indexer:addKey(self[i].unit, "heroName", i)
-            indexer:addKey(self[i].unit, "heroNumber", self.count)
-
-            self[i].alive = false
-            self[i].fleeing = false
-            self[i].casting = false
-            self[i].castingDuration = -10.00
-            self[i].castingDanger = false
-            self[i].order = nil
-            self[i].castingUlt = false
-            self[i].chasing = false
-            self[i].defending = false
-            self[i].defendingFast = false
-            self[i].lowLife = false
-            self[i].highDamage = false
-            self[i].updateDest = false
-
-            self[i].regionAttacking = nil
+	-- Create the table for the class definition
+	ai_Class = {}
+
+	-- Define the new() function
+	ai_Class.new = function()
+		local self = {}
+
+		self.heroes = {}
+		self.heroGroup = CreateGroup()
+		self.heroOptions = {
+			"heroA", "heroB", "heroC", "heroD", "heroE", "heroF", "heroG", "heroH", "heroI", "heroJ", "heroK", "heroL"
+		}
+		self.count = 0
+		self.loop = 1
+		self.tick = 1
+
+		function self:isAlive(i) return self[i].alive end
+
+		function self:countOfHeroes() return self.count end
+
+		function self:initHero(heroUnit)
+			self.count = self.count + 1
+			self.tick = (1.00 + (self.count * 0.1)) / self.count
+
+			local i = self.heroOptions[self.count]
+			print("Name: " .. i)
+
+			table.insert(self.heroes, i)
 
-            self[i].unitHealing = nil
-            self[i].unitAttacking = nil
-            self[i].unitDefending = nil
-            self[i].unitChasing = nil
+			self[i] = {}
+
+			self[i].unit = heroUnit
+			GroupAddUnit(self.heroGroup, self[i].unit)
+
+			self[i].id = GetUnitTypeId(heroUnit)
+			self[i].four = CC2Four(self[i].id)
+			self[i].name = hero[self[i].four]
+
+			self[i].player = GetOwningPlayer(heroUnit)
+			self[i].playerNumber = GetConvertedPlayerId(GetOwningPlayer(heroUnit))
+
+			if self[i].playerNumber > 6 then
+				self[i].teamNumber = 2
+				self[i].teamName = "federation"
+				self[i].teamNameEnemy = "allied"
+			else
+				self[i].teamNumber = 1
+				self[i].teamName = "allied"
+				self[i].teamNameEnemy = "federation"
+			end
+
+			print("Team Number: " .. self[i].teamNumber)
 
-            if self[i].four == hero.brawler.four then -- Brawler
-                self[i].healthFactor = 1.00
-                self[i].manaFactor = 0.02
+			self[i].heroesFriend = CreateGroup()
+			self[i].heroesEnemy = CreateGroup()
+			self[i].lifeHistory = {0.00, 0.00, 0.00}
 
-                self[i].lifeHighPercent = 65.00
-                self[i].lifeLowPercent = 20.00
-                self[i].lifeLowNumber = 400.00
+			indexer:add(self[i].unit)
+			indexer:addKey(self[i].unit, "heroName", i)
+			indexer:addKey(self[i].unit, "heroNumber", self.count)
 
-                self[i].highDamageSingle = 17.00
-                self[i].highDamageAverage = 25.00
+			self[i].alive = false
+			self[i].fleeing = false
+			self[i].casting = false
+			self[i].castingDuration = -10.00
+			self[i].castingDanger = false
+			self[i].order = nil
+			self[i].castingUlt = false
+			self[i].chasing = false
+			self[i].defending = false
+			self[i].defendingFast = false
+			self[i].lowLife = false
+			self[i].highDamage = false
+			self[i].updateDest = false
 
-                self[i].powerBase = 500.00
-                self[i].powerLevel = 200.00
+			self[i].regionAttacking = nil
 
-                self[i].clumpCheck = true
-                self[i].clumpRange = 100.00
-                self[i].intelRange = 1100.00
-                self[i].closeRange = 500.00
+			self[i].unitHealing = nil
+			self[i].unitAttacking = nil
+			self[i].unitDefending = nil
+			self[i].unitChasing = nil
 
-                self[i].strats = {"aggressive", "defensive", "passive"}
+			if self[i].four == hero.brawler.four then -- Brawler
+				self[i].healthFactor = 1.00
+				self[i].manaFactor = 0.02
 
-            elseif self[i].four == hero.manaAddict.four then -- Mana Addict
-                self[i].healthFactor = 1.00
-                self[i].manaFactor = 0.75
+				self[i].lifeHighPercent = 65.00
+				self[i].lifeLowPercent = 20.00
+				self[i].lifeLowNumber = 400.00
 
-                self[i].lifeHighPercent = 85.00
-                self[i].lifeLowPercent = 25.00
-                self[i].lifeLowNumber = 300.00
-
-                self[i].highDamageSingle = 3.00
-                self[i].highDamageAverage = 18.00
+				self[i].highDamageSingle = 17.00
+				self[i].highDamageAverage = 25.00
 
-                self[i].powerBase = 700.00
-                self[i].powerLevel = 220.00
-
-                self[i].clumpCheck = true
-                self[i].clumpRange = 100.00
-                self[i].intelRange = 1000.00
-                self[i].closeRange = 400.00
-
-                self[i].strats = {"aggressive", "defensive", "passive"}
-
-            elseif self[i].four == hero.tactition.four then -- Tactition
-                self[i].healthFactor = 1.00
-                self[i].manaFactor = 0.20
-
-                self[i].lifeHighPercent = 75.00
-                self[i].lifeLowPercent = 20.00
-                self[i].lifeLowNumber = 350.00
-
-                self[i].highDamageSingle = 17.00
-                self[i].highDamageAverage = 25.00
-
-                self[i].powerBase = 500.00
-                self[i].powerLevel = 200.00
-                self[i].clumpCheck = true
-                self[i].clumpRange = 250.00
-                self[i].intelRange = 1000.00
-                self[i].closeRange = 400.00
-
-                self[i].strats = {"aggressive", "defensive", "passive"}
-
-            elseif self[i].four == hero.timeMage.four then -- Time Mage
-                self[i].healthFactor = 1.00
-                self[i].manaFactor = 0.10
-
-                self[i].lifeHighPercent = 85.00
-                self[i].lifeLowPercent = 25.00
-                self[i].lifeLowNumber = 350.00
-
-                self[i].highDamageSingle = 8.00
-                self[i].highDamageAverage = 17.00
-
-                self[i].powerBase = 750.00
-                self[i].powerLevel = 250.00
-
-                self[i].clumpCheck = true
-                self[i].clumpRange = 250.00
-                self[i].intelRange = 1100.00
-                self[i].closeRange = 700.00
-
-                self[i].strats = {"aggressive", "defensive", "passive"}
-
-            elseif self[i].four == hero.shiftMaster.four then -- Shifter
-                self[i].healthFactor = 1.00
-                self[i].manaFactor = 0.15
-
-                self[i].lifeHighPercent = 70.00
-                self[i].lifeLowPercent = 25.00
-                self[i].lifeLowNumber = 350.00
-
-                self[i].highDamageSingle = 17.00
-                self[i].highDamageAverage = 25.00
-
-                self[i].powerBase = 500.00
-                self[i].powerLevel = 200.00
-
-                self[i].clumpCheck = true
-                self[i].clumpRange = 100.00
-                self[i].intelRange = 1100.00
-                self[i].closeRange = 400.00
-
-                self[i].strats = {"aggressive", "defensive", "passive"}
-            end
-
-            local randI = GetRandomInt(1, #self[i].strats)
-            self[i].strat = self[i].strats[randI]
-
-            -- TESTING
-            -- self[i].strat = "aggressive"
-            -- TESTING
-
-            print(self[i].strat)
-        end
-
-        -- Update Intel
-        function self:updateIntel(i)
-            -- Only run if the hero is alive
-            if (self[i].alive == true) then
-                -- Update info about the AI Hero
-                self[i].x = GetUnitX(self[i].unit)
-                self[i].y = GetUnitY(self[i].unit)
-                self[i].life = GetWidgetLife(self[i].unit)
-                self[i].lifePercent = GetUnitLifePercent(self[i].unit)
-                self[i].lifeMax = GetUnitState(self[i].unit, UNIT_STATE_MAX_LIFE)
-                self[i].mana = GetUnitState(self[i].unit, UNIT_STATE_MANA)
-                self[i].manaPercent = GetUnitManaPercent(self[i].unit)
-                self[i].manaMax = GetUnitState(self[i].unit, UNIT_STATE_MAX_MANA)
-                self[i].level = GetHeroLevel(self[i].unit)
-                self[i].currentOrder = OrderId2String(GetUnitCurrentOrder(self[i].unit))
-
-                -- Reset Intel
-                self[i].countUnit = 0
-                self[i].countUnitFriend = 0
-                self[i].countUnitFriendClose = 0
-                self[i].countUnitEnemy = 0
-                self[i].countUnitEnemyClose = 0
-                self[i].powerFriend = 0.00
-                self[i].powerEnemy = 0.00
-
-                self[i].unitPowerFriend = nil
-                self[i].unitPowerEnemy = nil
-
-                self[i].clumpFriend = nil
-                self[i].clumpFriendNumber = 0
-                self[i].clumpFriendPower = 0.00
-                self[i].clumpEnemy = nil
-                self[i].clumpEnemyNumber = 0
-                self[i].clumpEnemyPower = 0.00
-                self[i].clumpBoth = nil
-                self[i].clumpBothNumber = 0
-                self[i].clumpBothPower = 0.00
-
-                GroupClear(self[i].heroesFriend)
-                GroupClear(self[i].heroesEnemy)
-
-                -- Units around Hero
-                local g = CreateGroup()
-                local clump = CreateGroup()
-                local unitPower = 0.00
-                local unitPower = 0.00
-                local unitLife = 0.00
-                local unitX
-                local unitY
-                local unitDistance = 0.00
-                local unitRange = 0.00
-                local unitPowerRangeMultiplier = 0.00
-                local u
-                local clumpUnit
-                local powerAllyTemp, powerAllyNumTemp, powerEnemyTemp, powerEnemyNumTemp
-
-                GroupEnumUnitsInRange(g, self[i].x, self[i].y, self[i].intelRange, nil)
-
-                -- Enumerate through group
-
-                while true do
-                    u = FirstOfGroup(g)
-                    if (u == nil) then
-                        break
-                    end
-
-                    -- Unit is alive and not the hero
-                    if (IsUnitAliveBJ(u) == true and u ~= self[i].unit) then
-                        self[i].countUnit = self[i].countUnit + 1
-
-                        -- Get Unit Details
-                        unitLife = GetUnitLifePercent(u)
-                        unitRange = BlzGetUnitWeaponRealField(u, UNIT_WEAPON_RF_ATTACK_RANGE, 0)
-
-                        unitX = GetUnitX(u)
-                        unitY = GetUnitY(u)
-                        unitDistance = distanceBetweenCoordinates(unitX, unitY, self[i].x, self[i].y)
-
-                        -- Get Unit Power
-                        if (IsUnitType(u, UNIT_TYPE_HERO) == true) then -- is Hero
-                            unitPower = I2R((GetHeroLevel(u) * 75))
-
-                            if IsUnitAlly(u, self[i].player) then -- Add to hero Group
-                                GroupAddUnit(self[i].heroesFriend, u)
-                            else
-                                GroupAddUnit(self[i].heroesEnemy, u)
-                            end
-                        else -- Unit is NOT a hero
-                            unitPower = I2R(GetUnitPointValue(u))
-                        end
-
-                        -- Power range modifier
-                        if unitDistance < unitRange then
-                            unitPowerRangeMultiplier = 1.00
-                        else
-                            unitPowerRangeMultiplier = 300.00 / (unitDistance - unitRange + 300.00)
-                        end
-
-                        if IsUnitAlly(u, self[i].player) == true then
-                            -- Update count
-                            self[i].countUnitFriend = self[i].countUnitFriend + 1
-                            if unitDistance <= self[i].closeRange then
-                                self[i].countUnitFriendClose = self[i].countUnitFriendClose + 1
-                            end
-
-                            -- Check to see if unit is the most powerful friend
-                            if unitPower > self[i].powerFriend then
-                                self[i].unitPowerFriend = u
-                            end
-
-                            -- Relative Power
-                            self[i].powerFriend = self[i].powerFriend +
-                                                      (unitPower * (unitLife / 100.00) * unitPowerRangeMultiplier)
-                        else
-                            -- Update Count
-                            self[i].countUnitEnemy = self[i].countUnitEnemy + 1
-                            if unitDistance <= self[i].closeRange then
-                                self[i].countUnitEnemyClose = self[i].countUnitEnemyClose + 1
-                            end
-
-                            -- Check to see if unit is the most powerful Enemy
-                            if unitPower > self[i].powerEnemy then
-                                self[i].unitPowerEnemy = u
-                            end
-
-                            -- Relative Power
-                            self[i].powerEnemy = self[i].powerEnemy +
-                                                     (unitPower * (unitLife / 100.00) * unitPowerRangeMultiplier)
-                        end
-
-                        if self[i].clumpCheck == true then
-                            powerAllyTemp = 0
-                            powerEnemyTemp = 0
-                            powerAllyNumTemp = 0
-                            powerEnemyNumTemp = 0
-                            clump = CreateGroup()
-
-                            GroupEnumUnitsInRange(clump, unitX, unitY, self[i].clumpRange, nil)
-
-                            while true do
-                                clumpUnit = FirstOfGroup(clump)
-                                if clumpUnit == nil then
-                                    break
-                                end
-
-                                if IsUnitAliveBJ(clumpUnit) and IsUnitType(clumpUnit, UNIT_TYPE_STRUCTURE) == false then
-                                    if IsUnitAlly(clumpUnit, self[i].player) then
-                                        powerAllyTemp = powerAllyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
-                                        powerAllyNumTemp = powerAllyNumTemp + 1
-                                    else
-                                        powerEnemyTemp = powerEnemyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
-                                        powerEnemyNumTemp = powerEnemyNumTemp + 1
-                                    end
-                                end
-
-                                GroupRemoveUnit(clump, clumpUnit)
-                            end
-                            DestroyGroup(clump)
-
-                            if powerAllyNumTemp > self[i].clumpFriendNumber then
-                                self[i].clumpFriendNumber = powerAllyNumTemp
-                            end
-
-                            if powerEnemyNumTemp > self[i].clumpEnemyNumber then
-                                self[i].clumpEnemyNumber = powerEnemyNumTemp
-                            end
-
-                            if powerAllyTemp > self[i].clumpFriendPower then
-                                self[i].clumpFriendPower = powerAllyTemp
-                                self[i].clumpFriend = u
-                            end
-
-                            if powerEnemyTemp > self[i].clumpEnemyPower then
-                                self[i].clumpEnemyPower = powerEnemyTemp
-                                self[i].clumpEnemy = u
-                            end
-
-                            if (powerAllyTemp + powerEnemyTemp) > self[i].clumpBothPower then
-                                self[i].clumpBothPower = powerAllyTemp + powerEnemyTemp
-                                self[i].clumpBoth = u
-                            end
-                        end
-                    end
-
-                    GroupRemoveUnit(g, u)
-                end
-                DestroyGroup(g)
-
-                -- Find how much damage the Hero is taking
-                self[i].lifeHistory[#self[i].lifeHistory + 1] = self[i].lifePercent
-
-                if #self[i].lifeHistory > 5 then
-                    table.remove(self[i].lifeHistory, 1)
-                end
-
-                self[i].clumpBothNumber = self[i].clumpFriendNumber + self[i].clumpEnemyNumber
-                self[i].percentLifeSingle = self[i].lifeHistory[#self[i].lifeHistory - 1] -
-                                                self[i].lifeHistory[#self[i].lifeHistory]
-                self[i].percentLifeAverage = self[i].lifeHistory[1] - self[i].lifeHistory[#self[i].lifeHistory]
-
-                -- Figure out the Heroes Weighted Life
-                self[i].weightedLife = (self[i].life * self[i].healthFactor) + (self[i].mana * self[i].manaFactor)
-                self[i].weightedLifeMax = (self[i].lifeMax * self[i].healthFactor) +
-                                              (self[i].manaMax * self[i].manaFactor)
-                self[i].weightedLifePercent = (self[i].weightedLife / self[i].weightedLifeMax) * 100.00
-
-                -- Get the Power Level of the surrounding Units
-                self[i].powerEnemy = (self[i].powerEnemy * (((100.00 - self[i].weightedLifePercent) / 20.00) + 0.50))
-                self[i].powerCount = self[i].powerEnemy - self[i].powerFriend
-
-                -- Raise Hero Confidence Level
-                self[i].powerBase = self[i].powerBase + (0.25 * I2R(self[i].level))
-                self[i].powerHero = self[i].powerBase + (self[i].powerLevel * I2R(self[i].level))
-
-                -- print(self[i].currentOrder)
-                -- print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
-                -- print("Clump Both: " .. R2S(self[i].clumpBothPower))
-                -- print("Clump: " .. GetUnitName(self[i].clumpBoth))
-                -- print("Enemies Nearby: " .. self[i].countUnitEnemy)
-                -- print("Power Clump Enemy: " .. self[i].powerEnemy)
-                -- print("Hero Power: " .. R2S(self[i].powerHero))
-                -- print("Power Level: " .. R2S(self[i].powerCount))
-            end
-        end
-
-        function self:CleanUp(i)
-            if (self[i].currentOrder ~= "move" and (self[i].lowLife or self[i].fleeing)) then
-                self:ACTIONtravelToHeal(i)
-            end
-
-            if (self[i].currentOrder ~= "attack" and self[i].currentOrder ~= "move" and self[i].lowLife == false and
-                self[i].casting == false) then
-
-                self:ACTIONtravelToDest(i)
-            end
-        end
-
-        -- AI Run Specifics
-        function self:STATEAbilities(i)
-
-            if self[i].name == "manaAddict" then
-                self:manaAddictAI(i)
-            elseif self[i].name == "brawler" then
-                self:brawlerAI(i)
-            elseif self[i].name == "shiftMaster" then
-                self:shiftMasterAI(i)
-            elseif self[i].name == "tactition" then
-                self:tactitionAI(i)
-            elseif self[i].name == "timeMage" then
-                self:timeMageAI(i)
-            end
-        end
-
-        -- Check to see if Hero should try to upgrade
-        function self:STATEUpgrade(i)
-            local randInt = GetRandomInt(1, 40)
-
-            if randInt == 10 then
-                hero:upgrade(i)
-            end
-        end
-
-        function self:STATEDefend(i)
-            if self[i].alive and not self[i].lowLife and not self[i].fleeing and not self[i].casting and
-                not self[i].defending then
-                local baseCountDanger = CountUnitsInGroup(base[self[i].teamName].gDanger)
-                if baseCountDanger > 0 then
-                    local u, id, defend, unitCount, danger, selectedId, distanceToBase
-                    local g = CreateGroup()
-
-                    GroupAddGroup(base[self[i].teamName].gDanger, g)
-                    local danger = 0
-                    local selectedId = nil
-                    while true do
-                        u = FirstOfGroup(g)
-                        if u == nil then
-                            break
-                        end
-
-                        id = GetHandleId(u)
-                        if base[id].danger > danger then
-                            danger = base[id].danger
-                            selectedId = id
-                        end
-
-                        GroupRemoveUnit(g, u)
-                    end
-                    DestroyGroup(g)
-
-                    id = selectedId
-
-                    if self[i].strat == "defensive" and danger > 40 then
-                        self[i].defending = true
-                    elseif self[i].strat == "passive" and danger > 120 then
-                        self[i].defending = true
-                    elseif self[i].strat == "aggressive" and danger > 400 then
-                        self[i].defending = true
-                    end
-
-                    if self[i].defending then
-                        self[i].unitDefending = base[id].unit
-                        distanceToBase = distanceBetweenCoordinates(self[i].x, self[i].y, base[id].x, base[id].y)
-
-                        if distanceToBase > 3500 then
-                            self[i].defendingFast = true
-                        end
-
-                        self:ACTIONtravelToDest(i)
-                        print("Defending: " .. GetUnitName(self[i].unitDefending))
-                    end
-                end
-            end
-        end
-
-        function self:STATEDefending(i)
-            if self[i].defending then
-
-                local id = GetHandleId(self[i].unitDefending)
-                if base[id].danger <= 0 or not IsUnitAliveBJ(self[i].unitDefending) then
-                    self[i].defending = false
-                    self[i].defendingFast = false
-                    self[i].unitDefending = nil
-                    self:ACTIONattackBase(i)
-                    print("Stop Defending")
-
-                else
-                    local distanceToBase = distanceBetweenCoordinates(self[i].x, self[i].y, base[id].x, base[id].y)
-                    local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit,
-                                                 hero.item.teleportation.abilityId)
-
-                    if distanceToBase < 2500 and self[i].defendingFast then
-                        self[i].defendingFast = false
-                        self:ACTIONtravelToDest(i)
-
-                    elseif distanceToBase > 4000 and teleportCooldown == 0 then
-                        self:ACTIONtravelToDest(i)
-                    end
-                end
-            end
-        end
-
-        -- AI has Low Health
-        function self:STATELowHealth(i)
-            if (self[i].weightedLifePercent < self[i].lifeLowPercent or self[i].weightedLife < self[i].lifeLowNumber) and
-                self[i].lowLife == false then
-                print("Low Health")
-                self[i].lowLife = true
-                self[i].fleeing = false
-                self[i].chasing = false
-                self[i].defending = false
-                self[i].highdamage = false
-                self[i].updateDest = false
-
-                if self[i].castingDanger == false then
-                    self[i].casting = false
-                    self[i].castingCounter = -10.00
-                    self:ACTIONtravelToHeal(i)
-                end
-            end
-        end
-
-        -- AI Has High Health
-        function self:STATEHighHealth(i)
-            if self[i].alive == true and self[i].lowLife == true and self[i].weightedLifePercent >
-                self[i].lifeHighPercent then
-                print("High Health")
-                self[i].lowLife = false
-                self[i].fleeing = false
-
-                -- Reward the AI For doing good
-                self[i].lifeLowPercent = self[i].lifeLowPercent - 1.00
-                self[i].lifeHighPercent = self[i].lifeHighPercent - 1.00
-
-                if self[i].defending then
-                    self:ACTIONtravelToDest(i)
-                else
-                    local rand = GetRandomInt(1, 3)
-                    if rand == 1 then
-                        self:ACTIONattackBase(i)
-                    else
-                        self:ACTIONtravelToDest(i)
-                    end
-                end
-            end
-        end
-
-        -- AI is Dead
-        function self:STATEDead(i)
-            if self[i].alive == true and IsUnitAliveBJ(self[i].unit) == false then
-                print("Dead")
-                self[i].alive = false
-                self[i].lowLife = false
-                self[i].fleeing = false
-                self[i].chasing = false
-                self[i].defending = false
-                self[i].highdamage = false
-                self[i].updateDest = false
-                self[i].casting = false
-                self[i].castingUlt = false
-                self[i].defending = false
-                self[i].defendingFast = false
-                self[i].castingCounter = -10.00
-
-                -- Punish the AI for screwing up.  IT WILL FEAR DEATH!!!
-                self[i].lifeLowPercent = self[i].lifeLowPercent + 4.00
-                self[i].powerBase = self[i].powerBase / 2
-
-                if self[i].lifeHighPercent < 98.00 then
-                    self[i].lifeHighPercent = self[i].lifeHighPercent + 2.00
-                end
-            end
-        end
-
-        -- AI has Revived
-        function self:STATERevived(i)
-            if self[i].alive == false and IsUnitAliveBJ(self[i].unit) == true then
-                print("Revived")
-                self[i].alive = true
-                self:ACTIONattackBase(i)
-            end
-        end
-
-        -- AI Fleeing
-        function self:STATEFleeing(i)
-            if (self[i].powerHero < self[i].powerCount or self[i].percentLifeSingle > self[i].highDamageSingle or
-                self[i].percentLifeAverage > self[i].highDamageAverage) and self[i].lowLife == false and self[i].fleeing ==
-                false then
-                print("Flee")
-                self[i].fleeing = true
-
-                if self[i].castingDanger == false then
-                    self[i].casting = false
-                    self[i].castingCounter = -10.00
-                    self:ACTIONtravelToHeal(i)
-                end
-            end
-        end
-
-        -- AI Stop Fleeing
-        function self:STATEStopFleeing(i)
-            if self[i].powerHero > self[i].powerCount and self[i].percentLifeSingle <= 0.0 and
-                self[i].percentLifeAverage <= self[i].highDamageAverage and self[i].lowLife == false and self[i].fleeing ==
-                true then
-                print("Stop Fleeing")
-                self[i].fleeing = false
-
-                self:ACTIONtravelToDest(i)
-            end
-        end
-
-        -- AI Casting Spell
-        function self:STATEcastingSpell(i)
-            if self[i].casting == true then
-
-                if self[i].castingDuration > 0.00 then
-                    print("Casting Spell: " .. self[i].spellCast.name .. " - " .. self[i].castingDuration)
-
-                    self[i].castingDuration = self[i].castingDuration - (self.tick * self.count)
-                else
-                    print("Stopped Cast")
-                    self[i].casting = false
-                    self[i].castingDuration = 0
-                    self[i].spellCast = {}
-                    self[i].castingDanger = false
-                    self:ACTIONtravelToDest(i)
-                end
-            end
-        end
-
-        --
-        -- ACTIONS
-        --
-
-        function self:castSpell(i, spellCast, danger)
-
-            if not self[i].casting then
-                danger = danger or false
-                if spellCast ~= nil then
-                    if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
-                        self:ACTIONtravelToDest(i)
-                    else
-                        print("Spell Cast")
-                        self[i].casting = true
-
-                        if danger then
-                            self[i].castingDanger = true
-                        end
-
-                        self[i].spellCast = spellCast
-
-                        if self[i].spellCast.instant then
-                            self[i].castingDuration = 1
-                        else
-                            self[i].castingDuration = self[i].spellCast.castTime[1]
-                        end
-
-                    end
-                end
-            end
-        end
-
-        function self:ACTIONtravelToHeal(i)
-            local healDistance = 100000000.00
-            local healDistanceNew = 0.00
-            local unitX, unitY, u
-            local g = CreateGroup()
-
-            GroupAddGroup(base[self[i].teamName].gHealing, g)
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
-
-                unitX = GetUnitX(u)
-                unitY = GetUnitY(u)
-                healDistanceNew = distanceBetweenCoordinates(self[i].x, self[i].y, unitX, unitY)
-
-                if healDistanceNew < healDistance then
-                    healDistance = healDistanceNew
-                    self[i].unitHealing = u
-                end
-
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
-
-            unitX = GetUnitX(self[i].unitHealing)
-            unitY = GetUnitY(self[i].unitHealing)
-
-            -- print("x:" .. unitX .. "y:" .. unitY)
-
-            IssuePointOrder(self[i].unit, "move", unitX, unitY)
-        end
-
-        function self:ACTIONtravelToDest(i)
-            local unitX, unitY
-
-            if not self[i].casting then
-                if self[i].lowLife == true or self[i].fleeing == true then
-                    unitX = GetUnitX(self[i].unitHealing)
-                    unitY = GetUnitY(self[i].unitHealing)
-                    IssuePointOrder(self[i].unit, "move", unitX, unitY)
-
-                elseif self[i].defending then
-                    unitX = GetUnitX(self[i].unitDefending)
-                    unitY = GetUnitY(self[i].unitDefending)
-
-                    if not self:teleportCheck(i, unitX, unitY) then
-                        if self[i].defendingFast == true then
-                            IssuePointOrder(self[i].unit, "move", unitX, unitY)
-                        else
-                            IssuePointOrder(self[i].unit, "attack", unitX, unitY)
-                        end
-                    end
-
-                else
-                    if not IsUnitAliveBJ(self[i].unitAttacking) then
-                        self:ACTIONattackBase(i)
-                        return
-                    end
-                    unitX = GetUnitX(self[i].unitAttacking)
-                    unitY = GetUnitY(self[i].unitAttacking)
-                    if not self:teleportCheck(i, unitX, unitY) then
-                        IssuePointOrder(self[i].unit, "attack", unitX, unitY)
-                    end
-                end
-            end
-
-        end
-
-        function self:ACTIONattackBase(i)
-
-            if not self[i].casting then
-                local regionAdvantage = 0
-                local regions = {"top", "middle", "bottom"}
-                local regionsPick = {}
-                local baseAdvantage
-
-                if self[i].strat == "aggressive" then
-                    baseAdvantage = self[i].teamName
-                elseif self[i].strat == "defensive" then
-                    baseAdvantage = self[i].teamNameEnemy
-                end
-
-                if self[i].strat == "passive" then
-                    self[i].regionAttacking = regions[GetRandomInt(1, #regions)]
-                else
-                    for a = 1, 3 do
-                        if regionAdvantage < base[regions[a]][baseAdvantage].advantage then
-                            regionAdvantage = base[regions[a]][baseAdvantage].advantage
-                            self[i].regionAttacking = regions[a]
-
-                            regionsPick = {}
-                            table.insert(regionsPick, regions[a])
-
-                        elseif regionAdvantage == base[regions[a]][baseAdvantage].advantage then
-
-                            table.insert(regionsPick, regions[a])
-
-                        end
-                    end
-
-                    if #regionsPick > 1 then
-                        self[i].regionAttacking = regionsPick[GetRandomInt(1, #regionsPick)]
-                    end
-
-                end
-
-                self[i].unitAttacking = GroupPickRandomUnit(base[self[i].regionAttacking][self[i].teamNameEnemy].g)
-
-                local unitX = GetUnitX(self[i].unitAttacking)
-                local unitY = GetUnitY(self[i].unitAttacking)
-                print("Attacking: " .. self[i].regionAttacking .. " Base: " .. GetUnitName(self[i].unitAttacking))
-
-                if not self:teleportCheck(i, unitX, unitY) then
-                    IssuePointOrder(self[i].unit, "attack", unitX, unitY)
-                end
-            end
-        end
-
-        function self:getHeroData(unit)
-            return self[indexer:get(unit).heroName]
-        end
-
-        -- Teleport Stuff
-        function self:teleportCheck(i, destX, destY)
-            local destDistance = 100000000.00
-            local destDistanceNew = 0.00
-            local unitX, unitY, u
-            local teleportUnit
-            local g = CreateGroup()
-            local heroUnit = self[i].unit
-
-            local distanceOrig = distanceBetweenCoordinates(self[i].x, self[i].y, destX, destY)
-            local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(heroUnit, hero.item.teleportation.abilityId)
-
-            if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
-
-                GroupAddGroup(base[self[i].teamName].gTeleport, g)
-                while true do
-                    u = FirstOfGroup(g)
-                    if u == nil then
-                        break
-                    end
-
-                    unitX = GetUnitX(u)
-                    unitY = GetUnitY(u)
-                    destDistanceNew = distanceBetweenCoordinates(destX, destY, unitX, unitY)
-
-                    if destDistanceNew < destDistance then
-                        destDistance = destDistanceNew
-                        teleportUnit = u
-                    end
-
-                    GroupRemoveUnit(g, u)
-                end
-                DestroyGroup(g)
-
-                if distanceOrig - 2000 > destDistanceNew then
-
-                    print("Teleporting")
-
-                    -- PingMinimap(unitX, unitY, 15)
-
-                    UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id),
-                        teleportUnit)
-
-                    self:castSpell(i, hero.item.teleportation)
-
-                    return true
-                else
-                    return false
-                end
-            else
-                return false
-            end
-
-        end
-
-        -- Hero AI
-
-        function self:manaAddictAI(i)
-            local curSpell
-
-            --  Always Cast
-            -------
-
-            -- Mana Shield
-            if self[i].casting then
-                return false
-            end
-
-            curSpell = hero:spell(self[i], "manaShield")
-            if curSpell.castable == true and curSpell.hasBuff == false then
-                print(curSpell.name)
-                IssueImmediateOrder(self[i].unit, curSpell.order)
-                self:castSpell(i, curSpell)
-                return true
-            end
-
-            --  Cast available all the time
-            -------
-            -- Mana Drain
-            curSpell = hero:spell(self[i], "manaExplosion")
-            if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
-                print(curSpell.name)
-                IssueImmediateOrder(self[i].unit, curSpell.order)
-                self:castSpell(i, curSpell)
-                return true
-            end
-
-            -- Normal Cast
-            --------
-
-            if self[i].lowLife == false and self[i].fleeing == false then
-                -- Frost Nova
-                curSpell = hero:spell(self[i], "manaBomb")
-                if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
-                    print(curSpell.name)
-                    IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy),
-                        GetUnitY(self[i].clumpEnemy))
-                    self:castSpell(i, curSpell)
-                    return true
-                end
-            end
-        end
-
-        function self:brawlerAI(i)
-            local curSpell
-
-            if self[i].casting == false then
-            end
-        end
-
-        -- Shift Master Spell AI
-        function self:shiftMasterAI(i)
-            local curSpell
-
-            if not self[i].casting then
-
-                -- Custom Intel
-                local g = CreateGroup()
-                local gUnits = CreateGroup()
-                local gIllusions = CreateGroup()
-                local u, uTemp, unitsNearby
-                local illusionsNearby = 0
-
-                -- Find all Nearby Illusions
-                GroupEnumUnitsInRange(g, self[i].x, self[i].y, 600.00, nil)
-
-                GroupAddGroup(g, gIllusions)
-                while true do
-                    u = FirstOfGroup(g)
-                    if (u == nil) then
-                        break
-                    end
-
-                    if IsUnitIllusion(u) then
-                        illusionsNearby = illusionsNearby + 1
-                    end
-                    GroupRemoveUnit(g, u)
-                end
-                DestroyGroup(g)
-
-                if self[i].fleeing or self[i].lowLife then
-
-                    -- Check if there are illusions Nearby
-                    if illusionsNearby > 0 then
-                        curSpell = hero:spell(self[i], "switch")
-                        if curSpell.castable and curSpell.manaLeft > 0 and not self[i].casting then
-                            print(curSpell.name)
-
-                            u = GroupPickRandomUnit(gIllusions)
-                            GroupEnumUnitsInRange(gUnits, GetUnitX(u), GetUnitY(u), 350, nil)
-                            unitsNearby = 0
-                            while true do
-                                uTemp = FirstOfGroup(g)
-                                if (uTemp == nil) then
-                                    break
-                                end
-
-                                if not IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then
-                                    unitsNearby = unitsNearby + 1
-                                end
-
-                                GroupRemoveUnit(g, uTemp)
-                            end
-                            DestroyGroup(g)
-
-                            if unitsNearby < self[i].countUnitEnemyClose then
-                                IssuePointOrderById(self[i].unit, oid.reveal, GetUnitX(u), GetUnitY(u))
-                            end
-                        end
-                    end
-
-                    curSpell = hero:spell(self[i], "shift")
-                    if curSpell.castable == true and curSpell.manaLeft > 0 then
-                        print(curSpell.name)
-                        IssueImmediateOrder(self[i].unit, curSpell.order)
-                        self:castSpell(i, curSpell)
-                    end
-                end
-
-                -- Normal Cast Spells
-                if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
-
-                    -- Shift
-                    curSpell = hero:spell(self[i], "shift")
-                    if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
-                        print(curSpell.name)
-
-                        IssueImmediateOrder(self[i].unit, curSpell.order)
-                        self:castSpell(i, curSpell)
-                    end
-
-                    -- Falling Strike
-                    curSpell = hero:spell(self[i], "fallingStrike")
-                    if (self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00) and curSpell.castable == true and
-                        curSpell.manaLeft > 45 then
-                        print(curSpell.name)
-
-                        if self[i].powerEnemy > 250.00 then
-                            IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].unitPowerEnemy),
-                                GetUnitY(self[i].unitPowerEnemy))
-                        else
-                            IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy),
-                                GetUnitY(self[i].clumpEnemy))
-                        end
-
-                        self:castSpell(i, curSpell)
-                    end
-
-                    -- Shift Storm
-                    curSpell = hero:spell(self[i], "shiftStorm")
-                    if self[i].countUnitEnemy >= 6 and curSpell.castable == true and curSpell.manaLeft > 30 then
-                        print(curSpell.name)
-                        IssueImmediateOrder(self[i].unit, curSpell.order)
-                        self:castSpell(i, curSpell)
-                    end
-                end
-
-                -- Clean up custom Intel
-                DestroyGroup(gIllusions)
-            end
-        end
-
-        function self:tactitionAI(i)
-            local curSpell, u
-
-            -- Iron Defense
-            curSpell = hero:spell(self[i], "ironDefense")
-            if self[i].countUnitEnemy >= 2 and curSpell.castable == true and curSpell.manaLeft > 20 and
-                self[i].lifePercent < 80 and not self[i].casting then
-                print(curSpell.name)
-                IssueImmediateOrder(self[i].unit, curSpell.order)
-                self:castSpell(i, curSpell)
-            end
-
-            if not self[i].fleeing and not self[i].lowLife then
-                -- Bolster
-                curSpell = hero:spell(self[i], "bolster")
-                if self[i].countUnitFriendClose >= 1 and curSpell.castable == true and curSpell.manaLeft > 50 and
-                    not self[i].casting then
-                    print(curSpell.name)
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell)
-                end
-
-                -- Attack!
-                curSpell = hero:spell(self[i], "attack")
-                if CountUnitsInGroup(self[i].heroesEnemy) > 0 and curSpell.castable == true and curSpell.manaLeft > 40 and
-                    not self[i].casting then
-
-                    print(curSpell.name)
-                    u = GroupPickRandomUnit(self[i].heroesEnemy)
-                    IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
-                    IssueImmediateOrder(self[i].unit, curSpell.order)
-                    self:castSpell(i, curSpell)
-                end
-            end
-        end
-
-        function self:timeMageAI(i)
-            if self[i].casting then
-                return
-            end
-
-            local curSpell, x, y, u
-
-            if not self[i].fleeing and not self[i].lowLife then
-
-                -- chrono Atrophy
-                curSpell = hero:spell(self[i], "chronoAtrophy")
-                if self[i].clumpBothNumber >= 7 and curSpell.castable and curSpell.manaLeft > 30 then
-                    print(curSpell.name)
-
-                    x = GetUnitX(self[i].clumpBoth)
-                    y = GetUnitY(self[i].clumpBoth)
-                    IssuePointOrder(self[i].unit, curSpell.order, x, y)
-                    self:castSpell(i, curSpell)
-                    return
-                end
-
-                -- Decay
-                curSpell = hero:spell(self[i], "decay")
-                if CountUnitsInGroup(self[i].heroesEnemies) > 0 and curSpell.castable == true and curSpell.manaLeft > 20 then
-                    print(curSpell.name)
-
-                    u = GroupPickRandomUnit(self[i].heroesEnemies)
-                    IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
-                    self:castSpell(i, curSpell)
-                    return
-                end
-
-                -- Time Travel
-                curSpell = hero:spell(self[i], "timeTravel")
-                if self[i].clumpBothNumber >= 4 and curSpell.castable and curSpell.manaLeft > 30 then
-                    print(curSpell.name)
-
-                    x = GetUnitX(self[i].clumpBoth)
-                    y = GetUnitY(self[i].clumpBoth)
-                    IssuePointOrder(self[i].unit, curSpell.order, x, y)
-                    self:castSpell(i, curSpell)
-                    return
-                end
-            end
-        end
-
-        return self
-    end
+				self[i].powerBase = 500.00
+				self[i].powerLevel = 200.00
+
+				self[i].clumpCheck = true
+				self[i].clumpRange = 100.00
+				self[i].intelRange = 1100.00
+				self[i].closeRange = 500.00
+
+				self[i].strats = {"aggressive", "defensive", "passive"}
+
+			elseif self[i].four == hero.manaAddict.four then -- Mana Addict
+				self[i].healthFactor = 1.00
+				self[i].manaFactor = 0.75
+
+				self[i].lifeHighPercent = 85.00
+				self[i].lifeLowPercent = 25.00
+				self[i].lifeLowNumber = 300.00
+
+				self[i].highDamageSingle = 3.00
+				self[i].highDamageAverage = 18.00
+
+				self[i].powerBase = 700.00
+				self[i].powerLevel = 220.00
+
+				self[i].clumpCheck = true
+				self[i].clumpRange = 100.00
+				self[i].intelRange = 1000.00
+				self[i].closeRange = 400.00
+
+				self[i].strats = {"aggressive", "defensive", "passive"}
+
+			elseif self[i].four == hero.tactition.four then -- Tactition
+				self[i].healthFactor = 1.00
+				self[i].manaFactor = 0.20
+
+				self[i].lifeHighPercent = 75.00
+				self[i].lifeLowPercent = 20.00
+				self[i].lifeLowNumber = 350.00
+
+				self[i].highDamageSingle = 17.00
+				self[i].highDamageAverage = 25.00
+
+				self[i].powerBase = 500.00
+				self[i].powerLevel = 200.00
+				self[i].clumpCheck = true
+				self[i].clumpRange = 250.00
+				self[i].intelRange = 1000.00
+				self[i].closeRange = 400.00
+
+				self[i].strats = {"aggressive", "defensive", "passive"}
+
+			elseif self[i].four == hero.timeMage.four then -- Time Mage
+				self[i].healthFactor = 1.00
+				self[i].manaFactor = 0.10
+
+				self[i].lifeHighPercent = 85.00
+				self[i].lifeLowPercent = 25.00
+				self[i].lifeLowNumber = 350.00
+
+				self[i].highDamageSingle = 8.00
+				self[i].highDamageAverage = 17.00
+
+				self[i].powerBase = 750.00
+				self[i].powerLevel = 250.00
+
+				self[i].clumpCheck = true
+				self[i].clumpRange = 250.00
+				self[i].intelRange = 1100.00
+				self[i].closeRange = 700.00
+
+				self[i].strats = {"aggressive", "defensive", "passive"}
+
+			elseif self[i].four == hero.shiftMaster.four then -- Shifter
+				self[i].healthFactor = 1.00
+				self[i].manaFactor = 0.15
+
+				self[i].lifeHighPercent = 70.00
+				self[i].lifeLowPercent = 25.00
+				self[i].lifeLowNumber = 350.00
+
+				self[i].highDamageSingle = 17.00
+				self[i].highDamageAverage = 25.00
+
+				self[i].powerBase = 500.00
+				self[i].powerLevel = 200.00
+
+				self[i].clumpCheck = true
+				self[i].clumpRange = 100.00
+				self[i].intelRange = 1100.00
+				self[i].closeRange = 400.00
+
+				self[i].strats = {"aggressive", "defensive", "passive"}
+			end
+
+			local randI = GetRandomInt(1, #self[i].strats)
+			self[i].strat = self[i].strats[randI]
+
+			-- TESTING
+			-- self[i].strat = "aggressive"
+			-- TESTING
+
+			print(self[i].strat)
+		end
+
+		-- Update Intel
+		function self:updateIntel(i)
+			-- Only run if the hero is alive
+			if (self[i].alive == true) then
+				-- Update info about the AI Hero
+				self[i].x = GetUnitX(self[i].unit)
+				self[i].y = GetUnitY(self[i].unit)
+				self[i].life = GetWidgetLife(self[i].unit)
+				self[i].lifePercent = GetUnitLifePercent(self[i].unit)
+				self[i].lifeMax = GetUnitState(self[i].unit, UNIT_STATE_MAX_LIFE)
+				self[i].mana = GetUnitState(self[i].unit, UNIT_STATE_MANA)
+				self[i].manaPercent = GetUnitManaPercent(self[i].unit)
+				self[i].manaMax = GetUnitState(self[i].unit, UNIT_STATE_MAX_MANA)
+				self[i].level = GetHeroLevel(self[i].unit)
+				self[i].currentOrder = OrderId2String(GetUnitCurrentOrder(self[i].unit))
+
+				-- Reset Intel
+				self[i].countUnit = 0
+				self[i].countUnitFriend = 0
+				self[i].countUnitFriendClose = 0
+				self[i].countUnitEnemy = 0
+				self[i].countUnitEnemyClose = 0
+				self[i].powerFriend = 0.00
+				self[i].powerEnemy = 0.00
+
+				self[i].unitPowerFriend = nil
+				self[i].unitPowerEnemy = nil
+
+				self[i].clumpFriend = nil
+				self[i].clumpFriendNumber = 0
+				self[i].clumpFriendPower = 0.00
+				self[i].clumpEnemy = nil
+				self[i].clumpEnemyNumber = 0
+				self[i].clumpEnemyPower = 0.00
+				self[i].clumpBoth = nil
+				self[i].clumpBothNumber = 0
+				self[i].clumpBothPower = 0.00
+
+				GroupClear(self[i].heroesFriend)
+				GroupClear(self[i].heroesEnemy)
+
+				-- Units around Hero
+				local g = CreateGroup()
+				local clump = CreateGroup()
+				local unitPower = 0.00
+				local unitPower = 0.00
+				local unitLife = 0.00
+				local unitX
+				local unitY
+				local unitDistance = 0.00
+				local unitRange = 0.00
+				local unitPowerRangeMultiplier = 0.00
+				local u
+				local clumpUnit
+				local powerAllyTemp, powerAllyNumTemp, powerEnemyTemp, powerEnemyNumTemp
+
+				GroupEnumUnitsInRange(g, self[i].x, self[i].y, self[i].intelRange, nil)
+
+				-- Enumerate through group
+
+				while true do
+					u = FirstOfGroup(g)
+					if (u == nil) then break end
+
+					-- Unit is alive and not the hero
+					if (IsUnitAliveBJ(u) == true and u ~= self[i].unit) then
+						self[i].countUnit = self[i].countUnit + 1
+
+						-- Get Unit Details
+						unitLife = GetUnitLifePercent(u)
+						unitRange = BlzGetUnitWeaponRealField(u, UNIT_WEAPON_RF_ATTACK_RANGE, 0)
+
+						unitX = GetUnitX(u)
+						unitY = GetUnitY(u)
+						unitDistance = distanceBetweenCoordinates(unitX, unitY, self[i].x, self[i].y)
+
+						-- Get Unit Power
+						if (IsUnitType(u, UNIT_TYPE_HERO) == true) then -- is Hero
+							unitPower = I2R((GetHeroLevel(u) * 75))
+
+							if IsUnitAlly(u, self[i].player) then -- Add to hero Group
+								GroupAddUnit(self[i].heroesFriend, u)
+							else
+								GroupAddUnit(self[i].heroesEnemy, u)
+							end
+						else -- Unit is NOT a hero
+							unitPower = I2R(GetUnitPointValue(u))
+						end
+
+						-- Power range modifier
+						if unitDistance < unitRange then
+							unitPowerRangeMultiplier = 1.00
+						else
+							unitPowerRangeMultiplier = 300.00 / (unitDistance - unitRange + 300.00)
+						end
+
+						if IsUnitAlly(u, self[i].player) == true then
+							-- Update count
+							self[i].countUnitFriend = self[i].countUnitFriend + 1
+							if unitDistance <= self[i].closeRange then self[i].countUnitFriendClose = self[i].countUnitFriendClose + 1 end
+
+							-- Check to see if unit is the most powerful friend
+							if unitPower > self[i].powerFriend then self[i].unitPowerFriend = u end
+
+							-- Relative Power
+							self[i].powerFriend = self[i].powerFriend + (unitPower * (unitLife / 100.00) * unitPowerRangeMultiplier)
+						else
+							-- Update Count
+							self[i].countUnitEnemy = self[i].countUnitEnemy + 1
+							if unitDistance <= self[i].closeRange then self[i].countUnitEnemyClose = self[i].countUnitEnemyClose + 1 end
+
+							-- Check to see if unit is the most powerful Enemy
+							if unitPower > self[i].powerEnemy then self[i].unitPowerEnemy = u end
+
+							-- Relative Power
+							self[i].powerEnemy = self[i].powerEnemy + (unitPower * (unitLife / 100.00) * unitPowerRangeMultiplier)
+						end
+
+						if self[i].clumpCheck == true then
+							powerAllyTemp = 0
+							powerEnemyTemp = 0
+							powerAllyNumTemp = 0
+							powerEnemyNumTemp = 0
+							clump = CreateGroup()
+
+							GroupEnumUnitsInRange(clump, unitX, unitY, self[i].clumpRange, nil)
+
+							while true do
+								clumpUnit = FirstOfGroup(clump)
+								if clumpUnit == nil then break end
+
+								if IsUnitAliveBJ(clumpUnit) and IsUnitType(clumpUnit, UNIT_TYPE_STRUCTURE) == false then
+									if IsUnitAlly(clumpUnit, self[i].player) then
+										powerAllyTemp = powerAllyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+										powerAllyNumTemp = powerAllyNumTemp + 1
+									else
+										powerEnemyTemp = powerEnemyTemp + SquareRoot(I2R(GetUnitPointValue(clumpUnit)))
+										powerEnemyNumTemp = powerEnemyNumTemp + 1
+									end
+								end
+
+								GroupRemoveUnit(clump, clumpUnit)
+							end
+							DestroyGroup(clump)
+
+							if powerAllyNumTemp > self[i].clumpFriendNumber then self[i].clumpFriendNumber = powerAllyNumTemp end
+
+							if powerEnemyNumTemp > self[i].clumpEnemyNumber then self[i].clumpEnemyNumber = powerEnemyNumTemp end
+
+							if powerAllyTemp > self[i].clumpFriendPower then
+								self[i].clumpFriendPower = powerAllyTemp
+								self[i].clumpFriend = u
+							end
+
+							if powerEnemyTemp > self[i].clumpEnemyPower then
+								self[i].clumpEnemyPower = powerEnemyTemp
+								self[i].clumpEnemy = u
+							end
+
+							if (powerAllyTemp + powerEnemyTemp) > self[i].clumpBothPower then
+								self[i].clumpBothPower = powerAllyTemp + powerEnemyTemp
+								self[i].clumpBoth = u
+							end
+						end
+					end
+
+					GroupRemoveUnit(g, u)
+				end
+				DestroyGroup(g)
+
+				-- Find how much damage the Hero is taking
+				self[i].lifeHistory[#self[i].lifeHistory + 1] = self[i].lifePercent
+
+				if #self[i].lifeHistory > 5 then table.remove(self[i].lifeHistory, 1) end
+
+				self[i].clumpBothNumber = self[i].clumpFriendNumber + self[i].clumpEnemyNumber
+				self[i].percentLifeSingle = self[i].lifeHistory[#self[i].lifeHistory - 1] -
+								                            self[i].lifeHistory[#self[i].lifeHistory]
+				self[i].percentLifeAverage = self[i].lifeHistory[1] - self[i].lifeHistory[#self[i].lifeHistory]
+
+				-- Figure out the Heroes Weighted Life
+				self[i].weightedLife = (self[i].life * self[i].healthFactor) + (self[i].mana * self[i].manaFactor)
+				self[i].weightedLifeMax = (self[i].lifeMax * self[i].healthFactor) + (self[i].manaMax * self[i].manaFactor)
+				self[i].weightedLifePercent = (self[i].weightedLife / self[i].weightedLifeMax) * 100.00
+
+				-- Get the Power Level of the surrounding Units
+				self[i].powerEnemy = (self[i].powerEnemy * (((100.00 - self[i].weightedLifePercent) / 20.00) + 0.50))
+				self[i].powerCount = self[i].powerEnemy - self[i].powerFriend
+
+				-- Raise Hero Confidence Level
+				self[i].powerBase = self[i].powerBase + (0.25 * I2R(self[i].level))
+				self[i].powerHero = self[i].powerBase + (self[i].powerLevel * I2R(self[i].level))
+
+				-- print(self[i].currentOrder)
+				-- print("Clump Enemy: " .. R2S(self[i].clumpEnemyPower))
+				-- print("Clump Both: " .. R2S(self[i].clumpBothPower))
+				-- print("Clump: " .. GetUnitName(self[i].clumpBoth))
+				-- print("Enemies Nearby: " .. self[i].countUnitEnemy)
+				-- print("Power Clump Enemy: " .. self[i].powerEnemy)
+				-- print("Hero Power: " .. R2S(self[i].powerHero))
+				-- print("Power Level: " .. R2S(self[i].powerCount))
+			end
+		end
+
+		function self:CleanUp(i)
+			if (self[i].currentOrder ~= "move" and (self[i].lowLife or self[i].fleeing)) then self:ACTIONtravelToHeal(i) end
+
+			if (self[i].currentOrder ~= "attack" and self[i].currentOrder ~= "move" and self[i].lowLife == false and
+							self[i].casting == false) then self:ACTIONtravelToDest(i) end
+		end
+
+		-- AI Run Specifics
+		function self:STATEAbilities(i)
+
+			if self[i].name == "manaAddict" then
+				self:manaAddictAI(i)
+			elseif self[i].name == "brawler" then
+				self:brawlerAI(i)
+			elseif self[i].name == "shiftMaster" then
+				self:shiftMasterAI(i)
+			elseif self[i].name == "tactition" then
+				self:tactitionAI(i)
+			elseif self[i].name == "timeMage" then
+				self:timeMageAI(i)
+			end
+		end
+
+		-- Check to see if Hero should try to upgrade
+		function self:STATEUpgrade(i)
+			local randInt = GetRandomInt(1, 40)
+
+			if randInt == 10 then hero:upgrade(i) end
+		end
+
+		function self:STATEDefend(i)
+			if self[i].alive and not self[i].lowLife and not self[i].fleeing and not self[i].casting and not self[i].defending then
+				local baseCountDanger = CountUnitsInGroup(base[self[i].teamName].gDanger)
+				if baseCountDanger > 0 then
+					local u, id, defend, unitCount, danger, selectedId, distanceToBase
+					local g = CreateGroup()
+
+					GroupAddGroup(base[self[i].teamName].gDanger, g)
+					local danger = 0
+					local selectedId = nil
+					while true do
+						u = FirstOfGroup(g)
+						if u == nil then break end
+
+						id = GetHandleId(u)
+						if base[id].danger > danger then
+							danger = base[id].danger
+							selectedId = id
+						end
+
+						GroupRemoveUnit(g, u)
+					end
+					DestroyGroup(g)
+
+					id = selectedId
+
+					if self[i].strat == "defensive" and danger > 40 then
+						self[i].defending = true
+					elseif self[i].strat == "passive" and danger > 120 then
+						self[i].defending = true
+					elseif self[i].strat == "aggressive" and danger > 400 then
+						self[i].defending = true
+					end
+
+					if self[i].defending then
+						self[i].unitDefending = base[id].unit
+						distanceToBase = distanceBetweenCoordinates(self[i].x, self[i].y, base[id].x, base[id].y)
+
+						if distanceToBase > 3500 then self[i].defendingFast = true end
+
+						self:ACTIONtravelToDest(i)
+						print("Defending: " .. GetUnitName(self[i].unitDefending))
+					end
+				end
+			end
+		end
+
+		function self:STATEDefending(i)
+			if self[i].defending then
+
+				local id = GetHandleId(self[i].unitDefending)
+				if base[id].danger <= 0 or not IsUnitAliveBJ(self[i].unitDefending) then
+					self[i].defending = false
+					self[i].defendingFast = false
+					self[i].unitDefending = nil
+					self:ACTIONattackBase(i)
+					print("Stop Defending")
+
+				else
+					local distanceToBase = distanceBetweenCoordinates(self[i].x, self[i].y, base[id].x, base[id].y)
+					local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(self[i].unit, hero.item.teleportation.abilityId)
+
+					if distanceToBase < 2500 and self[i].defendingFast then
+						self[i].defendingFast = false
+						self:ACTIONtravelToDest(i)
+
+					elseif distanceToBase > 4000 and teleportCooldown == 0 then
+						self:ACTIONtravelToDest(i)
+					end
+				end
+			end
+		end
+
+		-- AI has Low Health
+		function self:STATELowHealth(i)
+			if (self[i].weightedLifePercent < self[i].lifeLowPercent or self[i].weightedLife < self[i].lifeLowNumber) and
+							self[i].lowLife == false then
+				print("Low Health")
+				self[i].lowLife = true
+				self[i].fleeing = false
+				self[i].chasing = false
+				self[i].defending = false
+				self[i].highdamage = false
+				self[i].updateDest = false
+
+				if self[i].castingDanger == false then
+					self[i].casting = false
+					self[i].castingCounter = -10.00
+					self:ACTIONtravelToHeal(i)
+				end
+			end
+		end
+
+		-- AI Has High Health
+		function self:STATEHighHealth(i)
+			if self[i].alive == true and self[i].lowLife == true and self[i].weightedLifePercent > self[i].lifeHighPercent then
+				print("High Health")
+				self[i].lowLife = false
+				self[i].fleeing = false
+
+				-- Reward the AI For doing good
+				self[i].lifeLowPercent = self[i].lifeLowPercent - 1.00
+				self[i].lifeHighPercent = self[i].lifeHighPercent - 1.00
+
+				if self[i].defending then
+					self:ACTIONtravelToDest(i)
+				else
+					local rand = GetRandomInt(1, 3)
+					if rand == 1 then
+						self:ACTIONattackBase(i)
+					else
+						self:ACTIONtravelToDest(i)
+					end
+				end
+			end
+		end
+
+		-- AI is Dead
+		function self:STATEDead(i)
+			if self[i].alive == true and IsUnitAliveBJ(self[i].unit) == false then
+				print("Dead")
+				self[i].alive = false
+				self[i].lowLife = false
+				self[i].fleeing = false
+				self[i].chasing = false
+				self[i].defending = false
+				self[i].highdamage = false
+				self[i].updateDest = false
+				self[i].casting = false
+				self[i].castingUlt = false
+				self[i].defending = false
+				self[i].defendingFast = false
+				self[i].castingCounter = -10.00
+
+				-- Punish the AI for screwing up.  IT WILL FEAR DEATH!!!
+				self[i].lifeLowPercent = self[i].lifeLowPercent + 4.00
+				self[i].powerBase = self[i].powerBase / 2
+
+				if self[i].lifeHighPercent < 98.00 then self[i].lifeHighPercent = self[i].lifeHighPercent + 2.00 end
+			end
+		end
+
+		-- AI has Revived
+		function self:STATERevived(i)
+			if self[i].alive == false and IsUnitAliveBJ(self[i].unit) == true then
+				print("Revived")
+				self[i].alive = true
+				self:ACTIONattackBase(i)
+			end
+		end
+
+		-- AI Fleeing
+		function self:STATEFleeing(i)
+			if (self[i].powerHero < self[i].powerCount or self[i].percentLifeSingle > self[i].highDamageSingle or
+							self[i].percentLifeAverage > self[i].highDamageAverage) and self[i].lowLife == false and self[i].fleeing == false then
+				print("Flee")
+				self[i].fleeing = true
+
+				if self[i].castingDanger == false then
+					self[i].casting = false
+					self[i].castingCounter = -10.00
+					self:ACTIONtravelToHeal(i)
+				end
+			end
+		end
+
+		-- AI Stop Fleeing
+		function self:STATEStopFleeing(i)
+			if self[i].powerHero > self[i].powerCount and self[i].percentLifeSingle <= 0.0 and self[i].percentLifeAverage <=
+							self[i].highDamageAverage and self[i].lowLife == false and self[i].fleeing == true then
+				print("Stop Fleeing")
+				self[i].fleeing = false
+
+				self:ACTIONtravelToDest(i)
+			end
+		end
+
+		-- AI Casting Spell
+		function self:STATEcastingSpell(i)
+			if self[i].casting == true then
+
+				if self[i].castingDuration > 0.00 then
+					print("Casting Spell: " .. self[i].spellCast.name .. " - " .. self[i].castingDuration)
+
+					self[i].castingDuration = self[i].castingDuration - (self.tick * self.count)
+				else
+					print("Stopped Cast")
+					self[i].casting = false
+					self[i].castingDuration = 0
+					self[i].spellCast = {}
+					self[i].castingDanger = false
+					self:ACTIONtravelToDest(i)
+				end
+			end
+		end
+
+		--
+		-- ACTIONS
+		--
+
+		function self:castSpell(i, spellCast, danger)
+
+			if not self[i].casting then
+				danger = danger or false
+				if spellCast ~= nil then
+					if (self[i].fleeing == true or self[i].lowhealth == true) and danger == false then
+						self:ACTIONtravelToDest(i)
+					else
+						print("Spell Cast")
+						self[i].casting = true
+
+						if danger then self[i].castingDanger = true end
+
+						self[i].spellCast = spellCast
+
+						if self[i].spellCast.instant then
+							self[i].castingDuration = 1
+						else
+							self[i].castingDuration = self[i].spellCast.castTime[1]
+						end
+
+					end
+				end
+			end
+		end
+
+		function self:ACTIONtravelToHeal(i)
+			local healDistance = 100000000.00
+			local healDistanceNew = 0.00
+			local unitX, unitY, u
+			local g = CreateGroup()
+
+			GroupAddGroup(base[self[i].teamName].gHealing, g)
+			while true do
+				u = FirstOfGroup(g)
+				if u == nil then break end
+
+				unitX = GetUnitX(u)
+				unitY = GetUnitY(u)
+				healDistanceNew = distanceBetweenCoordinates(self[i].x, self[i].y, unitX, unitY)
+
+				if healDistanceNew < healDistance then
+					healDistance = healDistanceNew
+					self[i].unitHealing = u
+				end
+
+				GroupRemoveUnit(g, u)
+			end
+			DestroyGroup(g)
+
+			unitX = GetUnitX(self[i].unitHealing)
+			unitY = GetUnitY(self[i].unitHealing)
+
+			-- print("x:" .. unitX .. "y:" .. unitY)
+
+			IssuePointOrder(self[i].unit, "move", unitX, unitY)
+		end
+
+		function self:ACTIONtravelToDest(i)
+			local unitX, unitY
+
+			if not self[i].casting then
+				if self[i].lowLife == true or self[i].fleeing == true then
+					unitX = GetUnitX(self[i].unitHealing)
+					unitY = GetUnitY(self[i].unitHealing)
+					IssuePointOrder(self[i].unit, "move", unitX, unitY)
+
+				elseif self[i].defending then
+					unitX = GetUnitX(self[i].unitDefending)
+					unitY = GetUnitY(self[i].unitDefending)
+
+					if not self:teleportCheck(i, unitX, unitY) then
+						if self[i].defendingFast == true then
+							IssuePointOrder(self[i].unit, "move", unitX, unitY)
+						else
+							IssuePointOrder(self[i].unit, "attack", unitX, unitY)
+						end
+					end
+
+				else
+					if not IsUnitAliveBJ(self[i].unitAttacking) then
+						self:ACTIONattackBase(i)
+						return
+					end
+					unitX = GetUnitX(self[i].unitAttacking)
+					unitY = GetUnitY(self[i].unitAttacking)
+					if not self:teleportCheck(i, unitX, unitY) then IssuePointOrder(self[i].unit, "attack", unitX, unitY) end
+				end
+			end
+
+		end
+
+		function self:ACTIONattackBase(i)
+
+			if not self[i].casting then
+				local regionAdvantage = 0
+				local regions = {"top", "middle", "bottom"}
+				local regionsPick = {}
+				local baseAdvantage
+
+				if self[i].strat == "aggressive" then
+					baseAdvantage = self[i].teamName
+				elseif self[i].strat == "defensive" then
+					baseAdvantage = self[i].teamNameEnemy
+				end
+
+				if self[i].strat == "passive" then
+					self[i].regionAttacking = regions[GetRandomInt(1, #regions)]
+				else
+					for a = 1, 3 do
+						if regionAdvantage < base[regions[a]][baseAdvantage].advantage then
+							regionAdvantage = base[regions[a]][baseAdvantage].advantage
+							self[i].regionAttacking = regions[a]
+
+							regionsPick = {}
+							table.insert(regionsPick, regions[a])
+
+						elseif regionAdvantage == base[regions[a]][baseAdvantage].advantage then
+
+							table.insert(regionsPick, regions[a])
+
+						end
+					end
+
+					if #regionsPick > 1 then self[i].regionAttacking = regionsPick[GetRandomInt(1, #regionsPick)] end
+
+				end
+
+				self[i].unitAttacking = GroupPickRandomUnit(base[self[i].regionAttacking][self[i].teamNameEnemy].g)
+
+				local unitX = GetUnitX(self[i].unitAttacking)
+				local unitY = GetUnitY(self[i].unitAttacking)
+				print("Attacking: " .. self[i].regionAttacking .. " Base: " .. GetUnitName(self[i].unitAttacking))
+
+				if not self:teleportCheck(i, unitX, unitY) then IssuePointOrder(self[i].unit, "attack", unitX, unitY) end
+			end
+		end
+
+		function self:getHeroData(unit) return self[indexer:get(unit).heroName] end
+
+		-- Teleport Stuff
+		function self:teleportCheck(i, destX, destY)
+			local destDistance = 100000000.00
+			local destDistanceNew = 0.00
+			local unitX, unitY, u
+			local teleportUnit
+			local g = CreateGroup()
+			local heroUnit = self[i].unit
+
+			local distanceOrig = distanceBetweenCoordinates(self[i].x, self[i].y, destX, destY)
+			local teleportCooldown = BlzGetUnitAbilityCooldownRemaining(heroUnit, hero.item.teleportation.abilityId)
+
+			if teleportCooldown == 0 and UnitHasItemOfTypeBJ(heroUnit, hero.item.teleportation.id) then
+
+				GroupAddGroup(base[self[i].teamName].gTeleport, g)
+				while true do
+					u = FirstOfGroup(g)
+					if u == nil then break end
+
+					unitX = GetUnitX(u)
+					unitY = GetUnitY(u)
+					destDistanceNew = distanceBetweenCoordinates(destX, destY, unitX, unitY)
+
+					if destDistanceNew < destDistance then
+						destDistance = destDistanceNew
+						teleportUnit = u
+					end
+
+					GroupRemoveUnit(g, u)
+				end
+				DestroyGroup(g)
+
+				if distanceOrig - 2000 > destDistanceNew then
+
+					print("Teleporting")
+
+					-- PingMinimap(unitX, unitY, 15)
+
+					UnitUseItemTarget(heroUnit, GetItemOfTypeFromUnitBJ(heroUnit, hero.item.teleportation.id), teleportUnit)
+
+					self:castSpell(i, hero.item.teleportation)
+
+					return true
+				else
+					return false
+				end
+			else
+				return false
+			end
+
+		end
+
+		-- Hero AI
+
+		function self:manaAddictAI(i)
+			local curSpell
+
+			--  Always Cast
+			-------
+
+			-- Mana Shield
+			if self[i].casting then return false end
+
+			curSpell = hero:spell(self[i], "manaShield")
+			if curSpell.castable == true and curSpell.hasBuff == false then
+				print(curSpell.name)
+				IssueImmediateOrder(self[i].unit, curSpell.order)
+				self:castSpell(i, curSpell)
+				return true
+			end
+
+			--  Cast available all the time
+			-------
+			-- Mana Drain
+			curSpell = hero:spell(self[i], "manaExplosion")
+			if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
+				print(curSpell.name)
+				IssueImmediateOrder(self[i].unit, curSpell.order)
+				self:castSpell(i, curSpell)
+				return true
+			end
+
+			-- Normal Cast
+			--------
+
+			if self[i].lowLife == false and self[i].fleeing == false then
+				-- Frost Nova
+				curSpell = hero:spell(self[i], "manaBomb")
+				if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
+					print(curSpell.name)
+					IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
+					self:castSpell(i, curSpell)
+					return true
+				end
+			end
+		end
+
+		function self:brawlerAI(i)
+			local curSpell
+
+			if self[i].casting == false then end
+		end
+
+		-- Shift Master Spell AI
+		function self:shiftMasterAI(i)
+			local curSpell
+
+			if not self[i].casting then
+
+				-- Custom Intel
+				local g = CreateGroup()
+				local gUnits = CreateGroup()
+				local gIllusions = CreateGroup()
+				local u, uTemp, unitsNearby
+				local illusionsNearby = 0
+
+				-- Find all Nearby Illusions
+				GroupEnumUnitsInRange(g, self[i].x, self[i].y, 600.00, nil)
+
+				GroupAddGroup(g, gIllusions)
+				while true do
+					u = FirstOfGroup(g)
+					if (u == nil) then break end
+
+					if IsUnitIllusion(u) then illusionsNearby = illusionsNearby + 1 end
+					GroupRemoveUnit(g, u)
+				end
+				DestroyGroup(g)
+
+				if self[i].fleeing or self[i].lowLife then
+
+					-- Check if there are illusions Nearby
+					if illusionsNearby > 0 then
+						curSpell = hero:spell(self[i], "switch")
+						if curSpell.castable and curSpell.manaLeft > 0 and not self[i].casting then
+							print(curSpell.name)
+
+							u = GroupPickRandomUnit(gIllusions)
+							GroupEnumUnitsInRange(gUnits, GetUnitX(u), GetUnitY(u), 350, nil)
+							unitsNearby = 0
+							while true do
+								uTemp = FirstOfGroup(g)
+								if (uTemp == nil) then break end
+
+								if not IsUnitAlly(uTemp, GetOwningPlayer(self[i].unit)) then unitsNearby = unitsNearby + 1 end
+
+								GroupRemoveUnit(g, uTemp)
+							end
+							DestroyGroup(g)
+
+							if unitsNearby < self[i].countUnitEnemyClose then
+								IssuePointOrderById(self[i].unit, oid.reveal, GetUnitX(u), GetUnitY(u))
+							end
+						end
+					end
+
+					curSpell = hero:spell(self[i], "shift")
+					if curSpell.castable == true and curSpell.manaLeft > 0 then
+						print(curSpell.name)
+						IssueImmediateOrder(self[i].unit, curSpell.order)
+						self:castSpell(i, curSpell)
+					end
+				end
+
+				-- Normal Cast Spells
+				if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
+
+					-- Shift
+					curSpell = hero:spell(self[i], "shift")
+					if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
+						print(curSpell.name)
+
+						IssueImmediateOrder(self[i].unit, curSpell.order)
+						self:castSpell(i, curSpell)
+					end
+
+					-- Falling Strike
+					curSpell = hero:spell(self[i], "fallingStrike")
+					if (self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00) and curSpell.castable == true and
+									curSpell.manaLeft > 45 then
+						print(curSpell.name)
+
+						if self[i].powerEnemy > 250.00 then
+							IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].unitPowerEnemy), GetUnitY(self[i].unitPowerEnemy))
+						else
+							IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
+						end
+
+						self:castSpell(i, curSpell)
+					end
+
+					-- Shift Storm
+					curSpell = hero:spell(self[i], "shiftStorm")
+					if self[i].countUnitEnemy >= 6 and curSpell.castable == true and curSpell.manaLeft > 30 then
+						print(curSpell.name)
+						IssueImmediateOrder(self[i].unit, curSpell.order)
+						self:castSpell(i, curSpell)
+					end
+				end
+
+				-- Clean up custom Intel
+				DestroyGroup(gIllusions)
+			end
+		end
+
+		function self:tactitionAI(i)
+			local curSpell, u
+
+			-- Iron Defense
+			curSpell = hero:spell(self[i], "ironDefense")
+			if self[i].countUnitEnemy >= 2 and curSpell.castable == true and curSpell.manaLeft > 20 and self[i].lifePercent < 80 and
+							not self[i].casting then
+				print(curSpell.name)
+				IssueImmediateOrder(self[i].unit, curSpell.order)
+				self:castSpell(i, curSpell)
+			end
+
+			if not self[i].fleeing and not self[i].lowLife then
+				-- Bolster
+				curSpell = hero:spell(self[i], "bolster")
+				if self[i].countUnitFriendClose >= 1 and curSpell.castable == true and curSpell.manaLeft > 50 and
+								not self[i].casting then
+					print(curSpell.name)
+					IssueImmediateOrder(self[i].unit, curSpell.order)
+					self:castSpell(i, curSpell)
+				end
+
+				-- Attack!
+				curSpell = hero:spell(self[i], "attack")
+				if CountUnitsInGroup(self[i].heroesEnemy) > 0 and curSpell.castable == true and curSpell.manaLeft > 40 and
+								not self[i].casting then
+
+					print(curSpell.name)
+					u = GroupPickRandomUnit(self[i].heroesEnemy)
+					IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
+					IssueImmediateOrder(self[i].unit, curSpell.order)
+					self:castSpell(i, curSpell)
+				end
+			end
+		end
+
+		function self:timeMageAI(i)
+			if self[i].casting then return end
+
+			local curSpell, x, y, u
+
+			if not self[i].fleeing and not self[i].lowLife then
+
+				-- chrono Atrophy
+				curSpell = hero:spell(self[i], "chronoAtrophy")
+				if self[i].clumpBothNumber >= 7 and curSpell.castable and curSpell.manaLeft > 30 then
+					print(curSpell.name)
+
+					x = GetUnitX(self[i].clumpBoth)
+					y = GetUnitY(self[i].clumpBoth)
+					IssuePointOrder(self[i].unit, curSpell.order, x, y)
+					self:castSpell(i, curSpell)
+					return
+				end
+
+				-- Decay
+				curSpell = hero:spell(self[i], "decay")
+				if CountUnitsInGroup(self[i].heroesEnemies) > 0 and curSpell.castable == true and curSpell.manaLeft > 20 then
+					print(curSpell.name)
+
+					u = GroupPickRandomUnit(self[i].heroesEnemies)
+					IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(u), GetUnitY(u))
+					self:castSpell(i, curSpell)
+					return
+				end
+
+				-- Time Travel
+				curSpell = hero:spell(self[i], "timeTravel")
+				if self[i].clumpBothNumber >= 4 and curSpell.castable and curSpell.manaLeft > 30 then
+					print(curSpell.name)
+
+					x = GetUnitX(self[i].clumpBoth)
+					y = GetUnitY(self[i].clumpBoth)
+					IssuePointOrder(self[i].unit, curSpell.order, x, y)
+					self:castSpell(i, curSpell)
+					return
+				end
+			end
+		end
+
+		return self
+	end
 end
 
 --
 -- Hero Skills / Abilities Class
 -----------------
 function init_heroClass()
-    -- Create Class Definition
-    hero_Class = {}
+	-- Create Class Definition
+	hero_Class = {}
 
-    -- Define new() function
-    hero_Class.new = function()
-        local self = {}
+	-- Define new() function
+	hero_Class.new = function()
+		local self = {}
 
-        self.players = {}
-        for i = 1, 12 do
-            self.players[i] = {
-                picked = false
-            }
-        end
+		self.players = {}
+		for i = 1, 12 do self.players[i] = {picked = false} end
 
-        self.items = {"teleportation", "tank"}
-        self.item = {}
+		self.items = {"teleportation", "tank"}
+		self.item = {}
 
-        self.item.teleportation = {
-            name = "teleportation",
-            properName = "Teleport",
-            four = "I000",
-            id = FourCC("I000"),
-            abilityFour = "A01M",
-            abilityId = FourCC("A01M"),
-            order = "",
-            instant = false,
-            castTime = {6}
-        }
+		self.item.teleportation = {
+			name = "teleportation",
+			properName = "Teleport",
+			four = "I000",
+			id = FourCC("I000"),
+			abilityFour = "A01M",
+			abilityId = FourCC("A01M"),
+			order = "",
+			instant = false,
+			castTime = {6}
+		}
 
-        self.item.tank = {
-            name = "tank",
-            properName = "Tank",
-            four = "I005",
-            id = FourCC("I005"),
-            order = "",
-            instant = true
-        }
+		self.item.tank = {name = "tank", properName = "Tank", four = "I005", id = FourCC("I005"), order = "", instant = true}
 
-        self.item.mage = {
-            name = "mage",
-            properName = "Mage",
-            four = "I006",
-            id = FourCC("I006"),
-            order = "",
-            instant = true
-        }
+		self.item.mage = {name = "mage", properName = "Mage", four = "I006", id = FourCC("I006"), order = "", instant = true}
 
-        self.item[self.item.teleportation.id] = self.item[self.item.teleportation.name]
-        self.item[self.item.tank.id] = self.item[self.item.tank.name]
-        self.item[self.item.mage.id] = self.item[self.item.mage.name]
+		self.item[self.item.teleportation.id] = self.item[self.item.teleportation.name]
+		self.item[self.item.tank.id] = self.item[self.item.tank.name]
+		self.item[self.item.mage.id] = self.item[self.item.mage.name]
 
-        self.heroes = {"brawler", "manaAddict", "shiftMaster", "tactition", "timeMage"}
+		self.heroes = {"brawler", "manaAddict", "shiftMaster", "tactition", "timeMage"}
 
-        self.E001 = "brawler"
-        self.brawler = {}
-        self.brawler.four = "E001"
-        self.brawler.fourAlter = "h00I"
-        self.brawler.id = FourCC(self.brawler.four)
-        self.brawler.idAlter = FourCC(self.brawler.fourAlter)
-        self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
-        self.brawler.upgrades = {}
-        self.brawler.startingSpells = {}
-        self.brawler.permanentSpells = {}
-        self.brawler.startingItems = {"teleportation", "tank"}
-        self.drain = {
-            name = "drain",
-            properName = "Drain",
-            four = "A01Y",
-            id = FourCC("A01Y"),
-            buff = 0,
-            order = "stomp",
-            ult = false,
-            instant = false,
-            castTime = {6, 6, 6, 6, 6, 6}
-        }
-        self.bloodlust = {
-            name = "bloodlust",
-            properName = "Bloodlust",
-            four = "A007",
-            id = FourCC("A007"),
-            buff = 0,
-            order = "stomp",
-            ult = false,
-            instant = true
-        }
-        self.warstomp = {
-            name = "warstomp",
-            properName = "War Stomp",
-            four = "A002",
-            id = FourCC("A002"),
-            buff = 0,
-            order = "stomp",
-            ult = false,
-            instant = true
-        }
-        self.unleashRage = {
-            name = "unleashRage",
-            properName = "Unleassh Rage",
-            four = "A029",
-            id = FourCC("A029"),
-            buff = 0,
-            order = "stomp",
-            ult = true,
-            instant = false,
-            castTime = {6, 6, 6, 6, 6, 6}
-        }
+		self.E001 = "brawler"
+		self.brawler = {}
+		self.brawler.four = "E001"
+		self.brawler.fourAlter = "h00I"
+		self.brawler.id = FourCC(self.brawler.four)
+		self.brawler.idAlter = FourCC(self.brawler.fourAlter)
+		self.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
+		self.brawler.upgrades = {}
+		self.brawler.startingSpells = {}
+		self.brawler.permanentSpells = {}
+		self.brawler.startingItems = {"teleportation", "tank"}
+		self.drain = {
+			name = "drain",
+			properName = "Drain",
+			four = "A01Y",
+			id = FourCC("A01Y"),
+			buff = 0,
+			order = "stomp",
+			ult = false,
+			instant = false,
+			castTime = {6, 6, 6, 6, 6, 6}
+		}
+		self.bloodlust = {
+			name = "bloodlust",
+			properName = "Bloodlust",
+			four = "A007",
+			id = FourCC("A007"),
+			buff = 0,
+			order = "stomp",
+			ult = false,
+			instant = true
+		}
+		self.warstomp = {
+			name = "warstomp",
+			properName = "War Stomp",
+			four = "A002",
+			id = FourCC("A002"),
+			buff = 0,
+			order = "stomp",
+			ult = false,
+			instant = true
+		}
+		self.unleashRage = {
+			name = "unleashRage",
+			properName = "Unleassh Rage",
+			four = "A029",
+			id = FourCC("A029"),
+			buff = 0,
+			order = "stomp",
+			ult = true,
+			instant = false,
+			castTime = {6, 6, 6, 6, 6, 6}
+		}
 
-        self[self.drain.four] = self.drain.name
-        self[self.bloodlust.four] = self.bloodlust.name
-        self[self.warstomp.four] = self.warstomp.name
-        self[self.unleashRage.four] = self.unleashRage.name
+		self[self.drain.four] = self.drain.name
+		self[self.bloodlust.four] = self.bloodlust.name
+		self[self.warstomp.four] = self.warstomp.name
+		self[self.unleashRage.four] = self.unleashRage.name
 
-        self.H009 = "tactition"
-        self.tactition = {}
-        self.tactition.four = "H009"
-        self.tactition.fourAlter = "h00Y"
-        self.tactition.id = FourCC(self.tactition.four)
-        self.tactition.idAlter = FourCC(self.tactition.fourAlter)
-        self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
-        self.tactition.startingSpells = {"raiseBanner"}
-        self.brawler.upgrades = {}
-        self.tactition.permanentSpells = {}
-        self.tactition.startingItems = {"teleportation", "tank"}
-        self.ironDefense = {
-            name = "ironDefense",
-            properName = "Iron Defense",
-            four = "A019",
-            id = FourCC("A019"),
-            buff = 0,
-            order = "roar",
-            ult = false,
-            instant = true
-        }
-        self.raiseBanner = {
-            name = "raiseBanner",
-            properName = "Raise Banner",
-            four = "A01I",
-            id = FourCC("A01I"),
-            buff = 0,
-            order = "healingward",
-            ult = false,
-            instant = true
-        }
-        self.attack = {
-            name = "attack",
-            properName = "Attack!",
-            four = "A01B",
-            id = FourCC("A01B"),
-            buff = 0,
-            order = "fingerofdeath",
-            ult = false,
-            instant = true
-        }
-        self.bolster = {
-            name = "bolster",
-            properName = "Bolster",
-            four = "A01Z",
-            id = FourCC("A01Z"),
-            buff = 0,
-            order = "tranquility",
-            ult = false,
-            instant = true
-        }
-        self.inspire = {
-            name = "inspire",
-            properName = "Inspire",
-            four = "A042",
-            id = FourCC("A042"),
-            buff = 0,
-            order = "channel",
-            ult = true,
-            instant = true
-        }
+		self.H009 = "tactition"
+		self.tactition = {}
+		self.tactition.four = "H009"
+		self.tactition.fourAlter = "h00Y"
+		self.tactition.id = FourCC(self.tactition.four)
+		self.tactition.idAlter = FourCC(self.tactition.fourAlter)
+		self.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
+		self.tactition.startingSpells = {"raiseBanner"}
+		self.brawler.upgrades = {}
+		self.tactition.permanentSpells = {}
+		self.tactition.startingItems = {"teleportation", "tank"}
+		self.ironDefense = {
+			name = "ironDefense",
+			properName = "Iron Defense",
+			four = "A019",
+			id = FourCC("A019"),
+			buff = 0,
+			order = "roar",
+			ult = false,
+			instant = true
+		}
+		self.raiseBanner = {
+			name = "raiseBanner",
+			properName = "Raise Banner",
+			four = "A01I",
+			id = FourCC("A01I"),
+			buff = 0,
+			order = "healingward",
+			ult = false,
+			instant = true
+		}
+		self.attack = {
+			name = "attack",
+			properName = "Attack!",
+			four = "A01B",
+			id = FourCC("A01B"),
+			buff = 0,
+			order = "fingerofdeath",
+			ult = false,
+			instant = true
+		}
+		self.bolster = {
+			name = "bolster",
+			properName = "Bolster",
+			four = "A01Z",
+			id = FourCC("A01Z"),
+			buff = 0,
+			order = "tranquility",
+			ult = false,
+			instant = true
+		}
+		self.inspire = {
+			name = "inspire",
+			properName = "Inspire",
+			four = "A042",
+			id = FourCC("A042"),
+			buff = 0,
+			order = "channel",
+			ult = true,
+			instant = true
+		}
 
-        self[self.ironDefense.four] = self.ironDefense.name
-        self[self.raiseBanner.four] = self.raiseBanner.name
-        self[self.attack.four] = self.attack.name
-        self[self.bolster.four] = self.bolster.name
-        self[self.inspire.four] = self.inspire.name
+		self[self.ironDefense.four] = self.ironDefense.name
+		self[self.raiseBanner.four] = self.raiseBanner.name
+		self[self.attack.four] = self.attack.name
+		self[self.bolster.four] = self.bolster.name
+		self[self.inspire.four] = self.inspire.name
 
-        self.E002 = "shiftMaster"
-        self.shiftMaster = {}
-        self.shiftMaster.four = "E002"
-        self.shiftMaster.fourAlter = "h00Q"
-        self.shiftMaster.id = FourCC(self.shiftMaster.four)
-        self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
-        self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
-        self.shiftMaster.startingSpells = {"shift"}
-        self.brawler.upgrades = {"shadeStrength", "swiftMoves", "swiftAttacks"}
+		self.E002 = "shiftMaster"
+		self.shiftMaster = {}
+		self.shiftMaster.four = "E002"
+		self.shiftMaster.fourAlter = "h00Q"
+		self.shiftMaster.id = FourCC(self.shiftMaster.four)
+		self.shiftMaster.idAlter = FourCC(self.shiftMaster.fourAlter)
+		self.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
+		self.shiftMaster.startingSpells = {"shift"}
+		self.brawler.upgrades = {"shadeStrength", "swiftMoves", "swiftAttacks"}
 
-        self.shiftMaster.permanentSpells = {"felForm", "fallingStrike", "shadeStrength", "swiftMoves", "swiftAttacks",
-                                            "attributeStiftMaster"}
-        self.shiftMaster.startingItems = {"teleportation", "tank"}
-        self.attributeStiftMaster = {
-            name = "attributeStiftMaster",
-            properName = "Attribute Bonus",
-            four = "A031",
-            id = FourCC("A031"),
-            buff = 0,
-            order = "",
-            ult = false
-        }
-        self.shadeStrength = {
-            name = "shadeStrength",
-            properName = "Shade Strength",
-            four = "A037",
-            id = FourCC("A037"),
-            buff = 0,
-            order = "",
-            ult = false
-        }
-        self.swiftMoves = {
-            name = "swiftMoves",
-            properName = "Swift Moves",
-            four = "A056",
-            id = FourCC("A056"),
-            buff = 0,
-            order = "",
-            ult = false
-        }
-        self.swiftAttacks = {
-            name = "swiftAttacks",
-            properName = "Swift Attacks",
-            four = "A030",
-            id = FourCC("A030"),
-            buff = 0,
-            order = "",
-            ult = false
-        }
+		self.shiftMaster.permanentSpells = {
+			"felForm", "fallingStrike", "shadeStrength", "swiftMoves", "swiftAttacks", "attributeStiftMaster"
+		}
+		self.shiftMaster.startingItems = {"teleportation", "tank"}
+		self.attributeStiftMaster = {
+			name = "attributeStiftMaster",
+			properName = "Attribute Bonus",
+			four = "A031",
+			id = FourCC("A031"),
+			buff = 0,
+			order = "",
+			ult = false
+		}
+		self.shadeStrength = {
+			name = "shadeStrength",
+			properName = "Shade Strength",
+			four = "A037",
+			id = FourCC("A037"),
+			buff = 0,
+			order = "",
+			ult = false
+		}
+		self.swiftMoves = {
+			name = "swiftMoves",
+			properName = "Swift Moves",
+			four = "A056",
+			id = FourCC("A056"),
+			buff = 0,
+			order = "",
+			ult = false
+		}
+		self.swiftAttacks = {
+			name = "swiftAttacks",
+			properName = "Swift Attacks",
+			four = "A030",
+			id = FourCC("A030"),
+			buff = 0,
+			order = "",
+			ult = false
+		}
 
-        self.switch = {
-            name = "switch",
-            properName = "Switch",
-            four = "A03U",
-            id = FourCC("A03U"),
-            buff = 0,
-            order = "reveal",
-            ult = false,
-            instant = true
-        }
+		self.switch = {
+			name = "switch",
+			properName = "Switch",
+			four = "A03U",
+			id = FourCC("A03U"),
+			buff = 0,
+			order = "reveal",
+			ult = false,
+			instant = true
+		}
 
-        self.shift = {
-            name = "shift",
-            properName = "Shift",
-            four = "A03T",
-            id = FourCC("A03T"),
-            buff = 0,
-            order = "berserk",
-            ult = false,
-            instant = true
-        }
+		self.shift = {
+			name = "shift",
+			properName = "Shift",
+			four = "A03T",
+			id = FourCC("A03T"),
+			buff = 0,
+			order = "berserk",
+			ult = false,
+			instant = true
+		}
 
-        self.fallingStrike = {
-            name = "fallingStrike",
-            properName = "Falling Strike",
-            four = "A059",
-            id = FourCC("A059"),
-            buff = 0,
-            order = "thunderbolt",
-            ult = false,
-            instant = false,
-            castTime = {1.5, 1.5, 1.5, 1.5, 1.5, 1.5}
-        }
+		self.fallingStrike = {
+			name = "fallingStrike",
+			properName = "Falling Strike",
+			four = "A059",
+			id = FourCC("A059"),
+			buff = 0,
+			order = "thunderbolt",
+			ult = false,
+			instant = false,
+			castTime = {1.5, 1.5, 1.5, 1.5, 1.5, 1.5}
+		}
 
-        self.shiftStorm = {
-            name = "shiftStorm",
-            properName = "Shift Storm",
-            four = "A03C",
-            id = FourCC("A03C"),
-            buff = 0,
-            order = "channel",
-            ult = true,
-            instant = true
-        }
+		self.shiftStorm = {
+			name = "shiftStorm",
+			properName = "Shift Storm",
+			four = "A03C",
+			id = FourCC("A03C"),
+			buff = 0,
+			order = "channel",
+			ult = true,
+			instant = true
+		}
 
-        self.felForm = {
-            name = "felForm",
-            properName = "Fel Form",
-            four = "A02Y",
-            id = FourCC("A02Y"),
-            buff = 0,
-            order = "metamorphosis",
-            ult = true,
-            instant = true
-        }
+		self.felForm = {
+			name = "felForm",
+			properName = "Fel Form",
+			four = "A02Y",
+			id = FourCC("A02Y"),
+			buff = 0,
+			order = "metamorphosis",
+			ult = true,
+			instant = true
+		}
 
-        self[self.switch.four] = self.switch.name
-        self[self.shift.four] = self.shift.name
-        self[self.fallingStrike.four] = self.fallingStrike.name
-        self[self.shiftStorm.four] = self.shiftStorm.name
-        self[self.felForm.four] = self.felForm.name
+		self[self.switch.four] = self.switch.name
+		self[self.shift.four] = self.shift.name
+		self[self.fallingStrike.four] = self.fallingStrike.name
+		self[self.shiftStorm.four] = self.shiftStorm.name
+		self[self.felForm.four] = self.felForm.name
 
-        self.H00R = "manaAddict"
-        self.manaAddict = {}
-        self.manaAddict.four = "H00R"
-        self.manaAddict.fourAlter = "h00B"
-        self.manaAddict.id = FourCC(self.manaAddict.four)
-        self.manaAddict.idAlter = FourCC(self.manaAddict.fourAlter)
-        self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "manaExplosion", "manaBomb", "soulBind"}
-        self.manaAddict.startingSpells = {"manaShield"}
-        self.manaAddict.permanentSpells = {}
-        self.manaAddict.startingItems = {"teleportation", "mage"}
-        self.manaShield = {
-            name = "manaShield",
-            properName = "Mana Shield",
-            four = "A001",
-            id = FourCC("A001"),
-            buff = FourCC("BNms"),
-            order = "manashieldon",
-            ult = false,
-            instant = true
-        }
-        self.manaBomb = {
-            name = "manaBomb",
-            properName = "Mana bomb",
-            four = "A03P",
-            id = FourCC("A03P"),
-            buff = 0,
-            order = "flamestrike",
-            ult = false,
-            instant = true
-        }
-        self.manaExplosion = {
-            name = "manaExplosion",
-            properName = "Mana Explosion",
-            four = "A018",
-            id = FourCC("A018"),
-            buff = 0,
-            order = "thunderclap",
-            ult = false,
-            instant = true
-        }
-        self.soulBind = {
-            name = "soulBind",
-            properName = "Soul Bind",
-            four = "A015",
-            id = FourCC("A015"),
-            buff = FourCC("B00F"),
-            order = "custerrockets",
-            ult = false,
-            instant = true
-        }
-        self.unleashMana = {
-            name = "unleashMana",
-            properName = "Unleash Mana",
-            four = "A03S",
-            id = FourCC("A03S"),
-            buff = 0,
-            order = "starfall",
-            ult = true,
-            instant = false,
-            castTime = {15, 15, 15, 15, 15, 15}
-        }
+		self.H00R = "manaAddict"
+		self.manaAddict = {}
+		self.manaAddict.four = "H00R"
+		self.manaAddict.fourAlter = "h00B"
+		self.manaAddict.id = FourCC(self.manaAddict.four)
+		self.manaAddict.idAlter = FourCC(self.manaAddict.fourAlter)
+		self.manaAddict.spellLearnOrder = {"starfall", "manaShield", "manaExplosion", "manaBomb", "soulBind"}
+		self.manaAddict.startingSpells = {"manaShield"}
+		self.manaAddict.permanentSpells = {}
+		self.manaAddict.startingItems = {"teleportation", "mage"}
+		self.manaShield = {
+			name = "manaShield",
+			properName = "Mana Shield",
+			four = "A001",
+			id = FourCC("A001"),
+			buff = FourCC("BNms"),
+			order = "manashieldon",
+			ult = false,
+			instant = true
+		}
+		self.manaBomb = {
+			name = "manaBomb",
+			properName = "Mana bomb",
+			four = "A03P",
+			id = FourCC("A03P"),
+			buff = 0,
+			order = "flamestrike",
+			ult = false,
+			instant = true
+		}
+		self.manaExplosion = {
+			name = "manaExplosion",
+			properName = "Mana Explosion",
+			four = "A018",
+			id = FourCC("A018"),
+			buff = 0,
+			order = "thunderclap",
+			ult = false,
+			instant = true
+		}
+		self.soulBind = {
+			name = "soulBind",
+			properName = "Soul Bind",
+			four = "A015",
+			id = FourCC("A015"),
+			buff = FourCC("B00F"),
+			order = "custerrockets",
+			ult = false,
+			instant = true
+		}
+		self.unleashMana = {
+			name = "unleashMana",
+			properName = "Unleash Mana",
+			four = "A03S",
+			id = FourCC("A03S"),
+			buff = 0,
+			order = "starfall",
+			ult = true,
+			instant = false,
+			castTime = {15, 15, 15, 15, 15, 15}
+		}
 
-        self[self.manaShield.four] = self.manaShield.name
-        self[self.manaBomb.four] = self.manaBomb.name
-        self[self.manaExplosion.four] = self.manaExplosion.name
-        self[self.soulBind.four] = self.soulBind.name
-        self[self.unleashMana.four] = self.unleashMana.name
+		self[self.manaShield.four] = self.manaShield.name
+		self[self.manaBomb.four] = self.manaBomb.name
+		self[self.manaExplosion.four] = self.manaExplosion.name
+		self[self.soulBind.four] = self.soulBind.name
+		self[self.unleashMana.four] = self.unleashMana.name
 
-        self.H00J = "timeMage"
-        self.timeMage = {}
-        self.timeMage.four = "H00J"
-        self.timeMage.fourAlter = "h00Z"
-        self.timeMage.id = FourCC(self.timeMage.four)
-        self.timeMage.idAlter = FourCC(self.timeMage.fourAlter)
-        self.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
-        self.timeMage.startingSpells = {}
-        self.timeMage.permanentSpells = {}
-        self.timeMage.startingItems = {"teleportation", "mage"}
-        self.chronoAtrophy = {
-            name = "chronoAtrophy",
-            properName = "Chrono Atrophy",
-            four = "A04K",
-            id = FourCC("A04K"),
-            buff = 0,
-            order = "flamestrike",
-            ult = false,
-            instant = true
-        }
-        self.decay = {
-            name = "decay",
-            properName = "Decay",
-            four = "A032",
-            id = FourCC("A032"),
-            buff = 0,
-            order = "shadowstrike",
-            ult = false,
-            instant = true
-        }
-        self.timeTravel = {
-            name = "timeTravel",
-            properName = "Time Travel",
-            four = "A04P",
-            id = FourCC("A04P"),
-            buff = 0,
-            order = "clusterrockets",
-            ult = false,
-            instant = true
-        }
-        self.paradox = {
-            name = "paradox",
-            properName = "Paradox",
-            four = "A04N",
-            id = FourCC("A04N"),
-            buff = 0,
-            order = "tranquility",
-            ult = true,
-            instant = false,
-            castTime = {10, 10, 10}
-        }
+		self.H00J = "timeMage"
+		self.timeMage = {}
+		self.timeMage.four = "H00J"
+		self.timeMage.fourAlter = "h00Z"
+		self.timeMage.id = FourCC(self.timeMage.four)
+		self.timeMage.idAlter = FourCC(self.timeMage.fourAlter)
+		self.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
+		self.timeMage.startingSpells = {}
+		self.timeMage.permanentSpells = {}
+		self.timeMage.startingItems = {"teleportation", "mage"}
+		self.chronoAtrophy = {
+			name = "chronoAtrophy",
+			properName = "Chrono Atrophy",
+			four = "A04K",
+			id = FourCC("A04K"),
+			buff = 0,
+			order = "flamestrike",
+			ult = false,
+			instant = true
+		}
+		self.decay = {
+			name = "decay",
+			properName = "Decay",
+			four = "A032",
+			id = FourCC("A032"),
+			buff = 0,
+			order = "shadowstrike",
+			ult = false,
+			instant = true
+		}
+		self.timeTravel = {
+			name = "timeTravel",
+			properName = "Time Travel",
+			four = "A04P",
+			id = FourCC("A04P"),
+			buff = 0,
+			order = "clusterrockets",
+			ult = false,
+			instant = true
+		}
+		self.paradox = {
+			name = "paradox",
+			properName = "Paradox",
+			four = "A04N",
+			id = FourCC("A04N"),
+			buff = 0,
+			order = "tranquility",
+			ult = true,
+			instant = false,
+			castTime = {10, 10, 10}
+		}
 
-        self[self.chronoAtrophy.four] = self.chronoAtrophy.name
-        self[self.decay.four] = self.decay.name
-        self[self.timeTravel.four] = self.timeTravel.name
-        self[self.paradox.four] = self.paradox.name
+		self[self.chronoAtrophy.four] = self.chronoAtrophy.name
+		self[self.decay.four] = self.decay.name
+		self[self.timeTravel.four] = self.timeTravel.name
+		self[self.paradox.four] = self.paradox.name
 
-        function self:spell(heroUnit, spellName)
-            local spellDetails = self[spellName]
-            spellDetails.level = self:level(heroUnit, spellName)
-            spellDetails.cooldown = self:cooldown(heroUnit, spellName)
-            spellDetails.hasBuff = self:hasBuff(heroUnit, spellName)
-            spellDetails.mana = self:mana(heroUnit, spellName, spellDetails.level)
-            spellDetails.manaLeft = heroUnit.mana - spellDetails.mana
+		function self:spell(heroUnit, spellName)
+			local spellDetails = self[spellName]
+			spellDetails.level = self:level(heroUnit, spellName)
+			spellDetails.cooldown = self:cooldown(heroUnit, spellName)
+			spellDetails.hasBuff = self:hasBuff(heroUnit, spellName)
+			spellDetails.mana = self:mana(heroUnit, spellName, spellDetails.level)
+			spellDetails.manaLeft = heroUnit.mana - spellDetails.mana
 
-            if spellDetails.level > 0 and spellDetails.cooldown == 0 and spellDetails.manaLeft >= 0 then
-                spellDetails.castable = true
-            else
-                spellDetails.castable = false
-            end
+			if spellDetails.level > 0 and spellDetails.cooldown == 0 and spellDetails.manaLeft >= 0 then
+				spellDetails.castable = true
+			else
+				spellDetails.castable = false
+			end
 
-            -- print(spellName .. " : " .. spellDetails.level)
-            -- print("Castable: " .. tostring(spellDetails.castable))
+			-- print(spellName .. " : " .. spellDetails.level)
+			-- print("Castable: " .. tostring(spellDetails.castable))
 
-            return spellDetails
-        end
+			return spellDetails
+		end
 
-        function self:level(heroUnit, spellName)
-            return GetUnitAbilityLevel(heroUnit.unit, self[spellName].id)
-        end
+		function self:level(heroUnit, spellName) return GetUnitAbilityLevel(heroUnit.unit, self[spellName].id) end
 
-        function self:cooldown(heroUnit, spellName)
-            return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, self[spellName].id)
-        end
+		function self:cooldown(heroUnit, spellName)
+			return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, self[spellName].id)
+		end
 
-        function self:mana(heroUnit, spellName, level)
-            return BlzGetUnitAbilityManaCost(heroUnit.unit, self[spellName].id, level)
-        end
+		function self:mana(heroUnit, spellName, level)
+			return BlzGetUnitAbilityManaCost(heroUnit.unit, self[spellName].id, level)
+		end
 
-        function self:hasBuff(heroUnit, spellName)
-            if self[spellName].buff == 0 then
-                return false
-            else
-                return UnitHasBuffBJ(heroUnit.unit, self[spellName].buff)
-            end
-        end
+		function self:hasBuff(heroUnit, spellName)
+			if self[spellName].buff == 0 then
+				return false
+			else
+				return UnitHasBuffBJ(heroUnit.unit, self[spellName].buff)
+			end
+		end
 
-        function self:levelUp(unit)
-            local heroFour = CC2Four(GetUnitTypeId(unit))
-            local heroName = self[heroFour]
-            local heroLevel = GetHeroLevel(unit)
-            local heroPlayer = GetOwningPlayer(unit)
-            local spells = self[heroName]
+		function self:levelUp(unit)
+			local heroFour = CC2Four(GetUnitTypeId(unit))
+			local heroName = self[heroFour]
+			local heroLevel = GetHeroLevel(unit)
+			local heroPlayer = GetOwningPlayer(unit)
+			local spells = self[heroName]
 
-            AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
+			AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
 
-            -- Remove Ability Points
-            if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
-                ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-            elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
-                ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-            elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
-                ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-            end
+			-- Remove Ability Points
+			if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
+				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+			elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
+				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+			elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
+				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+			end
 
-            print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
+			print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
 
-            -- Learn Skill if the Hero is owned by a Computer
-            if GetPlayerController(heroPlayer) == MAP_CONTROL_COMPUTER then
-                local unspentPoints = GetHeroSkillPoints(unit)
+			-- Learn Skill if the Hero is owned by a Computer
+			if GetPlayerController(heroPlayer) == MAP_CONTROL_COMPUTER then
+				local unspentPoints = GetHeroSkillPoints(unit)
 
-                print("Unspent Abilities: " .. unspentPoints)
+				print("Unspent Abilities: " .. unspentPoints)
 
-                if unspentPoints > 0 then
-                    for i = 1, #spells.spellLearnOrder do
-                        SelectHeroSkill(unit, self[spells.spellLearnOrder[i]].id)
+				if unspentPoints > 0 then
+					for i = 1, #spells.spellLearnOrder do
+						SelectHeroSkill(unit, self[spells.spellLearnOrder[i]].id)
 
-                        if GetHeroSkillPoints(unit) == 0 then
-                            return
-                        end
-                    end
-                end
-            end
-        end
+						if GetHeroSkillPoints(unit) == 0 then return end
+					end
+				end
+			end
+		end
 
-        function self:upgrade(unit)
+		function self:upgrade(unit) IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D")) end
 
-            IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D"))
-        end
+		function self:setupHero(unit)
+			local heroFour = CC2Four(GetUnitTypeId(unit))
+			local heroName = self[heroFour]
+			local player = GetOwningPlayer(unit)
+			local playerNumber = GetConvertedPlayerId(player)
+			local heroLevel = GetHeroLevel(unit)
+			local spells = self[heroName]
+			local picked, u, x, y, newAlter
+			local g = CreateGroup()
 
-        function self:setupHero(unit)
-            local heroFour = CC2Four(GetUnitTypeId(unit))
-            local heroName = self[heroFour]
-            local player = GetOwningPlayer(unit)
-            local playerNumber = GetConvertedPlayerId(player)
-            local heroLevel = GetHeroLevel(unit)
-            local spells = self[heroName]
-            local picked, u, x, y, newAlter
-            local g = CreateGroup()
+			self.players[playerNumber] = {}
 
-            self.players[playerNumber] = {}
+			-- Get home Base Location
+			if playerNumber < 7 then
+				x = GetRectCenterX(gg_rct_Left_Castle)
+				y = GetRectCenterY(gg_rct_Left_Castle)
+			else
+				x = GetRectCenterX(gg_rct_Right_Castle)
+				y = GetRectCenterY(gg_rct_Right_Castle)
+			end
 
-            -- Get home Base Location
-            if playerNumber < 7 then
-                x = GetRectCenterX(gg_rct_Left_Castle)
-                y = GetRectCenterY(gg_rct_Left_Castle)
-            else
-                x = GetRectCenterX(gg_rct_Right_Castle)
-                y = GetRectCenterY(gg_rct_Right_Castle)
-            end
+			-- Move hero to home base
+			SetUnitPosition(unit, x, y)
 
-            -- Move hero to home base
-            SetUnitPosition(unit, x, y)
+			-- Give the hero the required Skill points for the spells
+			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
+			for i = 1, #spells.startingSpells do
+				picked = self[spells.startingSpells[i]]
 
-            -- Give the hero the required Skill points for the spells
-            ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
-            for i = 1, #spells.startingSpells do
-                picked = self[spells.startingSpells[i]]
+				-- Have the hero learn the spell
+				SelectHeroSkill(unit, picked.id)
+			end
 
-                -- Have the hero learn the spell
-                SelectHeroSkill(unit, picked.id)
-            end
+			-- Add the Permanent Spells for the Hero
+			for i = 1, #spells.permanentSpells do
+				picked = self[spells.permanentSpells[i]]
 
-            -- Add the Permanent Spells for the Hero
-            for i = 1, #spells.permanentSpells do
-                picked = self[spells.permanentSpells[i]]
+				-- Make the Spell Permanent
+				UnitMakeAbilityPermanent(unit, true, picked.id)
+			end
 
-                -- Make the Spell Permanent
-                UnitMakeAbilityPermanent(unit, true, picked.id)
-            end
+			-- Give the Hero starting Items
+			for i = 1, #spells.startingItems do
+				picked = self.item[spells.startingItems[i]]
 
-            -- Give the Hero starting Items
-            for i = 1, #spells.startingItems do
-                picked = self.item[spells.startingItems[i]]
+				-- Make the Spell Permanent
+				UnitAddItemById(unit, picked.id)
+			end
 
-                -- Make the Spell Permanent
-                UnitAddItemById(unit, picked.id)
-            end
+			-- Set up Alter
+			g = GetUnitsOfPlayerAndTypeId(player, FourCC("halt"))
+			while true do
+				u = FirstOfGroup(g)
+				if u == nil then break end
 
-            -- Set up Alter
-            g = GetUnitsOfPlayerAndTypeId(player, FourCC("halt"))
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
+				-- Replace Unit Alter
+				ReplaceUnitBJ(u, self[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
+				newAlter = GetLastReplacedUnitBJ()
+				GroupRemoveUnit(g, u)
+			end
+			DestroyGroup(g)
 
-                -- Replace Unit Alter
-                ReplaceUnitBJ(u, self[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
-                newAlter = GetLastReplacedUnitBJ()
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
+			self.players[playerNumber].picked = true
+			self.players[playerNumber].cameraLock = false
+			self.players[playerNumber].alter = newAlter
+			self.players[playerNumber].hero = unit
+		end
 
-            self.players[playerNumber].picked = true
-            self.players[playerNumber].cameraLock = false
-            self.players[playerNumber].alter = newAlter
-            self.players[playerNumber].hero = unit
-        end
-
-        return self
-    end
+		return self
+	end
 end
 
 --
 -- Unit Indexer Class
 -----------------
 function init_indexerClass()
-    indexer_Class = {}
+	indexer_Class = {}
 
-    indexer_Class.new = function()
-        local self = {}
+	indexer_Class.new = function()
+		local self = {}
 
-        self.data = {}
+		self.data = {}
 
-        function self:add(unit, order)
-            order = order or "attack"
-            local unitId = GetHandleId(unit)
+		function self:add(unit, order)
+			order = order or "attack"
+			local unitId = GetHandleId(unit)
 
-            if self.data[unitId] == nil then
-                local x = GetUnitX(unit)
-                local y = GetUnitY(unit)
+			if self.data[unitId] == nil then
+				local x = GetUnitX(unit)
+				local y = GetUnitY(unit)
 
-                self.data[unitId] = {}
-                self.data[unitId] = {
-                    xSpawn = x,
-                    ySpawn = y,
-                    order = order,
-                    unit = unit,
-                    sfx = {}
-                }
-            end
-        end
+				self.data[unitId] = {}
+				self.data[unitId] = {xSpawn = x, ySpawn = y, order = order, unit = unit, sfx = {}}
+			end
+		end
 
-        function self:updateEnd(unit, x, y)
-            local unitId = GetHandleId(unit)
-            self.data[unitId].xEnd = x
-            self.data[unitId].yEnd = y
-        end
+		function self:updateEnd(unit, x, y)
+			local unitId = GetHandleId(unit)
+			self.data[unitId].xEnd = x
+			self.data[unitId].yEnd = y
+		end
 
-        function self:order(unit, order)
+		function self:order(unit, order)
 
-            local unitId = GetHandleId(unit)
-            local alliedForce = IsUnitInForce(unit, udg_PLAYERGRPallied)
-            local p
-            local x = self.data[unitId].xEnd
-            local y = self.data[unitId].yEnd
-            order = order or self.data[unitId].order
+			local unitId = GetHandleId(unit)
+			local alliedForce = IsUnitInForce(unit, udg_PLAYERGRPallied)
+			local p
+			local x = self.data[unitId].xEnd
+			local y = self.data[unitId].yEnd
+			order = order or self.data[unitId].order
 
-            if self.data[unitId].xEnd == nil or self.data[unitId].yEnd == nil then
+			if self.data[unitId].xEnd == nil or self.data[unitId].yEnd == nil then
 
-                if RectContainsUnit(gg_rct_Big_Top_Left, unit) or RectContainsUnit(gg_rct_Big_Top_Left_Center, unit) or
-                    RectContainsUnit(gg_rct_Big_Top_Right_Center, unit) or RectContainsUnit(gg_rct_Big_Top_Right, unit) then
+				if RectContainsUnit(gg_rct_Big_Top_Left, unit) or RectContainsUnit(gg_rct_Big_Top_Left_Center, unit) or
+								RectContainsUnit(gg_rct_Big_Top_Right_Center, unit) or RectContainsUnit(gg_rct_Big_Top_Right, unit) then
 
-                    if alliedForce then
-                        p = GetRandomLocInRect(gg_rct_Right_Start_Top)
-                    else
-                        p = GetRandomLocInRect(gg_rct_Left_Start_Top)
-                    end
+					if alliedForce then
+						p = GetRandomLocInRect(gg_rct_Right_Start_Top)
+					else
+						p = GetRandomLocInRect(gg_rct_Left_Start_Top)
+					end
 
-                elseif RectContainsUnit(gg_rct_Big_Middle_Left, unit) or
-                    RectContainsUnit(gg_rct_Big_Middle_Left_Center, unit) or
-                    RectContainsUnit(gg_rct_Big_Middle_Right_Center, unit) or
-                    RectContainsUnit(gg_rct_Big_Middle_Right, unit) then
+				elseif RectContainsUnit(gg_rct_Big_Middle_Left, unit) or RectContainsUnit(gg_rct_Big_Middle_Left_Center, unit) or
+								RectContainsUnit(gg_rct_Big_Middle_Right_Center, unit) or RectContainsUnit(gg_rct_Big_Middle_Right, unit) then
 
-                    if alliedForce then
-                        p = GetRandomLocInRect(gg_rct_Right_Start)
-                    else
-                        p = GetRandomLocInRect(gg_rct_Left_Start)
-                    end
+					if alliedForce then
+						p = GetRandomLocInRect(gg_rct_Right_Start)
+					else
+						p = GetRandomLocInRect(gg_rct_Left_Start)
+					end
 
-                else
+				else
 
-                    if alliedForce then
-                        p = GetRandomLocInRect(gg_rct_Right_Start_Bottom)
-                    else
-                        p = GetRandomLocInRect(gg_rct_Left_Start_Bottom)
-                    end
-                end
+					if alliedForce then
+						p = GetRandomLocInRect(gg_rct_Right_Start_Bottom)
+					else
+						p = GetRandomLocInRect(gg_rct_Left_Start_Bottom)
+					end
+				end
 
-                x = GetLocationX(p)
-                y = GetLocationY(p)
-                RemoveLocation(p)
+				x = GetLocationX(p)
+				y = GetLocationY(p)
+				RemoveLocation(p)
 
-                self.data[unitId].xEnd = x
-                self.data[unitId].yEnd = y
-            end
+				self.data[unitId].xEnd = x
+				self.data[unitId].yEnd = y
+			end
 
-            -- Issue Order
-            IssuePointOrder(unit, order, x, y)
-        end
+			-- Issue Order
+			IssuePointOrder(unit, order, x, y)
+		end
 
-        function self:addKey(unit, key, value)
-            value = value or 0
-            local unitId = GetHandleId(unit)
-            self.data[unitId][key] = value
-        end
+		function self:addKey(unit, key, value)
+			value = value or 0
+			local unitId = GetHandleId(unit)
+			self.data[unitId][key] = value
+		end
 
-        function self:getKey(unit, key)
-            local unitId = GetHandleId(unit)
-            return self.data[unitId][key]
-        end
+		function self:getKey(unit, key)
+			local unitId = GetHandleId(unit)
+			return self.data[unitId][key]
+		end
 
-        function self:get(unit)
-            local unitId = GetHandleId(unit)
-            return self.data[unitId]
-        end
+		function self:get(unit)
+			local unitId = GetHandleId(unit)
+			return self.data[unitId]
+		end
 
-        function self:set(unit, data)
-            local unitId = GetHandleId(unit)
-            self.data[unitId] = data
-        end
+		function self:set(unit, data)
+			local unitId = GetHandleId(unit)
+			self.data[unitId] = data
+		end
 
-        function self:remove(unit)
-            self.data[GetHandleId(unit)] = nil
-            return true
-        end
+		function self:remove(unit)
+			self.data[GetHandleId(unit)] = nil
+			return true
+		end
 
-        return self
-    end
+		return self
+	end
 end
 
 --
 -- Spawn Class
 -----------------
 function init_spawnClass()
-    -- Create the table for the class definition
-    spawn_Class = {}
+	-- Create the table for the class definition
+	spawn_Class = {}
 
-    -- Define the new() function
-    spawn_Class.new = function()
-        local self = {}
+	-- Define the new() function
+	spawn_Class.new = function()
+		local self = {}
 
-        self.bases = {}
-        self.baseCount = 0
-        self.timer = CreateTimer()
-        self.cycleInterval = 5.00
-        self.baseInterval = 0.5
-        self.waveInterval = 28.00
+		self.bases = {}
+		self.baseCount = 0
+		self.timer = CreateTimer()
+		self.cycleInterval = 5.00
+		self.baseInterval = 0.5
+		self.waveInterval = 28.00
 
-        self.creepLevel = 1
-        self.creepLevelTimer = CreateTimer()
+		self.creepLevel = 1
+		self.creepLevelTimer = CreateTimer()
 
-        self.wave = 1
-        self.base = ""
-        self.baseI = 0
-        self.indexer = ""
-        self.alliedBaseAlive = false
-        self.fedBaseAlive = false
-        self.unitInWave = false
-        self.unitInLevel = true
-        self.numOfUnits = 0
-        self.unitType = ""
+		self.wave = 1
+		self.base = ""
+		self.baseI = 0
+		self.indexer = ""
+		self.alliedBaseAlive = false
+		self.fedBaseAlive = false
+		self.unitInWave = false
+		self.unitInLevel = true
+		self.numOfUnits = 0
+		self.unitType = ""
 
-        function self:addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition)
-            -- Add all of the info the base and add the base name to the base list
-            self[baseName] = {
-                allied = {
-                    startPoint = alliedStart,
-                    endPoint = alliedEnd,
-                    condition = alliedCondition
-                },
-                fed = {
-                    startPoint = fedStart,
-                    endPoint = fedEnd,
-                    condition = fedCondition
-                },
-                units = {}
-            }
-            table.insert(self.bases, baseName)
-            self.baseCount = self.baseCount + 1
-        end
+		function self:addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition)
+			-- Add all of the info the base and add the base name to the base list
+			self[baseName] = {
+				allied = {startPoint = alliedStart, endPoint = alliedEnd, condition = alliedCondition},
+				fed = {startPoint = fedStart, endPoint = fedEnd, condition = fedCondition},
+				units = {}
+			}
+			table.insert(self.bases, baseName)
+			self.baseCount = self.baseCount + 1
+		end
 
-        function self:addUnit(baseName, unitType, numOfUnits, waves, levelStart, levelEnd)
-            table.insert(self[baseName].units, {
-                unitType = unitType,
-                numOfUnits = numOfUnits,
-                waves = waves,
-                level = {levelStart, levelEnd}
-            })
-        end
+		function self:addUnit(baseName, unitType, numOfUnits, waves, levelStart, levelEnd)
+			table.insert(self[baseName].units,
+			             {unitType = unitType, numOfUnits = numOfUnits, waves = waves, level = {levelStart, levelEnd}})
+		end
 
-        function self:unitCount()
-            return #self[self.base].units
-        end
+		function self:unitCount() return #self[self.base].units end
 
-        function self:isUnitInWave()
-            local waves = self[self.base].units[self.indexer].waves
+		function self:isUnitInWave()
+			local waves = self[self.base].units[self.indexer].waves
 
-            for index, value in ipairs(waves) do
-                if value == self.wave then
-                    self.unitInWave = true
-                    return true
-                end
-            end
+			for index, value in ipairs(waves) do
+				if value == self.wave then
+					self.unitInWave = true
+					return true
+				end
+			end
 
-            self.unitInWave = false
-            return true
-        end
+			self.unitInWave = false
+			return true
+		end
 
-        function self:isUnitInLevel()
-            local levelStart = self[self.base].units[self.indexer].level[1]
-            local levelEnd = self[self.base].units[self.indexer].level[2]
+		function self:isUnitInLevel()
+			local levelStart = self[self.base].units[self.indexer].level[1]
+			local levelEnd = self[self.base].units[self.indexer].level[2]
 
-            if (self.creepLevel >= levelStart and self.creepLevel <= levelEnd) then
-                self.unitInLevel = true
-            else
-                self.unitInLevel = false
-            end
-        end
+			if (self.creepLevel >= levelStart and self.creepLevel <= levelEnd) then
+				self.unitInLevel = true
+			else
+				self.unitInLevel = false
+			end
+		end
 
-        function self:baseAlive()
-            self.alliedBaseAlive = IsUnitAliveBJ(self[self.base].allied.condition)
-            self.fedBaseAlive = IsUnitAliveBJ(self[self.base].fed.condition)
-        end
+		function self:baseAlive()
+			self.alliedBaseAlive = IsUnitAliveBJ(self[self.base].allied.condition)
+			self.fedBaseAlive = IsUnitAliveBJ(self[self.base].fed.condition)
+		end
 
-        function self:checkSpawnUnit()
-            self:baseAlive(self.base)
-            self:isUnitInWave()
-            self:isUnitInLevel()
-            self.numOfUnits = self[self.base].units[self.indexer].numOfUnits
-            self.unitType = self[self.base].units[self.indexer].unitType
-        end
+		function self:checkSpawnUnit()
+			self:baseAlive(self.base)
+			self:isUnitInWave()
+			self:isUnitInLevel()
+			self.numOfUnits = self[self.base].units[self.indexer].numOfUnits
+			self.unitType = self[self.base].units[self.indexer].unitType
+		end
 
-        function self:spawnUnits()
-            local pStart, xStart, yStart, pDest, xDest, yDest, spawnedUnit
+		function self:spawnUnits()
+			local pStart, xStart, yStart, pDest, xDest, yDest, spawnedUnit
 
-            for i = 1, self:unitCount(self.base) do
-                self.indexer = i
-                self:checkSpawnUnit()
+			for i = 1, self:unitCount(self.base) do
+				self.indexer = i
+				self:checkSpawnUnit()
 
-                if self.unitInWave and self.unitInLevel then
+				if self.unitInWave and self.unitInLevel then
 
-                    if self.alliedBaseAlive then
-                        for n = 1, self.numOfUnits do
+					if self.alliedBaseAlive then
+						for n = 1, self.numOfUnits do
 
-                            xStart, yStart = loc:getRandomXY(self[self.base].allied.startPoint)
-                            xDest, yDest = loc:getRandomXY(self[self.base].allied.endPoint)
+							xStart, yStart = loc:getRandomXY(self[self.base].allied.startPoint)
+							xDest, yDest = loc:getRandomXY(self[self.base].allied.endPoint)
 
-                            spawnedUnit = CreateUnit(Player(GetRandomInt(18, 20)), FourCC(self.unitType), xStart,
-                                              yStart, bj_UNIT_FACING)
+							spawnedUnit = CreateUnit(Player(GetRandomInt(18, 20)), FourCC(self.unitType), xStart, yStart, bj_UNIT_FACING)
 
-                            indexer:add(spawnedUnit)
-                            indexer:updateEnd(spawnedUnit, xDest, yDest)
-                            indexer:order(spawnedUnit)
+							indexer:add(spawnedUnit)
+							indexer:updateEnd(spawnedUnit, xDest, yDest)
+							indexer:order(spawnedUnit)
 
-                        end
-                    end
+						end
+					end
 
-                    if self.fedBaseAlive then
-                        for n = 1, self.numOfUnits do
-                            xStart, yStart = loc:getRandomXY(self[self.base].fed.startPoint)
-                            xDest, yDest = loc:getRandomXY(self[self.base].fed.endPoint)
+					if self.fedBaseAlive then
+						for n = 1, self.numOfUnits do
+							xStart, yStart = loc:getRandomXY(self[self.base].fed.startPoint)
+							xDest, yDest = loc:getRandomXY(self[self.base].fed.endPoint)
 
-                            spawnedUnit = CreateUnit(Player(GetRandomInt(21, 23)), FourCC(self.unitType), xStart,
-                                              yStart, bj_UNIT_FACING)
+							spawnedUnit = CreateUnit(Player(GetRandomInt(21, 23)), FourCC(self.unitType), xStart, yStart, bj_UNIT_FACING)
 
-                            indexer:add(spawnedUnit)
-                            indexer:updateEnd(spawnedUnit, xDest, yDest)
-                            indexer:order(spawnedUnit)
-                        end
-                    end
-                end
-            end
-        end
+							indexer:add(spawnedUnit)
+							indexer:updateEnd(spawnedUnit, xDest, yDest)
+							indexer:order(spawnedUnit)
+						end
+					end
+				end
+			end
+		end
 
-        -- Run the Spawn Loop
-        function self:loopSpawn()
-            -- Iterate everything up
-            self.baseI = self.baseI + 1
+		-- Run the Spawn Loop
+		function self:loopSpawn()
+			-- Iterate everything up
+			self.baseI = self.baseI + 1
 
-            if (self.baseI > self.baseCount) then
-                self.baseI = 0
-                self.wave = self.wave + 1
+			if (self.baseI > self.baseCount) then
+				self.baseI = 0
+				self.wave = self.wave + 1
 
-                if self.wave > 10 then
-                    self.wave = 1
-                    StartTimerBJ(self.timer, false, self.cycleInterval)
-                else
-                    StartTimerBJ(self.timer, false, self.waveInterval)
-                end
+				if self.wave > 10 then
+					self.wave = 1
+					StartTimerBJ(self.timer, false, self.cycleInterval)
+				else
+					StartTimerBJ(self.timer, false, self.waveInterval)
+				end
 
-                return true
-            else
-                StartTimerBJ(self.timer, false, self.baseInterval)
-            end
+				return true
+			else
+				StartTimerBJ(self.timer, false, self.baseInterval)
+			end
 
-            -- Find the Base to Spawn Next
-            self.base = self.bases[self.baseI]
+			-- Find the Base to Spawn Next
+			self.base = self.bases[self.baseI]
 
-            -- Spawn the Units at the selected Base
-            DisableTrigger(Trig_UnitEntersMap)
-            self:spawnUnits()
-            EnableTrigger(Trig_UnitEntersMap)
-        end
+			-- Spawn the Units at the selected Base
+			DisableTrigger(Trig_UnitEntersMap)
+			self:spawnUnits()
+			EnableTrigger(Trig_UnitEntersMap)
+		end
 
-        function self:upgradeCreeps()
-            self.creepLevel = self.creepLevel + 1
+		function self:upgradeCreeps()
+			self.creepLevel = self.creepLevel + 1
 
-            if self.creepLevel >= 12 then
-                DisableTrigger(self.Trig_upgradeCreeps)
-            else
-                StartTimerBJ(self.creepLevelTimer, false, (50 + (10 * self.creepLevel)))
-            end
+			if self.creepLevel >= 12 then
+				DisableTrigger(self.Trig_upgradeCreeps)
+			else
+				StartTimerBJ(self.creepLevelTimer, false, (50 + (10 * self.creepLevel)))
+			end
 
-            DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)
-        end
+			DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)
+		end
 
-        -- Start the Spawn Loop
-        function self:startSpawn()
-            -- Start Spawn Timer
-            StartTimerBJ(self.timer, false, 1)
-            StartTimerBJ(self.creepLevelTimer, false, 90)
+		-- Start the Spawn Loop
+		function self:startSpawn()
+			-- Start Spawn Timer
+			StartTimerBJ(self.timer, false, 1)
+			StartTimerBJ(self.creepLevelTimer, false, 90)
 
-            TriggerRegisterTimerExpireEvent(Trig_spawnLoop, self.timer)
-            TriggerRegisterTimerExpireEvent(Trig_upgradeCreeps, self.creepLevelTimer)
-        end
+			TriggerRegisterTimerExpireEvent(Trig_spawnLoop, self.timer)
+			TriggerRegisterTimerExpireEvent(Trig_upgradeCreeps, self.creepLevelTimer)
+		end
 
-        --
-        -- Class Triggers
-        --
+		--
+		-- Class Triggers
+		--
 
-        return self
-    end
+		return self
+	end
 end
 
 function init_baseClass()
 
-    base = {}
+	base = {}
 
-    base.all = {
-        g = CreateGroup(),
-        unitsTotal = 0,
-        unitsAlive = 0
-    }
+	base.all = {g = CreateGroup(), unitsTotal = 0, unitsAlive = 0}
 
-    base.allied = {
-        unitsTotal = 0,
-        unitsAlive = 0,
-        advantage = 0,
-        gTeleport = CreateGroup(),
-        gDanger = CreateGroup(),
-        gHealing = CreateGroup()
-    }
-    base.federation = {
-        unitsTotal = 0,
-        unitsAlive = 0,
-        advantage = 0,
-        gTeleport = CreateGroup(),
-        gDanger = CreateGroup(),
-        gHealing = CreateGroup()
-    }
+	base.allied = {
+		unitsTotal = 0,
+		unitsAlive = 0,
+		advantage = 0,
+		gTeleport = CreateGroup(),
+		gDanger = CreateGroup(),
+		gHealing = CreateGroup()
+	}
+	base.federation = {
+		unitsTotal = 0,
+		unitsAlive = 0,
+		advantage = 0,
+		gTeleport = CreateGroup(),
+		gDanger = CreateGroup(),
+		gHealing = CreateGroup()
+	}
 
-    base.top = {
-        allied = {
-            g = CreateGroup(),
-            unitsTotal = 0,
-            unitsAlive = 0,
-            advantage = 0
-        },
-        federation = {
-            g = CreateGroup(),
-            unitsTotal = 0,
-            unitsAlive = 0,
-            advantage = 0
-        }
-    }
-    base.middle = {
-        allied = {
-            g = CreateGroup(),
-            unitsTotal = 0,
-            unitsAlive = 0,
-            advantage = 0
-        },
-        federation = {
-            g = CreateGroup(),
-            unitsTotal = 0,
-            unitsAlive = 0,
-            advantage = 0
-        }
-    }
-    base.bottom = {
-        allied = {
-            g = CreateGroup(),
-            unitsTotal = 0,
-            unitsAlive = 0,
-            advantage = 0
-        },
-        federation = {
-            g = CreateGroup(),
-            unitsTotal = 0,
-            unitsAlive = 0,
-            advantage = 0
-        }
-    }
+	base.top = {
+		allied = {g = CreateGroup(), unitsTotal = 0, unitsAlive = 0, advantage = 0},
+		federation = {g = CreateGroup(), unitsTotal = 0, unitsAlive = 0, advantage = 0}
+	}
+	base.middle = {
+		allied = {g = CreateGroup(), unitsTotal = 0, unitsAlive = 0, advantage = 0},
+		federation = {g = CreateGroup(), unitsTotal = 0, unitsAlive = 0, advantage = 0}
+	}
+	base.bottom = {
+		allied = {g = CreateGroup(), unitsTotal = 0, unitsAlive = 0, advantage = 0},
+		federation = {g = CreateGroup(), unitsTotal = 0, unitsAlive = 0, advantage = 0}
+	}
 
-    function base.add(unit, importance, mainBase, update, teleport, healing)
+	function base.add(unit, importance, mainBase, update, teleport, healing)
 
-        local teamNumber, regionName, teamName, allied, federation
-        local handleId = GetHandleId(unit)
-        local x = GetUnitX(unit)
-        local y = GetUnitY(unit)
-        local name = GetUnitName(unit)
-        local player = GetOwningPlayer(unit)
-        local lifePercent = GetUnitLifePercent(unit)
-        local mana = GetUnitState(unit, UNIT_STATE_MANA)
-        local idType = GetUnitTypeId(unit)
-        local fourType = CC2Four(idType)
+		local teamNumber, regionName, teamName, allied, federation
+		local handleId = GetHandleId(unit)
+		local x = GetUnitX(unit)
+		local y = GetUnitY(unit)
+		local name = GetUnitName(unit)
+		local player = GetOwningPlayer(unit)
+		local lifePercent = GetUnitLifePercent(unit)
+		local mana = GetUnitState(unit, UNIT_STATE_MANA)
+		local idType = GetUnitTypeId(unit)
+		local fourType = CC2Four(idType)
 
-        if IsPlayerInForce(player, udg_PLAYERGRPallied) then
-            teamNumber = 1
-            teamName = "allied"
-        else
-            teamNumber = 2
-            teamName = "federation"
-        end
+		if IsPlayerInForce(player, udg_PLAYERGRPallied) then
+			teamNumber = 1
+			teamName = "allied"
+		else
+			teamNumber = 2
+			teamName = "federation"
+		end
 
-        -- Add to Region Specific Buildings
-        if IsUnitInRegion(bottomRegion, unit) then
-            regionName = "bottom"
-        elseif IsUnitInRegion(middleRegion, unit) then
-            regionName = "middle"
-        elseif IsUnitInRegion(topRegion, unit) then
-            regionName = "top"
-        end
+		-- Add to Region Specific Buildings
+		if IsUnitInRegion(bottomRegion, unit) then
+			regionName = "bottom"
+		elseif IsUnitInRegion(middleRegion, unit) then
+			regionName = "middle"
+		elseif IsUnitInRegion(topRegion, unit) then
+			regionName = "top"
+		end
 
-        if update then
-            -- Add to ALL Unit Group
-            GroupAddUnit(base.all.g, unit)
+		if update then
+			-- Add to ALL Unit Group
+			GroupAddUnit(base.all.g, unit)
 
-            -- Add to HEALING Unit Group
-            -- if healing then
-            GroupAddUnit(base[teamName].gHealing, unit)
-            -- end
+			-- Add to HEALING Unit Group
+			-- if healing then
+			GroupAddUnit(base[teamName].gHealing, unit)
+			-- end
 
-            -- Add to REGION Unit Group
-            GroupAddUnit(base[regionName][teamName].g, unit)
-        end
+			-- Add to REGION Unit Group
+			GroupAddUnit(base[regionName][teamName].g, unit)
+		end
 
-        -- Add to TELEPORT Unit Group
-        if teleport then
-            GroupAddUnit(base[teamName].gTeleport, unit)
-        end
+		-- Add to TELEPORT Unit Group
+		if teleport then GroupAddUnit(base[teamName].gTeleport, unit) end
 
-        -- Set Importance
-        base[regionName][teamName].unitsTotal = base[regionName][teamName].unitsTotal + importance
-        base[regionName][teamName].unitsAlive = base[regionName][teamName].unitsAlive + importance
-        base[teamName].unitsTotal = base[teamName].unitsTotal + importance
-        base[teamName].unitsAlive = base[teamName].unitsAlive + importance
-        base.all.unitsTotal = base.all.unitsTotal + importance
-        base.all.unitsAlive = base.all.unitsAlive + importance
+		-- Set Importance
+		base[regionName][teamName].unitsTotal = base[regionName][teamName].unitsTotal + importance
+		base[regionName][teamName].unitsAlive = base[regionName][teamName].unitsAlive + importance
+		base[teamName].unitsTotal = base[teamName].unitsTotal + importance
+		base[teamName].unitsAlive = base[teamName].unitsAlive + importance
+		base.all.unitsTotal = base.all.unitsTotal + importance
+		base.all.unitsAlive = base.all.unitsAlive + importance
 
-        -- Get TEAM Advantage
-        allied = base.allied.unitsAlive / base.allied.unitsTotal
-        federation = base.federation.unitsAlive / base.federation.unitsTotal
-        base.allied.advantage = allied - federation
-        base.federation.advantage = federation - allied
+		-- Get TEAM Advantage
+		allied = base.allied.unitsAlive / base.allied.unitsTotal
+		federation = base.federation.unitsAlive / base.federation.unitsTotal
+		base.allied.advantage = allied - federation
+		base.federation.advantage = federation - allied
 
-        -- Get REGION Advantage
-        allied = (base[regionName].allied.unitsAlive / base[regionName].allied.unitsTotal) * 100
-        federation = (base[regionName].federation.unitsAlive / base[regionName].federation.unitsTotal) * 100
+		-- Get REGION Advantage
+		allied = (base[regionName].allied.unitsAlive / base[regionName].allied.unitsTotal) * 100
+		federation = (base[regionName].federation.unitsAlive / base[regionName].federation.unitsTotal) * 100
 
-        base[regionName].allied.advantage = allied - federation
-        base[regionName].federation.advantage = federation - allied
+		base[regionName].allied.advantage = allied - federation
+		base[regionName].federation.advantage = federation - allied
 
-        -- Add Building to Table
-        base[handleId] = {
-            x = x,
-            y = y,
-            name = name,
-            unit = unit,
-            importance = importance,
-            lifePercent = lifePercent,
-            unitsFriendly = 0,
-            unitsEnemy = 0,
-            unitsCount = 0,
-            danger = 0,
-            update = update,
-            idType = idType,
-            fourType = fourType,
-            handleId = handleId,
-            mainBase = mainBase,
-            regionName = regionName,
-            teamName = teamName,
-            mana = mana
-        }
-    end
+		-- Add Building to Table
+		base[handleId] = {
+			x = x,
+			y = y,
+			name = name,
+			unit = unit,
+			importance = importance,
+			lifePercent = lifePercent,
+			unitsFriendly = 0,
+			unitsEnemy = 0,
+			unitsCount = 0,
+			danger = 0,
+			update = update,
+			idType = idType,
+			fourType = fourType,
+			handleId = handleId,
+			mainBase = mainBase,
+			regionName = regionName,
+			teamName = teamName,
+			mana = mana
+		}
+	end
 
-    function base.update(unit)
-        local u, heroLevel
+	function base.update(unit)
+		local u, heroLevel
 
-        local unitsFriendly = 0
-        local unitsEnemy = 0
-        local unitsCount = 0
+		local unitsFriendly = 0
+		local unitsEnemy = 0
+		local unitsCount = 0
 
-        local handleId = GetHandleId(unit)
+		local handleId = GetHandleId(unit)
 
-        if base[handleId].update == false then
-            return true
-        end
+		if base[handleId].update == false then return true end
 
-        local l = Location(base[handleId].x, base[handleId].y)
-        local teamName = base[handleId].teamName
+		local l = Location(base[handleId].x, base[handleId].y)
+		local teamName = base[handleId].teamName
 
-        local g = CreateGroup()
-        g = GetUnitsInRangeOfLocAll(900, l)
-        while true do
-            u = FirstOfGroup(g)
-            if u == nil then
-                break
-            end
+		local g = CreateGroup()
+		g = GetUnitsInRangeOfLocAll(900, l)
+		while true do
+			u = FirstOfGroup(g)
+			if u == nil then break end
 
-            -- Calculate Danger Levels
-            if IsUnitAliveBJ(u) then
-                if IsUnitAlly(u, GetOwningPlayer(unit)) then
-                    if IsUnitType(u, UNIT_TYPE_HERO) then
-                        unitsFriendly = unitsFriendly + 3 * GetHeroLevel(u)
-                    else
-                        unitsFriendly = unitsFriendly + GetUnitLevel(u)
-                    end
-                else
-                    if IsUnitType(u, UNIT_TYPE_HERO) then
-                        unitsEnemy = unitsEnemy + 3 * GetHeroLevel(u)
-                    else
-                        unitsEnemy = unitsEnemy + GetUnitLevel(u)
-                    end
-                end
-            end
+			-- Calculate Danger Levels
+			if IsUnitAliveBJ(u) then
+				if IsUnitAlly(u, GetOwningPlayer(unit)) then
+					if IsUnitType(u, UNIT_TYPE_HERO) then
+						unitsFriendly = unitsFriendly + 3 * GetHeroLevel(u)
+					else
+						unitsFriendly = unitsFriendly + GetUnitLevel(u)
+					end
+				else
+					if IsUnitType(u, UNIT_TYPE_HERO) then
+						unitsEnemy = unitsEnemy + 3 * GetHeroLevel(u)
+					else
+						unitsEnemy = unitsEnemy + GetUnitLevel(u)
+					end
+				end
+			end
 
-            GroupRemoveUnit(g, u)
-        end
-        DestroyGroup(g)
+			GroupRemoveUnit(g, u)
+		end
+		DestroyGroup(g)
 
-        -- Check if Unit is in Danger
-        if IsUnitInGroup(unit, base[teamName].gDanger) then
-            if unitsEnemy == 0 then
-                GroupRemoveUnit(base[teamName].gDanger, unit)
-                GroupAddUnit(base[teamName].gHealing, unit)
-            end
+		-- Check if Unit is in Danger
+		if IsUnitInGroup(unit, base[teamName].gDanger) then
+			if unitsEnemy == 0 then
+				GroupRemoveUnit(base[teamName].gDanger, unit)
+				GroupAddUnit(base[teamName].gHealing, unit)
+			end
 
-            CreateCorpse()
+			CreateCorpse()
 
-        else
-            if unitsEnemy > 0 then
-                GroupAddUnit(base[teamName].gDanger, unit)
-                GroupRemoveUnit(base[teamName].gHealing, unit)
-            end
-        end
+		else
+			if unitsEnemy > 0 then
+				GroupAddUnit(base[teamName].gDanger, unit)
+				GroupRemoveUnit(base[teamName].gHealing, unit)
+			end
+		end
 
-        -- Heal Units as needed
-        if unitsEnemy == 0 and unitsFriendly > 0 and base[handleId].mana > 50 then
-            if IsUnitInGroup(unit, base[teamName].gHealing) and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) ==
-                0 then
+		-- Heal Units as needed
+		if unitsEnemy == 0 and unitsFriendly > 0 and base[handleId].mana > 50 then
+			if IsUnitInGroup(unit, base[teamName].gHealing) and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) == 0 then
 
-                g = GetUnitsInRangeOfLocAll(500, l)
+				g = GetUnitsInRangeOfLocAll(500, l)
 
-                while true do
-                    u = FirstOfGroup(g)
-                    if u == nil then
-                        break
-                    end
+				while true do
+					u = FirstOfGroup(g)
+					if u == nil then break end
 
-                    if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
-                        if not UnitHasBuffBJ(u, FourCC("Brej")) and
-                            (GetUnitLifePercent(u) < 95 or GetUnitManaPercent(u) < 95) then
+					if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
+						if not UnitHasBuffBJ(u, FourCC("Brej")) and (GetUnitLifePercent(u) < 95 or GetUnitManaPercent(u) < 95) then
 
-                            SetUnitAbilityLevel(unit, FourCC("A027"), spawn.creepLevel)
-                            IssueTargetOrder(unit, "rejuvination", u)
-                            break
-                        end
-                    end
+							SetUnitAbilityLevel(unit, FourCC("A027"), spawn.creepLevel)
+							IssueTargetOrder(unit, "rejuvination", u)
+							break
+						end
+					end
 
-                    GroupRemoveUnit(g, u)
-                end
+					GroupRemoveUnit(g, u)
+				end
 
-                DestroyGroup(g)
-            end
-        end
-        RemoveLocation(l)
+				DestroyGroup(g)
+			end
+		end
+		RemoveLocation(l)
 
-        base[handleId].lifePercent = GetUnitLifePercent(unit)
-        base[handleId].mana = GetUnitState(unit, UNIT_STATE_MANA)
-        base[handleId].unitsFriendly = unitsFriendly
-        base[handleId].unitsEnemy = unitsEnemy
-        base[handleId].unitsCount = unitsEnemy - unitsFriendly
-        base[handleId].danger = base[handleId].unitsCount * (((100 - base[handleId].lifePercent) / 10) + 1) *
-                                    base[handleId].importance
+		base[handleId].lifePercent = GetUnitLifePercent(unit)
+		base[handleId].mana = GetUnitState(unit, UNIT_STATE_MANA)
+		base[handleId].unitsFriendly = unitsFriendly
+		base[handleId].unitsEnemy = unitsEnemy
+		base[handleId].unitsCount = unitsEnemy - unitsFriendly
+		base[handleId].danger = base[handleId].unitsCount * (((100 - base[handleId].lifePercent) / 10) + 1) *
+						                        base[handleId].importance
 
-        -- print(base[handleId].name .. " Allies:" .. base[handleId].unitsFriendly .. " Enemies: " .. base[handleId].unitsEnemy)
-    end
+		-- print(base[handleId].name .. " Allies:" .. base[handleId].unitsFriendly .. " Enemies: " .. base[handleId].unitsEnemy)
+	end
 
-    function base.died(unit)
-        local allied, federation, u
-        local handleId = GetHandleId(unit)
-        local regionName = base[handleId].regionName
-        local teamName = base[handleId].teamName
-        local teleport = base[handleId].teleport
-        local importance = base[handleId].importance
-        local x = base[handleId].x
-        local y = base[handleId].y
-        local name = base[handleId].name
+	function base.died(unit)
+		local allied, federation, u
+		local handleId = GetHandleId(unit)
+		local regionName = base[handleId].regionName
+		local teamName = base[handleId].teamName
+		local teleport = base[handleId].teleport
+		local importance = base[handleId].importance
+		local x = base[handleId].x
+		local y = base[handleId].y
+		local name = base[handleId].name
 
-        -- Remove Unit from ALL Group
-        GroupRemoveUnit(base.all.g, unit)
+		-- Remove Unit from ALL Group
+		GroupRemoveUnit(base.all.g, unit)
 
-        -- Remove Unit from REGION Group
-        if IsUnitInGroup(unit, base[regionName][teamName].g) then
-            GroupRemoveUnit(base[regionName][teamName].g, unit)
-        end
+		-- Remove Unit from REGION Group
+		if IsUnitInGroup(unit, base[regionName][teamName].g) then GroupRemoveUnit(base[regionName][teamName].g, unit) end
 
-        if IsUnitInGroup(unit, base[teamName].gDanger) then
-            GroupRemoveUnit(base[teamName].gDanger, unit)
-        end
+		if IsUnitInGroup(unit, base[teamName].gDanger) then GroupRemoveUnit(base[teamName].gDanger, unit) end
 
-        if IsUnitInGroup(unit, base[teamName].gHealing) then
-            GroupRemoveUnit(base[teamName].gDanger, unit)
-        end
+		if IsUnitInGroup(unit, base[teamName].gHealing) then GroupRemoveUnit(base[teamName].gDanger, unit) end
 
-        -- Remove Unit from TELEPORT Group
-        if teleport then
-            GroupRemoveUnit(base[teamName].gTeleport, unit)
-        end
+		-- Remove Unit from TELEPORT Group
+		if teleport then GroupRemoveUnit(base[teamName].gTeleport, unit) end
 
-        -- Adjust Region importance
-        base[regionName][teamName].unitsAlive = base[regionName][teamName].unitsAlive - importance
-        base[teamName].unitsAlive = base[teamName].unitsAlive - importance
-        base.all.unitsAlive = base.all.unitsAlive - importance
+		-- Adjust Region importance
+		base[regionName][teamName].unitsAlive = base[regionName][teamName].unitsAlive - importance
+		base[teamName].unitsAlive = base[teamName].unitsAlive - importance
+		base.all.unitsAlive = base.all.unitsAlive - importance
 
-        -- Get TEAM Advantage
-        allied = (base.allied.unitsAlive / base.allied.unitsTotal) * 100
-        federation = (base.federation.unitsAlive / base.federation.unitsTotal) * 100
-        base.allied.advantage = allied - federation
-        base.federation.advantage = federation - allied
+		-- Get TEAM Advantage
+		allied = (base.allied.unitsAlive / base.allied.unitsTotal) * 100
+		federation = (base.federation.unitsAlive / base.federation.unitsTotal) * 100
+		base.allied.advantage = allied - federation
+		base.federation.advantage = federation - allied
 
-        -- Get REGION Advantage
-        allied = (base[regionName].allied.unitsAlive / base[regionName].allied.unitsTotal) * 100
-        federation = (base[regionName].federation.unitsAlive / base[regionName].federation.unitsTotal) * 100
+		-- Get REGION Advantage
+		allied = (base[regionName].allied.unitsAlive / base[regionName].allied.unitsTotal) * 100
+		federation = (base[regionName].federation.unitsAlive / base[regionName].federation.unitsTotal) * 100
 
-        base[regionName].allied.advantage = allied - federation
-        base[regionName].federation.advantage = federation - allied
+		base[regionName].allied.advantage = allied - federation
+		base[regionName].federation.advantage = federation - allied
 
-        PlaySound("Sound/Interface/Warning.flac")
+		PlaySound("Sound/Interface/Warning.flac")
 
-        if teamName == "federation" then
+		if teamName == "federation" then
 
-            for i = 6, 11 do
-                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
-            end
+			for i = 6, 11 do SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10) end
 
-            print("FEDERATION Base has Fallen!")
-            u = CreateUnit(Player(20), FourCC("h00W"), x, y, bj_UNIT_FACING)
+			print("FEDERATION Base has Fallen!")
+			u = CreateUnit(Player(20), FourCC("h00W"), x, y, bj_UNIT_FACING)
 
-        else
-            for i = 0, 5 do
-                SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10)
-            end
+		else
+			for i = 0, 5 do SetPlayerHandicapXPBJ(Player(i), GetPlayerHandicapXPBJ(Player(i)) + 10) end
 
-            print("ALLIED Base has Fallen!")
+			print("ALLIED Base has Fallen!")
 
-            u = CreateUnit(Player(23), FourCC("h00W"), x, y, bj_UNIT_FACING)
-        end
+			u = CreateUnit(Player(23), FourCC("h00W"), x, y, bj_UNIT_FACING)
+		end
 
-        print(name .. " has been razed.")
-        PingMinimap(x, y, 15)
-        base.add(u, 0, false, false, true)
+		print(name .. " has been razed.")
+		PingMinimap(x, y, 15)
+		base.add(u, 0, false, false, true)
 
-    end
+	end
 
 end
 
 function init_gateClass()
 
-    gate = {}
-    gate.g = CreateGroup()
-    gate.gClosed = CreateGroup()
-    gate.gOpen = CreateGroup()
+	gate = {}
+	gate.g = CreateGroup()
+	gate.gClosed = CreateGroup()
+	gate.gOpen = CreateGroup()
 
-    function gate.add(unit, owningPlayer)
+	function gate.add(unit, owningPlayer)
 
-        local playerForce, facingAngle, unitTypeClosed
-        local unitType = GetUnitTypeId(unit)
-        local x = GetUnitX(unit)
-        local y = GetUnitY(unit)
+		local playerForce, facingAngle, unitTypeClosed
+		local unitType = GetUnitTypeId(unit)
+		local x = GetUnitX(unit)
+		local y = GetUnitY(unit)
 
-        -- Find if unit is Allied or Fed
-        if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
-            playerForce = "allied"
-        else
-            playerForce = "federation"
-        end
+		-- Find if unit is Allied or Fed
+		if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
+			playerForce = "allied"
+		else
+			playerForce = "federation"
+		end
 
-        -- Determine Proper Angle
-        if unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 45 Degrees
-            facingAngle = 90
-        elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or unitType ==
-            FourCC("h00U") then -- City Gate and Arcane Gate 0 Degrees
-            facingAngle = 0
-        elseif unitType == FourCC("h01E") or unitType == FourCC("h01D") then -- City Gate 135 Degrees
-            facingAngle = 0
-        else
-            facingAngle = 0
-        end
+		-- Determine Proper Angle
+		if unitType == FourCC("h01T") or unitType == FourCC("h01S") then -- City Gate Horizontal Top
+			facingAngle = 90
 
-        if playerForce == "federation" then
-            facingAngle = facingAngle + 180
-        end
+		elseif unitType == FourCC("h01D") or unitType == FourCC("h01B") then -- City Gate Vertical Left
+			facingAngle = 180
 
-        -- Find Open Unit Type
-        if unitType == FourCC("h01C") then -- City Gate 0
-            unitTypeClosed = FourCC("h01G")
+		elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or unitType ==
+						FourCC("h00U") then -- City Gate and Arcane Gate Vertical Right
+			facingAngle = 0
 
-        elseif unitType == FourCC("h01B") then -- City Gate 45
-            unitTypeClosed = FourCC("h01F")
+		else
+			facingAngle = 0
+			print("Nothing should be Here")
+		end
 
-        elseif unitType == FourCC("h01D") then -- City Gate 135
-            unitTypeClosed = FourCC("h01E")
+		if playerForce == "federation" then
+			facingAngle = facingAngle + 180
 
-        elseif unitType == FourCC("h00U") then -- Arcane Gate 0
-            unitTypeClosed = FourCC("h00T")
-        end
+			if facingAngle >= 360 then facingAngle = facingAngle - 360 end
+		end
 
-        RemoveUnit(unit)
-        unit = CreateUnit(owningPlayer, unitType, x, y, facingAngle)
+		-- Find Open Unit Type
+		if unitType == FourCC("h01C") then -- City Gate Vertical Right
+			unitTypeClosed = FourCC("h01G")
 
-        -- Play animation
-        SetUnitAnimation(unit, "Death Alternate 1")
+		elseif unitType == FourCC("h01D") then -- City Gate Vertical Left
+			unitTypeClosed = FourCC("h01B")
 
-        GroupAddUnit(gate.g, unit)
-        GroupAddUnit(gate.gOpen, unit)
+		elseif unitType == FourCC("h01T") then -- City Gate Horizontal Top
+			unitTypeClosed = FourCC("h01S")
 
-        local unitId = GetHandleId(unit)
-        gate[unitId] = {}
-        gate[unitId].force = playerForce
-        gate[unitId].unitTypeClosed = unitTypeClosed
-        gate[unitId].unitTypeOpen = unitType
-        gate[unitId].x = x
-        gate[unitId].y = y
-        gate[unitId].facing = facingAngle
+		elseif unitType == FourCC("h00U") then -- Arcane Gate Vertical Right
+			unitTypeClosed = FourCC("h00T")
+		end
 
-    end
+		RemoveUnit(unit)
+		unit = CreateUnit(owningPlayer, unitType, x, y, facingAngle)
 
-    function gate.update()
+		-- Play animation
+		SetUnitAnimation(unit, "Death Alternate 1")
 
-        ForGroup(gate.g, function()
-            local u
-            local heroes = 0
-            local enemies = 0
-            local unit = GetEnumUnit()
-            local info = gate[GetHandleId(unit)]
-            local g = CreateGroup()
-            local l = GetUnitLoc(unit)
+		GroupAddUnit(gate.g, unit)
+		GroupAddUnit(gate.gOpen, unit)
 
-            g = GetUnitsInRangeOfLocAll(700, l)
+		local unitId = GetHandleId(unit)
+		gate[unitId] = {}
+		gate[unitId].force = playerForce
+		gate[unitId].unitTypeClosed = unitTypeClosed
+		gate[unitId].unitTypeOpen = unitType
+		gate[unitId].x = x
+		gate[unitId].y = y
+		gate[unitId].facing = facingAngle
 
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
+	end
 
-                if not IsUnitAlly(u, GetOwningPlayer(unit)) and IsUnitAliveBJ(u) then
-                    enemies = enemies + 1
-                end
+	function gate.update()
 
-                if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then
-                    heroes = heroes + 1
-                end
+		local gGates = CreateGroup()
+		GroupAddGroup(gate.g, gGates)
 
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
+		local pickedUnit = FirstOfGroup(gGates)
+		while pickedUnit ~= nil do
+			local u
+			local heroes = 0
+			local enemies = 0
+			local unit = pickedUnit
+			local info = gate[GetHandleId(unit)]
+			local g = CreateGroup()
+			local l = GetUnitLoc(unit)
 
-            -- print("Enemies:" .. enemies .. " Heroes: " .. heroes)
+			g = GetUnitsInRangeOfLocAll(700, l)
 
-            if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
-                GroupRemoveUnit(gate.gOpen, unit)
-                GroupRemoveUnit(gate.g, unit)
-                gate[GetHandleId(unit)] = {}
+			while true do
+				u = FirstOfGroup(g)
+				if u == nil then break end
 
-                -- Replace Gate with Closed Gate
-                DisableTrigger(gate.Trig_gateDies)
-                ReplaceUnitBJ(unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
-                EnableTrigger(gate.Trig_gateDies)
+				if not IsUnitAlly(u, GetOwningPlayer(unit)) and IsUnitAliveBJ(u) then enemies = enemies + 1 end
 
-                unit = GetLastReplacedUnitBJ()
-                gate[GetHandleId(unit)] = info
-                GroupAddUnit(gate.gClosed, unit)
-                GroupAddUnit(gate.g, unit)
+				if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then heroes = heroes + 1 end
 
-                -- Play animation
-                SetUnitAnimation(unit, "stand")
+				GroupRemoveUnit(g, u)
+			end
+			DestroyGroup(g)
 
-            elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
-                GroupRemoveUnit(gate.gClosed, unit)
-                GroupRemoveUnit(gate.g, unit)
-                gate[GetHandleId(unit)] = {}
+			-- print("Enemies:" .. enemies .. " Heroes: " .. heroes)
 
-                -- Replace Gate with Closed Gate
-                DisableTrigger(gate.Trig_gateDies)
-                ReplaceUnitBJ(unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
-                EnableTrigger(gate.Trig_gateDies)
+			if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
+				GroupRemoveUnit(gate.gOpen, unit)
+				GroupRemoveUnit(gate.g, unit)
+				gate[GetHandleId(unit)] = {}
 
-                unit = GetLastReplacedUnitBJ()
-                gate[GetHandleId(unit)] = info
-                GroupAddUnit(gate.gOpen, unit)
-                GroupAddUnit(gate.g, unit)
+				SetUnitTimeScale(unit, -1)
+				PolledWait(0.667)
 
-                -- Play animation
-                SetUnitAnimation(unit, "Death Alternate 1")
+				-- Replace Gate with Closed Gate
+				DisableTrigger(gate.Trig_gateDies)
+				ReplaceUnitBJ(unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
+				EnableTrigger(gate.Trig_gateDies)
 
-            end
+				unit = GetLastReplacedUnitBJ()
+				gate[GetHandleId(unit)] = info
+				GroupAddUnit(gate.gClosed, unit)
+				GroupAddUnit(gate.g, unit)
 
-        end)
-        -- print("--")
-    end
+			elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
+				GroupRemoveUnit(gate.gClosed, unit)
+				GroupRemoveUnit(gate.g, unit)
+				gate[GetHandleId(unit)] = {}
 
-    --
-    --  TRIGGERS
-    --
+				-- Replace Gate with Opened Gate
+				DisableTrigger(gate.Trig_gateDies)
+				ReplaceUnitBJ(unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
+				EnableTrigger(gate.Trig_gateDies)
 
-    function gate.InitTrig_update()
-        local t = CreateTrigger()
-        TriggerRegisterTimerEventPeriodic(t, 2.5)
-        TriggerAddAction(t, function()
+				unit = GetLastReplacedUnitBJ()
+				gate[GetHandleId(unit)] = info
+				GroupAddUnit(gate.gOpen, unit)
+				GroupAddUnit(gate.g, unit)
 
-            debugfunc(function()
-                gate.update()
-            end, "Init Spawn")
-        end)
-    end
+				-- Play animation
+				SetUnitAnimation(unit, "Death Alternate 1")
 
-    function gate.InitTrig_dies()
-        gate.Trig_gateDies = CreateTrigger()
-        TriggerRegisterAnyUnitEventBJ(gate.Trig_gateDies, EVENT_PLAYER_UNIT_DEATH)
-        TriggerAddAction(gate.Trig_gateDies, function()
+			end
 
-            debugfunc(function()
-                local dyingUnit = GetDyingUnit()
+			GroupRemoveUnit(gGates, pickedUnit)
+			pickedUnit = FirstOfGroup(gGates)
+		end
+		DestroyGroup(gGates)
 
-                if IsUnitInGroup(dyingUnit, gate.g) then
-                    local player, unit, unitType, unitTypeOpen, facingAngle
-                    local x = GetUnitX(dyingUnit)
-                    local y = GetUnitY(dyingUnit)
-                    local unitType = GetUnitTypeId(dyingUnit)
-                    local owningPlayer = GetOwningPlayer(dyingUnit)
+		-- print("--")
+	end
 
-                    -- Find Open Unit Type
-                    if unitType == FourCC("h01G") then -- City Gate 0
-                        unitTypeOpen = FourCC("h01C")
+	--
+	--  TRIGGERS
+	--
 
-                    elseif unitType == FourCC("h01F") then -- City Gate 45
-                        unitTypeOpen = FourCC("h01B")
+	function gate.InitTrig_update()
+		local t = CreateTrigger()
+		TriggerRegisterTimerEventPeriodic(t, 2.5)
+		TriggerAddAction(t, function() debugfunc(function() gate.update() end, "Update") end)
+	end
 
-                    elseif unitType == FourCC("h01E") then -- City Gate 135
-                        unitTypeOpen = FourCC("h01D")
+	function gate.InitTrig_hitAnim()
+		local t = CreateTrigger()
+		TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_ATTACKED)
+		TriggerAddAction(t, function()
 
-                    elseif unitType == FourCC("h00T") then -- Arcane Gate 0
-                        unitTypeOpen = FourCC("h00U")
-                    end
+			local triggerUnit = GetAttackedUnitBJ()
+			local unitId = GetUnitTypeId(triggerUnit)
 
-                    -- Determine Proper Angle
-                    if unitType == FourCC("h01F") or unitType == FourCC("h01B") then -- City Gate 45 Degrees
-                        facingAngle = 90
-                    elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or
-                        unitType == FourCC("h00U") then -- City Gate and Arcane Gate 0 Degrees
-                        facingAngle = 0
-                    elseif unitType == FourCC("h01E") or unitType == FourCC("h01D") then -- City Gate 135 Degrees
-                        facingAngle = 0
-                    else
-                        facingAngle = 0
-                    end
+			if unitId == FourCC("h01G") or unitId == FourCC("h01B") or unitId == FourCC("h01S") or unitId == FourCC("h00T") then
+				PolledWait(0.2)
+				QueueUnitAnimation(triggerUnit, "Stand Hit")
+			end
 
-                    -- Remove Traces of Unit
-                    GroupRemoveUnit(gate.g, dyingUnit)
-                    RemoveUnit(dyingUnit)
+		end)
+	end
 
-                    if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
-                        player = Player(21)
-                    else
-                        player = Player(18)
-                        facingAngle = facingAngle + 180
-                    end
+	function gate.InitTrig_dies()
+		gate.Trig_gateDies = CreateTrigger()
+		TriggerRegisterAnyUnitEventBJ(gate.Trig_gateDies, EVENT_PLAYER_UNIT_DEATH)
+		TriggerAddAction(gate.Trig_gateDies, function()
 
-                    unit = CreateUnit(player, unitTypeOpen, x, y, facingAngle)
+			debugfunc(function()
+				local dyingUnit = GetDyingUnit()
 
-                    -- Play Death animation
-                    SetUnitAnimation(unit, "Death 1")
-                end
-            end, "Start Delayed Triggers")
-        end)
-    end
+				if IsUnitInGroup(dyingUnit, gate.g) then
+					local player, unit, unitType, unitTypeOpen, facingAngle
+					local x = GetUnitX(dyingUnit)
+					local y = GetUnitY(dyingUnit)
+					local unitType = GetUnitTypeId(dyingUnit)
+					local owningPlayer = GetOwningPlayer(dyingUnit)
 
-    --
-    -- MAIN
-    --
+					-- Determine Proper Angle
+					if unitType == FourCC("h01T") or unitType == FourCC("h01S") then -- City Gate Horizontal Top
+						facingAngle = 270
 
-    function gate.main()
-        local unitId, u
-        local g = CreateGroup()
+					elseif unitType == FourCC("h01D") or unitType == FourCC("h01B") then -- City Gate Vertical Left
+						facingAngle = 180
 
-        for i = 1, 4 do
-            if i == 1 then
-                unitId = FourCC("h01B")
-            elseif i == 2 then
-                unitId = FourCC("h01D")
-            elseif i == 3 then
-                unitId = FourCC("h01C")
-            else
-                unitId = FourCC("h00U")
-            end
+					elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or unitType ==
+									FourCC("h00U") then -- City Gate and Arcane Gate Vertical Right
+						facingAngle = 0
 
-            g = GetUnitsOfTypeIdAll(unitId)
+					else
+						facingAngle = 0
+					end
 
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
+					-- Find Open Unit Type
+					if unitType == FourCC("h01G") then -- City Gate Vertical Right
+						unitTypeOpen = FourCC("h01C")
 
-                gate.add(u, GetOwningPlayer(u))
+					elseif unitType == FourCC("h01B") then -- City Gate Vertical Left
+						unitTypeOpen = FourCC("h01D")
 
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
-        end
+					elseif unitType == FourCC("h01S") then -- City Gate Horizontal Top
+						unitTypeOpen = FourCC("h01T")
 
-        -- Init Triggers
-        gate.InitTrig_update()
-        gate.InitTrig_dies()
-    end
+					elseif unitType == FourCC("h00T") then -- Arcane Gate Vertical Right
+						unitTypeOpen = FourCC("h00U")
+					end
 
+
+					-- Remove Traces of Unit
+					GroupRemoveUnit(gate.g, dyingUnit)
+					RemoveUnit(dyingUnit)
+
+					if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
+						player = Player(21)
+					else
+						player = Player(18)
+						facingAngle = facingAngle + 180
+					end
+
+					unit = CreateUnit(player, unitTypeOpen, x, y, facingAngle)
+
+					-- Play Death animation
+					SetUnitAnimation(unit, "Death 1")
+				end
+			end, "Start Delayed Triggers")
+		end)
+	end
+
+	--
+	-- MAIN
+	--
+
+	function gate.main()
+		local unitId, u
+		local g = CreateGroup()
+
+		for i = 1, 6 do
+			if i == 1 then
+				unitId = FourCC("h01B")
+			elseif i == 2 then
+				unitId = FourCC("h01D")
+			elseif i == 3 then
+				unitId = FourCC("h01C")
+			elseif i == 4 then
+				unitId = FourCC("h01T")
+			elseif i == 5 then
+				unitId = FourCC("h01S")
+			else
+				unitId = FourCC("h00U")
+			end
+
+			g = GetUnitsOfTypeIdAll(unitId)
+
+			while true do
+				u = FirstOfGroup(g)
+				if u == nil then break end
+
+				gate.add(u, GetOwningPlayer(u))
+
+				GroupRemoveUnit(g, u)
+			end
+			DestroyGroup(g)
+		end
+
+		-- Init Triggers
+		gate.InitTrig_update()
+		gate.InitTrig_dies()
+		gate.InitTrig_hitAnim()
+	end
 end
 
 --
@@ -7056,6 +6904,10 @@ function InitSounds()
     SetSoundParamsFromLabel(gg_snd_Warning, "Warning")
     SetSoundDuration(gg_snd_Warning, 1903)
     SetSoundVolume(gg_snd_Warning, 80)
+    gg_snd_GateEpicDeath = CreateSound("Doodads/LordaeronSummer/Terrain/Gate/GateEpicDeath.flac", false, true, true, 0, 0, "DefaultEAXON")
+    SetSoundParamsFromLabel(gg_snd_GateEpicDeath, "GateDeath")
+    SetSoundDuration(gg_snd_GateEpicDeath, 1581)
+    SetSoundVolume(gg_snd_GateEpicDeath, 127)
 end
 
 function CreateBuildingsForPlayer0()
@@ -7163,10 +7015,10 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -17088.0, -10752.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -20544.0, -11200.0, 270.000, FourCC("h00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01J"), -15392.0, -11232.0, 270.000, FourCC("h01J"))
-    gg_unit_e003_0058 = BlzCreateUnitWithSkin(p, FourCC("e003"), -23424.0, -1792.0, 270.000, FourCC("e003"))
+    gg_unit_e003_0058 = BlzCreateUnitWithSkin(p, FourCC("e003"), -24256.0, -1792.0, 270.000, FourCC("e003"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01K"), -16480.0, -13600.0, 270.000, FourCC("h01K"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -16192.0, -10432.0, 270.000, FourCC("h01C"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -14912.0, -13376.0, 270.000, FourCC("h01C"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01T"), -16192.0, -10432.0, 270.000, FourCC("h01T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -14848.0, -13376.0, 270.000, FourCC("h01C"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01L"), -15776.0, -12640.0, 270.000, FourCC("h01L"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17280.0, -4928.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -15808.0, -13248.0, 270.000, FourCC("h01I"))
@@ -7190,9 +7042,10 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -19136.0, -1600.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -18496.0, -3520.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17856.0, -3520.0, 270.000, FourCC("h00X"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -17408.0, -11776.0, 270.000, FourCC("h01C"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -17856.0, -13504.0, 270.000, FourCC("h01D"))
     gg_unit_u001_0097 = BlzCreateUnitWithSkin(p, FourCC("u001"), -16576.0, -3392.0, 270.000, FourCC("u001"))
     u = BlzCreateUnitWithSkin(p, FourCC("o005"), -19072.0, -1472.0, 270.000, FourCC("o005"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -8128.0, 1280.0, 270.000, FourCC("n007"))
     gg_unit_n00B_0102 = BlzCreateUnitWithSkin(p, FourCC("n00B"), -20352.0, -6912.0, 270.000, FourCC("n00B"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20224.0, -4992.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -19840.0, -10752.0, 270.000, FourCC("n007"))
@@ -7200,22 +7053,39 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17280.0, -5312.0, 270.000, FourCC("h00X"))
     gg_unit_nheb_0109 = BlzCreateUnitWithSkin(p, FourCC("nheb"), -24896.0, 1280.0, 270.000, FourCC("nheb"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -15808.0, -6464.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -17408.0, -11776.0, 270.000, FourCC("h01D"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -9472.0, 1856.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23168.0, -4864.0, 270.000, FourCC("n000"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -8128.0, 2432.0, 270.000, FourCC("n007"))
     gg_unit_eshy_0120 = BlzCreateUnitWithSkin(p, FourCC("eshy"), -22176.0, 288.0, 270.000, FourCC("eshy"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -18432.0, -1472.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -21312.0, 1920.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -9216.0, 2368.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -19968.0, -12736.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -20544.0, 2560.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -6912.0, 3584.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("o004"), -14592.0, -8064.0, 270.000, FourCC("o004"))
     gg_unit_nntt_0135 = BlzCreateUnitWithSkin(p, FourCC("nntt"), -20736.0, 1984.0, 270.000, FourCC("nntt"))
     u = BlzCreateUnitWithSkin(p, FourCC("o004"), -15808.0, -7936.0, 270.000, FourCC("o004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -6656.0, 2048.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -20992.0, 1344.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -9088.0, 3392.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -19840.0, -11712.0, 270.000, FourCC("n007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -10048.0, 1664.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -4800.0, 2816.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -24576.0, 832.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -6336.0, 768.0, 270.000, FourCC("n007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -6336.0, 2944.0, 270.000, FourCC("n007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -5184.0, 2240.0, 270.000, FourCC("h00G"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -10048.0, 2048.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -5952.0, 2240.0, 270.000, FourCC("h00G"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -6912.0, 128.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17664.0, -7744.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -7424.0, 128.0, 270.000, FourCC("h00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -24704.0, 256.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -18560.0, -1600.0, 270.000, FourCC("otrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -17856.0, -13504.0, 270.000, FourCC("h01C"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -7424.0, 3584.0, 270.000, FourCC("h00U"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -6656.0, 2560.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -23936.0, 640.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -24256.0, 256.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -14464.0, -8128.0, 270.000, FourCC("h01R"))
@@ -7257,7 +7127,19 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -14464.0, -8000.0, 270.000, FourCC("h01R"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -14432.0, -7392.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -15840.0, -8480.0, 270.000, FourCC("n00M"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -19360.0, 3424.0, 270.000, FourCC("n00Z"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -8512.0, 1856.0, 270.000, FourCC("h00U"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -9088.0, 0.0, 270.000, FourCC("h00G"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -9408.0, 0.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -9088.0, 320.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -6656.0, 1664.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -6656.0, 1152.0, 270.000, FourCC("n007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -4800.0, 896.0, 270.000, FourCC("n007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n007"), -9216.0, 1408.0, 270.000, FourCC("n007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -9088.0, 3712.0, 270.000, FourCC("h00G"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -9408.0, 3712.0, 270.000, FourCC("nft2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -19616.0, 3488.0, 270.000, FourCC("n00Z"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -5952.0, 1472.0, 270.000, FourCC("h00G"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -5184.0, 1472.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20224.0, -4544.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -21312.0, -11200.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18208.0, -4960.0, 270.000, FourCC("ncb4"))
@@ -7276,7 +7158,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20416.0, -5440.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -18656.0, -6560.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -17344.0, -1920.0, 270.000, FourCC("otrb"))
-    u = BlzCreateUnitWithSkin(p, FourCC("hvlt"), -23488.0, -15808.0, 270.000, FourCC("hvlt"))
     u = BlzCreateUnitWithSkin(p, FourCC("otrb"), -19008.0, -1600.0, 270.000, FourCC("otrb"))
     u = BlzCreateUnitWithSkin(p, FourCC("h019"), -19392.0, -7808.0, 17.000, FourCC("h019"))
     u = BlzCreateUnitWithSkin(p, FourCC("hbar"), -19840.0, -7360.0, 270.000, FourCC("hbar"))
@@ -7330,10 +7211,10 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -20256.0, 1632.0, 270.000, FourCC("nnad"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -21696.0, 1984.0, 270.000, FourCC("nnsg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -20384.0, 3552.0, 270.000, FourCC("nmh0"))
-    gg_unit_nmh1_0735 = BlzCreateUnitWithSkin(p, FourCC("nmh1"), -20000.0, 3872.0, 270.000, FourCC("nmh1"))
+    gg_unit_nmh1_0735 = BlzCreateUnitWithSkin(p, FourCC("nmh1"), -20320.0, 4064.0, 270.000, FourCC("nmh1"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmg0"), -19104.0, 4448.0, 270.000, FourCC("nmg0"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -18528.0, 4256.0, 270.000, FourCC("nmg1"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -18720.0, 3872.0, 270.000, FourCC("nmg1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -19872.0, 3872.0, 270.000, FourCC("nmg1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -18976.0, 3808.0, 270.000, FourCC("nmg1"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -19936.0, 4512.0, 270.000, FourCC("nmh0"))
     gg_unit_n00K_0802 = BlzCreateUnitWithSkin(p, FourCC("n00K"), -23104.0, -6720.0, 270.000, FourCC("n00K"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -25312.0, -480.0, 270.000, FourCC("nef4"))
@@ -7370,61 +7251,191 @@ function CreateBuildingsForPlayer23()
     local unitID
     local t
     local life
-    gg_unit_h003_0007 = BlzCreateUnitWithSkin(p, FourCC("h003"), -5504.0, 1856.0, 270.000, FourCC("h003"))
-    gg_unit_e003_0014 = BlzCreateUnitWithSkin(p, FourCC("e003"), -3840.0, -7296.0, 270.000, FourCC("e003"))
-    gg_unit_nheb_0036 = BlzCreateUnitWithSkin(p, FourCC("nheb"), -4352.0, -10240.0, 270.000, FourCC("nheb"))
+    gg_unit_h003_0007 = BlzCreateUnitWithSkin(p, FourCC("h003"), -5568.0, 1856.0, 270.000, FourCC("h003"))
+    gg_unit_e003_0014 = BlzCreateUnitWithSkin(p, FourCC("e003"), -4352.0, -7360.0, 270.000, FourCC("e003"))
+    gg_unit_nheb_0036 = BlzCreateUnitWithSkin(p, FourCC("nheb"), -4160.0, -10624.0, 270.000, FourCC("nheb"))
     gg_unit_n00B_0038 = BlzCreateUnitWithSkin(p, FourCC("n00B"), -8704.0, -2432.0, 270.000, FourCC("n00B"))
     gg_unit_eshy_0047 = BlzCreateUnitWithSkin(p, FourCC("eshy"), -6944.0, -9632.0, 270.000, FourCC("eshy"))
-    gg_unit_n001_0049 = BlzCreateUnitWithSkin(p, FourCC("n001"), -13696.0, -1280.0, 270.000, FourCC("n001"))
+    gg_unit_n001_0049 = BlzCreateUnitWithSkin(p, FourCC("n001"), -13760.0, -1088.0, 270.000, FourCC("n001"))
     SetUnitColor(gg_unit_n001_0049, ConvertPlayerColor(9))
-    gg_unit_h006_0055 = BlzCreateUnitWithSkin(p, FourCC("h006"), -12992.0, 2432.0, 270.000, FourCC("h006"))
+    gg_unit_h006_0055 = BlzCreateUnitWithSkin(p, FourCC("h006"), -12928.0, 2368.0, 270.000, FourCC("h006"))
     SetUnitState(gg_unit_h006_0055, UNIT_STATE_MANA, 100)
     gg_unit_o001_0078 = BlzCreateUnitWithSkin(p, FourCC("o001"), -9856.0, -8384.0, 270.000, FourCC("o001"))
     gg_unit_h00E_0081 = BlzCreateUnitWithSkin(p, FourCC("h00E"), -5312.0, -4544.0, 270.000, FourCC("h00E"))
     gg_unit_u001_0098 = BlzCreateUnitWithSkin(p, FourCC("u001"), -12416.0, -5888.0, 270.000, FourCC("u001"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -10240.0, -8448.0, 270.000, FourCC("n000"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -10048.0, -7872.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -10688.0, -4288.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -11136.0, -1984.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -12992.0, 1984.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -12992.0, 3008.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -6080.0, 1920.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5824.0, -4160.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5696.0, -4992.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -4736.0, -4288.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -11264.0, -9856.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -13696.0, -1600.0, 270.000, FourCC("n000"))
-    gg_unit_nntt_0132 = BlzCreateUnitWithSkin(p, FourCC("nntt"), -8000.0, -11264.0, 270.000, FourCC("nntt"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -14144.0, -1280.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -10752.0, -1408.0, 270.000, FourCC("n000"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -14400.0, 2560.0, 270.000, FourCC("h01C"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -14400.0, 1664.0, 270.000, FourCC("h01I"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -8704.0, -1984.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -9248.0, -4000.0, 270.000, FourCC("ncb3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -9696.0, -2976.0, 90.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o005"), -12096.0, -10048.0, 270.000, FourCC("o005"))
+    gg_unit_nntt_0132 = BlzCreateUnitWithSkin(p, FourCC("nntt"), -8640.0, -8128.0, 270.000, FourCC("nntt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5312.0, -5312.0, 270.000, FourCC("n000"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -12096.0, -5568.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -10432.0, -4608.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -10368.0, -3776.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -9792.0, -4224.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -13376.0, 2240.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -13376.0, 2816.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -12544.0, 2048.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -12416.0, 2880.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -9280.0, 1472.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -9280.0, 2304.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -8512.0, 1856.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5824.0, 1408.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5696.0, 2368.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5120.0, 2240.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5184.0, 1472.0, 270.000, FourCC("n000"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -7936.0, -3296.0, 90.000, FourCC("ncbb"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -14144.0, 3392.0, 270.000, FourCC("h01I"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -11968.0, 1408.0, 270.000, FourCC("h01I"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01J"), -13664.0, 1888.0, 270.000, FourCC("h01J"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01K"), -12576.0, 4256.0, 270.000, FourCC("h01K"))
     gg_unit_h014_0158 = BlzCreateUnitWithSkin(p, FourCC("h014"), -8960.0, 1856.0, 270.000, FourCC("h014"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -9216.0, -2496.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -8256.0, -4480.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5120.0, -3776.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5312.0, -5184.0, 270.000, FourCC("n000"))
-    gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -10592.0, -1888.0, 270.000, FourCC("hshy"))
-    gg_unit_hars_0293 = BlzCreateUnitWithSkin(p, FourCC("hars"), -8704.0, -192.0, 270.000, FourCC("hars"))
-    gg_unit_hars_0303 = BlzCreateUnitWithSkin(p, FourCC("hars"), -8896.0, 3840.0, 270.000, FourCC("hars"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -8800.0, -1504.0, 270.000, FourCC("ncbb"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -10080.0, -5280.0, 90.000, FourCC("ncba"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -8288.0, -1952.0, 90.000, FourCC("ncb5"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o005"), -11712.0, -11328.0, 270.000, FourCC("o005"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -4864.0, -4096.0, 270.000, FourCC("n000"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -7296.0, -2560.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -8288.0, -2144.0, 90.000, FourCC("ncb5"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -8256.0, -2432.0, 270.000, FourCC("h004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -8704.0, -2880.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -8832.0, -4800.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -9952.0, -4832.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -10464.0, -4832.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -9696.0, -2592.0, 90.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -9632.0, -5280.0, 90.000, FourCC("ncba"))
+    gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -10592.0, -1952.0, 270.000, FourCC("hshy"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -9632.0, -3424.0, 90.000, FourCC("ncba"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -8640.0, -3904.0, 270.000, FourCC("h004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -9152.0, -2432.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5760.0, -4992.0, 270.000, FourCC("n000"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -8832.0, -4352.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -7296.0, -3072.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -9216.0, -10816.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -10272.0, -5280.0, 90.000, FourCC("ncba"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -11392.0, -1600.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -11104.0, -3328.0, 180.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -5888.0, -3520.0, 270.000, FourCC("h004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -9248.0, -3616.0, 270.000, FourCC("ncb3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -9856.0, -5248.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -10592.0, -2784.0, 90.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("halt"), -4064.0, -4768.0, 270.000, FourCC("halt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("halt"), -4064.0, -4448.0, 270.000, FourCC("halt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("halt"), -4064.0, -4128.0, 270.000, FourCC("halt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("halt"), -5728.0, -5792.0, 270.000, FourCC("halt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("halt"), -5408.0, -5792.0, 270.000, FourCC("halt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("halt"), -5088.0, -5792.0, 270.000, FourCC("halt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -10400.0, -2784.0, 90.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -9696.0, -2784.0, 90.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -14624.0, -1952.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -6784.0, -2560.0, 270.000, FourCC("hgtw"))
+    gg_unit_hars_0293 = BlzCreateUnitWithSkin(p, FourCC("hars"), -8832.0, -256.0, 270.000, FourCC("hars"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntt"), -8320.0, -11328.0, 270.000, FourCC("nntt"))
+    gg_unit_hars_0303 = BlzCreateUnitWithSkin(p, FourCC("hars"), -8832.0, 3968.0, 270.000, FourCC("hars"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h019"), -9664.0, -1536.0, 197.000, FourCC("h019"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbc"), -10976.0, -4928.0, 90.000, FourCC("ncbc"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -9856.0, -3904.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -10464.0, -5280.0, 90.000, FourCC("ncba"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -8672.0, -12896.0, 270.000, FourCC("nmh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -9856.0, -4544.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -10848.0, -4384.0, 90.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5376.0, -3968.0, 270.000, FourCC("n000"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -10656.0, -4832.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5888.0, -4480.0, 270.000, FourCC("n000"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n000"), -4544.0, -4544.0, 270.000, FourCC("n000"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), -4544.0, -5312.0, 270.000, FourCC("ncp3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbc"), -9952.0, -3520.0, 90.000, FourCC("ncbc"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -11776.0, -4032.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -10848.0, -4192.0, 90.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nfv4"), -7072.0, -4320.0, 270.000, FourCC("nfv4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nfv3"), -7072.0, -5216.0, 270.000, FourCC("nfv3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nfv3"), -7520.0, -3616.0, 270.000, FourCC("nfv3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -9760.0, -4832.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -11264.0, -4224.0, 270.000, FourCC("h004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -10848.0, -4000.0, 90.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nfv0"), -7584.0, -5600.0, 270.000, FourCC("nfv0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nfv1"), -8544.0, -5280.0, 270.000, FourCC("nfv1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nfv4"), -7776.0, -5344.0, 270.000, FourCC("nfv4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -8224.0, -2848.0, 90.000, FourCC("ncb5"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb3"), -9248.0, -3808.0, 270.000, FourCC("ncb3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -6336.0, -3968.0, 270.000, FourCC("h004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hbla"), -9216.0, -2880.0, 270.000, FourCC("hbla"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -11552.0, -3168.0, 90.000, FourCC("ncb4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -6336.0, -3520.0, 270.000, FourCC("h004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -10112.0, -3200.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -9440.0, -5280.0, 90.000, FourCC("ncba"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -6400.0, -5824.0, 270.000, FourCC("hgtw"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -11104.0, -3520.0, 180.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -9248.0, -5280.0, 90.000, FourCC("ncba"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hbar"), -9216.0, -1984.0, 270.000, FourCC("hbar"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbe"), -10592.0, -3264.0, 0.000, FourCC("ncbe"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -10816.0, -1024.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -6912.0, -5824.0, 270.000, FourCC("hgtw"))
     gg_unit_n00B_0399 = BlzCreateUnitWithSkin(p, FourCC("n00B"), -10240.0, -4224.0, 270.000, FourCC("n00B"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -14176.0, -864.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -10272.0, -4832.0, 270.000, FourCC("ncb9"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -13088.0, -2592.0, 90.000, FourCC("ncbb"))
     gg_unit_hvlt_0406 = BlzCreateUnitWithSkin(p, FourCC("hvlt"), -7808.0, -4480.0, 270.000, FourCC("hvlt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hlum"), -13600.0, -2464.0, 270.000, FourCC("hlum"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -13216.0, -864.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb2"), -12448.0, -3168.0, 90.000, FourCC("ncb2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -12704.0, -2784.0, 90.000, FourCC("ncb5"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -12064.0, -1952.0, 90.000, FourCC("ncb5"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -12192.0, -1504.0, 90.000, FourCC("ncbb"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -12640.0, -2144.0, 90.000, FourCC("ncbb"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o004"), -14464.0, -1280.0, 270.000, FourCC("o004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -10560.0, -5824.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -11200.0, -5824.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -13248.0, -2880.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o004"), -13248.0, -1408.0, 270.000, FourCC("o004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -14592.0, -1216.0, 270.000, FourCC("h01R"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -14592.0, -1344.0, 270.000, FourCC("h01R"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -11776.0, -4416.0, 270.000, FourCC("h00X"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o004"), -14144.0, -1600.0, 270.000, FourCC("o004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -15264.0, -1568.0, 270.000, FourCC("n00M"))
+    SetUnitState(u, UNIT_STATE_MANA, 260)
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -14944.0, -928.0, 270.000, FourCC("n00M"))
+    SetUnitState(u, UNIT_STATE_MANA, 260)
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -13472.0, -3488.0, 90.000, FourCC("ncbb"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01A"), -14080.0, -2880.0, 270.000, FourCC("h01A"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01A"), -14848.0, -2944.0, 270.000, FourCC("h01A"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -13536.0, -3104.0, 90.000, FourCC("ncb5"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -12064.0, -3232.0, 90.000, FourCC("ncbb"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -7744.0, -11264.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -8512.0, -11904.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -8064.0, -10688.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -8832.0, -10496.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -8800.0, -10976.0, 270.000, FourCC("nnad"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -9120.0, -13856.0, 270.000, FourCC("nmh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -9184.0, -13216.0, 270.000, FourCC("nmg1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -9088.0, -11648.0, 270.000, FourCC("nntg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg0"), -9952.0, -13792.0, 270.000, FourCC("nmg0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("negt"), -4352.0, -9600.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -9440.0, -12832.0, 270.000, FourCC("n00Z"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -7360.0, -11328.0, 270.000, FourCC("nnsg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -10080.0, -13152.0, 270.000, FourCC("nmg1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("negt"), -4800.0, -9600.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nefm"), -5152.0, -8928.0, 270.000, FourCC("nefm"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -4704.0, -10656.0, 270.000, FourCC("nef4"))
     gg_unit_ngt2_0455 = BlzCreateUnitWithSkin(p, FourCC("ngt2"), -11648.0, -9856.0, 270.000, FourCC("ngt2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef0"), -4704.0, -10144.0, 270.000, FourCC("nef0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef6"), -5728.0, -10848.0, 270.000, FourCC("nef6"))
+    u = BlzCreateUnitWithSkin(p, FourCC("negt"), -5120.0, -9984.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -5728.0, -9504.0, 270.000, FourCC("nef4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef3"), -3680.0, -8544.0, 270.000, FourCC("nef3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("negt"), -5120.0, -10368.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("negt"), -4480.0, -10176.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef3"), -5024.0, -9760.0, 270.000, FourCC("nef3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nefm"), -4256.0, -10208.0, 270.000, FourCC("nefm"))
+    u = BlzCreateUnitWithSkin(p, FourCC("negt"), -3840.0, -10240.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef1"), -4256.0, -9760.0, 270.000, FourCC("nef1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nefm"), -4064.0, -8928.0, 270.000, FourCC("nefm"))
+    u = BlzCreateUnitWithSkin(p, FourCC("negt"), -4672.0, -10816.0, 270.000, FourCC("negt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -3744.0, -8864.0, 270.000, FourCC("nef4"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nef0"), -5856.0, -11104.0, 270.000, FourCC("nef0"))
     gg_unit_n00K_0477 = BlzCreateUnitWithSkin(p, FourCC("n00K"), -5952.0, -2624.0, 270.000, FourCC("n00K"))
-    gg_unit_nmh1_0783 = BlzCreateUnitWithSkin(p, FourCC("nmh1"), -8992.0, -13280.0, 270.000, FourCC("nmh1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01T"), -12864.0, 1088.0, 270.000, FourCC("h01T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -14208.0, 4032.0, 270.000, FourCC("h01C"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01L"), -13280.0, 3296.0, 270.000, FourCC("h01L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -13248.0, 3904.0, 270.000, FourCC("h01I"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -11712.0, 3264.0, 270.000, FourCC("h01I"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01M"), -12128.0, 2848.0, 270.000, FourCC("h01M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01M"), -12320.0, 1824.0, 270.000, FourCC("h01M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -12064.0, 4384.0, 270.000, FourCC("h01N"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -13856.0, 4640.0, 270.000, FourCC("h01N"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -11648.0, 2432.0, 270.000, FourCC("h01D"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01D"), -11200.0, 4160.0, 270.000, FourCC("h01D"))
+    gg_unit_nmh1_0783 = BlzCreateUnitWithSkin(p, FourCC("nmh1"), -8736.0, -13344.0, 270.000, FourCC("nmh1"))
 end
 
 function CreateUnitsForPlayer23()
@@ -7433,7 +7444,18 @@ function CreateUnitsForPlayer23()
     local unitID
     local t
     local life
-    u = BlzCreateUnitWithSkin(p, FourCC("h007"), -9661.4, -3291.6, 95.460, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h007"), -9869.1, -5063.9, 230.407, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -9634.2, -1776.0, 270.071, FourCC("hpea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -9331.8, -1467.1, 50.291, FourCC("hhdl"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -9101.9, -1560.9, 66.892, FourCC("hhdl"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -7667.3, -1657.9, 238.328, FourCC("hpea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h007"), -8625.8, -1689.1, 45.721, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h007"), -9390.8, -3499.3, 275.463, FourCC("h007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hhdl"), -9206.3, -1487.1, 15.002, FourCC("hhdl"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -9444.6, -1624.0, 51.558, FourCC("hpea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -7827.8, -1797.0, 93.909, FourCC("hpea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmsc"), -7172.0, -13936.0, 127.640, FourCC("nmsc"))
+    SetUnitState(u, UNIT_STATE_MANA, 600)
 end
 
 function CreateNeutralHostile()
@@ -7463,59 +7485,15 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), -1752.4, -2129.3, 142.656, FourCC("nzom"))
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), -1167.9, -1813.9, 203.863, FourCC("nzom"))
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), -1961.6, -1791.7, 142.656, FourCC("nzom"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncks"), -3037.2, -13738.6, 184.064, FourCC("ncks"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1665.8, -10372.4, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -5494.4, -13365.9, 21.339, FourCC("ncea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -484.3, -10723.9, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1252.5, -8971.4, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2589.4, -15101.2, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -847.6, -12996.0, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -3133.6, -13547.9, 230.327, FourCC("ncea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -846.7, -9727.8, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncnk"), -3356.5, -13533.9, 180.919, FourCC("ncnk"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2040.4, -12777.1, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1749.1, -13001.9, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -4759.3, -12795.6, 230.327, FourCC("ncea"))
     u = BlzCreateUnitWithSkin(p, FourCC("nelb"), -27327.0, -9069.4, 174.670, FourCC("nelb"))
     SetUnitAcquireRange(u, 200.0)
     u = BlzCreateUnitWithSkin(p, FourCC("nmsc"), -21884.0, 4592.0, 307.640, FourCC("nmsc"))
     SetUnitState(u, UNIT_STATE_MANA, 600)
-    u = BlzCreateUnitWithSkin(p, FourCC("ncer"), -5554.9, -13119.1, 123.976, FourCC("ncer"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncer"), -5253.1, -13116.8, 144.411, FourCC("ncer"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -754.7, -11533.3, 340.559, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1862.9, -10528.2, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -637.0, -13528.6, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1084.5, -11592.5, 15.299, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -627.3, -9303.3, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1620.0, -13343.4, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1224.3, -14538.2, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -874.0, -11656.6, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1801.4, -8767.5, 358.709, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -2053.0, -9204.8, 90.000, FourCC("etrp"))
-    IssueImmediateOrder(u, "unroot")
-    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -4454.4, -12636.9, 230.327, FourCC("ncea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -463.5, -12836.0, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1861.4, -9167.3, 348.821, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -2045.5, -8752.8, 90.000, FourCC("etrp"))
-    IssueImmediateOrder(u, "unroot")
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2017.9, -8953.7, 269.333, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncen"), -3215.1, -13719.5, 73.164, FourCC("ncen"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00N"), -2243.3, -8901.0, 262.230, FourCC("n00N"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -5209.4, -13347.4, 230.327, FourCC("ncea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2193.3, -14898.5, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2405.6, -15380.4, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1009.6, -10304.0, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1301.5, -9300.7, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncen"), -3230.5, -13377.4, 294.584, FourCC("ncen"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncim"), -3094.5, -13392.6, 129.799, FourCC("ncim"))
-    u = BlzCreateUnitWithSkin(p, FourCC("eaow"), -935.2, -11316.4, 90.000, FourCC("eaow"))
-    IssueImmediateOrder(u, "unroot")
     u = BlzCreateUnitWithSkin(p, FourCC("nvdw"), -1414.9, 1553.7, 67.942, FourCC("nvdw"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -1464.5, 1197.4, 73.105, FourCC("nvdg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -2004.1, 2944.5, 211.922, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -964.4, 1732.5, 6.175, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -2168.4, 2942.5, 38.420, FourCC("nvdl"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nvdg"), -1406.7, -344.1, 189.817, FourCC("nvdg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -1693.4, 101.7, 34.608, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nelb"), -1649.9, -333.4, 354.670, FourCC("nelb"))
     SetUnitAcquireRange(u, 200.0)
@@ -7537,8 +7515,6 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -2694.8, 3648.2, 18.095, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -1251.4, -149.1, 81.466, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -2861.8, 3733.7, 354.979, FourCC("nvdl"))
-    u = BlzCreateUnitWithSkin(p, FourCC("nmsc"), -7111.9, -13859.6, 307.640, FourCC("nmsc"))
-    SetUnitState(u, UNIT_STATE_MANA, 600)
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -26824.7, 5471.6, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -26428.6, 5674.3, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -26612.4, 5953.5, 357.704, FourCC("e008"))
@@ -7547,8 +7523,6 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -28554.4, 3409.1, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncer"), -23764.9, 3689.9, 324.411, FourCC("ncer"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -23808.5, 3920.5, 50.327, FourCC("ncea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -27268.8, 3575.0, 357.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -26977.6, 3350.2, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), -25980.7, 4311.7, 4.064, FourCC("ncks"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -24563.5, 3210.0, 50.327, FourCC("ncea"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -28144.0, 2229.7, 357.704, FourCC("e008"))
@@ -7558,10 +7532,51 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -28381.0, 4101.7, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncnk"), -25661.5, 4107.0, 0.919, FourCC("ncnk"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -25884.4, 4121.0, 50.327, FourCC("ncea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncks"), -3096.5, -13696.7, 184.064, FourCC("ncks"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -5553.7, -13324.0, 21.339, FourCC("ncea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -543.6, -10682.1, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1311.8, -8929.6, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2648.7, -15059.3, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -906.9, -12954.2, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -3192.8, -13506.0, 230.327, FourCC("ncea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -906.0, -9686.0, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncnk"), -3415.7, -13492.0, 180.919, FourCC("ncnk"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -4818.6, -12753.7, 230.327, FourCC("ncea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncer"), -5614.2, -13077.3, 123.976, FourCC("ncer"))
     u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -26972.4, -674.1, 270.000, FourCC("etrp"))
     IssueImmediateOrder(u, "unroot")
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -28533.6, 1297.0, 357.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncer"), -5312.3, -13074.9, 144.411, FourCC("ncer"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -814.0, -11491.4, 340.559, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -696.3, -13486.7, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1143.8, -11550.6, 15.299, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -686.5, -9261.5, 177.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("uabo"), -25856.0, -7519.8, 120.426, FourCC("uabo"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1679.2, -13301.6, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1283.6, -14496.3, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -933.3, -11614.7, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1860.7, -8725.7, 358.709, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -2112.3, -9163.0, 90.000, FourCC("etrp"))
+    IssueImmediateOrder(u, "unroot")
+    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -4513.7, -12595.1, 230.327, FourCC("ncea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -522.8, -12794.1, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1920.6, -9125.4, 348.821, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -2104.8, -8710.9, 90.000, FourCC("etrp"))
+    IssueImmediateOrder(u, "unroot")
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2077.1, -8911.8, 269.333, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncen"), -3274.4, -13677.7, 73.164, FourCC("ncen"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00N"), -2302.6, -8859.2, 262.230, FourCC("n00N"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -5268.7, -13305.5, 230.327, FourCC("ncea"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2252.5, -14856.6, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2464.8, -15338.5, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1068.9, -10262.1, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1360.7, -9258.8, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncen"), -3289.8, -13335.6, 294.584, FourCC("ncen"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ncim"), -3153.8, -13350.8, 129.799, FourCC("ncim"))
+    u = BlzCreateUnitWithSkin(p, FourCC("eaow"), -994.5, -11274.5, 90.000, FourCC("eaow"))
+    IssueImmediateOrder(u, "unroot")
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1725.0, -10330.6, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1922.1, -10486.4, 177.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -26808.5, -12345.4, 218.420, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -26972.9, -12347.3, 31.922, FourCC("nvdl"))
     u = BlzCreateUnitWithSkin(p, FourCC("nvdl"), -26115.1, -13136.6, 174.979, FourCC("nvdl"))
@@ -7661,25 +7676,25 @@ function CreateRegions()
     gg_rct_Left_Start = Rect(-23616.0, -7968.0, -23360.0, -3392.0)
     gg_rct_Left_Hero = Rect(-24800.0, -5600.0, -22912.0, -3744.0)
     gg_rct_Camp_Top = Rect(-15168.0, -2016.0, -13280.0, -576.0)
-    gg_rct_Left_Tree = Rect(-24320.0, -2944.0, -21792.0, -800.0)
+    gg_rct_Left_Tree = Rect(-25056.0, -2816.0, -23584.0, -768.0)
     we = AddWeatherEffect(gg_rct_Left_Tree, FourCC("LRma"))
     EnableWeatherEffect(we, true)
     gg_rct_Left_Workshop = Rect(-17152.0, -13952.0, -14976.0, -10720.0)
     gg_rct_Left_Arcane = Rect(-24640.0, -12288.0, -22368.0, -10080.0)
     gg_rct_Right_Hero = Rect(-6048.0, -5728.0, -4128.0, -3744.0)
     gg_rct_Right_Start = Rect(-5344.0, -5760.0, -4960.0, -1344.0)
-    gg_rct_Right_Tree = Rect(-5632.0, -8288.0, -2880.0, -6304.0)
+    gg_rct_Right_Tree = Rect(-5184.0, -8448.0, -3872.0, -6304.0)
     gg_rct_Right_Arcane = Rect(-6688.0, 704.0, -4416.0, 2912.0)
     gg_rct_Right_Workshop = Rect(-14240.0, 1504.0, -12032.0, 4064.0)
-    gg_rct_Camp_Bottom = Rect(-16096.0, -8672.0, -13888.0, -7168.0)
+    gg_rct_Camp_Bottom = Rect(-15872.0, -8672.0, -14176.0, -7168.0)
     gg_rct_Left_Orc = Rect(-19456.0, -2688.0, -17376.0, -608.0)
     gg_rct_Right_Orc = Rect(-11680.0, -9056.0, -9248.0, -7072.0)
     gg_rct_Center_Events = Rect(-15168.0, -5312.0, -13888.0, -4032.0)
     gg_rct_Furbolg_Left = Rect(-18016.0, 128.0, -17344.0, 1152.0)
     gg_rct_Furbolg_Right = Rect(-11872.0, -10272.0, -11168.0, -9408.0)
-    gg_rct_Left_Start_Bottom = Rect(-18368.0, -13856.0, -18112.0, -6592.0)
+    gg_rct_Left_Start_Bottom = Rect(-18368.0, -13856.0, -18112.0, -7104.0)
     gg_rct_Left_Start_Top = Rect(-20992.0, -3584.0, -20512.0, 4704.0)
-    gg_rct_Right_Start_Top = Rect(-11008.0, -2944.0, -10720.0, 4704.0)
+    gg_rct_Right_Start_Top = Rect(-11008.0, -2144.0, -10720.0, 4512.0)
     gg_rct_Big_Bottom_Left = Rect(-29280.0, -16256.0, -16992.0, -8416.0)
     gg_rct_Big_Middle_Left = Rect(-28864.0, -8448.0, -16992.0, -3776.0)
     gg_rct_Big_Top_Left = Rect(-29248.0, -3808.0, -16992.0, 7168.0)
@@ -7690,7 +7705,7 @@ function CreateRegions()
     gg_rct_Left_High_Elves = Rect(-25088.0, -352.0, -23296.0, 1600.0)
     gg_rct_Left_Shipyard = Rect(-22272.0, 160.0, -21664.0, 768.0)
     gg_rct_Right_Shipyard = Rect(-7296.0, -10048.0, -6784.0, -9536.0)
-    gg_rct_Right_Start_Bottom = Rect(-8608.0, -13888.0, -8096.0, -5792.0)
+    gg_rct_Right_Start_Bottom = Rect(-8608.0, -14240.0, -8096.0, -5792.0)
     gg_rct_Right_High_Elves = Rect(-5568.0, -11360.0, -3840.0, -9120.0)
     gg_rct_Naga_Right = Rect(-8736.0, -12128.0, -7296.0, -10112.0)
     gg_rct_Naga_Left = Rect(-21216.0, 1152.0, -19584.0, 3168.0)
@@ -7709,7 +7724,7 @@ function CreateRegions()
     gg_rct_Murloc_Gate_Right = Rect(-8128.0, -14240.0, -7456.0, -13472.0)
     gg_rct_Big_Top_Right = Rect(-12064.0, -960.0, 1632.0, 7424.0)
     gg_rct_Big_Middle_Right = Rect(-12064.0, -5472.0, 1792.0, -928.0)
-    gg_rct_Big_Bottom_Right = Rect(-12064.0, -16256.0, 2112.0, -5440.0)
+    gg_rct_Big_Bottom_Right = Rect(-12064.0, -16256.0, 2048.0, -5440.0)
     gg_rct_Big_Bottom_Left_Center = Rect(-17024.0, -16544.0, -14528.0, -6880.0)
     gg_rct_Big_Bottom_Right_Center = Rect(-14560.0, -16576.0, -12032.0, -6208.0)
     gg_rct_Big_Top_Right_Center = Rect(-14560.0, -2464.0, -12032.0, 7264.0)
@@ -7733,21 +7748,22 @@ function CreateRegions()
     gg_rct_Human_Shipyard_Left = Rect(-18624.0, -7776.0, -18048.0, -7392.0)
     gg_rct_Human_Shipyard_Right = Rect(-10944.0, -2048.0, -10368.0, -1664.0)
     gg_rct_Right_Everything = Rect(-5376.0, -10784.0, -5088.0, 4288.0)
-    gg_rct_Left_Everything = Rect(-24960.0, -13344.0, -24640.0, 1728.0)
+    gg_rct_Left_Everything = Rect(-24768.0, -13376.0, -24448.0, 1696.0)
     gg_rct_Left_Mage_Base = Rect(-23904.0, -12384.0, -23040.0, -9984.0)
     gg_rct_Right_Mage_Base = Rect(-5856.0, 640.0, -5024.0, 3008.0)
-    gg_rct_Murloc_Spawn_Left = Rect(-20480.0, 3168.0, -19168.0, 4576.0)
+    gg_rct_Murloc_Spawn_Left = Rect(-20864.0, 3232.0, -19552.0, 4640.0)
     gg_rct_Murloc_Spawn_Right = Rect(-9984.0, -14080.0, -8576.0, -12544.0)
-    gg_rct_Right_Start_Middle = Rect(-13120.0, -5664.0, -12864.0, -2432.0)
+    gg_rct_Right_Start_Middle = Rect(-13120.0, -6176.0, -12864.0, -2112.0)
     gg_rct_Zombie_Mid_Left = Rect(-24704.0, -2624.0, -24128.0, -1984.0)
     gg_rct_Zombie_Mid_Right = Rect(-2880.0, -7168.0, -2560.0, -6656.0)
     gg_rct_Aspect_of_Forest_Left_Mid = Rect(-25088.0, 4160.0, -24544.0, 4736.0)
     gg_rct_Aspect_of_Forest_Right_Mid = Rect(-4544.0, -14048.0, -4000.0, -13472.0)
     gg_rct_Aspect_of_Forest_Right = Rect(-2592.0, -9024.0, -2048.0, -8576.0)
     gg_rct_Right_Elemental_Start = Rect(-1952.0, -512.0, -1312.0, 128.0)
-    gg_rct_Left_Start_Middle = Rect(-16288.0, -6912.0, -16032.0, -3648.0)
+    gg_rct_Left_Start_Middle = Rect(-16288.0, -7008.0, -16032.0, -3328.0)
     gg_rct_Big_Middle_Left_Center = Rect(-17024.0, -6912.0, -14528.0, -3104.0)
     gg_rct_Region_043 = Rect(-17312.0, -8832.0, -17280.0, -8800.0)
+    gg_rct_Region_068 = Rect(-14912.0, -13408.0, -14880.0, -13376.0)
 end
 
 function CreateCameras()
@@ -7902,11 +7918,13 @@ function Trig_testing_Actions()
     IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D"))
     BlzSetUnitBaseDamage(GetTriggerUnit(), 10, 0)
     UnitDamageTargetBJ(GetTriggerUnit(), GetTriggerUnit(), 500, ATTACK_TYPE_MELEE, DAMAGE_TYPE_MAGIC)
+    SetUnitTimeScalePercent(GetEnumUnit(), 100)
 end
 
 function InitTrig_testing()
     gg_trg_testing = CreateTrigger()
     DisableTrigger(gg_trg_testing)
+    TriggerRegisterAnyUnitEventBJ(gg_trg_testing, EVENT_PLAYER_UNIT_ATTACKED)
     TriggerAddCondition(gg_trg_testing, Condition(Trig_testing_Conditions))
     TriggerAddAction(gg_trg_testing, Trig_testing_Actions)
 end
@@ -11864,7 +11882,7 @@ function InitAllyPriorities()
 end
 
 function main()
-    SetCameraBounds(-29696.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), -16256.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM), 1536.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), 7040.0 - GetCameraMargin(CAMERA_MARGIN_TOP), -29696.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), 7040.0 - GetCameraMargin(CAMERA_MARGIN_TOP), 1536.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), -16256.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
+    SetCameraBounds(-29440.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), -16256.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM), 512.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), 7040.0 - GetCameraMargin(CAMERA_MARGIN_TOP), -29440.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), 7040.0 - GetCameraMargin(CAMERA_MARGIN_TOP), 512.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), -16256.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
     SetDayNightModels("Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl", "Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl")
     SetTerrainFogEx(0, 2000.0, 7600.0, 0.500, 0.373, 0.471, 0.588)
     NewSoundEnvironment("Default")
