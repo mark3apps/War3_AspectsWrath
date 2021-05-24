@@ -660,7 +660,6 @@ function spawnAddUnits()
 
     -- Arcane Spawn
     spawn:addUnit("arcane", "h00C", 2, {5, 6, 7, 8, 9}, 3, 12) -- Sorcress
-    spawn:addUnit("arcane", "hgry", 1, {2, 3, 4, 5, 6, 8, 10}, 10, 12) -- Gryphon Rider
 
     -- Arcane Creep Spawn
     spawn:addUnit("arcaneCreep", "narg", 2, {1, 2, 3, 4}, 2, 12) -- Battle Golem
@@ -706,6 +705,8 @@ function spawnAddUnits()
     spawn:addUnit("cityFront", "h015", 3, {2, 3, 4, 5, 6, 7}, 1, 5) -- Militia 2
     spawn:addUnit("cityFront", "hfoo", 3, {2, 3, 4, 5, 6, 7}, 4, 12) -- Footman 1
     spawn:addUnit("cityFront", "hcth", 2, {2, 3, 4, 5, 6}, 6, 12) -- Captian
+    spawn:addUnit("cityFront", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
+    spawn:addUnit("cityFront", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
     -- City Side Spawn
     spawn:addUnit("citySide", "h015", 2, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
@@ -714,8 +715,7 @@ function spawnAddUnits()
     spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 3, 12) -- Knight
     spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 5, 12) -- Knight
     spawn:addUnit("citySide", "h017", 1, {1, 2, 3}, 6, 12) -- Scarlet Commander
-    spawn:addUnit("citySide", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
-    spawn:addUnit("citySide", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
+    spawn:addUnit("citySide", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
 
     -- Kobold Spawn
     spawn:addUnit("kobold", "nkob", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Kobold
@@ -748,11 +748,11 @@ function spawnAddUnits()
     spawn:addUnit("mine", "h01O", 3, {2, 3, 4, 5, 6}, 1, 12) -- Dwarven Soldiers
     spawn:addUnit("mine", "h01O", 2, {3, 4, 5, 6, 7}, 2, 12) -- Dwarven Soldiers
     spawn:addUnit("mine", "h001", 1, {2, 3, 4, 5, 6}, 2, 12) -- Morter Team
-    spawn:addUnit("mine", "h008", 2, {1, 2, 3, 4, 5}, 3, 12) -- Rifleman
-    spawn:addUnit("mine", "h01Q", 1, {2, 3, 4, 5, 6, 7, 8}, 1, 12) -- Mountianeer
-    spawn:addUnit("mine", "h01P", 1, {2, 3, 4, 5, 6, 7, 8}, 1, 12) -- Dwarven Armored Captians
-    spawn:addUnit("mine", "h013", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Rifleman Long
-    spawn:addUnit("mine", "hmtt", 1, {1, 3, 5, 7}, 6, 12) -- Seige Engine
+    spawn:addUnit("mine", "h008", 2, {2, 3, 4, 5, 6}, 3, 12) -- Rifleman
+    spawn:addUnit("mine", "h01Q", 1, {2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Mountianeer
+    spawn:addUnit("mine", "h01P", 1, {2, 3, 4, 5, 6, 7, 8}, 5, 12) -- Dwarven Armored Captians
+    spawn:addUnit("mine", "hgry", 1, {2, 3, 4, 5, 6, 8, 10}, 8, 12) -- Gryphon Rider
+    spawn:addUnit("mine", "hmtt", 1, {1, 2, 4, 5}, 6, 12) -- Seige Engine
     spawn:addUnit("mine", "n00F", 1, {2, 3, 4, 5, 6, 7}, 7, 12) -- Automaton
 
     -- Murloc Spawn
@@ -786,7 +786,6 @@ function spawnAddUnits()
     spawn:addUnit("orc", "nogo", 3, {2, 4, 6, 8, 10}, 4, 12) -- Ogre
     spawn:addUnit("orc", "nw2w", 1, {1, 3, 5, 7, 9}, 3, 12) -- Warlock
     spawn:addUnit("orc", "owad", 1, {1, 6, 9}, 6, 12) -- Orc Warchief
-    -- spawn:addUnit("orc", "ocat", 1, {1,5}, 6, 12)  -- Demolisher
 
     -- Human Shipyard Spawn
     spawn:addUnit("hshipyard", "hdes", 1, {2, 4}, 1, 2) -- Human Frigate
@@ -799,14 +798,6 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "edes", 1, {1, 3, 6}, 4, 5) -- Night Elf Frigate
     spawn:addUnit("shipyard", "edes", 1, {1, 3, 6, 10}, 6, 12) -- Night Elf Frigate
     spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
-
-    -- Town Spawn
-    -- spawn:addUnit("town", "h007", 3, {1, 2, 3, 4, 5}, 1, 5) -- Militia
-    -- spawn:addUnit("town", "h007", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3, 12) -- Militia
-    -- spawn:addUnit("town", "hcth", 1, {1, 2, 3, 4}, 2, 12) -- Captian
-    -- spawn:addUnit("town", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
-    -- spawn:addUnit("town", "hfoo", 5, {1, 2, 5, 6, 8}, 5, 12) -- Footman
-    -- spawn:addUnit("town", "h00L", 2, {1, 3, 7, 9}, 4, 12) -- Knight
 
     -- Undead Spawn
     spawn:addUnit("undead", "ugho", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul

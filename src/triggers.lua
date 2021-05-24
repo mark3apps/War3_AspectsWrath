@@ -48,23 +48,23 @@ function Init_IssuedOrder()
     TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
     TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_ORDER)
 
-    TriggerAddAction(Trig_IssuedOrder, function()
-        local triggerUnit = GetTriggerUnit()
-        local orderId = GetIssuedOrderId()
-        local orderString = OrderId2String(orderId)
+    -- TriggerAddAction(Trig_IssuedOrder, function()
+    --     local triggerUnit = GetTriggerUnit()
+    --     local orderId = GetIssuedOrderId()
+    --     local orderString = OrderId2String(orderId)
 
-        if ordersIgnore[orderString] ~= nil and IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) == false and
-            IsUnitType(triggerUnit, UNIT_TYPE_HERO) == false and GetUnitTypeId(triggerUnit) ~= FourCC("uloc") and
-            GetUnitTypeId(triggerUnit) ~= FourCC("h000") and GetUnitTypeId(triggerUnit) ~= FourCC("h00V") and
-            GetUnitTypeId(triggerUnit) ~= FourCC("h00N") and GetUnitTypeId(triggerUnit) ~= FourCC("h00O") and
-            GetUnitTypeId(triggerUnit) ~= FourCC("h00M") and GetUnitTypeId(triggerUnit) ~= FourCC("o006") and
-            UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]] GetOwningPlayer(triggerUnit) ~=
-            Player(17) and GetOwningPlayer(triggerUnit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
+    --     if ordersIgnore[orderString] ~= nil and IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) == false and
+    --         IsUnitType(triggerUnit, UNIT_TYPE_HERO) == false and GetUnitTypeId(triggerUnit) ~= FourCC("uloc") and
+    --         GetUnitTypeId(triggerUnit) ~= FourCC("h000") and GetUnitTypeId(triggerUnit) ~= FourCC("h00V") and
+    --         GetUnitTypeId(triggerUnit) ~= FourCC("h00N") and GetUnitTypeId(triggerUnit) ~= FourCC("h00O") and
+    --         GetUnitTypeId(triggerUnit) ~= FourCC("h00M") and GetUnitTypeId(triggerUnit) ~= FourCC("o006") and
+    --         UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]] GetOwningPlayer(triggerUnit) ~=
+    --         Player(17) and GetOwningPlayer(triggerUnit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
 
-            PolledWait(3)
-            indexer:order(triggerUnit)
-        end
-    end)
+    --         PolledWait(3)
+    --         indexer:order(triggerUnit)
+    --     end
+    -- end)
 
 end
 
@@ -153,7 +153,7 @@ function init_BaseLoop()
                 break
             end
 
-            base.update(u)
+            --base.update(u)
 
             GroupRemoveUnit(g, u)
         end
@@ -288,6 +288,6 @@ function unitKeepMoving(unit)
         (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
             IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
         PolledWait(0.5)
-        indexer:order(unit, "attack")
+        --indexer:order(unit, "attack")
     end
 end

@@ -14010,3 +14010,15 @@ STRING 4686
 (Open Vertical Left)
 }
 
+STRING 4687
+// Units: hgyr (Gyrocopter), Name (Name)
+{
+Gyrocopter
+}
+
+STRING 4688
+// Abilities: A05C (Spawn Copter), Name (Name)
+{
+Spawn Copter
+}
+
