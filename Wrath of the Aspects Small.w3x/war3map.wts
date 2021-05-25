@@ -2703,7 +2703,7 @@ High Elven Hall
 }
 
 STRING 997
-// Units: ncg2 (Clockwerk Goblin), EditorSuffix (Name - Editor Suffix)
+// Units: ncg2 (Clockwerk), EditorSuffix (Name - Editor Suffix)
 {
 (Used Version)
 }
@@ -13446,11 +13446,6 @@ STRING 4562
 Rack Weapon 2
 }
 
-STRING 4563
-{
-%s the %s (level %d) has fallen.,%s the %s (level %d) has been slain.,%s the %s (level %d) has been killed.,%s the %s (level %d) has fallen.
-}
-
 STRING 4564
 {
 Fortified armor greatly reduces Piercing, Magic, Normal and Hero attacks, but takes extra damage from Siege attacks.
@@ -14020,5 +14015,40 @@ STRING 4688
 // Abilities: A05C (Spawn Copter), Name (Name)
 {
 Spawn Copter
+}
+
+STRING 4689
+// Units: ncg2 (Clockwerk), Name (Name)
+{
+Clockwerk
+}
+
+STRING 4690
+// Units: h01E (Magi), Name (Name)
+{
+Magi
+}
+
+STRING 4691
+// Abilities: A05D (Link), Name (Name)
+{
+Link
+}
+
+STRING 4692
+{
+Type: |Cffffcc00Tower|r
+}
+
+STRING 4693
+// Abilities: A05E (Summon Ancent of Wind), Name (Name)
+{
+Summon Ancent of Wind
+}
+
+STRING 4694
+// Abilities: A05F (Replenish Mana and Life Aspect), Name (Name)
+{
+Replenish Mana and Life Aspect
 }
 

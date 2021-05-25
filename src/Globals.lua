@@ -736,36 +736,37 @@ function spawnAddUnits()
     spawn:addUnit("highElvesCreep", "h010", 2, {1, 2, 3, 4, 5}, 5, 12) -- Elven Guardian
 
     -- Merc Spawn
-    spawn:addUnit("merc", "n00L", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Rogue
-    spawn:addUnit("merc", "n003", 2, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Merc Archer
-    spawn:addUnit("merc", "n002", 3, {2, 3, 4, 7, 8, 9, 10}, 3, 12) -- Merc
-    spawn:addUnit("merc", "n008", 1, {2, 4, 5, 8, 9}, 4, 12) -- Enforcer
-    spawn:addUnit("merc", "nass", 1, {6, 7, 8, 9, 10}, 5, 12) -- Assasin
-    spawn:addUnit("merc", "n004", 1, {7, 8, 9, 10}, 1, 12) -- Wizard Warrior
-    spawn:addUnit("merc", "n005", 1, {7, 8, 9, 10}, 6, 12) -- Bandit Lord
+    spawn:addUnit("merc", "n00L", 4, {1, 2, 3, 4, 5, 6}, 1, 12) -- Rogue
+    spawn:addUnit("merc", "n003", 2, {2, 3, 4, 5, 6, 7, 8}, 2, 12) -- Merc Archer
+    spawn:addUnit("merc", "n002", 3, {1, 2, 3, 4, 5, 6}, 3, 12) -- Merc
+    spawn:addUnit("merc", "n008", 1, {2, 3, 4, 5}, 4, 12) -- Enforcer
+    spawn:addUnit("merc", "nass", 1, {3, 4, 5, 6, 7}, 5, 12) -- Assasin
+    spawn:addUnit("merc", "n004", 1, {2, 4, 6, 8}, 1, 12) -- Wizard Warrior
+    spawn:addUnit("merc", "n005", 1, {1, 3, 5, 7}, 6, 12) -- Bandit Lord
 
     -- Mine Spawn
     spawn:addUnit("mine", "h01O", 3, {2, 3, 4, 5, 6}, 1, 12) -- Dwarven Soldiers
     spawn:addUnit("mine", "h01O", 2, {3, 4, 5, 6, 7}, 2, 12) -- Dwarven Soldiers
     spawn:addUnit("mine", "h001", 1, {2, 3, 4, 5, 6}, 2, 12) -- Morter Team
     spawn:addUnit("mine", "h008", 2, {2, 3, 4, 5, 6}, 3, 12) -- Rifleman
-    spawn:addUnit("mine", "h01Q", 1, {2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Mountianeer
-    spawn:addUnit("mine", "h01P", 1, {2, 3, 4, 5, 6, 7, 8}, 5, 12) -- Dwarven Armored Captians
-    spawn:addUnit("mine", "hgry", 1, {2, 3, 4, 5, 6, 8, 10}, 8, 12) -- Gryphon Rider
-    spawn:addUnit("mine", "hmtt", 1, {1, 2, 4, 5}, 6, 12) -- Seige Engine
-    spawn:addUnit("mine", "n00F", 1, {2, 3, 4, 5, 6, 7}, 7, 12) -- Automaton
+    spawn:addUnit("mine", "h01Q", 1, {1,2, 3, 4, 5, 6, 7}, 4, 12) -- Mountianeer
+    spawn:addUnit("mine", "h01P", 1, {1, 2, 3, 4, 5, 6, 7}, 5, 12) -- Dwarven Armored Captians
+    spawn:addUnit("mine", "h01E", 1, {1, 2, 3, 4, 5, 6, 7}, 1, 12) -- Magi
+    spawn:addUnit("mine", "hgry", 1, {1, 2, 3, 4, 5, 6, 8}, 8, 12) -- Gryphon Rider
+    spawn:addUnit("mine", "hmtt", 1, {2, 3, 4, 5}, 6, 12) -- Seige Engine
+    spawn:addUnit("mine", "n00F", 1, {1, 2, 3, 4, 5, 6}, 7, 12) -- Automaton
 
     -- Murloc Spawn
-    spawn:addUnit("murloc", "nmcf", 4, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Mur'gul Cliffrunner
-    spawn:addUnit("murloc", "nnmg", 1, {2, 4, 6, 7, 8}, 2, 12) -- Mur'gul Reaver
-    spawn:addUnit("murloc", "nmsn", 1, {1, 3, 4, 6, 9}, 3, 12) -- Mur'gul Snarecaster
-    spawn:addUnit("murloc", "nmtw", 1, {1, 3, 6}, 6, 12) -- Mur'gul Tidewarrior
+    spawn:addUnit("murloc", "nmcf", 5, {5, 6, 7, 8, 9, 10}, 1, 12) -- Mur'gul Cliffrunner
+    spawn:addUnit("murloc", "nnmg", 1, {5, 6, 7, 7, 8}, 2, 12) -- Mur'gul Reaver
+    spawn:addUnit("murloc", "nmsn", 1, {6, 7, 8, 9, 10}, 3, 12) -- Mur'gul Snarecaster
+    spawn:addUnit("murloc", "nmtw", 1, {4, 6, 8}, 6, 12) -- Mur'gul Tidewarrior
 
     -- Naga Spawn
-    spawn:addUnit("naga", "nmyr", 2, {1, 3, 4, 6, 7, 9, 10}, 1, 12) -- Naga Myrmidon
-    spawn:addUnit("naga", "nnsw", 1, {4, 5, 7, 9, 10}, 3, 12) -- Naga Siren
-    spawn:addUnit("naga", "nnrg", 1, {5, 8, 9, 10}, 6, 12) -- Naga Royal Guard
-    spawn:addUnit("naga", "nhyc", 1, {1, 3, 5, 8, 9}, 9, 12) -- Dragon Turtle
+    spawn:addUnit("naga", "nmyr", 2, {1, 2, 3, 4, 5, 6, 7}, 1, 12) -- Naga Myrmidon
+    spawn:addUnit("naga", "nnsw", 1, {3, 4, 5, 6, 7}, 3, 12) -- Naga Siren
+    spawn:addUnit("naga", "nnrg", 1, {2, 4, 5, 7}, 6, 12) -- Naga Royal Guard
+    spawn:addUnit("naga", "nhyc", 1, {1, 2, 4, 5, 6}, 9, 12) -- Dragon Turtle
 
     -- Naga Creep Spawn
     spawn:addUnit("nagaCreep", "nmyr", 2, {1, 2, 3, 4}, 2, 12) -- Naga Myrmidon
@@ -773,19 +774,19 @@ function spawnAddUnits()
     spawn:addUnit("nagaCreep", "nsnp", 2, {2, 3, 4, 5, 6}, 5, 12) -- Snap Dragon
 
     -- Night Elves Spawn
-    spawn:addUnit("nightElves", "nwat", 1, {3, 4, 5, 6, 7, 8, 9}, 2, 12) -- Sentry
-    spawn:addUnit("nightElves", "edry", 1, {1, 4, 5, 7, 9}, 3, 12) -- Dryad
-    spawn:addUnit("nightElves", "edoc", 2, {1, 3, 5, 7, 9}, 4, 12) -- Druid of the Claw
-    spawn:addUnit("nightElves", "e005", 1, {2, 4, 6, 8}, 5, 12) -- Mountain Giant
-    spawn:addUnit("nightElves", "nwnr", 1, {5, 10}, 9, 12) -- Ent
+    spawn:addUnit("nightElves", "nwat", 2, {6, 7, 8, 9}, 2, 12) -- Sentry
+    spawn:addUnit("nightElves", "edry", 1, {5, 6, 7, 8, 9}, 3, 12) -- Dryad
+    spawn:addUnit("nightElves", "edoc", 2, {5, 6, 7, 8, 9}, 4, 12) -- Druid of the Claw
+    spawn:addUnit("nightElves", "e005", 1, {4, 6, 8, 9}, 5, 12) -- Mountain Giant
+    spawn:addUnit("nightElves", "nwnr", 1, {5, 10}, 10, 12) -- Ent
 
     -- Orc Spawn
-    spawn:addUnit("orc", "o002", 2, {1, 3, 4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Grunt
-    spawn:addUnit("orc", "o002", 2, {5, 6, 7, 8, 9}, 3, 12) -- Grunt
-    spawn:addUnit("orc", "nftr", 1, {4, 5, 7, 8, 9, 10}, 2, 12) -- Spearman
-    spawn:addUnit("orc", "nogo", 3, {2, 4, 6, 8, 10}, 4, 12) -- Ogre
-    spawn:addUnit("orc", "nw2w", 1, {1, 3, 5, 7, 9}, 3, 12) -- Warlock
-    spawn:addUnit("orc", "owad", 1, {1, 6, 9}, 6, 12) -- Orc Warchief
+    spawn:addUnit("orc", "o002", 3, {1, 3, 4, 5, 6}, 1, 12) -- Grunt
+    spawn:addUnit("orc", "o002", 2, {2, 3, 4, 6, 7}, 3, 12) -- Grunt
+    spawn:addUnit("orc", "nftr", 1, {2, 3, 4, 5, 6, 7}, 2, 12) -- Spearman
+    spawn:addUnit("orc", "nogo", 3, {2, 4, 5, 6, 7}, 4, 12) -- Ogre
+    spawn:addUnit("orc", "nw2w", 1, {1, 3, 5, 6, 7}, 3, 12) -- Warlock
+    spawn:addUnit("orc", "owad", 1, {1, 5, 7}, 6, 12) -- Orc Warchief
 
     -- Human Shipyard Spawn
     spawn:addUnit("hshipyard", "hdes", 1, {2, 4}, 1, 2) -- Human Frigate
@@ -800,9 +801,9 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
 
     -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 3, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6,}, 1, 12) -- Ghoul
     spawn:addUnit("undead", "uskm", 2, {1, 2, 3, 4, 5, 6, 7}, 2, 12) -- Skeleton Mage
-    spawn:addUnit("undead", "unec", 1, {1, 3, 5}, 4, 12) -- Necromancer
+    spawn:addUnit("undead", "unec", 1, {1, 3, 5, 6}, 4, 12) -- Necromancer
     spawn:addUnit("undead", "nerw", 1, {1, 6}, 6, 12) -- Warlock
-    spawn:addUnit("undead", "nfgl", 1, {2, 5, 8}, 8, 12) -- Giant Skeleton
+    spawn:addUnit("undead", "nfgl", 1, {2, 5, 6}, 8, 12) -- Giant Skeleton
 end
