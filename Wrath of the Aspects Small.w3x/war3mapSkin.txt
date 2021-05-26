@@ -6,9 +6,6 @@ IdlePeon=ReplaceableTextures\CommandButtons\BTNAltarOfKings.blp
 InfoPanelIconDamageChaos=UI\Widgets\COnsole\Human\infocard-attack-piercing.blp
 InfoPanelIconDamageChaosNeutral=UI\Widgets\COnsole\Human\infocard-neutral-attack-piercing.blp
 
-[Errors]
-Herodeath=
-
 [FrameDef]
 ARMORTIP_FORT=TRIGSTR_4564
 ARMORTIP_FORT_V0C=TRIGSTR_4565
