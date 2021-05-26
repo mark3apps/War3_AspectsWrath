@@ -14052,3 +14052,15 @@ STRING 4694
 Replenish Mana and Life Aspect
 }
 
+STRING 4695
+// Abilities: A05G (Cycle), Name (Name)
+{
+Cycle
+}
+
+STRING 4696
+// Abilities: A05H (Summon Ancient of Wind), Name (Name)
+{
+Summon Ancient of Wind
+}
+
