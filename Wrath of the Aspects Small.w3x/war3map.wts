@@ -1874,12 +1874,6 @@ STRING 703
 Furbolg Camp
 }
 
-STRING 704
-// Units: e007 (Furbolg Protector), Name (Name)
-{
-Furbolg Protector
-}
-
 STRING 706
 // Abilities: A01N (Magic Defense), Name (Name)
 {

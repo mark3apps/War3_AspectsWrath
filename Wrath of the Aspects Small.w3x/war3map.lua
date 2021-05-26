@@ -7252,7 +7252,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n012"), -23257.5, -808.6, 346.081, FourCC("n012"))
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -23968.0, -1056.0, 270.000, FourCC("e007"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -24128.0, -2432.0, 270.000, FourCC("ngob"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -24640.0, -960.0, 270.000, FourCC("ngob"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -24640.0, -896.0, 270.000, FourCC("ngob"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -20800.0, -6912.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("oalt"), -20128.0, -1568.0, 270.000, FourCC("oalt"))
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -23648.0, -2656.0, 270.000, FourCC("e007"))
@@ -7512,7 +7512,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("nef0"), -6816.0, -10272.0, 270.000, FourCC("nef0"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -6304.0, -10080.0, 270.000, FourCC("nef4"))
     u = BlzCreateUnitWithSkin(p, FourCC("nefm"), -6752.0, -10784.0, 270.000, FourCC("nefm"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -4416.0, -8384.0, 270.000, FourCC("ngob"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -4416.0, -8448.0, 270.000, FourCC("ngob"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01T"), -12864.0, 1088.0, 270.000, FourCC("h01T"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -14208.0, 4032.0, 270.000, FourCC("h01C"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01L"), -13280.0, 3296.0, 270.000, FourCC("h01L"))
@@ -7566,6 +7566,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -5088.0, -8288.0, 270.000, FourCC("e007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n012"), -5798.5, -8535.4, 166.081, FourCC("n012"))
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -5408.0, -6688.0, 270.000, FourCC("e007"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n013"), -7584.0, -6688.0, 270.000, FourCC("n013"))
     gg_unit_nmh1_0783 = BlzCreateUnitWithSkin(p, FourCC("nmh1"), -8736.0, -13344.0, 270.000, FourCC("nmh1"))
 end
 
@@ -7863,7 +7864,7 @@ function CreateRegions()
     gg_rct_Elf_Base_Left = Rect(-25216.0, 736.0, -24480.0, 1632.0)
     gg_rct_Undead_Right = Rect(-12960.0, -6432.0, -11968.0, -5248.0)
     gg_rct_Undead_Left = Rect(-17248.0, -4000.0, -16160.0, -2912.0)
-    gg_rct_Human_Shipyard_Left = Rect(-18624.0, -7776.0, -18048.0, -7392.0)
+    gg_rct_Human_Shipyard_Left = Rect(-18496.0, -7776.0, -18112.0, -7392.0)
     gg_rct_Human_Shipyard_Right = Rect(-10944.0, -2048.0, -10368.0, -1664.0)
     gg_rct_Right_Everything = Rect(-5376.0, -10784.0, -5088.0, 4288.0)
     gg_rct_Left_Everything = Rect(-24768.0, -13376.0, -24448.0, 1696.0)
@@ -9421,7 +9422,7 @@ function Trig_Shipyard_Left_End_Func009C()
     if (GetUnitTypeId(GetEnteringUnit()) == FourCC("edes")) then
         return true
     end
-    if (GetUnitTypeId(GetDyingUnit()) == FourCC("ebsh")) then
+    if (GetUnitTypeId(GetEnteringUnit()) == FourCC("ebsh")) then
         return true
     end
     return false
