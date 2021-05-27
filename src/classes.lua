@@ -2282,10 +2282,12 @@ function init_gateClass()
 		elseif unitType == FourCC("h01D") or unitType == FourCC("h01B") then -- City Gate Vertical Left
 			facingAngle = 180
 
-		elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or unitType ==
-						FourCC("h00U") then -- City Gate and Arcane Gate Vertical Right
+		elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") then -- City Gate Vertical Right
 			facingAngle = 0
 
+		elseif unitType == FourCC("h00T") or unitType == FourCC("h00U") then -- Arcane Gate Vertical Right
+			facingAngle = 180
+			
 		else
 			facingAngle = 0
 			print("Nothing should be Here")
@@ -2477,7 +2479,6 @@ function init_gateClass()
 					elseif unitType == FourCC("h00T") then -- Arcane Gate Vertical Right
 						unitTypeOpen = FourCC("h00U")
 					end
-
 
 					-- Remove Traces of Unit
 					GroupRemoveUnit(gate.g, dyingUnit)

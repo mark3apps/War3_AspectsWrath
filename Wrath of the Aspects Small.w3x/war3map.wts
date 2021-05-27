@@ -10476,12 +10476,6 @@ STRING 3896
 TC - Attack! Damage
 }
 
-STRING 3899
-// Units: nwnr (Elder Ent), Name (Name)
-{
-Elder Ent
-}
-
 STRING 3900
 // Abilities: A04Y (Arrow Storm), Name (Name)
 {
@@ -13849,12 +13843,6 @@ STRING 4655
 Dwarf Tower Rimmed
 }
 
-STRING 4656
-// Doodads: D01U (Dwarf Tower Thin), Name (Name)
-{
-Dwarf Tower Thin
-}
-
 STRING 4657
 // Units: h006 (Fortress), Name (Name)
 {
@@ -14056,5 +14044,65 @@ STRING 4696
 // Abilities: A05H (Summon Ancient of Wind), Name (Name)
 {
 Summon Ancient of Wind
+}
+
+STRING 4697
+// Units: nwnr (Ancient of War), Name (Name)
+{
+Ancient of War
+}
+
+STRING 4698
+// Doodads: D005 (Wildhammer Well), Name (Name)
+{
+Wildhammer Well
+}
+
+STRING 4699
+// Units: h01F (Wildhammer Tower), Name (Name)
+{
+Wildhammer Tower
+}
+
+STRING 4700
+// Units: h01U (Wildhammer Farm), Name (Name)
+{
+Wildhammer Farm
+}
+
+STRING 4701
+// Units: h01V (Wildhammer Tavern), Name (Name)
+{
+Wildhammer Tavern
+}
+
+STRING 4702
+// Units: h01W (Wildhammer Cottage), Name (Name)
+{
+Wildhammer Cottage
+}
+
+STRING 4703
+// Units: h01X (Wildhammer Mound), Name (Name)
+{
+Wildhammer Mound
+}
+
+STRING 4704
+// Units: h01Y (Wildhammer Meeting Hall), Name (Name)
+{
+Wildhammer Meeting Hall
+}
+
+STRING 4705
+// Doodads: D00B (Gryphon Sled), Name (Name)
+{
+Gryphon Sled
+}
+
+STRING 4706
+// Doodads: D00L (Wildhammer Sign Post), Name (Name)
+{
+Wildhammer Sign Post
 }
 

@@ -751,7 +751,7 @@ function spawnAddUnits()
     spawn:addUnit("mine", "h008", 2, {2, 3, 4, 5, 6}, 3, 12) -- Rifleman
     spawn:addUnit("mine", "h01Q", 1, {1,2, 3, 4, 5, 6, 7}, 4, 12) -- Mountianeer
     spawn:addUnit("mine", "h01P", 1, {1, 2, 3, 4, 5, 6, 7}, 5, 12) -- Dwarven Armored Captians
-    spawn:addUnit("mine", "h01E", 1, {1, 2, 3, 4, 5, 6, 7}, 1, 12) -- Magi
+    spawn:addUnit("mine", "h01E", 1, {1, 2, 3, 4, 5, 6, 7}, 6, 12) -- Magi
     spawn:addUnit("mine", "hgry", 1, {1, 2, 3, 4, 5, 6, 8}, 8, 12) -- Gryphon Rider
     spawn:addUnit("mine", "hmtt", 1, {2, 3, 4, 5}, 6, 12) -- Seige Engine
     spawn:addUnit("mine", "n00F", 1, {1, 2, 3, 4, 5, 6}, 7, 12) -- Automaton
