@@ -14106,3 +14106,15 @@ STRING 4706
 Wildhammer Sign Post
 }
 
+STRING 4707
+// Units: e00E (Wildhammer Footman), Name (Name)
+{
+Wildhammer Footman
+}
+
+STRING 4708
+// Units: n006 (Wildhammer Axethrower), Name (Name)
+{
+Wildhammer Axethrower
+}
+

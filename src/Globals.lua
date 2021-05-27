@@ -672,7 +672,7 @@ function spawnAddUnits()
     spawn:addUnit("arcaneHero", "nsgg", 1, {4, 6}, 9, 12) -- Seige Golem
 
     -- Arcane Top Spawn
-    spawn:addUnit("arcaneTop", "narg", 4, {4, 5, 6}, 2, 12) -- Battle Golem
+    spawn:addUnit("arcaneTop", "narg", 4, {4, 5, 6}, 1, 12) -- Battle Golem
     spawn:addUnit("arcaneTop", "hwt2", 1, {4, 5, 6}, 4, 12) -- Water Elemental (Level 2)
     spawn:addUnit("arcaneTop", "hwt3", 1, {5, 6}, 8, 12) -- Water Elemental (Level 3)
 

@@ -392,6 +392,7 @@ gg_unit_h014_0158 = nil
 gg_unit_nmh1_0735 = nil
 gg_unit_u001_0097 = nil
 gg_unit_u001_0098 = nil
+gg_trg_Wildhammer_Building_Dies = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -7277,12 +7278,12 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("hgra"), -15680.0, -13824.0, 270.000, FourCC("hgra"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13824.0, -13760.0, 270.000, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01X"), -13824.0, -13184.0, 270.000, FourCC("h01X"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01V"), -13376.0, -11776.0, 270.000, FourCC("h01V"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01F"), -12928.0, -13184.0, 270.000, FourCC("h01F"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -14080.0, -11264.0, 270.000, FourCC("h01W"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01F"), -13056.0, -13184.0, 270.000, FourCC("h01F"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01Y"), -13504.0, -12480.0, 270.000, FourCC("h01Y"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -12928.0, -13376.0, 270.000, FourCC("h01U"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13120.0, -12992.0, 270.000, FourCC("h01W"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13120.0, -13504.0, 270.000, FourCC("h01W"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -13056.0, -13376.0, 270.000, FourCC("h01U"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13120.0, -13056.0, 270.000, FourCC("h01W"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13248.0, -13504.0, 270.000, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -14336.0, -13888.0, 270.000, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -13440.0, -14080.0, 270.000, FourCC("h01U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -13952.0, -13696.0, 270.000, FourCC("h01U"))
@@ -7291,13 +7292,13 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01F"), -13696.0, -11456.0, 270.000, FourCC("h01F"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -13632.0, -11648.0, 270.000, FourCC("h01U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14016.0, -11520.0, 270.000, FourCC("h01U"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14080.0, -11264.0, 270.000, FourCC("h01U"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13120.0, -11840.0, 270.000, FourCC("h01W"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13504.0, -11776.0, 270.000, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -12800.0, -12160.0, 270.000, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -12864.0, -12544.0, 270.000, FourCC("h01W"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14016.0, -12736.0, 270.000, FourCC("h01U"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14144.0, -12736.0, 270.000, FourCC("h01U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14080.0, -12416.0, 270.000, FourCC("h01U"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -20256.0, 1632.0, 270.000, FourCC("nnad"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -14080.0, -12864.0, 270.000, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -21696.0, 1984.0, 270.000, FourCC("nnsg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -20384.0, 3552.0, 270.000, FourCC("nmh0"))
     gg_unit_nmh1_0735 = BlzCreateUnitWithSkin(p, FourCC("nmh1"), -20320.0, 4064.0, 270.000, FourCC("nmh1"))
@@ -9361,6 +9362,49 @@ function InitTrig_Elf_Boat_Dies()
     TriggerAddAction(gg_trg_Elf_Boat_Dies, Trig_Elf_Boat_Dies_Actions)
 end
 
+function Trig_Wildhammer_Building_Dies_Func001C()
+    if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01W")) then
+        return true
+    end
+    if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01U")) then
+        return true
+    end
+    if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01Y")) then
+        return true
+    end
+    if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01X")) then
+        return true
+    end
+    if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01V")) then
+        return true
+    end
+    if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01F")) then
+        return true
+    end
+    return false
+end
+
+function Trig_Wildhammer_Building_Dies_Conditions()
+    if (not Trig_Wildhammer_Building_Dies_Func001C()) then
+        return false
+    end
+    return true
+end
+
+function Trig_Wildhammer_Building_Dies_Actions()
+    udg_TEMP_Pos2 = GetUnitLoc(GetDyingUnit())
+    CreateNUnitsAtLoc(2, FourCC("e00E"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, bj_UNIT_FACING)
+    CreateNUnitsAtLoc(1, FourCC("n006"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, bj_UNIT_FACING)
+        RemoveLocation ( udg_TEMP_Pos2 )
+end
+
+function InitTrig_Wildhammer_Building_Dies()
+    gg_trg_Wildhammer_Building_Dies = CreateTrigger()
+    TriggerRegisterAnyUnitEventBJ(gg_trg_Wildhammer_Building_Dies, EVENT_PLAYER_UNIT_DEATH)
+    TriggerAddCondition(gg_trg_Wildhammer_Building_Dies, Condition(Trig_Wildhammer_Building_Dies_Conditions))
+    TriggerAddAction(gg_trg_Wildhammer_Building_Dies, Trig_Wildhammer_Building_Dies_Actions)
+end
+
 function Trig_Human_Boat_Dies_Func001C()
     if (GetUnitTypeId(GetDyingUnit()) == FourCC("hdes")) then
         return true
@@ -11366,6 +11410,7 @@ function InitCustomTriggers()
     InitTrig_Zombie_Infect()
     InitTrig_Upgrade_to_Fel_Warlock()
     InitTrig_Elf_Boat_Dies()
+    InitTrig_Wildhammer_Building_Dies()
     InitTrig_Human_Boat_Dies()
     InitTrig_Chain_Lightning()
     InitTrig_Energy_Tower()
