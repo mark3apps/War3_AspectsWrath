@@ -13885,18 +13885,6 @@ STRING 4663
 Mine
 }
 
-STRING 4664
-// Units: h01O (Dwarven Soldier), Name (Name)
-{
-Dwarven Soldier
-}
-
-STRING 4665
-// Units: h01P (Dwarven Armored Captian), Name (Name)
-{
-Dwarven Armored Captian
-}
-
 STRING 4667
 // Abilities: A014 (Hardened Armor), Name (Name)
 {
@@ -13937,12 +13925,6 @@ STRING 4674
 // Abilities: A05B (Spawn Assassins), Name (Name)
 {
 Spawn Assassins
-}
-
-STRING 4675
-// Units: h01Q (Dwarven Mountianeer), Name (Name)
-{
-Dwarven Mountianeer
 }
 
 STRING 4676
@@ -14106,15 +14088,45 @@ STRING 4706
 Wildhammer Sign Post
 }
 
-STRING 4707
-// Units: e00E (Wildhammer Footman), Name (Name)
-{
-Wildhammer Footman
-}
-
 STRING 4708
 // Units: n006 (Wildhammer Axethrower), Name (Name)
 {
 Wildhammer Axethrower
+}
+
+STRING 4709
+// Units: h01O (Armored Guard), Name (Name)
+{
+Armored Guard
+}
+
+STRING 4710
+// Units: h01P (Elite Guard), Name (Name)
+{
+Elite Guard
+}
+
+STRING 4711
+// Units: h01Q (Mountianeer), Name (Name)
+{
+Mountianeer
+}
+
+STRING 4712
+// Units: e00E (Wildhammer Dwarf), Name (Name)
+{
+Wildhammer Dwarf
+}
+
+STRING 4713
+// Units: e00F (Wildhammer Elite), Name (Name)
+{
+Wildhammer Elite
+}
+
+STRING 4714
+// Abilities: A05J (Berserk Dwarf), Name (Name)
+{
+Berserk Dwarf
 }
 

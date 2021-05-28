@@ -311,6 +311,7 @@ gg_trg_Elder_Ent_Movement = nil
 gg_trg_Zombie_Infect = nil
 gg_trg_Upgrade_to_Fel_Warlock = nil
 gg_trg_Elf_Boat_Dies = nil
+gg_trg_Wildhammer_Building_Dies = nil
 gg_trg_Human_Boat_Dies = nil
 gg_trg_Chain_Lightning = nil
 gg_trg_Energy_Tower = nil
@@ -392,7 +393,6 @@ gg_unit_h014_0158 = nil
 gg_unit_nmh1_0735 = nil
 gg_unit_u001_0097 = nil
 gg_unit_u001_0098 = nil
-gg_trg_Wildhammer_Building_Dies = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -7028,7 +7028,6 @@ function CreateBuildingsForPlayer20()
     gg_unit_hshy_0011 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -18464.0, -7456.0, 270.000, FourCC("hshy"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -15520.0, -6240.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -19968.0, -13248.0, 270.000, FourCC("nft2"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     gg_unit_h003_0015 = BlzCreateUnitWithSkin(p, FourCC("h003"), -23488.0, -11200.0, 270.000, FourCC("h003"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23680.0, -5376.0, 270.000, FourCC("n000"))
     gg_unit_h014_0017 = BlzCreateUnitWithSkin(p, FourCC("h014"), -20032.0, -11200.0, 270.000, FourCC("h014"))
@@ -7037,7 +7036,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01A"), -14208.0, -6400.0, 270.000, FourCC("h01A"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -15968.0, -6752.0, 270.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -19968.0, -9152.0, 270.000, FourCC("nft2"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -22400.0, -11008.0, 270.000, FourCC("nft2"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22720.0, -10112.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23744.0, -4032.0, 270.000, FourCC("n000"))
@@ -7065,7 +7063,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -14656.0, -11008.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -14912.0, -12736.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -19968.0, -9664.0, 270.000, FourCC("nft2"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -17088.0, -10752.0, 270.000, FourCC("h01I"))
     gg_unit_e003_0058 = BlzCreateUnitWithSkin(p, FourCC("e003"), -24448.0, -1792.0, 270.000, FourCC("e003"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01J"), -15392.0, -11232.0, 270.000, FourCC("h01J"))
@@ -7141,7 +7138,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -11584.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -23872.0, -10816.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -19968.0, -12736.0, 270.000, FourCC("nft2"))
-    SetUnitState(u, UNIT_STATE_MANA, 0)
     u = BlzCreateUnitWithSkin(p, FourCC("h00U"), -20544.0, -11200.0, 90.000, FourCC("h00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -19584.0, -11200.0, 270.000, FourCC("h00G"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -20928.0, -10624.0, 270.000, FourCC("n007"))
@@ -7290,13 +7286,13 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -12800.0, -12416.0, 178.353, FourCC("h01U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01F"), -12736.0, -12288.0, 151.104, FourCC("h01F"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01F"), -13696.0, -11456.0, 144.546, FourCC("h01F"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -13632.0, -11648.0, -78.026, FourCC("h01U"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -13632.0, -11648.0, 281.974, FourCC("h01U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14016.0, -11520.0, 22.561, FourCC("h01U"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13504.0, -11776.0, 214.139, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -12800.0, -12160.0, 270.000, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -12864.0, -12544.0, 162.327, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14144.0, -12736.0, 38.282, FourCC("h01U"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14080.0, -12416.0, -0.608, FourCC("h01U"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01U"), -14080.0, -12416.0, 359.392, FourCC("h01U"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnad"), -20256.0, 1632.0, 270.000, FourCC("nnad"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -14080.0, -12864.0, 66.112, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnsg"), -21696.0, 1984.0, 270.000, FourCC("nnsg"))
@@ -9413,10 +9409,41 @@ function Trig_Wildhammer_Building_Dies_Conditions()
     return true
 end
 
+function Trig_Wildhammer_Building_Dies_Func003C()
+    if (not (GetRandomInt(1, 3) > 1)) then
+        return false
+    end
+    return true
+end
+
+function Trig_Wildhammer_Building_Dies_Func004C()
+    if (not (GetRandomInt(1, 3) > 1)) then
+        return false
+    end
+    return true
+end
+
+function Trig_Wildhammer_Building_Dies_Func005C()
+    if (not (GetRandomInt(1, 3) == 1)) then
+        return false
+    end
+    return true
+end
+
 function Trig_Wildhammer_Building_Dies_Actions()
     udg_TEMP_Pos2 = GetUnitLoc(GetDyingUnit())
-    CreateNUnitsAtLoc(GetRandomInt(1, 2), FourCC("e00E"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, bj_UNIT_FACING)
-    CreateNUnitsAtLoc(GetRandomInt(1, 2), FourCC("n006"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, bj_UNIT_FACING)
+    if (Trig_Wildhammer_Building_Dies_Func003C()) then
+        CreateNUnitsAtLoc(GetRandomInt(1, 2), FourCC("n006"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, bj_UNIT_FACING)
+    else
+    end
+    if (Trig_Wildhammer_Building_Dies_Func004C()) then
+        CreateNUnitsAtLoc(GetRandomInt(1, 2), FourCC("e00E"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, bj_UNIT_FACING)
+    else
+    end
+    if (Trig_Wildhammer_Building_Dies_Func005C()) then
+        CreateNUnitsAtLoc(1, FourCC("e00F"), GetOwningPlayer(GetDyingUnit()), udg_TEMP_Pos2, bj_UNIT_FACING)
+    else
+    end
         RemoveLocation ( udg_TEMP_Pos2 )
 end
 
