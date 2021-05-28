@@ -260,13 +260,6 @@ gg_rct_Big_Middle_Left_Center = nil
 gg_rct_Region_043 = nil
 gg_rct_Region_068 = nil
 gg_rct_Region_069 = nil
-gg_cam_Castle_1 = nil
-gg_cam_Castle_3 = nil
-gg_cam_Castle_4 = nil
-gg_cam_Camera_005 = nil
-gg_cam_Camera_006 = nil
-gg_cam_Camera_007 = nil
-gg_cam_Left_Base_Hero_Cam = nil
 gg_snd_PurgeTarget1 = nil
 gg_snd_BattleNetTick = nil
 gg_snd_CreepAggroWhat1 = nil
@@ -393,6 +386,8 @@ gg_unit_h014_0158 = nil
 gg_unit_nmh1_0735 = nil
 gg_unit_u001_0097 = nil
 gg_unit_u001_0098 = nil
+gg_cam_Base_Left = nil
+gg_cam_Base_Left_Start = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -5541,7 +5536,9 @@ function addRegions()
     loc:add("sUndeadRight", gg_rct_Undead_Right)
 
     -- Creep Rects
+    loc:add("cForestMidLeft", gg_rct_Aspect_of_Forest_Left_Mid, "cForestLeft", true)
     loc:add("cForestLeft", gg_rct_Aspect_of_Forest_Left, "topRight", true)
+    loc:add("cForestMidRight", gg_rct_Aspect_of_Forest_Right_Mid, "cForestRight", false)
     loc:add("cForestRight", gg_rct_Aspect_of_Forest_Right, "bottomLeft", false)
     loc:add("cTidesLeft", gg_rct_Murloc_Left, "topRight", true)
     loc:add("cTidesRight", gg_rct_Murloc_Right, "bottomLeft", false)
@@ -6094,8 +6091,8 @@ function spawnAddBases()
                   "sKolboldRight", "bottomLeft", gg_unit_ngt2_0455)
     spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109,
                   "sElfRight", "bottomLeft", gg_unit_nheb_0036)
-    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft",
-                  gg_unit_nheb_0109, "sElfRight", "cForestRight",
+    spawn:addBase("highElvesCreep", "sElfLeft", "cForestMidLeft",
+                  gg_unit_nheb_0109, "sElfRight", "cForestMidRight",
                   gg_unit_nheb_0036)
     spawn:addBase("merc", "sCampLeft", "bottomRight", gg_unit_n001_0048,
                   "sCampRight", "topLeft", gg_unit_n001_0049)
@@ -6275,243 +6272,229 @@ function spawnAddUnits()
 end
 
 function init_Lua()
-    debugprint = 2
-    -- Define Classes
-    debugfunc(function()
-        init_triggers()
+	debugprint = 2
+	-- Hide UI Keep Mouse
+	BlzHideOriginFrames(true)
+	BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
 
-        Init_luaGlobals()
-        init_locationClass()
-        init_indexerClass()
-        init_heroClass()
-        init_spawnClass()
-        init_aiClass()
-        init_baseClass()
-        init_gateClass()
-    end, "Define Classes")
-    -- dprint("Classes Defined", 2)
+	-- Lock Cam
+	CameraSetupApplyForPlayer(true, gg_cam_Base_Left, Player(0), 0)
+	local camX = CameraSetupGetDestPositionX(gg_cam_Base_Left)
+	local camY = CameraSetupGetDestPositionY(gg_cam_Base_Left)
+    SetCameraBounds(camX, camY, camX, camY,camX, camY, camX, camY)
 
-    -- Start the Map init
-    Init_Map()
+	-- Define Classes
+	debugfunc(function()
+		init_triggers()
 
-    -- Init Classes
-    debugfunc(function()
-        loc = loc_Class.new()
-        addRegions()
-        addBases()
+		Init_luaGlobals()
+		init_locationClass()
+		init_indexerClass()
+		init_heroClass()
+		init_spawnClass()
+		init_aiClass()
+		init_baseClass()
+		init_gateClass()
+	end, "Define Classes")
+	-- dprint("Classes Defined", 2)
 
-        indexer = indexer_Class.new()
-        hero = hero_Class.new()
-        ai = ai_Class.new()
-        spawn = spawn_Class.new()
+	-- Start the Map init
+	Init_Map()
 
-    end, "Init Classes")
+	-- Init Classes
+	debugfunc(function()
+		loc = loc_Class.new()
+		addRegions()
+		addBases()
 
-    -- dprint("Classes Initialized", 2)
+		indexer = indexer_Class.new()
+		hero = hero_Class.new()
+		ai = ai_Class.new()
+		spawn = spawn_Class.new()
 
-    -- Init Trigger
+	end, "Init Classes")
 
-    ConditionalTriggerExecute(gg_trg_baseAndHeals)
+	-- dprint("Classes Initialized", 2)
 
-    init_AutoZoom()
-    Init_HeroLevelsUp()
-    Init_UnitCastsSpell()
-    init_spawnTimers()
-    Init_UnitEntersMap()
-    Init_stopCasting()
-    Init_finishCasting()
-    Init_IssuedOrder()
-    Init_UnitDies()
-    init_MoveToNext()
-    Init_PickingPhase()
-    init_BaseLoop()
+	-- Init Trigger
 
-    -- Abilities
-    debugfunc(function()
-        init_Abilities()
-    end, "Init Triggers")
+	ConditionalTriggerExecute(gg_trg_baseAndHeals)
 
-    -- dprint("Triggers Initialized", 2)
+	init_AutoZoom()
+	Init_HeroLevelsUp()
+	Init_UnitCastsSpell()
+	init_spawnTimers()
+	Init_UnitEntersMap()
+	Init_stopCasting()
+	Init_finishCasting()
+	Init_IssuedOrder()
+	Init_UnitDies()
+	init_MoveToNext()
+	Init_PickingPhase()
+	init_BaseLoop()
 
-    -- Spawn Base / Unit Setup
-    -- Init Trigger
-    debugfunc(function()
-        spawnAddBases()
-        spawnAddUnits()
-    end, "Init Spawn")
+	-- Abilities
+	debugfunc(function() init_Abilities() end, "Init Triggers")
 
-    -- dprint("Spawn Setup", 2)
+	-- dprint("Triggers Initialized", 2)
 
-    -- Setup Delayed Init Triggers
-    init_Delayed_1()
-    init_Delayed_10()
+	-- Spawn Base / Unit Setup
+	-- Init Trigger
+	debugfunc(function()
+		spawnAddBases()
+		spawnAddUnits()
+	end, "Init Spawn")
 
-    dprint("Init Finished")
+	-- dprint("Spawn Setup", 2)
+
+	-- Setup Delayed Init Triggers
+	init_Delayed_1()
+	init_Delayed_10()
+
+	--dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
 function init_Delayed_1()
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 1)
-    TriggerAddAction(t, function()
-        debugfunc(function()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventSingle(t, 1)
+	TriggerAddAction(t, function()
+		debugfunc(function() startHeroPicker() end, "Start Delayed Triggers")
+		-- dprint("AI Started", 2)
 
-            startHeroPicker()
-        end, "Start Delayed Triggers")
-        -- dprint("AI Started", 2)
+		gate.main()
+		orderStartingUnits()
+		spawn:startSpawn()
 
-        gate.main()
-        orderStartingUnits()
-        spawn:startSpawn()
+		-- dprint("Spawn Started", 2)
 
-        -- dprint("Spawn Started", 2)
-
-    end)
+	end)
 end
 
 -- Init Delayed Functions 10 second after Map Init
 function init_Delayed_10()
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 10)
-    TriggerAddAction(t, function()
-        debugfunc(function()
-            FogMaskEnableOn()
-            FogEnableOn()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventSingle(t, 10)
+	TriggerAddAction(t, function()
+		debugfunc(function()
 
-            -- Set up the Creep Event Timer
-            StartTimerBJ(udg_EventTimer, false, 350.00)
-        end, "Start Delayed Triggers")
-    end)
+			-- Set up the Creep Event Timer
+			StartTimerBJ(udg_EventTimer, false, 350.00)
+		end, "Start Delayed Triggers")
+	end)
 end
 
 function Init_Map()
 
-    FogMaskEnableOff()
-    FogEnableOff()
-    MeleeStartingVisibility()
-    udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
-    udg_ALL_PLAYERS = GetPlayersAll()
+	FogMaskEnableOff()
+	FogEnableOff()
+	MeleeStartingVisibility()
+	udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
+	udg_ALL_PLAYERS = GetPlayersAll()
 
-    -- Turn on Bounty
-    ForForce(udg_ALL_PLAYERS, function()
-        SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer())
-    end)
+	-- Turn on Bounty
+	ForForce(udg_ALL_PLAYERS, function() SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer()) end)
 
-    -- Add Computers to their group
-    udg_PLAYERcomputers[1] = Player(18)
-    udg_PLAYERcomputers[2] = Player(19)
-    udg_PLAYERcomputers[3] = Player(20)
-    udg_PLAYERcomputers[4] = Player(21)
-    udg_PLAYERcomputers[5] = Player(22)
-    udg_PLAYERcomputers[6] = Player(23)
+	-- Add Computers to their group
+	udg_PLAYERcomputers[1] = Player(18)
+	udg_PLAYERcomputers[2] = Player(19)
+	udg_PLAYERcomputers[3] = Player(20)
+	udg_PLAYERcomputers[4] = Player(21)
+	udg_PLAYERcomputers[5] = Player(22)
+	udg_PLAYERcomputers[6] = Player(23)
 
-    -- Create the Allied Computers
-    ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
+	-- Create the Allied Computers
+	ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
+	ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
+	ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
 
-    -- Create the Federation Computers
-    ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
+	-- Create the Federation Computers
+	ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
+	ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
+	ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
 
-    for i = 0, 11 do
-        if GetPlayerSlotState(Player(i)) == PLAYER_SLOT_STATE_PLAYING then
-            ForceAddPlayer(udg_playersAll, Player(i))
-        end
-    end
+	for i = 0, 11 do
+		if GetPlayerSlotState(Player(i)) == PLAYER_SLOT_STATE_PLAYING then ForceAddPlayer(udg_playersAll, Player(i)) end
+	end
 
-    -- Create the Allied Users
-    ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
+	-- Create the Allied Users
+	ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
 
-    -- Create the Federation Users
-    ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
+	-- Create the Federation Users
+	ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
 
-    -- Change the color of Player 1 and Player 2
-    SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
-    SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
+	-- Change the color of Player 1 and Player 2
+	SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
+	SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
 
-    -- Change the color of the computer players to all match
-    ForForce(udg_PLAYERGRPallied, function()
-        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true)
-    end)
-    ForForce(udg_PLAYERGRPfederation, function()
-        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
-    end)
+	-- Change the color of the computer players to all match
+	ForForce(udg_PLAYERGRPallied, function() SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true) end)
+	ForForce(udg_PLAYERGRPfederation, function() SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true) end)
 
 end
 
 function startHeroPicker()
-    HeroSelector.initHeroes()
+	HeroSelector.initHeroes()
 
-    for i = 1, 8 do
-        HeroSelector.show(true, Player(i))
-    end
+	for i = 1, 8 do HeroSelector.show(true, Player(i)) end
 end
 
 function init_aiLoopStates()
-    if (ai.count > 0) then
-        local t = CreateTrigger()
-        TriggerRegisterTimerEventPeriodic(t, ai.tick)
-        TriggerAddAction(t, function()
+	if (ai.count > 0) then
+		local t = CreateTrigger()
+		TriggerRegisterTimerEventPeriodic(t, ai.tick)
+		TriggerAddAction(t, function()
 
-            -- print(" -- ")
-            if ai.loop >= ai.count then
-                ai.loop = 1
-            else
-                ai.loop = ai.loop + 1
-            end
+			-- print(" -- ")
+			if ai.loop >= ai.count then
+				ai.loop = 1
+			else
+				ai.loop = ai.loop + 1
+			end
 
-            local i = ai.heroOptions[ai.loop]
-            print(i)
+			local i = ai.heroOptions[ai.loop]
+			print(i)
 
-            debugfunc(function()
-                ai:updateIntel(i)
+			debugfunc(function()
+				ai:updateIntel(i)
 
-                if ai:isAlive(i) then
-                    ai:STATEDead(i)
-                    ai:STATELowHealth(i)
-                    ai:STATEStopFleeing(i)
-                    ai:STATEFleeing(i)
-                    ai:STATEHighHealth(i)
-                    ai:STATEcastingSpell(i)
-                    ai:STATEDefend(i)
-                    ai:STATEDefending(i)
-                    ai:STATEAbilities(i)
-                    ai:CleanUp(i)
-                else
-                    ai:STATERevived(i)
-                end
-                print(" --")
-            end, "AI STATES")
-        end)
-    end
+				if ai:isAlive(i) then
+					ai:STATEDead(i)
+					ai:STATELowHealth(i)
+					ai:STATEStopFleeing(i)
+					ai:STATEFleeing(i)
+					ai:STATEHighHealth(i)
+					ai:STATEcastingSpell(i)
+					ai:STATEDefend(i)
+					ai:STATEDefending(i)
+					ai:STATEAbilities(i)
+					ai:CleanUp(i)
+				else
+					ai:STATERevived(i)
+				end
+				print(" --")
+			end, "AI STATES")
+		end)
+	end
 end
 
 function init_spawnTimers()
-    -- Create Spawn Loop Trigger
+	-- Create Spawn Loop Trigger
 
-    TriggerAddAction(Trig_spawnLoop, function()
-        debugfunc(function()
-            spawn:loopSpawn()
-        end, "spawn:loopSpawn")
-    end)
+	TriggerAddAction(Trig_spawnLoop, function() debugfunc(function() spawn:loopSpawn() end, "spawn:loopSpawn") end)
 
-    TriggerAddAction(Trig_upgradeCreeps, function()
-        debugfunc(function()
-            spawn:upgradeCreeps()
-        end, "spawn:upgradeCreeps()")
-    end)
+	TriggerAddAction(Trig_upgradeCreeps,
+	                 function() debugfunc(function() spawn:upgradeCreeps() end, "spawn:upgradeCreeps()") end)
 end
 
 --
@@ -6521,63 +6504,77 @@ end
 -- Camera Setup
 function init_AutoZoom()
 
-    -- DisableTrigger(Trig_AutoZoom)
-    TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
-    TriggerAddAction(Trig_AutoZoom, function()
-        local i = 1
-        local ug = CreateGroup()
+	-- -- DisableTrigger(Trig_AutoZoom)
+	-- TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
+	-- TriggerAddAction(Trig_AutoZoom, function()
+	--     local i = 1
+	--     local ug = CreateGroup()
 
-        while (i <= 12) do
-            if GetLocalPlayer() == Player(i) then
-                ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-                SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-                    (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
-                DestroyGroup(ug)
-            end
-            i = i + 1
-        end
-    end)
+	--     while (i <= 12) do
+	--         if GetLocalPlayer() == Player(i) then
+	--             ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
+	--             SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
+	--                 (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+	--             DestroyGroup(ug)
+	--         end
+	--         i = i + 1
+	--     end
+	-- end)
 end
 
 function Init_PickingPhase()
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventPeriodic(t, 1.00)
-    TriggerAddAction(t, function()
-        -- debugfunc(function()
-        local u, player
-        local unitHero = false
-        local g = CreateGroup()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventPeriodic(t, 1.00)
+	TriggerAddAction(t, function()
+		-- debugfunc(function()
+		local u, player
+		local unitHero = false
+		local g = CreateGroup()
 
-        local count = (5 - GetTriggerExecCount(GetTriggeringTrigger()))
+		local count = (15 - GetTriggerExecCount(GetTriggeringTrigger()))
 
-        HeroSelector.setTitleText(GetLocalizedString("DEFAULTTIMERDIALOGTEXT") .. ": " .. count)
+		HeroSelector.setTitleText(GetLocalizedString("DEFAULTTIMERDIALOGTEXT") .. ": " .. count)
 
-        if count <= 5 then
-            PlaySoundBJ(gg_snd_BattleNetTick)
-        end
+		if count <= 5 then PlaySoundBJ(gg_snd_BattleNetTick) end
 
-        if count <= 0 then
+		if count <= 0 then
 
-            ForForce(udg_playersAll, function()
-                player = GetEnumPlayer()
+			ForForce(udg_playersAll, function()
+				player = GetEnumPlayer()
 
-                if not hero.players[GetConvertedPlayerId(player)].picked then
-                    print("picking for player " .. GetConvertedPlayerId(player))
-                    HeroSelector.forcePick(player)
-                end
+				if not hero.players[GetConvertedPlayerId(player)].picked then
+					print("picking for player " .. GetConvertedPlayerId(player))
+					HeroSelector.forcePick(player)
+				end
 
-                local heroUnit = hero.players[GetConvertedPlayerId(player)].hero
-                ShowUnitShow(heroUnit)
-                SelectUnitForPlayerSingle(heroUnit, player)
-                PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 0)
-            end)
+				local heroUnit = hero.players[GetConvertedPlayerId(player)].hero
+				ShowUnitShow(heroUnit)
+				SelectUnitForPlayerSingle(heroUnit, player)
 
-            DisableTrigger(GetTriggeringTrigger())
-            HeroSelector.destroy()
-            init_aiLoopStates()
-        end
-        -- end, "Pick Hero")
-    end)
+				-- Reset back to normal
+                SetCameraBoundsToRect(bj_mapInitialCameraBounds)
+				ShowInterface(false, 0)
+				BlzHideOriginFrames(false)
+				BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
+
+				-- Fade back to normal
+				ShowInterface(true, 5)
+				CameraSetSmoothingFactor(1)
+
+				CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 3)
+
+				-- PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 3)
+			end)
+
+			FogMaskEnableOn()
+			FogEnableOn()
+
+			DisableTrigger(GetTriggeringTrigger())
+			HeroSelector.destroy()
+			init_aiLoopStates()
+		end
+		-- end, "Pick Hero")
+	end)
 end
 
 --
@@ -6769,13 +6766,13 @@ do
 
             debugfunc(function()
                 if hero.players[pNumber].cameraLock == true then
-                    PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
-                        GetUnitY(hero.players[pNumber].hero), 0)
+                    --PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
+                        --GetUnitY(hero.players[pNumber].hero), 0)
 
                     hero.players[pNumber].cameraLock = false
                     print("Camera Unlocked")
                 else
-                    SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
+                    --SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
                     hero.players[pNumber].cameraLock = true
                     print("Camera Locked")
                 end
@@ -6794,7 +6791,7 @@ do
             SelectUnitForPlayerSingle(playerDetails.hero, player)
 
             if playerDetails.cameraLocked == true then
-                PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
+                --PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
             end
         end)
     end
@@ -6912,6 +6909,20 @@ function CreateBuildingsForPlayer0()
     local t
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("halt"), -24992.0, -4576.0, 270.000, FourCC("halt"))
+end
+
+function CreateUnitsForPlayer0()
+    local p = Player(0)
+    local u
+    local unitID
+    local t
+    local life
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -19650.2, -8995.2, 36.119, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -19661.0, -9416.3, 310.390, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -19862.2, -9243.5, 60.070, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -19633.5, -12784.8, 257.884, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -19794.6, -12997.5, 286.779, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -19642.4, -13278.0, 185.405, FourCC("narg"))
 end
 
 function CreateBuildingsForPlayer1()
@@ -7072,7 +7083,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01K"), -16480.0, -13600.0, 270.000, FourCC("h01K"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -17280.0, -4928.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01L"), -15776.0, -12640.0, 270.000, FourCC("h01L"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -15808.0, -13248.0, 270.000, FourCC("h01I"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -15808.0, -13312.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -22720.0, -5824.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -17344.0, -12672.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -14848.0, -8448.0, 270.000, FourCC("n00M"))
@@ -7157,7 +7168,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -17088.0, -1536.0, 270.000, FourCC("h01R"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -14464.0, -8000.0, 270.000, FourCC("h01R"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -14464.0, -7360.0, 270.000, FourCC("n00M"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -15680.0, -8320.0, 270.000, FourCC("n00M"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -15872.0, -8448.0, 270.000, FourCC("n00M"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00Z"), -19616.0, 3488.0, 270.000, FourCC("n00Z"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -20224.0, -4544.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00G"), -21312.0, -11200.0, 270.000, FourCC("h00G"))
@@ -7338,6 +7349,22 @@ function CreateUnitsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h01O"), -15519.0, -13112.4, 50.517, FourCC("h01O"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01O"), -15553.0, -13591.0, 220.821, FourCC("h01O"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01O"), -16567.1, -12151.9, 334.137, FourCC("h01O"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -17843.1, -1224.2, 210.982, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -18307.3, -2120.2, 206.577, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -18834.5, -1160.3, 136.207, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -14599.5, -8206.8, 122.375, FourCC("n00L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -15622.3, -7798.4, 138.745, FourCC("n00L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -15762.4, -8260.3, 42.029, FourCC("n00L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -14875.8, -7488.3, 309.478, FourCC("n00L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -20399.6, 1953.4, 83.120, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -19889.4, 2667.3, 150.589, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -21228.6, 1571.7, 351.656, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -19258.9, 4065.4, 156.868, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -19941.7, 4264.8, 54.834, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -20108.9, 3838.7, 182.906, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -19873.1, 3400.3, 350.079, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -20568.7, 3957.4, 265.482, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -19620.8, 3763.0, 351.936, FourCC("nmcf"))
 end
 
 function CreateBuildingsForPlayer23()
@@ -7354,7 +7381,6 @@ function CreateBuildingsForPlayer23()
     gg_unit_n001_0049 = BlzCreateUnitWithSkin(p, FourCC("n001"), -13760.0, -1088.0, 270.000, FourCC("n001"))
     SetUnitColor(gg_unit_n001_0049, ConvertPlayerColor(9))
     gg_unit_h006_0055 = BlzCreateUnitWithSkin(p, FourCC("h006"), -12928.0, 2368.0, 270.000, FourCC("h006"))
-    SetUnitState(gg_unit_h006_0055, UNIT_STATE_MANA, 100)
     gg_unit_o001_0078 = BlzCreateUnitWithSkin(p, FourCC("o001"), -9728.0, -8320.0, 270.000, FourCC("o001"))
     gg_unit_h00E_0081 = BlzCreateUnitWithSkin(p, FourCC("h00E"), -5312.0, -4544.0, 270.000, FourCC("h00E"))
     u = BlzCreateUnitWithSkin(p, FourCC("o004"), -12224.0, -9536.0, 270.000, FourCC("o004"))
@@ -7553,7 +7579,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("h01T"), -12864.0, 1088.0, 270.000, FourCC("h01T"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01C"), -14208.0, 4032.0, 270.000, FourCC("h01C"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01L"), -13280.0, 3296.0, 270.000, FourCC("h01L"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -13248.0, 3904.0, 270.000, FourCC("h01I"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -13248.0, 3968.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -11712.0, 3328.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01M"), -12128.0, 2848.0, 270.000, FourCC("h01M"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01M"), -12320.0, 1824.0, 270.000, FourCC("h01M"))
@@ -7662,6 +7688,28 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("h01O"), -13537.0, 3768.4, 230.517, FourCC("h01O"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01O"), -13503.0, 4247.0, 40.821, FourCC("h01O"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01O"), -12488.9, 2807.9, 154.137, FourCC("h01O"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -9431.8, -301.0, 216.119, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -9421.0, 120.1, 130.390, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -9219.8, -52.7, 240.070, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -9448.6, 3488.6, 77.884, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -9287.5, 3701.4, 106.779, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("narg"), -9439.7, 3981.8, 5.405, FourCC("narg"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11110.8, -8190.7, 30.982, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -10646.5, -7294.7, 26.577, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("o002"), -10119.4, -8254.7, 316.207, FourCC("o002"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -14473.0, -1084.5, 302.375, FourCC("n00L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -13450.2, -1492.9, 318.745, FourCC("n00L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -13310.1, -1031.0, 222.029, FourCC("n00L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00L"), -14196.7, -1803.0, 129.478, FourCC("n00L"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -8718.5, -11271.2, 263.120, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -9228.7, -11985.1, 330.589, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -7889.6, -10889.4, 171.656, FourCC("nmyr"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -9806.7, -13498.6, 336.868, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -9123.9, -13697.9, 234.834, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -8956.7, -13271.8, 2.906, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -9192.5, -12833.4, 170.079, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -8496.9, -13390.5, 85.482, FourCC("nmcf"))
+    u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -9444.8, -13196.1, 171.936, FourCC("nmcf"))
 end
 
 function CreateNeutralHostile()
@@ -7742,7 +7790,7 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -26500.0, -92.2, 259.659, FourCC("etrp"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncks"), -3096.5, -13696.7, 184.064, FourCC("ncks"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -5553.7, -13324.0, 21.339, FourCC("ncea"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -543.6, -10682.1, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -586.4, -10641.0, 177.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2648.7, -15059.3, 177.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -906.9, -12954.2, 177.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -3192.8, -13506.0, 230.327, FourCC("ncea"))
@@ -7764,7 +7812,7 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("ncea"), -5268.7, -13305.5, 230.327, FourCC("ncea"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2252.5, -14856.6, 177.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -2464.8, -15338.5, 177.704, FourCC("e008"))
-    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1068.9, -10262.1, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1354.6, -8888.5, 177.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncen"), -3289.8, -13335.6, 294.584, FourCC("ncen"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncim"), -3153.8, -13350.8, 129.799, FourCC("ncim"))
     u = BlzCreateUnitWithSkin(p, FourCC("eaow"), -994.5, -11274.5, 90.000, FourCC("eaow"))
@@ -7806,6 +7854,13 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -28171.3, 300.9, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -28390.7, -123.6, 357.704, FourCC("e008"))
     u = BlzCreateUnitWithSkin(p, FourCC("e008"), -27765.4, -455.5, 357.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -948.8, -9644.9, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -729.3, -9220.4, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1111.6, -10221.1, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("e008"), -1403.5, -9217.8, 177.704, FourCC("e008"))
+    u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -2620.0, -9251.8, 79.659, FourCC("etrp"))
+    u = BlzCreateUnitWithSkin(p, FourCC("etrp"), -2518.5, -8925.2, 151.182, FourCC("etrp"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00N"), -2909.1, -8871.9, 227.210, FourCC("n00N"))
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), -26821.0, -6994.5, 23.863, FourCC("nzom"))
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), -25900.3, -6948.0, 306.253, FourCC("nzom"))
     u = BlzCreateUnitWithSkin(p, FourCC("nzom"), -26670.2, -7161.4, 322.656, FourCC("nzom"))
@@ -7851,6 +7906,7 @@ function CreatePlayerBuildings()
 end
 
 function CreatePlayerUnits()
+    CreateUnitsForPlayer0()
     CreateUnitsForPlayer20()
     CreateUnitsForPlayer23()
 end
@@ -7868,14 +7924,14 @@ function CreateRegions()
     gg_rct_Left_Start = Rect(-23616.0, -7968.0, -23360.0, -3392.0)
     gg_rct_Left_Hero = Rect(-24800.0, -5600.0, -22912.0, -3744.0)
     gg_rct_Camp_Top = Rect(-14624.0, -2016.0, -13280.0, -832.0)
-    gg_rct_Left_Tree = Rect(-25056.0, -2816.0, -23584.0, -768.0)
+    gg_rct_Left_Tree = Rect(-24928.0, -2816.0, -23584.0, -896.0)
     we = AddWeatherEffect(gg_rct_Left_Tree, FourCC("LRma"))
     EnableWeatherEffect(we, true)
     gg_rct_Left_Workshop = Rect(-17056.0, -13760.0, -15136.0, -10880.0)
     gg_rct_Left_Arcane = Rect(-24640.0, -12288.0, -22368.0, -10080.0)
     gg_rct_Right_Hero = Rect(-6048.0, -5728.0, -4128.0, -3744.0)
     gg_rct_Right_Start = Rect(-5344.0, -5760.0, -4960.0, -1344.0)
-    gg_rct_Right_Tree = Rect(-5184.0, -8448.0, -3872.0, -6304.0)
+    gg_rct_Right_Tree = Rect(-5184.0, -8448.0, -4096.0, -6304.0)
     gg_rct_Right_Arcane = Rect(-6688.0, 704.0, -4416.0, 2912.0)
     gg_rct_Right_Workshop = Rect(-13696.0, 1440.0, -12032.0, 4480.0)
     gg_rct_Camp_Bottom = Rect(-15872.0, -8512.0, -14496.0, -7168.0)
@@ -7960,97 +8016,32 @@ function CreateRegions()
 end
 
 function CreateCameras()
-    gg_cam_Castle_1 = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_ROTATION, 115.6, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_ANGLE_OF_ATTACK, 325.9, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_TARGET_DISTANCE, 2007.6, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_FARZ, 10000.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_NEARZ, 16.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_1, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Castle_1, -20121.5, -1144.1, 0.0)
-    gg_cam_Castle_3 = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_ROTATION, 35.4, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_ANGLE_OF_ATTACK, 330.5, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_TARGET_DISTANCE, 1815.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_FARZ, 9090.9, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_NEARZ, 16.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_3, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Castle_3, -2875.8, -7283.0, 0.0)
-    gg_cam_Castle_4 = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_ROTATION, 53.2, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_ANGLE_OF_ATTACK, 327.3, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_TARGET_DISTANCE, 2923.1, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_FARZ, 10000.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_NEARZ, 16.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Castle_4, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Castle_4, -20664.0, -9269.2, 0.0)
-    gg_cam_Camera_005 = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_ROTATION, 132.5, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_ANGLE_OF_ATTACK, 328.2, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_TARGET_DISTANCE, 1996.5, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_FARZ, 10000.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_NEARZ, 16.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_005, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Camera_005, -22670.8, -5712.4, 0.0)
-    gg_cam_Camera_006 = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_ROTATION, 145.8, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_ANGLE_OF_ATTACK, 4.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_TARGET_DISTANCE, 3536.9, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_FARZ, 10000.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_NEARZ, 16.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_006, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Camera_006, -24687.4, 634.1, 0.0)
-    gg_cam_Camera_007 = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_ROTATION, 108.8, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_ANGLE_OF_ATTACK, 350.3, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_TARGET_DISTANCE, 3002.1, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_FARZ, 10000.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_NEARZ, 16.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Camera_007, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Camera_007, -24871.4, 1100.2, 0.0)
-    gg_cam_Left_Base_Hero_Cam = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_ROTATION, 99.1, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_ANGLE_OF_ATTACK, 320.7, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_TARGET_DISTANCE, 2415.8, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_FARZ, 10000.0, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_NEARZ, 16.0, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_Left_Base_Hero_Cam, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Left_Base_Hero_Cam, -24312.7, -3862.7, 0.0)
+    gg_cam_Base_Left = CreateCameraSetup()
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ZOFFSET, 40.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ROTATION, 121.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ANGLE_OF_ATTACK, 335.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_TARGET_DISTANCE, 1955.5, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ROLL, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_FARZ, 7737.5, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_NEARZ, 16.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
+    CameraSetupSetDestPosition(gg_cam_Base_Left, -25109.1, -3125.5, 0.0)
+    gg_cam_Base_Left_Start = CreateCameraSetup()
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_ROTATION, 90.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_ANGLE_OF_ATTACK, 299.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_TARGET_DISTANCE, 1955.5, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_ROLL, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_FARZ, 7737.5, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_NEARZ, 16.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
+    CameraSetupSetDestPosition(gg_cam_Base_Left_Start, -24461.1, -4038.5, 0.0)
 end
 
 function Trig_Level100_Func001001002001()

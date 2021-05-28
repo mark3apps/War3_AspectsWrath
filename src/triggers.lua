@@ -187,13 +187,13 @@ do
 
             debugfunc(function()
                 if hero.players[pNumber].cameraLock == true then
-                    PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
-                        GetUnitY(hero.players[pNumber].hero), 0)
+                    --PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
+                        --GetUnitY(hero.players[pNumber].hero), 0)
 
                     hero.players[pNumber].cameraLock = false
                     print("Camera Unlocked")
                 else
-                    SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
+                    --SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
                     hero.players[pNumber].cameraLock = true
                     print("Camera Locked")
                 end
@@ -212,7 +212,7 @@ do
             SelectUnitForPlayerSingle(playerDetails.hero, player)
 
             if playerDetails.cameraLocked == true then
-                PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
+                --PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
             end
         end)
     end

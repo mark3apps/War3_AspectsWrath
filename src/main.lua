@@ -1,241 +1,227 @@
 function init_Lua()
-    debugprint = 2
-    -- Define Classes
-    debugfunc(function()
-        init_triggers()
+	debugprint = 2
+	-- Hide UI Keep Mouse
+	BlzHideOriginFrames(true)
+	BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
 
-        Init_luaGlobals()
-        init_locationClass()
-        init_indexerClass()
-        init_heroClass()
-        init_spawnClass()
-        init_aiClass()
-        init_baseClass()
-        init_gateClass()
-    end, "Define Classes")
-    -- dprint("Classes Defined", 2)
+	-- Lock Cam
+	CameraSetupApplyForPlayer(true, gg_cam_Base_Left, Player(0), 0)
+	local camX = CameraSetupGetDestPositionX(gg_cam_Base_Left)
+	local camY = CameraSetupGetDestPositionY(gg_cam_Base_Left)
+    SetCameraBounds(camX, camY, camX, camY,camX, camY, camX, camY)
 
-    -- Start the Map init
-    Init_Map()
+	-- Define Classes
+	debugfunc(function()
+		init_triggers()
 
-    -- Init Classes
-    debugfunc(function()
-        loc = loc_Class.new()
-        addRegions()
-        addBases()
+		Init_luaGlobals()
+		init_locationClass()
+		init_indexerClass()
+		init_heroClass()
+		init_spawnClass()
+		init_aiClass()
+		init_baseClass()
+		init_gateClass()
+	end, "Define Classes")
+	-- dprint("Classes Defined", 2)
 
-        indexer = indexer_Class.new()
-        hero = hero_Class.new()
-        ai = ai_Class.new()
-        spawn = spawn_Class.new()
+	-- Start the Map init
+	Init_Map()
 
-    end, "Init Classes")
+	-- Init Classes
+	debugfunc(function()
+		loc = loc_Class.new()
+		addRegions()
+		addBases()
 
-    -- dprint("Classes Initialized", 2)
+		indexer = indexer_Class.new()
+		hero = hero_Class.new()
+		ai = ai_Class.new()
+		spawn = spawn_Class.new()
 
-    -- Init Trigger
+	end, "Init Classes")
 
-    ConditionalTriggerExecute(gg_trg_baseAndHeals)
+	-- dprint("Classes Initialized", 2)
 
-    init_AutoZoom()
-    Init_HeroLevelsUp()
-    Init_UnitCastsSpell()
-    init_spawnTimers()
-    Init_UnitEntersMap()
-    Init_stopCasting()
-    Init_finishCasting()
-    Init_IssuedOrder()
-    Init_UnitDies()
-    init_MoveToNext()
-    Init_PickingPhase()
-    init_BaseLoop()
+	-- Init Trigger
 
-    -- Abilities
-    debugfunc(function()
-        init_Abilities()
-    end, "Init Triggers")
+	ConditionalTriggerExecute(gg_trg_baseAndHeals)
 
-    -- dprint("Triggers Initialized", 2)
+	init_AutoZoom()
+	Init_HeroLevelsUp()
+	Init_UnitCastsSpell()
+	init_spawnTimers()
+	Init_UnitEntersMap()
+	Init_stopCasting()
+	Init_finishCasting()
+	Init_IssuedOrder()
+	Init_UnitDies()
+	init_MoveToNext()
+	Init_PickingPhase()
+	init_BaseLoop()
 
-    -- Spawn Base / Unit Setup
-    -- Init Trigger
-    debugfunc(function()
-        spawnAddBases()
-        spawnAddUnits()
-    end, "Init Spawn")
+	-- Abilities
+	debugfunc(function() init_Abilities() end, "Init Triggers")
 
-    -- dprint("Spawn Setup", 2)
+	-- dprint("Triggers Initialized", 2)
 
-    -- Setup Delayed Init Triggers
-    init_Delayed_1()
-    init_Delayed_10()
+	-- Spawn Base / Unit Setup
+	-- Init Trigger
+	debugfunc(function()
+		spawnAddBases()
+		spawnAddUnits()
+	end, "Init Spawn")
 
-    dprint("Init Finished")
+	-- dprint("Spawn Setup", 2)
+
+	-- Setup Delayed Init Triggers
+	init_Delayed_1()
+	init_Delayed_10()
+
+	--dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
 function init_Delayed_1()
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 1)
-    TriggerAddAction(t, function()
-        debugfunc(function()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventSingle(t, 1)
+	TriggerAddAction(t, function()
+		debugfunc(function() startHeroPicker() end, "Start Delayed Triggers")
+		-- dprint("AI Started", 2)
 
-            startHeroPicker()
-        end, "Start Delayed Triggers")
-        -- dprint("AI Started", 2)
+		gate.main()
+		orderStartingUnits()
+		spawn:startSpawn()
 
-        gate.main()
-        orderStartingUnits()
-        spawn:startSpawn()
+		-- dprint("Spawn Started", 2)
 
-        -- dprint("Spawn Started", 2)
-
-    end)
+	end)
 end
 
 -- Init Delayed Functions 10 second after Map Init
 function init_Delayed_10()
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventSingle(t, 10)
-    TriggerAddAction(t, function()
-        debugfunc(function()
-            FogMaskEnableOn()
-            FogEnableOn()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventSingle(t, 10)
+	TriggerAddAction(t, function()
+		debugfunc(function()
 
-            -- Set up the Creep Event Timer
-            StartTimerBJ(udg_EventTimer, false, 350.00)
-        end, "Start Delayed Triggers")
-    end)
+			-- Set up the Creep Event Timer
+			StartTimerBJ(udg_EventTimer, false, 350.00)
+		end, "Start Delayed Triggers")
+	end)
 end
 
 function Init_Map()
 
-    FogMaskEnableOff()
-    FogEnableOff()
-    MeleeStartingVisibility()
-    udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
-    udg_ALL_PLAYERS = GetPlayersAll()
+	FogMaskEnableOff()
+	FogEnableOff()
+	MeleeStartingVisibility()
+	udg_UserPlayers = GetPlayersByMapControl(MAP_CONTROL_USER)
+	udg_ALL_PLAYERS = GetPlayersAll()
 
-    -- Turn on Bounty
-    ForForce(udg_ALL_PLAYERS, function()
-        SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer())
-    end)
+	-- Turn on Bounty
+	ForForce(udg_ALL_PLAYERS, function() SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer()) end)
 
-    -- Add Computers to their group
-    udg_PLAYERcomputers[1] = Player(18)
-    udg_PLAYERcomputers[2] = Player(19)
-    udg_PLAYERcomputers[3] = Player(20)
-    udg_PLAYERcomputers[4] = Player(21)
-    udg_PLAYERcomputers[5] = Player(22)
-    udg_PLAYERcomputers[6] = Player(23)
+	-- Add Computers to their group
+	udg_PLAYERcomputers[1] = Player(18)
+	udg_PLAYERcomputers[2] = Player(19)
+	udg_PLAYERcomputers[3] = Player(20)
+	udg_PLAYERcomputers[4] = Player(21)
+	udg_PLAYERcomputers[5] = Player(22)
+	udg_PLAYERcomputers[6] = Player(23)
 
-    -- Create the Allied Computers
-    ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
+	-- Create the Allied Computers
+	ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
+	ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
+	ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
 
-    -- Create the Federation Computers
-    ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
-    ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
+	-- Create the Federation Computers
+	ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
+	ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
+	ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
 
-    for i = 0, 11 do
-        if GetPlayerSlotState(Player(i)) == PLAYER_SLOT_STATE_PLAYING then
-            ForceAddPlayer(udg_playersAll, Player(i))
-        end
-    end
+	for i = 0, 11 do
+		if GetPlayerSlotState(Player(i)) == PLAYER_SLOT_STATE_PLAYING then ForceAddPlayer(udg_playersAll, Player(i)) end
+	end
 
-    -- Create the Allied Users
-    ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
-    ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
+	-- Create the Allied Users
+	ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
+	ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
 
-    -- Create the Federation Users
-    ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
-    ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
+	-- Create the Federation Users
+	ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
+	ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
 
-    -- Change the color of Player 1 and Player 2
-    SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
-    SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
+	-- Change the color of Player 1 and Player 2
+	SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
+	SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
 
-    -- Change the color of the computer players to all match
-    ForForce(udg_PLAYERGRPallied, function()
-        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true)
-    end)
-    ForForce(udg_PLAYERGRPfederation, function()
-        SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true)
-    end)
+	-- Change the color of the computer players to all match
+	ForForce(udg_PLAYERGRPallied, function() SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true) end)
+	ForForce(udg_PLAYERGRPfederation, function() SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true) end)
 
 end
 
 function startHeroPicker()
-    HeroSelector.initHeroes()
+	HeroSelector.initHeroes()
 
-    for i = 1, 8 do
-        HeroSelector.show(true, Player(i))
-    end
+	for i = 1, 8 do HeroSelector.show(true, Player(i)) end
 end
 
 function init_aiLoopStates()
-    if (ai.count > 0) then
-        local t = CreateTrigger()
-        TriggerRegisterTimerEventPeriodic(t, ai.tick)
-        TriggerAddAction(t, function()
+	if (ai.count > 0) then
+		local t = CreateTrigger()
+		TriggerRegisterTimerEventPeriodic(t, ai.tick)
+		TriggerAddAction(t, function()
 
-            -- print(" -- ")
-            if ai.loop >= ai.count then
-                ai.loop = 1
-            else
-                ai.loop = ai.loop + 1
-            end
+			-- print(" -- ")
+			if ai.loop >= ai.count then
+				ai.loop = 1
+			else
+				ai.loop = ai.loop + 1
+			end
 
-            local i = ai.heroOptions[ai.loop]
-            print(i)
+			local i = ai.heroOptions[ai.loop]
+			print(i)
 
-            debugfunc(function()
-                ai:updateIntel(i)
+			debugfunc(function()
+				ai:updateIntel(i)
 
-                if ai:isAlive(i) then
-                    ai:STATEDead(i)
-                    ai:STATELowHealth(i)
-                    ai:STATEStopFleeing(i)
-                    ai:STATEFleeing(i)
-                    ai:STATEHighHealth(i)
-                    ai:STATEcastingSpell(i)
-                    ai:STATEDefend(i)
-                    ai:STATEDefending(i)
-                    ai:STATEAbilities(i)
-                    ai:CleanUp(i)
-                else
-                    ai:STATERevived(i)
-                end
-                print(" --")
-            end, "AI STATES")
-        end)
-    end
+				if ai:isAlive(i) then
+					ai:STATEDead(i)
+					ai:STATELowHealth(i)
+					ai:STATEStopFleeing(i)
+					ai:STATEFleeing(i)
+					ai:STATEHighHealth(i)
+					ai:STATEcastingSpell(i)
+					ai:STATEDefend(i)
+					ai:STATEDefending(i)
+					ai:STATEAbilities(i)
+					ai:CleanUp(i)
+				else
+					ai:STATERevived(i)
+				end
+				print(" --")
+			end, "AI STATES")
+		end)
+	end
 end
 
 function init_spawnTimers()
-    -- Create Spawn Loop Trigger
+	-- Create Spawn Loop Trigger
 
-    TriggerAddAction(Trig_spawnLoop, function()
-        debugfunc(function()
-            spawn:loopSpawn()
-        end, "spawn:loopSpawn")
-    end)
+	TriggerAddAction(Trig_spawnLoop, function() debugfunc(function() spawn:loopSpawn() end, "spawn:loopSpawn") end)
 
-    TriggerAddAction(Trig_upgradeCreeps, function()
-        debugfunc(function()
-            spawn:upgradeCreeps()
-        end, "spawn:upgradeCreeps()")
-    end)
+	TriggerAddAction(Trig_upgradeCreeps,
+	                 function() debugfunc(function() spawn:upgradeCreeps() end, "spawn:upgradeCreeps()") end)
 end
 
 --
@@ -245,61 +231,75 @@ end
 -- Camera Setup
 function init_AutoZoom()
 
-    -- DisableTrigger(Trig_AutoZoom)
-    TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
-    TriggerAddAction(Trig_AutoZoom, function()
-        local i = 1
-        local ug = CreateGroup()
+	-- -- DisableTrigger(Trig_AutoZoom)
+	-- TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
+	-- TriggerAddAction(Trig_AutoZoom, function()
+	--     local i = 1
+	--     local ug = CreateGroup()
 
-        while (i <= 12) do
-            if GetLocalPlayer() == Player(i) then
-                ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-                SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-                    (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
-                DestroyGroup(ug)
-            end
-            i = i + 1
-        end
-    end)
+	--     while (i <= 12) do
+	--         if GetLocalPlayer() == Player(i) then
+	--             ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
+	--             SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
+	--                 (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
+	--             DestroyGroup(ug)
+	--         end
+	--         i = i + 1
+	--     end
+	-- end)
 end
 
 function Init_PickingPhase()
-    local t = CreateTrigger()
-    TriggerRegisterTimerEventPeriodic(t, 1.00)
-    TriggerAddAction(t, function()
-        -- debugfunc(function()
-        local u, player
-        local unitHero = false
-        local g = CreateGroup()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventPeriodic(t, 1.00)
+	TriggerAddAction(t, function()
+		-- debugfunc(function()
+		local u, player
+		local unitHero = false
+		local g = CreateGroup()
 
-        local count = (5 - GetTriggerExecCount(GetTriggeringTrigger()))
+		local count = (15 - GetTriggerExecCount(GetTriggeringTrigger()))
 
-        HeroSelector.setTitleText(GetLocalizedString("DEFAULTTIMERDIALOGTEXT") .. ": " .. count)
+		HeroSelector.setTitleText(GetLocalizedString("DEFAULTTIMERDIALOGTEXT") .. ": " .. count)
 
-        if count <= 5 then
-            PlaySoundBJ(gg_snd_BattleNetTick)
-        end
+		if count <= 5 then PlaySoundBJ(gg_snd_BattleNetTick) end
 
-        if count <= 0 then
+		if count <= 0 then
 
-            ForForce(udg_playersAll, function()
-                player = GetEnumPlayer()
+			ForForce(udg_playersAll, function()
+				player = GetEnumPlayer()
 
-                if not hero.players[GetConvertedPlayerId(player)].picked then
-                    print("picking for player " .. GetConvertedPlayerId(player))
-                    HeroSelector.forcePick(player)
-                end
+				if not hero.players[GetConvertedPlayerId(player)].picked then
+					print("picking for player " .. GetConvertedPlayerId(player))
+					HeroSelector.forcePick(player)
+				end
 
-                local heroUnit = hero.players[GetConvertedPlayerId(player)].hero
-                ShowUnitShow(heroUnit)
-                SelectUnitForPlayerSingle(heroUnit, player)
-                PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 0)
-            end)
+				local heroUnit = hero.players[GetConvertedPlayerId(player)].hero
+				ShowUnitShow(heroUnit)
+				SelectUnitForPlayerSingle(heroUnit, player)
 
-            DisableTrigger(GetTriggeringTrigger())
-            HeroSelector.destroy()
-            init_aiLoopStates()
-        end
-        -- end, "Pick Hero")
-    end)
+				-- Reset back to normal
+                SetCameraBoundsToRect(bj_mapInitialCameraBounds)
+				ShowInterface(false, 0)
+				BlzHideOriginFrames(false)
+				BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
+
+				-- Fade back to normal
+				ShowInterface(true, 5)
+				CameraSetSmoothingFactor(1)
+
+				CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 3)
+
+				-- PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 3)
+			end)
+
+			FogMaskEnableOn()
+			FogEnableOn()
+
+			DisableTrigger(GetTriggeringTrigger())
+			HeroSelector.destroy()
+			init_aiLoopStates()
+		end
+		-- end, "Pick Hero")
+	end)
 end

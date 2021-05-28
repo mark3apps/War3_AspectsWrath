@@ -75,7 +75,9 @@ function addRegions()
     loc:add("sUndeadRight", gg_rct_Undead_Right)
 
     -- Creep Rects
+    loc:add("cForestMidLeft", gg_rct_Aspect_of_Forest_Left_Mid, "cForestLeft", true)
     loc:add("cForestLeft", gg_rct_Aspect_of_Forest_Left, "topRight", true)
+    loc:add("cForestMidRight", gg_rct_Aspect_of_Forest_Right_Mid, "cForestRight", false)
     loc:add("cForestRight", gg_rct_Aspect_of_Forest_Right, "bottomLeft", false)
     loc:add("cTidesLeft", gg_rct_Murloc_Left, "topRight", true)
     loc:add("cTidesRight", gg_rct_Murloc_Right, "bottomLeft", false)
@@ -628,8 +630,8 @@ function spawnAddBases()
                   "sKolboldRight", "bottomLeft", gg_unit_ngt2_0455)
     spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109,
                   "sElfRight", "bottomLeft", gg_unit_nheb_0036)
-    spawn:addBase("highElvesCreep", "sElfLeft", "cForestLeft",
-                  gg_unit_nheb_0109, "sElfRight", "cForestRight",
+    spawn:addBase("highElvesCreep", "sElfLeft", "cForestMidLeft",
+                  gg_unit_nheb_0109, "sElfRight", "cForestMidRight",
                   gg_unit_nheb_0036)
     spawn:addBase("merc", "sCampLeft", "bottomRight", gg_unit_n001_0048,
                   "sCampRight", "topLeft", gg_unit_n001_0049)
