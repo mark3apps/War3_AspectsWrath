@@ -8,7 +8,7 @@ function init_Lua()
 	CameraSetupApplyForPlayer(true, gg_cam_Base_Left, Player(0), 0)
 	local camX = CameraSetupGetDestPositionX(gg_cam_Base_Left)
 	local camY = CameraSetupGetDestPositionY(gg_cam_Base_Left)
-    SetCameraBounds(camX, camY, camX, camY,camX, camY, camX, camY)
+	SetCameraBounds(camX, camY, camX, camY, camX, camY, camX, camY)
 
 	-- Define Classes
 	debugfunc(function()
@@ -78,7 +78,7 @@ function init_Lua()
 	init_Delayed_1()
 	init_Delayed_10()
 
-	--dprint("Init Finished")
+	-- dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -231,22 +231,26 @@ end
 -- Camera Setup
 function init_AutoZoom()
 
-	-- -- DisableTrigger(Trig_AutoZoom)
-	-- TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
-	-- TriggerAddAction(Trig_AutoZoom, function()
-	--     local i = 1
-	--     local ug = CreateGroup()
-
-	--     while (i <= 12) do
-	--         if GetLocalPlayer() == Player(i) then
-	--             ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-	--             SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-	--                 (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
-	--             DestroyGroup(ug)
-	--         end
-	--         i = i + 1
-	--     end
-	-- end)
+	DisableTrigger(Trig_AutoZoom)
+	TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
+	TriggerAddAction(Trig_AutoZoom, function()
+		local l
+		local i = 1
+		local ug = CreateGroup()
+		print("working")
+		while (i <= 12) do
+			if GetLocalPlayer() == Player(i) then
+				l = GetCameraTargetPositionLoc()
+				ug = GetUnitsInRangeOfLocAll(1350, l)
+				RemoveLocation(l)
+				SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
+				                        (1400.00 + (1.00 * CountUnitsInGroup(ug))), 6.00)
+				DestroyGroup(ug)
+			end
+			i = i + 1
+		end
+		print("Worked")
+	end)
 end
 
 function Init_PickingPhase()
@@ -278,20 +282,22 @@ function Init_PickingPhase()
 				ShowUnitShow(heroUnit)
 				SelectUnitForPlayerSingle(heroUnit, player)
 
-				-- Reset back to normal
-                SetCameraBoundsToRect(bj_mapInitialCameraBounds)
-				ShowInterface(false, 0)
-				BlzHideOriginFrames(false)
-				BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
-
-				-- Fade back to normal
-				ShowInterface(true, 5)
-				CameraSetSmoothingFactor(1)
-
-				CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 3)
-
-				-- PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 3)
 			end)
+
+			-- Reset back to normal
+			SetCameraBoundsToRect(bj_mapInitialCameraBounds)
+			
+			ShowInterface(false, 0)
+			BlzHideOriginFrames(false)
+			BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
+
+			-- Fade back to normal
+			ShowInterface(true, 3)
+			CameraSetSmoothingFactor(1)
+
+			CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 3)
+
+			-- PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 3)
 
 			FogMaskEnableOn()
 			FogEnableOn()
@@ -299,6 +305,9 @@ function Init_PickingPhase()
 			DisableTrigger(GetTriggeringTrigger())
 			HeroSelector.destroy()
 			init_aiLoopStates()
+
+			PolledWait(3)
+			EnableTrigger(Trig_AutoZoom)
 		end
 		-- end, "Pick Hero")
 	end)

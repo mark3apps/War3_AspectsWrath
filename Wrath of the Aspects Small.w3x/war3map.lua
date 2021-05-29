@@ -260,6 +260,8 @@ gg_rct_Big_Middle_Left_Center = nil
 gg_rct_Region_043 = nil
 gg_rct_Region_068 = nil
 gg_rct_Region_069 = nil
+gg_cam_Base_Left = nil
+gg_cam_Base_Left_Start = nil
 gg_snd_PurgeTarget1 = nil
 gg_snd_BattleNetTick = nil
 gg_snd_CreepAggroWhat1 = nil
@@ -386,8 +388,6 @@ gg_unit_h014_0158 = nil
 gg_unit_nmh1_0735 = nil
 gg_unit_u001_0097 = nil
 gg_unit_u001_0098 = nil
-gg_cam_Base_Left = nil
-gg_cam_Base_Left_Start = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -6281,7 +6281,7 @@ function init_Lua()
 	CameraSetupApplyForPlayer(true, gg_cam_Base_Left, Player(0), 0)
 	local camX = CameraSetupGetDestPositionX(gg_cam_Base_Left)
 	local camY = CameraSetupGetDestPositionY(gg_cam_Base_Left)
-    SetCameraBounds(camX, camY, camX, camY,camX, camY, camX, camY)
+	SetCameraBounds(camX, camY, camX, camY, camX, camY, camX, camY)
 
 	-- Define Classes
 	debugfunc(function()
@@ -6351,7 +6351,7 @@ function init_Lua()
 	init_Delayed_1()
 	init_Delayed_10()
 
-	--dprint("Init Finished")
+	-- dprint("Init Finished")
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -6504,22 +6504,26 @@ end
 -- Camera Setup
 function init_AutoZoom()
 
-	-- -- DisableTrigger(Trig_AutoZoom)
-	-- TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
-	-- TriggerAddAction(Trig_AutoZoom, function()
-	--     local i = 1
-	--     local ug = CreateGroup()
-
-	--     while (i <= 12) do
-	--         if GetLocalPlayer() == Player(i) then
-	--             ug = GetUnitsInRangeOfLocAll(1350, GetCameraTargetPositionLoc())
-	--             SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-	--                 (1400.00 + (1.00 * I2R(CountUnitsInGroup(ug)))), 6.00)
-	--             DestroyGroup(ug)
-	--         end
-	--         i = i + 1
-	--     end
-	-- end)
+	DisableTrigger(Trig_AutoZoom)
+	TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
+	TriggerAddAction(Trig_AutoZoom, function()
+		local l
+		local i = 1
+		local ug = CreateGroup()
+		print("working")
+		while (i <= 12) do
+			if GetLocalPlayer() == Player(i) then
+				l = GetCameraTargetPositionLoc()
+				ug = GetUnitsInRangeOfLocAll(1350, l)
+				RemoveLocation(l)
+				SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
+				                        (1400.00 + (1.00 * CountUnitsInGroup(ug))), 6.00)
+				DestroyGroup(ug)
+			end
+			i = i + 1
+		end
+		print("Worked")
+	end)
 end
 
 function Init_PickingPhase()
@@ -6551,20 +6555,22 @@ function Init_PickingPhase()
 				ShowUnitShow(heroUnit)
 				SelectUnitForPlayerSingle(heroUnit, player)
 
-				-- Reset back to normal
-                SetCameraBoundsToRect(bj_mapInitialCameraBounds)
-				ShowInterface(false, 0)
-				BlzHideOriginFrames(false)
-				BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
-
-				-- Fade back to normal
-				ShowInterface(true, 5)
-				CameraSetSmoothingFactor(1)
-
-				CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 3)
-
-				-- PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 3)
 			end)
+
+			-- Reset back to normal
+			SetCameraBoundsToRect(bj_mapInitialCameraBounds)
+			
+			ShowInterface(false, 0)
+			BlzHideOriginFrames(false)
+			BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
+
+			-- Fade back to normal
+			ShowInterface(true, 3)
+			CameraSetSmoothingFactor(1)
+
+			CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 3)
+
+			-- PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 3)
 
 			FogMaskEnableOn()
 			FogEnableOn()
@@ -6572,6 +6578,9 @@ function Init_PickingPhase()
 			DisableTrigger(GetTriggeringTrigger())
 			HeroSelector.destroy()
 			init_aiLoopStates()
+
+			PolledWait(3)
+			EnableTrigger(Trig_AutoZoom)
 		end
 		-- end, "Pick Hero")
 	end)
@@ -7466,7 +7475,6 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncb9"), -10656.0, -4832.0, 270.000, FourCC("ncb9"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5888.0, -4480.0, 270.000, FourCC("n000"))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -4544.0, -4544.0, 270.000, FourCC("n000"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), -4544.0, -5312.0, 270.000, FourCC("ncp3"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbc"), -9952.0, -3520.0, 90.000, FourCC("ncbc"))
     u = BlzCreateUnitWithSkin(p, FourCC("h00X"), -11776.0, -4032.0, 270.000, FourCC("h00X"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -10848.0, -4192.0, 90.000, FourCC("ncb4"))
@@ -7869,15 +7877,6 @@ function CreateNeutralHostile()
     u = BlzCreateUnitWithSkin(p, FourCC("ncim"), -25923.5, 3965.7, 309.799, FourCC("ncim"))
 end
 
-function CreateNeutralPassiveBuildings()
-    local p = Player(PLAYER_NEUTRAL_PASSIVE)
-    local u
-    local unitID
-    local t
-    local life
-    u = BlzCreateUnitWithSkin(p, FourCC("ncp3"), -24512.0, -4032.0, 270.000, FourCC("ncp3"))
-end
-
 function CreateNeutralPassive()
     local p = Player(PLAYER_NEUTRAL_PASSIVE)
     local u
@@ -7912,7 +7911,6 @@ function CreatePlayerUnits()
 end
 
 function CreateAllUnits()
-    CreateNeutralPassiveBuildings()
     CreatePlayerBuildings()
     CreateNeutralHostile()
     CreateNeutralPassive()
@@ -7948,13 +7946,13 @@ function CreateRegions()
     gg_rct_Big_Top_Left = Rect(-29248.0, -3808.0, -16992.0, 7168.0)
     gg_rct_Left_Castle = Rect(-24800.0, -4320.0, -24224.0, -3744.0)
     gg_rct_Left_City = Rect(-21280.0, -7776.0, -18656.0, -6016.0)
-    gg_rct_Right_City = Rect(-10592.0, -3200.0, -7808.0, -1536.0)
+    gg_rct_Right_City = Rect(-10080.0, -3200.0, -7808.0, -1536.0)
     gg_rct_Right_Castle = Rect(-4896.0, -5728.0, -4192.0, -4896.0)
     gg_rct_Left_High_Elves = Rect(-25088.0, -32.0, -23584.0, 1600.0)
     gg_rct_Left_Shipyard = Rect(-22176.0, -2272.0, -21696.0, -1856.0)
     gg_rct_Right_Shipyard = Rect(-7328.0, -7488.0, -6912.0, -7136.0)
     gg_rct_Right_Start_Bottom = Rect(-8608.0, -14240.0, -8096.0, -5792.0)
-    gg_rct_Right_High_Elves = Rect(-5408.0, -10880.0, -3872.0, -9376.0)
+    gg_rct_Right_High_Elves = Rect(-5408.0, -10880.0, -4000.0, -9376.0)
     gg_rct_Naga_Right = Rect(-9376.0, -12256.0, -7936.0, -10240.0)
     gg_rct_Naga_Left = Rect(-21216.0, 1152.0, -19584.0, 3168.0)
     gg_rct_Murloc_Left = Rect(-22112.0, 4480.0, -21728.0, 4864.0)
@@ -7963,7 +7961,7 @@ function CreateRegions()
     gg_rct_Front_Town_Left = Rect(-19712.0, -6240.0, -17440.0, -3968.0)
     gg_rct_City_Elves_Left = Rect(-22208.0, -5600.0, -20192.0, -3904.0)
     gg_rct_Blacksmith_Left = Rect(-25056.0, -7040.0, -23840.0, -5856.0)
-    gg_rct_Front_City_Right = Rect(-11424.0, -5344.0, -9472.0, -3136.0)
+    gg_rct_Front_City_Right = Rect(-11424.0, -5344.0, -9472.0, -3264.0)
     gg_rct_City_Elves_Right = Rect(-8896.0, -5472.0, -6816.0, -3712.0)
     gg_rct_Blacksmith_Right = Rect(-5344.0, -3232.0, -4128.0, -2080.0)
     gg_rct_Arcane_Hero_Right = Rect(-9440.0, 1248.0, -8736.0, 2464.0)
@@ -7981,10 +7979,10 @@ function CreateRegions()
     gg_rct_Aspect_of_Forest_Left = Rect(-26720.0, -608.0, -26176.0, -160.0)
     gg_rct_Aspect_of_Forest_Left_Gate = Rect(-25792.0, -32.0, -25472.0, 736.0)
     gg_rct_Aspect_of_Forest_Right_Gate = Rect(-3552.0, -10080.0, -3296.0, -9280.0)
-    gg_rct_Arcane_Left_Top = Rect(-20672.0, -9760.0, -19680.0, -8864.0)
-    gg_rct_Arcane_Left_Bottom = Rect(-20480.0, -13600.0, -19456.0, -12704.0)
-    gg_rct_Arcane_Right_Top = Rect(-9376.0, -512.0, -8480.0, 384.0)
-    gg_rct_Arcane_Right_Bottom = Rect(-9440.0, 3328.0, -8544.0, 4224.0)
+    gg_rct_Arcane_Left_Top = Rect(-20448.0, -9760.0, -19680.0, -8896.0)
+    gg_rct_Arcane_Left_Bottom = Rect(-20480.0, -13568.0, -19456.0, -12704.0)
+    gg_rct_Arcane_Right_Top = Rect(-9216.0, -640.0, -8704.0, 640.0)
+    gg_rct_Arcane_Right_Bottom = Rect(-9216.0, 3072.0, -8672.0, 4352.0)
     gg_rct_Zombie_End_Left = Rect(-26208.0, -7744.0, -25600.0, -7200.0)
     gg_rct_Zombie_End_Right = Rect(-3392.0, -2080.0, -2976.0, -1600.0)
     gg_rct_Death_Gate_Left = Rect(-25408.0, -6304.0, -25152.0, -5536.0)
@@ -8018,17 +8016,17 @@ end
 function CreateCameras()
     gg_cam_Base_Left = CreateCameraSetup()
     CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ZOFFSET, 40.0, 0.0)
-    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ROTATION, 121.0, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ROTATION, 118.0, 0.0)
     CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ANGLE_OF_ATTACK, 335.0, 0.0)
-    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_TARGET_DISTANCE, 1955.5, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_TARGET_DISTANCE, 1953.5, 0.0)
     CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_ROLL, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_FARZ, 7737.5, 0.0)
+    CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_FARZ, 8074.5, 0.0)
     CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_NEARZ, 16.0, 0.0)
     CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Base_Left, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
-    CameraSetupSetDestPosition(gg_cam_Base_Left, -25109.1, -3125.5, 0.0)
+    CameraSetupSetDestPosition(gg_cam_Base_Left, -25047.1, -3125.5, 0.0)
     gg_cam_Base_Left_Start = CreateCameraSetup()
     CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_ZOFFSET, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Base_Left_Start, CAMERA_FIELD_ROTATION, 90.0, 0.0)
