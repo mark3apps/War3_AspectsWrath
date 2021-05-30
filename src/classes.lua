@@ -1796,7 +1796,7 @@ function init_spawnClass()
 		self.baseInterval = 0.6
 		self.waveInterval = 33.00
 
-		self.creepLevel = 1
+		self.creepLevel = 7
 		self.creepLevelTimer = CreateTimer()
 
 		self.wave = 1

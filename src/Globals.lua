@@ -691,7 +691,7 @@ function spawnAddUnits()
     spawn:addUnit("blacksmithCreep", "hcth", 2, {1, 2, 3, 4, 5}, 11, 12) -- Captian
 
     -- Castle Spawn
-    spawn:addUnit("castle", "h018", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 8, 12) -- Commander
+    spawn:addUnit("castle", "h018", 1, {1, 2, 3, 4, 5, 6}, 8, 12) -- Commander
 
     -- City Elves
     spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6}, 1, 3) -- Archer
@@ -699,14 +699,15 @@ function spawnAddUnits()
     spawn:addUnit("cityElves", "hspt", 2, {1, 2, 3, 4, 5, 6, 7}, 4, 5) -- Tower Guard
     spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4}, 3, 12) -- Mystic
     spawn:addUnit("cityElves", "hspt", 3, {1, 2, 3, 4, 5, 6}, 6, 12) -- Tower Guard
-    spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Archer
+    spawn:addUnit("cityElves", "nhea", 2, {1, 2, 3, 4, 5, 6}, 4, 12) -- Archer
     spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4, 5, 6, 7}, 7, 12) -- Mystic
 
     -- City Front Spawn
-    spawn:addUnit("cityFront", "h007", 2, {2, 3, 4, 5, 6, 7}, 1, 2) -- Militia 1
-    spawn:addUnit("cityFront", "h015", 3, {2, 3, 4, 5, 6, 7}, 1, 5) -- Militia 2
-    spawn:addUnit("cityFront", "hfoo", 3, {2, 3, 4, 5, 6, 7}, 4, 12) -- Footman 1
-    spawn:addUnit("cityFront", "hcth", 2, {2, 3, 4, 5, 6}, 6, 12) -- Captian
+    spawn:addUnit("cityFront", "h007", 3, {2, 3, 4, 5, 6, 7}, 1, 2) -- Militia 1
+    spawn:addUnit("cityFront", "h015", 4, {2, 3, 4, 5, 6, 7}, 2, 4) -- Militia 2
+    spawn:addUnit("cityFront", "hfoo", 5, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Footman 1
+    spawn:addUnit("cityFront", "hcth", 3, {2, 3, 4, 5, 6}, 6, 12) -- Captian
+    spawn:addUnit("cityFront", "h00L", 1, {1, 2, 3, 4, 5}, 7, 12) -- Knight
     spawn:addUnit("cityFront", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
     spawn:addUnit("cityFront", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
@@ -803,7 +804,7 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
 
     -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6,}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6}, 1, 12) -- Ghoul
     spawn:addUnit("undead", "uskm", 2, {1, 2, 3, 4, 5, 6, 7}, 2, 12) -- Skeleton Mage
     spawn:addUnit("undead", "unec", 1, {1, 3, 5, 6}, 4, 12) -- Necromancer
     spawn:addUnit("undead", "nerw", 1, {1, 6}, 6, 12) -- Warlock
