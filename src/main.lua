@@ -1,14 +1,22 @@
 function init_Lua()
 	debugprint = 2
-	-- Hide UI Keep Mouse
-	BlzHideOriginFrames(true)
-	BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
+	debugfunc(function()
+		-- Hide UI Keep Mouse
+		BlzHideOriginFrames(true)
+		BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
 
-	-- Lock Cam
-	CameraSetupApplyForPlayer(true, gg_cam_Base_Left, Player(0), 0)
-	local camX = CameraSetupGetDestPositionX(gg_cam_Base_Left)
-	local camY = CameraSetupGetDestPositionY(gg_cam_Base_Left)
-	SetCameraBounds(camX, camY, camX, camY, camX, camY, camX, camY)
+		-- Lock Cam
+		CameraSetupApplyForPlayer(true, gg_cam_Base_Left, Player(0), 0)
+		local camX = CameraSetupGetDestPositionX(gg_cam_Base_Left)
+		local camY = CameraSetupGetDestPositionY(gg_cam_Base_Left)
+
+		local unit = CreateUnit(Player(19), FourCC("h01Z"), camX, camY, bj_UNIT_FACING)
+		UnitApplyTimedLife(unit, FourCC("BTLF"), 20)
+
+		SetCameraTargetControllerNoZForPlayer(Player(0), unit, 0, 0, false)
+
+	end, "Init Cam")
+	-- SetCameraBounds(camX, camY, camX, camY, camX, camY, camX, camY)
 
 	-- Define Classes
 	debugfunc(function()
@@ -231,26 +239,26 @@ end
 -- Camera Setup
 function init_AutoZoom()
 
-	DisableTrigger(Trig_AutoZoom)
-	TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
-	TriggerAddAction(Trig_AutoZoom, function()
-		local l
-		local i = 1
-		local ug = CreateGroup()
-		print("working")
-		while (i <= 12) do
-			if GetLocalPlayer() == Player(i) then
-				l = GetCameraTargetPositionLoc()
-				ug = GetUnitsInRangeOfLocAll(1350, l)
-				RemoveLocation(l)
-				SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-				                        (1400.00 + (1.00 * CountUnitsInGroup(ug))), 6.00)
-				DestroyGroup(ug)
-			end
-			i = i + 1
-		end
-		print("Worked")
-	end)
+	-- DisableTrigger(Trig_AutoZoom)
+	-- TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
+	-- TriggerAddAction(Trig_AutoZoom, function()
+	-- 	local l
+	-- 	local i = 1
+	-- 	local ug = CreateGroup()
+	-- 	print("working")
+	-- 	while (i <= 12) do
+	-- 		if GetLocalPlayer() == Player(i) then
+	-- 			l = GetCameraTargetPositionLoc()
+	-- 			ug = GetUnitsInRangeOfLocAll(1350, l)
+	-- 			RemoveLocation(l)
+	-- 			SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
+	-- 			                        (1400.00 + (1.00 * CountUnitsInGroup(ug))), 6.00)
+	-- 			DestroyGroup(ug)
+	-- 		end
+	-- 		i = i + 1
+	-- 	end
+	-- 	print("Worked")
+	-- end)
 end
 
 function Init_PickingPhase()
@@ -285,8 +293,8 @@ function Init_PickingPhase()
 			end)
 
 			-- Reset back to normal
-			SetCameraBoundsToRect(bj_mapInitialCameraBounds)
-			
+			-- SetCameraBoundsToRect(bj_mapInitialCameraBounds)
+
 			ShowInterface(false, 0)
 			BlzHideOriginFrames(false)
 			BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)

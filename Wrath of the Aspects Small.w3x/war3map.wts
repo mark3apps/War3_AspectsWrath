@@ -14136,3 +14136,63 @@ STRING 4715
 Cone of Fire
 }
 
+STRING 4716
+// Units: h01Z (Cam Lock), Name (Name)
+{
+Cam Lock
+}
+
+STRING 4717
+// Units: h01Z (Cam Lock), EditorSuffix (Name - Editor Suffix)
+{
+(Generic)
+}
+
+STRING 4718
+// Units: h020 (Caste Gate), Name (Name)
+{
+Caste Gate
+}
+
+STRING 4719
+// Units: h020 (Caste Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Open Vertical Right)
+}
+
+STRING 4720
+// Units: h021 (Castle Gate), Name (Name)
+{
+Castle Gate
+}
+
+STRING 4721
+// Units: h021 (Castle Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Closed Vertical Right)
+}
+
+STRING 4722
+// Units: h022 (Caste Gate), Name (Name)
+{
+Caste Gate
+}
+
+STRING 4723
+// Units: h022 (Caste Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Open Horizonal Bottom)
+}
+
+STRING 4724
+// Units: h023 (Castle Gate), Name (Name)
+{
+Castle Gate
+}
+
+STRING 4725
+// Units: h023 (Castle Gate), EditorSuffix (Name - Editor Suffix)
+{
+(Closed Horizontal Bottom)
+}
+

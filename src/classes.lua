@@ -1796,7 +1796,7 @@ function init_spawnClass()
 		self.baseInterval = 0.6
 		self.waveInterval = 33.00
 
-		self.creepLevel = 7
+		self.creepLevel = 1
 		self.creepLevelTimer = CreateTimer()
 
 		self.wave = 1
@@ -1942,7 +1942,7 @@ function init_spawnClass()
 			if self.creepLevel >= 12 then
 				DisableTrigger(self.Trig_upgradeCreeps)
 			else
-				StartTimerBJ(self.creepLevelTimer, false, (50 + (10 * self.creepLevel)))
+				StartTimerBJ(self.creepLevelTimer, false, (40 + (5 * self.creepLevel)))
 			end
 
 			DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)
@@ -2257,13 +2257,24 @@ end
 function init_gateClass()
 
 	gate = {}
+	gate.types = {}
 	gate.g = CreateGroup()
 	gate.gClosed = CreateGroup()
 	gate.gOpen = CreateGroup()
 
+	function gate.addType(unitTypeClosed, unitTypeOpen, rotation)
+
+		local data = {unitTypeClosed = FourCC(unitTypeClosed), unitTypeOpen = FourCC(unitTypeOpen), rotation = rotation}
+
+		gate.types[FourCC(unitTypeOpen)] = data
+		gate.types[FourCC(unitTypeClosed)] = data
+
+		return true
+	end
+
 	function gate.add(unit, owningPlayer)
 
-		local playerForce, facingAngle, unitTypeClosed
+		local playerForce, facingAngle, unitTypeClosed, unitTypeOpen
 		local unitType = GetUnitTypeId(unit)
 		local x = GetUnitX(unit)
 		local y = GetUnitY(unit)
@@ -2275,23 +2286,9 @@ function init_gateClass()
 			playerForce = "federation"
 		end
 
-		-- Determine Proper Angle
-		if unitType == FourCC("h01T") or unitType == FourCC("h01S") then -- City Gate Horizontal Top
-			facingAngle = 90
-
-		elseif unitType == FourCC("h01D") or unitType == FourCC("h01B") then -- City Gate Vertical Left
-			facingAngle = 180
-
-		elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") then -- City Gate Vertical Right
-			facingAngle = 0
-
-		elseif unitType == FourCC("h00T") or unitType == FourCC("h00U") then -- Arcane Gate Vertical Right
-			facingAngle = 180
-			
-		else
-			facingAngle = 0
-			print("Nothing should be Here")
-		end
+		facingAngle = gate.types[unitType].rotation
+		unitTypeOpen = gate.types[unitType].unitTypeOpen
+		unitTypeClosed = gate.types[unitType].unitTypeClosed
 
 		if playerForce == "federation" then
 			facingAngle = facingAngle + 180
@@ -2299,22 +2296,8 @@ function init_gateClass()
 			if facingAngle >= 360 then facingAngle = facingAngle - 360 end
 		end
 
-		-- Find Open Unit Type
-		if unitType == FourCC("h01C") then -- City Gate Vertical Right
-			unitTypeClosed = FourCC("h01G")
-
-		elseif unitType == FourCC("h01D") then -- City Gate Vertical Left
-			unitTypeClosed = FourCC("h01B")
-
-		elseif unitType == FourCC("h01T") then -- City Gate Horizontal Top
-			unitTypeClosed = FourCC("h01S")
-
-		elseif unitType == FourCC("h00U") then -- Arcane Gate Vertical Right
-			unitTypeClosed = FourCC("h00T")
-		end
-
 		RemoveUnit(unit)
-		unit = CreateUnit(owningPlayer, unitType, x, y, facingAngle)
+		unit = CreateUnit(owningPlayer, unitTypeOpen, x, y, facingAngle)
 
 		-- Play animation
 		SetUnitAnimation(unit, "Death Alternate 1")
@@ -2326,7 +2309,7 @@ function init_gateClass()
 		gate[unitId] = {}
 		gate[unitId].force = playerForce
 		gate[unitId].unitTypeClosed = unitTypeClosed
-		gate[unitId].unitTypeOpen = unitType
+		gate[unitId].unitTypeOpen = unitTypeOpen
 		gate[unitId].x = x
 		gate[unitId].y = y
 		gate[unitId].facing = facingAngle
@@ -2445,53 +2428,25 @@ function init_gateClass()
 				local dyingUnit = GetDyingUnit()
 
 				if IsUnitInGroup(dyingUnit, gate.g) then
-					local player, unit, unitType, unitTypeOpen, facingAngle
 					local x = GetUnitX(dyingUnit)
 					local y = GetUnitY(dyingUnit)
 					local unitType = GetUnitTypeId(dyingUnit)
 					local owningPlayer = GetOwningPlayer(dyingUnit)
 
-					-- Determine Proper Angle
-					if unitType == FourCC("h01T") or unitType == FourCC("h01S") then -- City Gate Horizontal Top
-						facingAngle = 270
-
-					elseif unitType == FourCC("h01D") or unitType == FourCC("h01B") then -- City Gate Vertical Left
-						facingAngle = 180
-
-					elseif unitType == FourCC("h01G") or unitType == FourCC("h01C") or unitType == FourCC("h00T") or unitType ==
-									FourCC("h00U") then -- City Gate and Arcane Gate Vertical Right
-						facingAngle = 0
-
-					else
-						facingAngle = 0
-					end
-
-					-- Find Open Unit Type
-					if unitType == FourCC("h01G") then -- City Gate Vertical Right
-						unitTypeOpen = FourCC("h01C")
-
-					elseif unitType == FourCC("h01B") then -- City Gate Vertical Left
-						unitTypeOpen = FourCC("h01D")
-
-					elseif unitType == FourCC("h01S") then -- City Gate Horizontal Top
-						unitTypeOpen = FourCC("h01T")
-
-					elseif unitType == FourCC("h00T") then -- Arcane Gate Vertical Right
-						unitTypeOpen = FourCC("h00U")
-					end
+					local facingAngle = gate.types[unitType].rotation
+					local unitTypeOpen = gate.types[unitType].unitTypeOpen
 
 					-- Remove Traces of Unit
 					GroupRemoveUnit(gate.g, dyingUnit)
 					RemoveUnit(dyingUnit)
 
-					if IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
-						player = Player(21)
-					else
-						player = Player(18)
+					if not IsPlayerInForce(owningPlayer, udg_PLAYERGRPallied) then
 						facingAngle = facingAngle + 180
+
+						if facingAngle >= 360 then facingAngle = facingAngle - 360 end
 					end
 
-					unit = CreateUnit(player, unitTypeOpen, x, y, facingAngle)
+					unit = CreateUnit(Player(PLAYER_NEUTRAL_PASSIVE), unitTypeOpen, x, y, facingAngle)
 
 					-- Play Death animation
 					SetUnitAnimation(unit, "Death 1")
@@ -2508,33 +2463,34 @@ function init_gateClass()
 		local unitId, u
 		local g = CreateGroup()
 
-		for i = 1, 6 do
-			if i == 1 then
-				unitId = FourCC("h01B")
-			elseif i == 2 then
-				unitId = FourCC("h01D")
-			elseif i == 3 then
-				unitId = FourCC("h01C")
-			elseif i == 4 then
-				unitId = FourCC("h01T")
-			elseif i == 5 then
-				unitId = FourCC("h01S")
-			else
-				unitId = FourCC("h00U")
+		local unitIds = {"h01B", "h01D", "h01C", "h01T", "h01S", "h00U", "h021", "h020", "h022", "h023"}
+
+		debugfunc(function()
+			gate.addType("h021", "h020", 0) -- Castle Gate Vertical Right
+			gate.addType("h023", "h022", 270) -- Castle Gate Horizontal Botoom
+			gate.addType("h01G", "h01C", 0) -- City Gate Verical Right
+			gate.addType("h01B", "h01D", 180) -- City Gate Vertical Left
+			gate.addType("h01S", "h01T", 90) -- City Gate Horizontal Top
+			gate.addType("h00T", "h00U", 180) -- Arcane Gate Vertical Right
+
+			for i = 1, #unitIds do
+				unitId = unitIds[i]
+
+				g = GetUnitsOfTypeIdAll(FourCC(unitId))
+
+				print(CountUnitsInGroup(g))
+
+				while true do
+					u = FirstOfGroup(g)
+					if u == nil then break end
+
+					gate.add(u, GetOwningPlayer(u))
+
+					GroupRemoveUnit(g, u)
+				end
+				DestroyGroup(g)
 			end
-
-			g = GetUnitsOfTypeIdAll(unitId)
-
-			while true do
-				u = FirstOfGroup(g)
-				if u == nil then break end
-
-				gate.add(u, GetOwningPlayer(u))
-
-				GroupRemoveUnit(g, u)
-			end
-			DestroyGroup(g)
-		end
+		end, "add Types")
 
 		-- Init Triggers
 		gate.InitTrig_update()
