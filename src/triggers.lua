@@ -3,219 +3,244 @@
 --
 -- Hero Levels Up
 function Init_HeroLevelsUp()
-    local t = CreateTrigger()
+	local t = CreateTrigger()
 
-    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
-    TriggerAddAction(t, function()
-        -- Get Locals
-        local levelingUnit = GetLevelingUnit()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
+	TriggerAddAction(t, function()
+		-- Get Locals
+		local levelingUnit = GetLevelingUnit()
 
-        debugfunc(function()
-            hero:levelUp(levelingUnit)
-        end, "hero:levelUp")
-    end)
+		debugfunc(function() hero:levelUp(levelingUnit) end, "hero:levelUp")
+	end)
 end
 
 -- Unit Casts Spell
 function Init_UnitCastsSpell()
-    trig_CastSpell = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
+	trig_CastSpell = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
 
-    TriggerAddAction(trig_CastSpell, function()
-        local triggerUnit = GetTriggerUnit()
-        local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
-        local spellCast = CC2Four(GetSpellAbilityId())
+	TriggerAddAction(trig_CastSpell, function()
+		local triggerUnit = GetTriggerUnit()
+		local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
+		local spellCast = CC2Four(GetSpellAbilityId())
 
-        debugfunc(function()
-            CAST_aiHero(triggerUnit, spellCast)
-        end, "CAST_aiHero")
-    end)
+		debugfunc(function() CAST_aiHero(triggerUnit, spellCast) end, "CAST_aiHero")
+	end)
 end
 
 -- Unit enters the Map
 function Init_UnitEntersMap()
 
-    TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
-    TriggerAddAction(Trig_UnitEntersMap, function()
-        local triggerUnit = GetTriggerUnit()
-        addUnitsToIndex(triggerUnit)
-    end)
+	TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
+	TriggerAddAction(Trig_UnitEntersMap, function()
+		local triggerUnit = GetTriggerUnit()
+		addUnitsToIndex(triggerUnit)
+	end)
 end
 
 -- Unit Issued Target or no Target Order
 function Init_IssuedOrder()
 
-    TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
-    TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_ORDER)
+	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_ORDER)
 
-    TriggerAddAction(Trig_IssuedOrder, function()
-        local triggerUnit = GetTriggerUnit()
-        local orderId = GetIssuedOrderId()
-        local orderString = OrderId2String(orderId)
+	TriggerAddAction(Trig_IssuedOrder, function()
+		local triggerUnit = GetTriggerUnit()
+		local orderId = GetIssuedOrderId()
+		local orderString = OrderId2String(orderId)
 
-        if IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) == false and
-            IsUnitType(triggerUnit, UNIT_TYPE_HERO) == false and GetUnitTypeId(triggerUnit) ~= FourCC("uloc") and
-            GetUnitTypeId(triggerUnit) ~= FourCC("h000") and GetUnitTypeId(triggerUnit) ~= FourCC("h00V") and
-            GetUnitTypeId(triggerUnit) ~= FourCC("h00N") and GetUnitTypeId(triggerUnit) ~= FourCC("h00O") and
-            GetUnitTypeId(triggerUnit) ~= FourCC("h00M") and GetUnitTypeId(triggerUnit) ~= FourCC("o006") and
-            UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]] GetOwningPlayer(triggerUnit) ~=
-            Player(17) and GetOwningPlayer(triggerUnit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
+		if IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) == false and IsUnitType(triggerUnit, UNIT_TYPE_HERO) == false and
+						GetUnitTypeId(triggerUnit) ~= FourCC("uloc") and GetUnitTypeId(triggerUnit) ~= FourCC("h000") and
+						GetUnitTypeId(triggerUnit) ~= FourCC("h00V") and GetUnitTypeId(triggerUnit) ~= FourCC("h00N") and
+						GetUnitTypeId(triggerUnit) ~= FourCC("h00O") and GetUnitTypeId(triggerUnit) ~= FourCC("h00M") and
+						GetUnitTypeId(triggerUnit) ~= FourCC("o006") and UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]]
+						GetOwningPlayer(triggerUnit) ~= Player(17) and GetOwningPlayer(triggerUnit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
 
-            PolledWait(3)
-            indexer:order(triggerUnit)
-        end
-    end)
+			PolledWait(3)
+			indexer:order(triggerUnit)
+		end
+	end)
 
 end
 
 -- Unit finishes casting a spell
 function Init_finishCasting()
-    local t = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_FINISH)
-    TriggerAddAction(t, function()
+	local t = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_FINISH)
+	TriggerAddAction(t, function()
 
-        local triggerUnit = GetTriggerUnit()
-        if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
-            unitKeepMoving(triggerUnit)
-        end
-    end)
+		local triggerUnit = GetTriggerUnit()
+		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then unitKeepMoving(triggerUnit) end
+	end)
 end
 
 -- Unit finishes Stops a spell
 function Init_stopCasting()
-    local t = CreateTrigger()
-    TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
-    TriggerAddAction(t, function()
-        local triggerUnit = GetTriggerUnit()
+	local t = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
+	TriggerAddAction(t, function()
+		local triggerUnit = GetTriggerUnit()
 
-        if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
-            unitKeepMoving(triggerUnit)
-        end
-    end)
+		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then unitKeepMoving(triggerUnit) end
+	end)
 end
 
 -- Unit Dies
 function Init_UnitDies()
-    TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
-    TriggerAddAction(Trig_UnitDies, function()
+	TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
+	TriggerAddAction(Trig_UnitDies, function()
 
-        local dieingUnit = GetTriggerUnit()
+		local dieingUnit = GetTriggerUnit()
 
-        if IsUnitInGroup(dieingUnit, base.all.g) then
-                base.died(dieingUnit)
-        end
+		if IsUnitInGroup(dieingUnit, base.all.g) then base.died(dieingUnit) end
 
-        PolledWait(5)
+		PolledWait(5)
 
-        -- Remove Index from Unit
-        if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
-            indexer:remove(dieingUnit)
-        end
+		-- Remove Index from Unit
+		if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then indexer:remove(dieingUnit) end
 
-    end)
+	end)
 end
 
 -- Unit Enters region (Special)
 function init_MoveToNext()
-    TriggerAddAction(Trig_moveToNext, function()
+	TriggerAddAction(Trig_moveToNext, function()
 
-        local triggerUnit = GetTriggerUnit()
-        local player = GetOwningPlayer(triggerUnit)
-        local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
-        local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
+		local triggerUnit = GetTriggerUnit()
+		local player = GetOwningPlayer(triggerUnit)
+		local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
+		local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
 
-        if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
-            if isAllied or isFed then
-                local region = loc:getRegion(GetTriggeringRegion())
+		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
+			if isAllied or isFed then
+				local region = loc:getRegion(GetTriggeringRegion())
 
-                if (isAllied and region.allied) or (isFed and region.fed) then
-                    local x, y = loc:getRandomXY(region.next)
-                    indexer:updateEnd(triggerUnit, x, y)
-                    indexer:order(triggerUnit)
-                end
-            end
-        end
-    end)
+				if (isAllied and region.allied) or (isFed and region.fed) then
+					local x, y = loc:getRandomXY(region.next)
+					indexer:updateEnd(triggerUnit, x, y)
+					indexer:order(triggerUnit)
+				end
+			end
+		end
+	end)
+end
+
+function init_Moonwell_cast()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventPeriodic(t, 4)
+	TriggerAddAction(t, function()
+
+		debugfunc(function()
+			local l, u2
+			local g = CreateGroup()
+			local g2 = CreateGroup()
+
+			print("Hi")
+			g = GetUnitsOfTypeIdAll(FourCC("h024"))
+
+			local u = FirstOfGroup(g)
+			while u ~= nil do
+
+				print("Working")
+				if GetUnitManaPercent(u) > 10 and BlzGetUnitAbilityCooldownRemaining(u, oid.recharge) == 0 then
+
+					l = GetUnitLoc(u)
+					g2 = GetUnitsInRangeOfLocAll(1200, l)
+					RemoveLocation(l)
+
+					u2 = FirstOfGroup(g2)
+					while u2 ~= nil do
+
+						if IsUnitType(u2, UNIT_TYPE_STRUCTURE) and GetUnitTypeId(u2) ~= FourCC("h024") and GetUnitManaPercent(u2) < 40 and
+										GetUnitState(u2, UNIT_STATE_MAX_MANA) > 0 then IssueTargetOrderById(u, oid.recharge, u2) end
+
+						GroupRemoveUnit(g2, u2)
+						u2 = FirstOfGroup(g2)
+					end
+					DestroyGroup(g2)
+
+				end
+
+				GroupRemoveUnit(g, u)
+				u = FirstOfGroup(g)
+			end
+
+			DestroyGroup(g)
+		end, "Testing")
+	end)
+
 end
 
 -- Update Base Buildings
 function init_BaseLoop()
-    TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 2.5)
-    TriggerAddAction(Trig_baseLoop, function()
+	TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 2.5)
+	TriggerAddAction(Trig_baseLoop, function()
 
-        local u, id
-        local g = CreateGroup()
+		local u, id
+		local g = CreateGroup()
 
-        GroupAddGroup(base.all.g, g)
-        while true do
-            u = FirstOfGroup(g)
-            if u == nil then
-                break
-            end
+		GroupAddGroup(base.all.g, g)
+		while true do
+			u = FirstOfGroup(g)
+			if u == nil then break end
 
-            --base.update(u)
+			-- base.update(u)
 
-            GroupRemoveUnit(g, u)
-        end
-        DestroyGroup(g)
-    end)
+			GroupRemoveUnit(g, u)
+		end
+		DestroyGroup(g)
+	end)
 end
 
 do
-    local real = MarkGameStarted
-    function MarkGameStarted()
-        real()
-        local trigger = CreateTrigger()
-        for i = 0, 11 do
-            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_G, 0, true)
-        end
-        TriggerAddAction(trigger, function()
+	local real = MarkGameStarted
+	function MarkGameStarted()
+		real()
+		local trigger = CreateTrigger()
+		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_G, 0, true) end
+		TriggerAddAction(trigger, function()
 
-            local player = GetTriggerPlayer()
-            local playerDetails = hero.players[GetConvertedPlayerId(player)]
-            SelectUnitForPlayerSingle(playerDetails.alter, player)
-        end)
+			local player = GetTriggerPlayer()
+			local playerDetails = hero.players[GetConvertedPlayerId(player)]
+			SelectUnitForPlayerSingle(playerDetails.alter, player)
+		end)
 
-        local trigger = CreateTrigger()
-        for i = 0, 11 do
-            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_D, 0, true)
-        end
-        TriggerAddAction(trigger, function()
+		local trigger = CreateTrigger()
+		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_D, 0, true) end
+		TriggerAddAction(trigger, function()
 
-            local player = GetTriggerPlayer()
-            local pNumber = GetConvertedPlayerId(player)
+			local player = GetTriggerPlayer()
+			local pNumber = GetConvertedPlayerId(player)
 
-            debugfunc(function()
-                if hero.players[pNumber].cameraLock == true then
-                    --PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
-                        --GetUnitY(hero.players[pNumber].hero), 0)
+			debugfunc(function()
+				if hero.players[pNumber].cameraLock == true then
+					-- PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
+					-- GetUnitY(hero.players[pNumber].hero), 0)
 
-                    hero.players[pNumber].cameraLock = false
-                    print("Camera Unlocked")
-                else
-                    --SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
-                    hero.players[pNumber].cameraLock = true
-                    print("Camera Locked")
-                end
-            end, "Camera Lock")
-        end)
+					hero.players[pNumber].cameraLock = false
+					print("Camera Unlocked")
+				else
+					-- SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
+					hero.players[pNumber].cameraLock = true
+					print("Camera Locked")
+				end
+			end, "Camera Lock")
+		end)
 
-        local trigger = CreateTrigger()
-        for i = 0, 11 do
-            BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_F, 0, true)
-        end
+		local trigger = CreateTrigger()
+		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_F, 0, true) end
 
-        TriggerAddAction(trigger, function()
+		TriggerAddAction(trigger, function()
 
-            local player = GetTriggerPlayer()
-            local playerDetails = hero.players[GetConvertedPlayerId(player)]
-            SelectUnitForPlayerSingle(playerDetails.hero, player)
+			local player = GetTriggerPlayer()
+			local playerDetails = hero.players[GetConvertedPlayerId(player)]
+			SelectUnitForPlayerSingle(playerDetails.hero, player)
 
-            if playerDetails.cameraLocked == true then
-                --PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
-            end
-        end)
-    end
+			if playerDetails.cameraLocked == true then
+				-- PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
+			end
+		end)
+	end
 end
 
 --
@@ -225,69 +250,59 @@ end
 -- Add unit to index then order to move if unit is computer controlled and a correct unit
 function addUnitsToIndex(unit)
 
-    if not IsUnitType(unit, UNIT_TYPE_HERO) then
-        indexer:add(unit)
+	if not IsUnitType(unit, UNIT_TYPE_HERO) then
+		indexer:add(unit)
 
-        if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and
-            (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
-                IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then
-            indexer:order(unit)
-        end
-    end
+		if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
+						IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then indexer:order(unit) end
+	end
 end
 
 function CAST_aiHero(triggerUnit, spellCast)
-    if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-        local heroName = indexer:getKey(triggerUnit, "heroName")
-        local spellCastData = hero[hero[spellCast]]
+	if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+		local heroName = indexer:getKey(triggerUnit, "heroName")
+		local spellCastData = hero[hero[spellCast]]
 
-        if spellCastData ~= nil then
-            ai:castSpell(heroName, spellCastData)
-            print("MANUAL CAST")
-        end
-    end
+		if spellCastData ~= nil then
+			ai:castSpell(heroName, spellCastData)
+			print("MANUAL CAST")
+		end
+	end
 end
 
 -- Order starting units to attack
 function orderStartingUnits()
-    local g = CreateGroup()
-    local u, uId
+	local g = CreateGroup()
+	local u, uId
 
-    g = GetUnitsInRectAll(GetPlayableMapRect())
-    while true do
-        u = FirstOfGroup(g)
-        if u == nil then
-            break
-        end
+	g = GetUnitsInRectAll(GetPlayableMapRect())
+	while true do
+		u = FirstOfGroup(g)
+		if u == nil then break end
 
-        debugfunc(function()
+		debugfunc(function()
 
-            indexer:add(u)
+			indexer:add(u)
 
-            uId = GetUnitTypeId(u)
-            if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and uId ~=
-                FourCC("hhdl") and uId ~= FourCC("hpea") and
-                (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
-                    IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then
+			uId = GetUnitTypeId(u)
+			if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and uId ~= FourCC("hhdl") and uId ~=
+							FourCC("hpea") and (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
+							IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then indexer:order(u) end
+		end, "Index")
 
-                indexer:order(u)
-            end
-        end, "Index")
-
-        GroupRemoveUnit(g, u)
-    end
-    DestroyGroup(g)
+		GroupRemoveUnit(g, u)
+	end
+	DestroyGroup(g)
 end
 
 -- Tell unit to keep Attack-Moving to it's indexed destination
 function unitKeepMoving(unit)
-    if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
-        UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
-        FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
-        GetUnitTypeId(unit) ~= FourCC("h00O") and
-        (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
-            IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
-        PolledWait(0.5)
-        --indexer:order(unit, "attack")
-    end
+	if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
+					UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
+					FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
+					GetUnitTypeId(unit) ~= FourCC("h00O") and (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
+					IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
+		PolledWait(0.5)
+		-- indexer:order(unit, "attack")
+	end
 end

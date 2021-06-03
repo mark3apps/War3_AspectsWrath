@@ -55,7 +55,7 @@ function init_Lua()
 
 	ConditionalTriggerExecute(gg_trg_baseAndHeals)
 
-	init_AutoZoom()
+	--init_AutoZoom()
 	Init_HeroLevelsUp()
 	Init_UnitCastsSpell()
 	init_spawnTimers()
@@ -67,6 +67,7 @@ function init_Lua()
 	init_MoveToNext()
 	Init_PickingPhase()
 	init_BaseLoop()
+	init_Moonwell_cast()
 
 	-- Abilities
 	debugfunc(function() init_Abilities() end, "Init Triggers")

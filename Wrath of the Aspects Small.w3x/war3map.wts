@@ -914,7 +914,7 @@ mana shield
 }
 
 STRING 325
-// Units: h005 (Mana Generator), Name (Name)
+// Units: h024 (Mana Generator), Name (Name)
 {
 Mana Generator
 }
@@ -937,25 +937,7 @@ STRING 333
 Stronghold
 }
 
-STRING 336
-// Abilities: A00J (DW - Thunder Clap), Name (Name)
-{
-DW - Thunder Clap
-}
-
 STRING 337
-// Abilities: A00M (DW - Avatar), Name (Name)
-{
-DW - Avatar
-}
-
-STRING 338
-// Abilities: A00N (DW - Moralle), Name (Name)
-{
-DW - Moralle
-}
-
-STRING 339
 // Buffs/Effects: B003 (DW - Avatar), EditorName (Name (Editor Only))
 {
 DW - Avatar
@@ -1597,24 +1579,6 @@ STRING 564
 Creates a shield that absorbs damage by using the Mana Seeker's mana, increases armor and returns a percentage of melee damage back.
 }
 
-STRING 571
-// Abilities: S001 (TC - Defender Stategy - Fall Back), Name (Name)
-{
-TC - Defender Stategy - Fall Back
-}
-
-STRING 572
-// Abilities: S001 (TC - Defender Stategy - Fall Back), Tip (Tooltip - Normal)
-{
-Defender Stategy - Fall Back
-}
-
-STRING 575
-// Abilities: A01R (TC - Defender Strategy - Charge), Tip (Tooltip - Normal)
-{
-Defender Stategy - Charge
-}
-
 STRING 600
 // Abilities: A019 (TC - Iron Defense), Name (Name)
 {
@@ -1640,7 +1604,7 @@ E
 }
 
 STRING 604
-// Abilities: A02C (Mana Burst), Researchhotkey (Hotkey - Learn)
+// Abilities: A02Y (Fel Form), Researchhotkey (Hotkey - Learn)
 {
 E
 }
@@ -1691,12 +1655,6 @@ STRING 624
 // Abilities: A01J (TA - Inspired), Tip (Tooltip - Normal)
 {
 Inspired
-}
-
-STRING 631
-// Abilities: S001 (TC - Defender Stategy - Fall Back), Ubertip (Tooltip - Normal - Extended)
-{
-+15% movement speed.
 }
 
 STRING 633
@@ -1862,12 +1820,6 @@ STRING 688
 Learn Inspire - [|cffffcc00Level %d|r]
 }
 
-STRING 702
-// Abilities: A01R (TC - Defender Strategy - Charge), Ubertip (Tooltip - Normal - Extended)
-{
-+45% Attack Damage.
-}
-
 STRING 703
 // Units: n00D (Furbolg Camp), Name (Name)
 {
@@ -1875,15 +1827,9 @@ Furbolg Camp
 }
 
 STRING 706
-// Abilities: A01N (Magic Defense), Name (Name)
+// Abilities: A04U (Magic Defense), Name (Name)
 {
 Magic Defense
-}
-
-STRING 707
-// Abilities: A01N (Magic Defense), EditorSuffix (Editor Suffix)
-{
-(Arcane Tower)
 }
 
 STRING 710
@@ -1992,12 +1938,6 @@ STRING 757
 // Abilities: A01Q (TC - Attack! Rage), Ubertip (Tooltip - Normal - Extended)
 {
 Increases Attack Speed
-}
-
-STRING 758
-// Abilities: A01R (TC - Defender Strategy - Charge), Name (Name)
-{
-TC - Defender Strategy - Charge
 }
 
 STRING 761
@@ -2181,13 +2121,13 @@ Drain
 }
 
 STRING 805
-// Abilities: A02C (Mana Burst), Hotkey (Hotkey - Normal)
+// Abilities: A02Y (Fel Form), Hotkey (Hotkey - Normal)
 {
 E
 }
 
 STRING 806
-// Abilities: A02Y (Fel Form), Researchhotkey (Hotkey - Learn)
+// Abilities: A037 (TALENT - SH - Shade Strength), Researchhotkey (Hotkey - Learn)
 {
 E
 }
@@ -2726,100 +2666,16 @@ STRING 1008
 W
 }
 
-STRING 1009
-// Abilities: A02C (Mana Burst), Name (Name)
-{
-Mana Burst
-}
-
-STRING 1010
-// Abilities: A02C (Mana Burst), Researchtip (Tooltip - Learn)
-{
-Learn Mana Burst - [|cffffcc00Level %d|r]
-}
-
-STRING 1011
-// Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 1|r]
-}
-
-STRING 1012
-// Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 2|r]
-}
-
-STRING 1013
-// Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 3|r]
-}
-
-STRING 1014
-// Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 4|r]
-}
-
-STRING 1015
-// Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 5|r]
-}
-
-STRING 1016
-// Abilities: A02C (Mana Burst), Tip (Tooltip - Normal)
-{
-Mana Burst - [|cffffcc00Level 6|r]
-}
-
-STRING 1017
-// Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur2> second.
-}
-
-STRING 1018
-// Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur3> second.
-}
-
-STRING 1019
-// Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur4> second.
-}
-
-STRING 1020
-// Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur5> second.
-}
-
-STRING 1021
-// Abilities: A02C (Mana Burst), Ubertip (Tooltip - Normal - Extended)
-{
-Bombards an area with rockets, dealing up to 35 damage to nearby enemy land units and stunning them for <ANcs,Dur6> second.
-}
-
 STRING 1035
-// Abilities: A02Y (Fel Form), Hotkey (Hotkey - Normal)
+// Abilities: A03P (MS - Mana Bomb), Hotkey (Hotkey - Normal)
 {
 E
 }
 
 STRING 1036
-// Abilities: A037 (TALENT - SH - Shade Strength), Researchhotkey (Hotkey - Learn)
+// Abilities: A03P (MS - Mana Bomb), Researchhotkey (Hotkey - Learn)
 {
 E
-}
-
-STRING 1037
-// Abilities: A02C (Mana Burst), EditorSuffix (Editor Suffix)
-{
-( Secondary )
 }
 
 STRING 1038
@@ -4632,13 +4488,13 @@ Fel Form
 }
 
 STRING 2462
-// Abilities: A03P (MS - Mana Bomb), Hotkey (Hotkey - Normal)
+// Abilities: A04P (TM - Time Travel), Hotkey (Hotkey - Normal)
 {
 E
 }
 
 STRING 2463
-// Abilities: A03P (MS - Mana Bomb), Researchhotkey (Hotkey - Learn)
+// Abilities: A04P (TM - Time Travel), Researchhotkey (Hotkey - Learn)
 {
 E
 }
@@ -6689,12 +6545,6 @@ STRING 2970
 Shades do 80% fo their normal Damage on every attack.
 }
 
-STRING 2973
-// Abilities: A04P (TM - Time Travel), Hotkey (Hotkey - Normal)
-{
-E
-}
-
 STRING 2976
 // Abilities: A037 (TALENT - SH - Shade Strength), Name (Name)
 {
@@ -8099,12 +7949,6 @@ STRING 3280
 Mana Shards
 }
 
-STRING 3281
-// Abilities: A028 (Breath Of Fire), Name (Name)
-{
-Breath Of Fire
-}
-
 STRING 3282
 // Units: n00M (Merc Tent), Name (Name)
 {
@@ -8915,12 +8759,6 @@ STRING 3551
 AF - Tranquility
 }
 
-STRING 3553
-// Abilities: A03Z (AF - Stampede), Name (Name)
-{
-AF - Stampede
-}
-
 STRING 3554
 // Units: uabo (Aspect of Death), Name (Name)
 {
@@ -9105,12 +8943,6 @@ STRING 3601
 // Units: n00T (City Building), EditorSuffix (Name - Editor Suffix)
 {
  5 (Ruined)
-}
-
-STRING 3602
-// Abilities: A049 (Hero Glow), Name (Name)
-{
-Hero Glow
 }
 
 STRING 3603
@@ -10075,12 +9907,6 @@ STRING 3788
 Time Travel - [|cffffcc00Level 6|r]
 }
 
-STRING 3789
-// Abilities: A04P (TM - Time Travel), Researchhotkey (Hotkey - Learn)
-{
-E
-}
-
 STRING 3791
 // Abilities: A04Q (Time Travel (Future Dummy)), Name (Name)
 {
@@ -10408,12 +10234,6 @@ STRING 3866
 // Units: h00K (Magi Defender), Name (Name)
 {
 Magi Defender
-}
-
-STRING 3867
-// Abilities: A04U (Magic Defense), Name (Name)
-{
-Magic Defense
 }
 
 STRING 3872
@@ -10768,48 +10588,6 @@ STRING 3992
 // Abilities: Afzy (Footman Auto Upgrade), Name (Name)
 {
 Footman Auto Upgrade
-}
-
-STRING 3993
-// Doodads: D00C (Book Blue), Name (Name)
-{
-Book Blue
-}
-
-STRING 3994
-// Doodads: D00D (Book Green), Name (Name)
-{
-Book Green
-}
-
-STRING 3995
-// Doodads: D00E (Book Red), Name (Name)
-{
-Book Red
-}
-
-STRING 3996
-// Doodads: D00F (Books 1), Name (Name)
-{
-Books 1
-}
-
-STRING 3997
-// Doodads: D00G (Books 2), Name (Name)
-{
-Books 2
-}
-
-STRING 3998
-// Doodads: D00H (Books 3), Name (Name)
-{
-Books 3
-}
-
-STRING 3999
-// Doodads: D00I (Books Scrolls), Name (Name)
-{
-Books Scrolls
 }
 
 STRING 4000
@@ -14194,5 +13972,23 @@ STRING 4725
 // Units: h023 (Castle Gate), EditorSuffix (Name - Editor Suffix)
 {
 (Closed Horizontal Bottom)
+}
+
+STRING 4727
+// Doodads: D00S (Fence Short (No Pathing)), Name (Name)
+{
+Fence Short (No Pathing)
+}
+
+STRING 4728
+// Abilities: A05L (Replenish Mana (Mana Generator)), Name (Name)
+{
+Replenish Mana (Mana Generator)
+}
+
+STRING 4729
+// Doodads: D00C (Crates Empty (No Pathing)), Name (Name)
+{
+Crates Empty (No Pathing)
 }
 

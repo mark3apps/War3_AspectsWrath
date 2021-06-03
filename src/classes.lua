@@ -2258,6 +2258,7 @@ function init_gateClass()
 
 	gate = {}
 	gate.types = {}
+	gate.typeIds = {}
 	gate.g = CreateGroup()
 	gate.gClosed = CreateGroup()
 	gate.gOpen = CreateGroup()
@@ -2268,6 +2269,9 @@ function init_gateClass()
 
 		gate.types[FourCC(unitTypeOpen)] = data
 		gate.types[FourCC(unitTypeClosed)] = data
+
+		table.insert(gate.typeIds, unitTypeOpen)
+		table.insert(gate.typeIds, unitTypeClosed)
 
 		return true
 	end
@@ -2411,7 +2415,7 @@ function init_gateClass()
 			local triggerUnit = GetAttackedUnitBJ()
 			local unitId = GetUnitTypeId(triggerUnit)
 
-			if unitId == FourCC("h01G") or unitId == FourCC("h01B") or unitId == FourCC("h01S") or unitId == FourCC("h00T") then
+			if gate.types[unitId] ~= nil then
 				PolledWait(0.2)
 				QueueUnitAnimation(triggerUnit, "Stand Hit")
 			end
@@ -2463,18 +2467,16 @@ function init_gateClass()
 		local unitId, u
 		local g = CreateGroup()
 
-		local unitIds = {"h01B", "h01D", "h01C", "h01T", "h01S", "h00U", "h021", "h020", "h022", "h023"}
-
 		debugfunc(function()
 			gate.addType("h021", "h020", 0) -- Castle Gate Vertical Right
-			gate.addType("h023", "h022", 270) -- Castle Gate Horizontal Botoom
+			gate.addType("h023", "h022", 90) -- Castle Gate Horizontal Botoom
 			gate.addType("h01G", "h01C", 0) -- City Gate Verical Right
 			gate.addType("h01B", "h01D", 180) -- City Gate Vertical Left
 			gate.addType("h01S", "h01T", 90) -- City Gate Horizontal Top
 			gate.addType("h00T", "h00U", 180) -- Arcane Gate Vertical Right
 
-			for i = 1, #unitIds do
-				unitId = unitIds[i]
+			for i = 1, #gate.typeIds do
+				unitId = gate.typeIds[i]
 
 				g = GetUnitsOfTypeIdAll(FourCC(unitId))
 
