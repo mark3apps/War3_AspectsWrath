@@ -1792,9 +1792,9 @@ function init_spawnClass()
 		self.bases = {}
 		self.baseCount = 0
 		self.timer = CreateTimer()
-		self.cycleInterval = 5.00
-		self.baseInterval = 0.6
-		self.waveInterval = 33.00
+		self.cycleInterval = 1.00
+		self.baseInterval = 0.85
+		self.waveInterval = 30.00
 
 		self.creepLevel = 1
 		self.creepLevelTimer = CreateTimer()
@@ -1915,7 +1915,7 @@ function init_spawnClass()
 				self.baseI = 0
 				self.wave = self.wave + 1
 
-				if self.wave > 10 then
+				if self.wave > 9 then
 					self.wave = 1
 					StartTimerBJ(self.timer, false, self.cycleInterval)
 				else

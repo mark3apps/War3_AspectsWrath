@@ -13992,3 +13992,9 @@ STRING 4729
 Crates Empty (No Pathing)
 }
 
+STRING 4730
+// Destructibles: B004 (City Tree Wall), Name (Name)
+{
+City Tree Wall
+}
+

@@ -667,7 +667,7 @@ function spawnAddUnits()
     spawn:addUnit("arcaneCreep", "narg", 2, {1, 2, 3, 4}, 2, 12) -- Battle Golem
     spawn:addUnit("arcaneCreep", "hwt2", 1, {1, 2, 3, 4}, 3, 12) -- Water Elemental (Level 2)
     spawn:addUnit("arcaneCreep", "hwt3", 1, {1, 2, 3, 4}, 4, 12) -- Water Elemental (Level 3)
-    spawn:addUnit("arcaneCreep", "h00K", 1, {1, 2, 3, 4, 5, 10}, 6, 12) -- Magi Defender
+    spawn:addUnit("arcaneCreep", "h00K", 1, {1, 2, 3, 4, 5, 9}, 6, 12) -- Magi Defender
 
     -- Arcane Hero Sapwn
     spawn:addUnit("arcaneHero", "n00A", 1, {5, 6}, 7, 12) -- Supreme Wizard
@@ -712,8 +712,8 @@ function spawnAddUnits()
     spawn:addUnit("cityFront", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
     -- City Side Spawn
-    spawn:addUnit("citySide", "h015", 2, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
-    spawn:addUnit("citySide", "hfoo", 3, {6, 7, 8, 9, 10}, 2, 12) -- Footman 1
+    spawn:addUnit("citySide", "h015", 2, {5, 6, 7, 8, 9}, 1, 2) -- Militia 1
+    spawn:addUnit("citySide", "hfoo", 3, {5, 6, 7, 8, 9}, 2, 12) -- Footman 1
     spawn:addUnit("citySide", "hfoo", 1, {1, 2, 3, 4, 5}, 3, 12) -- Footman 1
     spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 3, 12) -- Knight
     spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 5, 12) -- Knight
@@ -760,9 +760,9 @@ function spawnAddUnits()
     spawn:addUnit("mine", "n00F", 1, {1, 2, 3, 4, 5, 6}, 7, 12) -- Automaton
 
     -- Murloc Spawn
-    spawn:addUnit("murloc", "nmcf", 5, {5, 6, 7, 8, 9, 10}, 1, 12) -- Mur'gul Cliffrunner
+    spawn:addUnit("murloc", "nmcf", 5, {4, 5, 6, 7, 8, 9}, 1, 12) -- Mur'gul Cliffrunner
     spawn:addUnit("murloc", "nnmg", 1, {5, 6, 7, 7, 8}, 2, 12) -- Mur'gul Reaver
-    spawn:addUnit("murloc", "nmsn", 1, {6, 7, 8, 9, 10}, 3, 12) -- Mur'gul Snarecaster
+    spawn:addUnit("murloc", "nmsn", 1, {5, 6, 7, 8, 9}, 3, 12) -- Mur'gul Snarecaster
     spawn:addUnit("murloc", "nmtw", 1, {4, 6, 8}, 6, 12) -- Mur'gul Tidewarrior
 
     -- Naga Spawn
@@ -800,7 +800,7 @@ function spawnAddUnits()
     -- Night Elf Shipyard Spawn
     spawn:addUnit("shipyard", "edes", 1, {1, 6}, 2, 3) -- Night Elf Frigate
     spawn:addUnit("shipyard", "edes", 1, {1, 3, 6}, 4, 5) -- Night Elf Frigate
-    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6, 10}, 6, 12) -- Night Elf Frigate
+    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6, 9}, 6, 12) -- Night Elf Frigate
     spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
 
     -- Undead Spawn
