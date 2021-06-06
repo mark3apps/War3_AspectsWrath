@@ -637,7 +637,7 @@ function spawnAddBases()
                   gg_unit_n00B_0399)
     spawn:addBase("citySide", "sCitySideLeft", "bottomRight", gg_unit_n00B_0102,
                   "sCitySideRight", "topLeft", gg_unit_n00B_0038)
-    spawn:addBase("kobold", "sKolboldLeft", "topRight", gg_unit_ngt2_0525,
+    spawn:addBase("draenei", "sKolboldLeft", "topRight", gg_unit_ngt2_0525,
                   "sKolboldRight", "bottomLeft", gg_unit_ngt2_0455)
     spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109,
                   "sElfRight", "bottomLeft", gg_unit_nheb_0036)
@@ -731,21 +731,26 @@ function spawnAddUnits()
     spawn:addUnit("citySide", "h017", 1, {8, 10}, 6, 12) -- Scarlet Commander
     spawn:addUnit("citySide", "n00X", 1, {4, 5, 6, 7, 8, 9}, 3, 12) -- Arbalist
 
-    -- Kobold Spawn
-    spawn:addUnit("kobold", "nkob", 2, {5, 6, 7, 8, 9, 10}, 1, 12) -- Kobold
-    spawn:addUnit("kobold", "nkot", 1, {7, 9, 10}, 3, 12) -- Kobold Tunneler
-    spawn:addUnit("kobold", "nkog", 1, {7, 9, 10}, 4, 12) -- Kobold Geomancer
-    spawn:addUnit("kobold", "nkol", 1, {6, 8}, 5, 12) -- Kobold Taskmaster
+    -- Draenei Spawn
+    spawn:addUnit("draenei", "ndrf", 2, {5, 6, 7, 8, 9, 10}, 1, 12) -- Draenei Guardian
+    spawn:addUnit("draenei", "ndrd", 1, {7, 9, 10}, 3, 12) -- Draenei Darkslayer
+    spawn:addUnit("draenei", "ndrs", 1, {7, 10}, 4, 12) -- Draenei Seer
+    spawn:addUnit("draenei", "n00I", 1, {6, 8}, 7, 12) -- Draenei Vindicator
+    spawn:addUnit("draenei", "ncat", 1, {6, 8}, 6, 12) -- Draenei Demolisher
 
     -- High Elves
+    spawn:addUnit("highElves", "h00T", 1, {1, 2, 3, 5}, 1, 3) -- Apprentice
+    spawn:addUnit("highElves", "h00T", 1, {1, 3}, 4, 12) -- Apprentice
     spawn:addUnit("highElves", "nhea", 1, {1, 3, 5}, 2, 12) -- Archer
     spawn:addUnit("highElves", "hhes", 2, {1, 2, 3, 4}, 4, 12) -- Swordsman
-    spawn:addUnit("highElves", "nemi", 1, {1, 3, 5}, 5, 12) -- Emmisary
+    spawn:addUnit("highElves", "nemi", 1, {1, 3, 5}, 5, 12) -- Mystic
+    spawn:addUnit("highElves", "h005", 1, {1, 3}, 7, 12) -- High Elf Knight
 
     -- High Elves Creep
-    spawn:addUnit("highElvesCreep", "hhes", 1, {1, 2, 3, 4}, 1, 12) -- Swordsman
+    spawn:addUnit("highElvesCreep", "h00T", 1, {1, 2, 3, 4}, 1, 2) -- Swordsman
+    spawn:addUnit("highElvesCreep", "hhes", 1, {1, 2, 3, 4}, 3, 12) -- Swordsman
     spawn:addUnit("highElvesCreep", "nhea", 1, {1, 3, 5}, 2, 12) -- Archer
-    spawn:addUnit("highElvesCreep", "nemi", 1, {1, 3}, 4, 12) -- Emmisary
+    spawn:addUnit("highElvesCreep", "nemi", 1, {1, 3}, 4, 12) -- Mystic
     spawn:addUnit("highElvesCreep", "h010", 2, {1, 3, 5}, 5, 12) -- Elven Guardian
 
     -- Merc Spawn
@@ -776,9 +781,10 @@ function spawnAddUnits()
     spawn:addUnit("murloc", "nmtw", 1, {4, 8}, 6, 12) -- Mur'gul Tidewarrior
 
     -- Naga Spawn
-    spawn:addUnit("naga", "nmyr", 1, {1, 2, 3, 4}, 1, 3) -- Naga Myrmidon
-    spawn:addUnit("naga", "nmyr", 1, {1, 2, 3, 4, 5, 6, 7}, 4, 12) -- Naga Myrmidon
-    spawn:addUnit("naga", "nnsw", 1, {3, 5, 7}, 3, 12) -- Naga Siren
+    spawn:addUnit("naga", "nmyr", 1, {1, 3}, 1, 3) -- Naga Myrmidon
+    spawn:addUnit("naga", "nmyr", 1, {1, 2, 3, 4}, 4, 5) -- Naga Myrmidon
+    spawn:addUnit("naga", "nmyr", 1, {1, 2, 3, 4, 5, 6}, 6, 12) -- Naga Myrmidon
+    spawn:addUnit("naga", "nnsw", 1, {2, 4, 6}, 3, 12) -- Naga Siren
     spawn:addUnit("naga", "nnrg", 1, {2, 5}, 6, 12) -- Naga Royal Guard
     spawn:addUnit("naga", "nhyc", 1, {1, 4}, 9, 12) -- Dragon Turtle
 
@@ -799,7 +805,7 @@ function spawnAddUnits()
     -- Orc Spawn
     spawn:addUnit("orc", "o002", 2, {1, 3, 5, 6}, 1, 12) -- Grunt
     spawn:addUnit("orc", "o002", 1, {2, 4, 6, 7}, 3, 12) -- Grunt
-    spawn:addUnit("orc", "nftr", 1, {2, 4, 6, 7}, 2, 12) -- Spearman
+    spawn:addUnit("orc", "ohun", 1, {2, 4, 6, 7}, 2, 12) -- Spearthrower
     spawn:addUnit("orc", "nogo", 2, {2, 4, 6, 7}, 4, 12) -- Ogre
     spawn:addUnit("orc", "nw2w", 1, {3, 5, 7}, 3, 12) -- Warlock
     spawn:addUnit("orc", "owad", 1, {1, 7}, 6, 12) -- Orc Warchief
@@ -817,9 +823,12 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "ebsh", 1, {3}, 7, 12) -- Night Elf Battleship
 
     -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 2, {4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "ugho", 2, {4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Ghoul
     spawn:addUnit("undead", "uskm", 1, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
     spawn:addUnit("undead", "unec", 1, {5, 9}, 4, 12) -- Necromancer
     spawn:addUnit("undead", "nerw", 1, {7}, 6, 12) -- Warlock
     spawn:addUnit("undead", "nfgl", 1, {6, 9}, 8, 12) -- Giant Skeleton
+    spawn:addUnit("undead", "ninc", 1, {5, 7}, 3, 5) -- Infernal Contraption (Level 1)
+    spawn:addUnit("undead", "ninm", 1, {5, 7}, 6, 9) -- Infernal Contraption (Level 2)
+    spawn:addUnit("undead", "nina", 1, {5, 7}, 10, 12) -- Infernal Contraption (Level 3)
 end

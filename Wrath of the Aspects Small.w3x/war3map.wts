@@ -120,12 +120,6 @@ STRING 26
 Resurrection - [|cffffcc00Level 3|r]
 }
 
-STRING 27
-// Units: e000 (Elite Ranger), Name (Name)
-{
-Elite Ranger
-}
-
 STRING 28
 // Abilities: AOsh (Shockwave), Tip (Tooltip - Normal)
 {
@@ -941,12 +935,6 @@ STRING 337
 // Buffs/Effects: B003 (DW - Avatar), EditorName (Name (Editor Only))
 {
 DW - Avatar
-}
-
-STRING 342
-// Units: hspt (Tower Guard), Name (Name)
-{
-Tower Guard
 }
 
 STRING 343
@@ -10218,22 +10206,10 @@ STRING 3872
 Scarlet Commander
 }
 
-STRING 3874
-// Units: h010 (Elven Guardian), Name (Name)
-{
-Elven Guardian
-}
-
 STRING 3876
 // Abilities: A04W (Summon Fire Hounds), Name (Name)
 {
 Summon Fire Hounds
-}
-
-STRING 3878
-// Units: earc (Ranger), Name (Name)
-{
-Ranger
 }
 
 STRING 3879
@@ -13225,12 +13201,6 @@ STRING 4570
 (Larger)
 }
 
-STRING 4571
-// Destructibles: B003 (Large Tree), Name (Name)
-{
-Large Tree
-}
-
 STRING 4572
 {
 |cffff0000A DOOM WARDEN HAS APPEARRED!|r
@@ -13972,5 +13942,101 @@ STRING 4730
 // Destructibles: B004 (City Tree Wall), Name (Name)
 {
 City Tree Wall
+}
+
+STRING 4731
+// Units: nhea (High Elf Archer), Name (Name)
+{
+High Elf Archer
+}
+
+STRING 4732
+// Units: hspt (Blood Elf Breaker), Name (Name)
+{
+Blood Elf Breaker
+}
+
+STRING 4733
+// Units: earc (Night Elf Ranger), Name (Name)
+{
+Night Elf Ranger
+}
+
+STRING 4734
+// Units: e000 (Elite Night Elf Ranger), Name (Name)
+{
+Elite Night Elf Ranger
+}
+
+STRING 4735
+// Units: n00C (Blood Elf Archer), Name (Name)
+{
+Blood Elf Archer
+}
+
+STRING 4736
+// Units: h005 (High Elf Knight), Name (Name)
+{
+High Elf Knight
+}
+
+STRING 4737
+// Abilities: A00J (Charge), Name (Name)
+{
+Charge
+}
+
+STRING 4738
+// Buffs/Effects: B00G (Charge), EditorName (Name (Editor Only))
+{
+Charge
+}
+
+STRING 4739
+// Buffs/Effects: B00G (Charge), Bufftip (Tooltip)
+{
+Charge
+}
+
+STRING 4740
+// Buffs/Effects: B00G (Charge), Buffubertip (Tooltip - Extended)
+{
+This unit is Chargng: it will move faster.
+}
+
+STRING 4741
+// Units: hhes (High Elf Swordsman), Name (Name)
+{
+High Elf Swordsman
+}
+
+STRING 4742
+// Units: ohun (Orc Spearthrower), Name (Name)
+{
+Orc Spearthrower
+}
+
+STRING 4743
+// Units: h010 (High Elven Guardian), Name (Name)
+{
+High Elven Guardian
+}
+
+STRING 4744
+// Units: h00T (High Elf Apprentice), Name (Name)
+{
+High Elf Apprentice
+}
+
+STRING 4745
+// Units: o00C (Fel Orc Spearthrower), Name (Name)
+{
+Fel Orc Spearthrower
+}
+
+STRING 4746
+// Abilities: S001 (Fel Orc Spearthrower), Name (Name)
+{
+Fel Orc Spearthrower
 }
 
