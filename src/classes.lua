@@ -1798,7 +1798,7 @@ function init_spawnClass()
 		self.baseCount = 0
 		self.timer = CreateTimer()
 		self.cycleInterval = 2.00
-		self.baseInterval = 0.95
+		self.baseInterval = 1.1
 		self.waveInterval = 4.00
 
 		self.creepLevel = 1
@@ -2318,7 +2318,9 @@ function init_gateClass()
 	---@param owningPlayer player
 	function gate.add(unit, owningPlayer)
 
-		local playerForce, facingAngle, unitTypeClosed, unitTypeOpen
+		local playerForce, facingAngle
+		local unitTypeClosed ---@type unittype
+		local unitTypeOpen   ---@type unittype
 		local unitType = GetUnitTypeId(unit)
 		local x = GetUnitX(unit)
 		local y = GetUnitY(unit)
@@ -2372,7 +2374,7 @@ function init_gateClass()
 			local heroes = 0
 			local enemies = 0
 			local unit = pickedUnit
-			local info = gate[GetHandleId(unit)]
+			local info = gate[GetHandleId(unit)] ---@type table
 			local g = CreateGroup()
 			local l = GetUnitLoc(unit)
 
@@ -2445,7 +2447,7 @@ function init_gateClass()
 	function gate.InitTrig_update()
 		local t = CreateTrigger()
 		TriggerRegisterTimerEventPeriodic(t, 2.5)
-		TriggerAddAction(t, function() debugfunc(function() gate.update() end, "Update") end)
+		TriggerAddAction(t, function() try(function() gate.update() end, "Update") end)
 	end
 
 	function gate.InitTrig_hitAnim()
@@ -2469,7 +2471,7 @@ function init_gateClass()
 		TriggerRegisterAnyUnitEventBJ(gate.Trig_gateDies, EVENT_PLAYER_UNIT_DEATH)
 		TriggerAddAction(gate.Trig_gateDies, function()
 
-			debugfunc(function()
+			try(function()
 				local dyingUnit = GetDyingUnit()
 
 				if IsUnitInGroup(dyingUnit, gate.g) then
@@ -2505,10 +2507,11 @@ function init_gateClass()
 	--
 
 	function gate.main()
-		local unitId, u
+		local unitId ---@type unittype
+		local u
 		local g = CreateGroup()
 
-		debugfunc(function()
+		try(function()
 			gate.addType("h021", "h020", 0) -- Castle Gate Vertical Right
 			gate.addType("h023", "h022", 90) -- Castle Gate Horizontal Botoom
 			gate.addType("h01G", "h01C", 0) -- City Gate Verical Right

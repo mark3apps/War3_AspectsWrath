@@ -10,7 +10,7 @@ function Init_HeroLevelsUp()
 		-- Get Locals
 		local levelingUnit = GetLevelingUnit()
 
-		debugfunc(function() hero:levelUp(levelingUnit) end, "hero:levelUp")
+		try(function() hero:levelUp(levelingUnit) end, "hero:levelUp")
 	end)
 end
 
@@ -24,7 +24,7 @@ function Init_UnitCastsSpell()
 		local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
 		local spellCast = CC2Four(GetSpellAbilityId())
 
-		debugfunc(function() CAST_aiHero(triggerUnit, spellCast) end, "CAST_aiHero")
+		try(function() CAST_aiHero(triggerUnit, spellCast) end, "CAST_aiHero")
 	end)
 end
 
@@ -248,7 +248,7 @@ function orderStartingUnits()
 		u = FirstOfGroup(g)
 		if u == nil then break end
 
-		debugfunc(function()
+		try(function()
 
 			indexer:add(u)
 

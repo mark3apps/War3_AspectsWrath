@@ -1,6 +1,23 @@
 --
 -- Functions
 --
+
+---Returns the type of a warcraft object as string, e.g. "location", when inputting a location.
+---@param input anyWarcraftObject
+---@return string
+function Wc3Type(input)
+    local typeString = type(input)
+    if typeString == 'number' then
+        return (math.type(input) =='float' and 'real') or 'integer'
+    elseif typeString == 'userdata' then
+        typeString = tostring(input) --toString returns the warcraft type plus a colon and some hashstuff.
+        return string.sub(typeString, 1, (string.find(typeString, ":", nil, true) or 0) -1) --string.find returns nil, if the argument is not found, which would break string.sub. So we need or as coalesce.
+    else
+        return typeString
+    end
+end
+
+
 function dprint(message, level)
     level = level or 1
 
@@ -31,7 +48,7 @@ function polarProjectionCoordinates(x, y, dist, angle)
     return newX, newY
 end
 
-function debugfunc(func, name) -- Turn on runtime logging
+function try(func, name) -- Turn on runtime logging
     local passed, data = pcall(function()
         func()
         return "func " .. name .. " passed"

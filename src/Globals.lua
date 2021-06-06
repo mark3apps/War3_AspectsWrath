@@ -735,7 +735,7 @@ function spawnAddUnits()
 
     -- Draenei Spawn
     spawn:addUnit("draenei", "ndrf", 2, {5, 6, 7, 8, 9, 10}, 1, 12) -- Draenei Guardian
-    spawn:addUnit("draenei", "ndrf", 2, {7, 8, 9, 10}, 5, 12) -- Draenei Guardian
+    spawn:addUnit("draenei", "ndrf", 1, {7, 8, 9}, 5, 12) -- Draenei Guardian
     spawn:addUnit("draenei", "ndrd", 1, {6, 7, 8, 9, 10}, 3, 12) -- Draenei Darkslayer
     spawn:addUnit("draenei", "ndrs", 1, {7, 10}, 4, 12) -- Draenei Seer
     spawn:addUnit("draenei", "n00I", 1, {6, 8}, 7, 12) -- Draenei Vindicator

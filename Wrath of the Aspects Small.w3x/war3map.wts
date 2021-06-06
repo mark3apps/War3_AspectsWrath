@@ -14040,3 +14040,15 @@ STRING 4747
 Barracade
 }
 
+STRING 4748
+// Units: ntx2 (Draenei Pulse Cannon), Name (Name)
+{
+Draenei Pulse Cannon
+}
+
+STRING 4749
+// Units: ntt1 (Draenei Tower), Name (Name)
+{
+Draenei Tower
+}
+

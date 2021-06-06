@@ -400,7 +400,7 @@ function init_Abilities()
             -- If the Ability ID is a match, find the function
             if not (abilityName == nil) then
 
-                debugfunc(function()
+                try(function()
                     ability[abilityName]()
                 end, "Ability Cast")
             end

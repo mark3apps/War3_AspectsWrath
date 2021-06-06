@@ -1,6 +1,6 @@
 function init_Lua()
 	debugprint = 2
-	debugfunc(function()
+	try(function()
 		-- Hide UI Keep Mouse
 		BlzHideOriginFrames(true)
 		BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
@@ -19,7 +19,7 @@ function init_Lua()
 	-- SetCameraBounds(camX, camY, camX, camY, camX, camY, camX, camY)
 
 	-- Define Classes
-	debugfunc(function()
+	try(function()
 		init_triggers()
 
 		Init_luaGlobals()
@@ -37,7 +37,7 @@ function init_Lua()
 	Init_Map()
 
 	-- Init Classes
-	debugfunc(function()
+	try(function()
 		loc = loc_Class.new()
 		addRegions()
 		addBases()
@@ -70,13 +70,13 @@ function init_Lua()
 	init_Moonwell_cast()
 
 	-- Abilities
-	debugfunc(function() init_Abilities() end, "Init Triggers")
+	try(function() init_Abilities() end, "Init Triggers")
 
 	-- dprint("Triggers Initialized", 2)
 
 	-- Spawn Base / Unit Setup
 	-- Init Trigger
-	debugfunc(function()
+	try(function()
 		spawnAddBases()
 		spawnAddUnits()
 	end, "Init Spawn")
@@ -112,7 +112,7 @@ function init_Delayed_10()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventSingle(t, 10)
 	TriggerAddAction(t, function()
-		debugfunc(function()
+		try(function()
 
 			-- Set up the Creep Event Timer
 			StartTimerBJ(udg_EventTimer, false, 350.00)
@@ -196,7 +196,7 @@ function init_aiLoopStates()
 			local i = ai.heroOptions[ai.loop]
 			print(i)
 
-			debugfunc(function()
+			try(function()
 				ai:updateIntel(i)
 
 				if ai:isAlive(i) then
@@ -222,10 +222,10 @@ end
 function init_spawnTimers()
 	-- Create Spawn Loop Trigger
 
-	TriggerAddAction(Trig_spawnLoop, function() debugfunc(function() spawn:loopSpawn() end, "spawn:loopSpawn") end)
+	TriggerAddAction(Trig_spawnLoop, function() try(function() spawn:loopSpawn() end, "spawn:loopSpawn") end)
 
 	TriggerAddAction(Trig_upgradeCreeps,
-	                 function() debugfunc(function() spawn:upgradeCreeps() end, "spawn:upgradeCreeps()") end)
+	                 function() try(function() spawn:upgradeCreeps() end, "spawn:upgradeCreeps()") end)
 end
 
 --
@@ -261,7 +261,7 @@ function Init_PickingPhase()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventPeriodic(t, 1.00)
 	TriggerAddAction(t, function()
-		-- debugfunc(function()
+		-- try(function()
 		local u, player
 		local unitHero = false
 		local g = CreateGroup()
