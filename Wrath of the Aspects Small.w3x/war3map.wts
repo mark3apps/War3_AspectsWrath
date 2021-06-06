@@ -8045,30 +8045,6 @@ STRING 3321
 Barrage - Mana Tower
 }
 
-STRING 3322
-// Units: h00T (Arcane Gate), Name (Name)
-{
-Arcane Gate
-}
-
-STRING 3323
-// Units: h00T (Arcane Gate), EditorSuffix (Name - Editor Suffix)
-{
-(Closed)
-}
-
-STRING 3324
-// Units: h00U (Arcane Gate), Name (Name)
-{
-Arcane Gate
-}
-
-STRING 3325
-// Units: h00U (Arcane Gate), EditorSuffix (Name - Editor Suffix)
-{
-(Open)
-}
-
 STRING 3328
 // Units: o000 (Scout Tower), Name (Name)
 {

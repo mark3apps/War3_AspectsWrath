@@ -1792,9 +1792,9 @@ function init_spawnClass()
 		self.bases = {}
 		self.baseCount = 0
 		self.timer = CreateTimer()
-		self.cycleInterval = 1.00
-		self.baseInterval = 0.85
-		self.waveInterval = 30.00
+		self.cycleInterval = 2.00
+		self.baseInterval = 0.95
+		self.waveInterval = 4.00
 
 		self.creepLevel = 1
 		self.creepLevelTimer = CreateTimer()
@@ -1915,7 +1915,7 @@ function init_spawnClass()
 				self.baseI = 0
 				self.wave = self.wave + 1
 
-				if self.wave > 9 then
+				if self.wave > 10 then
 					self.wave = 1
 					StartTimerBJ(self.timer, false, self.cycleInterval)
 				else
@@ -2473,14 +2473,11 @@ function init_gateClass()
 			gate.addType("h01G", "h01C", 0) -- City Gate Verical Right
 			gate.addType("h01B", "h01D", 180) -- City Gate Vertical Left
 			gate.addType("h01S", "h01T", 90) -- City Gate Horizontal Top
-			gate.addType("h00T", "h00U", 180) -- Arcane Gate Vertical Right
 
 			for i = 1, #gate.typeIds do
 				unitId = gate.typeIds[i]
 
 				g = GetUnitsOfTypeIdAll(FourCC(unitId))
-
-				print(CountUnitsInGroup(g))
 
 				while true do
 					u = FirstOfGroup(g)

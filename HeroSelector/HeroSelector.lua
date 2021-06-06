@@ -119,9 +119,9 @@ HeroSelector.Category = {
     --Icon path, tooltip Text (tries to localize)
     {"ReplaceableTextures\\CommandButtons\\BTNSteelMelee", "Melee"},                 --1, automatic detected when adding an unit
     {"ReplaceableTextures\\CommandButtons\\BTNHumanMissileUpOne", "Ranged"},         --2, automatic detected when adding an unit
-    {"ReplaceableTextures\\CommandButtons\\BTNGauntletsOfOgrePower", "Tank"},    --4
-    {"ReplaceableTextures\\CommandButtons\\BTNSlippersOfAgility", "Assassin"},        --8
-    {"ReplaceableTextures\\CommandButtons\\BTNMantleOfIntelligence", "Mage"},   --16
+    {"ReplaceableTextures\\CommandButtons\\BTNGauntletsOfOgrePower", "Tank"},        --4
+    {"ReplaceableTextures\\CommandButtons\\BTNSlippersOfAgility", "Assassin"},       --8
+    {"ReplaceableTextures\\CommandButtons\\BTNMantleOfIntelligence", "Mage"}         --16
 }
 HeroSelector.CategoryAffectRandom   = true  --(false) random will not care about selected category
 HeroSelector.CategoryMultiSelect    = false --(false) deselect other category when selecting one, (true) can selected multiple categories and all heroes having any of them are not filtered.
@@ -136,7 +136,7 @@ HeroSelector.IndicatorPathBan       = "war3mapImported\\HeroSelectorBan.mdl" --t
 --Grid
 HeroSelector.SpaceBetweenX          = 0.008 --space between 2 buttons in one row
 HeroSelector.SpaceBetweenY          = 0.008 --space between 2 rows
-HeroSelector.ButtonColCount         = 5 --amount of buttons in one row
+HeroSelector.ButtonColCount         = 3 --amount of buttons in one row
 HeroSelector.ButtonRowCount         = 1 --amount of rows
 HeroSelector.ChainedButtons         = true --(true) connect to the previous button/ or row, (false) have a offset to the box topLeft in this moving a button has no effect on other buttons.
 --Button
@@ -188,9 +188,9 @@ function HeroSelector.initHeroes()
     --create categories setuped in config
     local categories = HeroSelector.Category
     HeroSelector.Category = {}
-    for index, value in ipairs(categories)
-    do
-       HeroSelector.addCategory(value[1], value[2])
+
+    for i = 1, #categories do
+        HeroSelector.addCategory(categories[i][1], categories[i][2])
     end
 
     --HeroSelector.addUnit("Hgam", true, 0) --antonidas is an only random Hero that can only be randomed by team 0 (for users 1).
@@ -221,6 +221,7 @@ function HeroSelector.initHeroes()
     local categoryTank = 4
     local categoryAssassin = 8
     local categoryMage = 16
+
     HeroSelector.addUnitCategory(hero.brawler.four, categoryTank)
     HeroSelector.addUnitCategory(hero.tactition.four, categoryTank)
     HeroSelector.addUnitCategory(hero.shiftMaster.four, categoryAssassin)
@@ -378,6 +379,8 @@ HeroSelector.Trigger[HeroSelector.CategoryClickTrigger] = TriggerAddAction(HeroS
 end)
 function HeroSelector.getDisabledIcon(icon)
     --ReplaceableTextures\CommandButtons\BTNHeroPaladin.tga -> ReplaceableTextures\CommandButtonsDisabled\DISBTNHeroPaladin.tga
+
+    if icon == nil then return "" end
     if string.sub(icon,35,35) ~= "\\" then return icon end --this string has not enough chars return it
     --string.len(icon) < 35 then return icon end --this string has not enough chars return it
     local prefix = string.sub(icon, 1, 34)
@@ -419,10 +422,13 @@ function HeroSelector.addCategory(icon, text)
         local box = HeroSelector.Box
         local lastButton = HeroSelector.CategoryButton[#HeroSelector.CategoryButton]
         local button = BlzCreateFrame("HeroSelectorCategoryButton", box, 0, 0)
-        local icon = BlzGetFrameByName("HeroSelectorCategoryButtonIcon", 0)
+        icon = BlzGetFrameByName("HeroSelectorCategoryButtonIcon", 0)
         local iconPushed = BlzGetFrameByName("HeroSelectorCategoryButtonIconPushed", 0)
         local tooltip = BlzCreateFrame("HeroSelectorText", box, 0, 0)
-        BlzFrameSetText(tooltip, GetLocalizedString(text))
+        if text ~= nil then
+            BlzFrameSetText(tooltip, GetLocalizedString(text))
+        end
+        
         newObject.Text = tooltip --when this is reached overwritte textframe with the tooltip
         BlzFrameSetTooltip(button, tooltip)
         BlzFrameSetPoint(tooltip, FRAMEPOINT_BOTTOM, button, FRAMEPOINT_TOP, 0, 0)
@@ -974,7 +980,7 @@ do
         backUp()
         backUp = nil
     HeroSelector.initHeroes()    
-
+    for i = 1, 8 do HeroSelector.show(true, Player(i)) end
     --for key, value in ipairs(HeroSelector.UnitData)
     --do
 --        print(key, ('>I4'):pack(value), GetObjectName(value))

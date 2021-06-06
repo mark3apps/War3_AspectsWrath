@@ -95,7 +95,7 @@ function init_Delayed_1()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventSingle(t, 1)
 	TriggerAddAction(t, function()
-		debugfunc(function() startHeroPicker() end, "Start Delayed Triggers")
+		
 		-- dprint("AI Started", 2)
 
 		gate.main()
@@ -179,11 +179,6 @@ function Init_Map()
 
 end
 
-function startHeroPicker()
-	HeroSelector.initHeroes()
-
-	for i = 1, 8 do HeroSelector.show(true, Player(i)) end
-end
 
 function init_aiLoopStates()
 	if (ai.count > 0) then

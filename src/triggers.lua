@@ -48,15 +48,13 @@ function Init_IssuedOrder()
 		local triggerUnit = GetTriggerUnit()
 		local orderId = GetIssuedOrderId()
 		local orderString = OrderId2String(orderId)
+		local unitIdType = GetUnitTypeId(triggerUnit)
 
 		if IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) == false and IsUnitType(triggerUnit, UNIT_TYPE_HERO) == false and
-						GetUnitTypeId(triggerUnit) ~= FourCC("uloc") and GetUnitTypeId(triggerUnit) ~= FourCC("h000") and
-						GetUnitTypeId(triggerUnit) ~= FourCC("h00V") and GetUnitTypeId(triggerUnit) ~= FourCC("h00N") and
-						GetUnitTypeId(triggerUnit) ~= FourCC("h00O") and GetUnitTypeId(triggerUnit) ~= FourCC("h00M") and
-						GetUnitTypeId(triggerUnit) ~= FourCC("o006") and UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]]
+						typeIdTable[unitIdType] ~= nil and UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]]
 						GetOwningPlayer(triggerUnit) ~= Player(17) and GetOwningPlayer(triggerUnit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
 
-			PolledWait(3)
+			PolledWait(4)
 			indexer:order(triggerUnit)
 		end
 	end)
@@ -130,43 +128,39 @@ function init_Moonwell_cast()
 	TriggerRegisterTimerEventPeriodic(t, 4)
 	TriggerAddAction(t, function()
 
-		debugfunc(function()
-			local l, u2
-			local g = CreateGroup()
-			local g2 = CreateGroup()
+		local l, u2
+		local g = CreateGroup()
+		local g2 = CreateGroup()
 
-			print("Hi")
-			g = GetUnitsOfTypeIdAll(FourCC("h024"))
+		g = GetUnitsOfTypeIdAll(FourCC("h024"))
 
-			local u = FirstOfGroup(g)
-			while u ~= nil do
+		local u = FirstOfGroup(g)
+		while u ~= nil do
 
-				print("Working")
-				if GetUnitManaPercent(u) > 10 and BlzGetUnitAbilityCooldownRemaining(u, oid.recharge) == 0 then
+			if GetUnitManaPercent(u) > 10 and BlzGetUnitAbilityCooldownRemaining(u, oid.recharge) == 0 then
 
-					l = GetUnitLoc(u)
-					g2 = GetUnitsInRangeOfLocAll(1200, l)
-					RemoveLocation(l)
+				l = GetUnitLoc(u)
+				g2 = GetUnitsInRangeOfLocAll(1200, l)
+				RemoveLocation(l)
 
+				u2 = FirstOfGroup(g2)
+				while u2 ~= nil do
+
+					if IsUnitType(u2, UNIT_TYPE_STRUCTURE) and GetUnitTypeId(u2) ~= FourCC("h024") and GetUnitManaPercent(u2) < 40 and
+									GetUnitState(u2, UNIT_STATE_MAX_MANA) > 0 then IssueTargetOrderById(u, oid.recharge, u2) end
+
+					GroupRemoveUnit(g2, u2)
 					u2 = FirstOfGroup(g2)
-					while u2 ~= nil do
-
-						if IsUnitType(u2, UNIT_TYPE_STRUCTURE) and GetUnitTypeId(u2) ~= FourCC("h024") and GetUnitManaPercent(u2) < 40 and
-										GetUnitState(u2, UNIT_STATE_MAX_MANA) > 0 then IssueTargetOrderById(u, oid.recharge, u2) end
-
-						GroupRemoveUnit(g2, u2)
-						u2 = FirstOfGroup(g2)
-					end
-					DestroyGroup(g2)
-
 				end
+				DestroyGroup(g2)
 
-				GroupRemoveUnit(g, u)
-				u = FirstOfGroup(g)
 			end
 
-			DestroyGroup(g)
-		end, "Testing")
+			GroupRemoveUnit(g, u)
+			u = FirstOfGroup(g)
+		end
+
+		DestroyGroup(g)
 	end)
 
 end
@@ -184,7 +178,7 @@ function init_BaseLoop()
 			u = FirstOfGroup(g)
 			if u == nil then break end
 
-			-- base.update(u)
+			base.update(u)
 
 			GroupRemoveUnit(g, u)
 		end
@@ -205,29 +199,7 @@ do
 			SelectUnitForPlayerSingle(playerDetails.alter, player)
 		end)
 
-		local trigger = CreateTrigger()
-		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_D, 0, true) end
-		TriggerAddAction(trigger, function()
-
-			local player = GetTriggerPlayer()
-			local pNumber = GetConvertedPlayerId(player)
-
-			debugfunc(function()
-				if hero.players[pNumber].cameraLock == true then
-					-- PanCameraToTimedForPlayer(player, GetUnitX(hero.players[pNumber].hero),
-					-- GetUnitY(hero.players[pNumber].hero), 0)
-
-					hero.players[pNumber].cameraLock = false
-					print("Camera Unlocked")
-				else
-					-- SetCameraTargetControllerNoZForPlayer(player, hero.players[pNumber].hero, 0, 0, false)
-					hero.players[pNumber].cameraLock = true
-					print("Camera Locked")
-				end
-			end, "Camera Lock")
-		end)
-
-		local trigger = CreateTrigger()
+		trigger = CreateTrigger()
 		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_F, 0, true) end
 
 		TriggerAddAction(trigger, function()
@@ -235,10 +207,6 @@ do
 			local player = GetTriggerPlayer()
 			local playerDetails = hero.players[GetConvertedPlayerId(player)]
 			SelectUnitForPlayerSingle(playerDetails.hero, player)
-
-			if playerDetails.cameraLocked == true then
-				-- PanCameraToTimedForPlayer(player, GetUnitX(playerDetails.hero), GetUnitY(playerDetails.hero), 0)
-			end
 		end)
 	end
 end
@@ -302,7 +270,7 @@ function unitKeepMoving(unit)
 					FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
 					GetUnitTypeId(unit) ~= FourCC("h00O") and (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
 					IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
-		PolledWait(0.5)
-		-- indexer:order(unit, "attack")
+		PolledWait(4)
+		indexer:order(unit, "attack")
 	end
 end
