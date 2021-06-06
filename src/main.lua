@@ -1,26 +1,11 @@
 function init_Lua()
 	debugprint = 2
-	try(function()
-		-- Hide UI Keep Mouse
-		BlzHideOriginFrames(true)
-		BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
-
-		-- Lock Cam
-		CameraSetupApplyForPlayer(true, gg_cam_Base_Left, Player(0), 0)
-		local camX = CameraSetupGetDestPositionX(gg_cam_Base_Left)
-		local camY = CameraSetupGetDestPositionY(gg_cam_Base_Left)
-
-		local unit = CreateUnit(Player(19), FourCC("h01Z"), camX, camY, bj_UNIT_FACING)
-		UnitApplyTimedLife(unit, FourCC("BTLF"), 20)
-
-		SetCameraTargetControllerNoZForPlayer(Player(0), unit, 0, 0, false)
-
-	end, "Init Cam")
-	-- SetCameraBounds(camX, camY, camX, camY, camX, camY, camX, camY)
+	cine = {}
 
 	-- Define Classes
 	try(function()
 		init_triggers()
+		cine.Init()
 
 		Init_luaGlobals()
 		init_locationClass()
@@ -30,7 +15,7 @@ function init_Lua()
 		init_aiClass()
 		init_baseClass()
 		init_gateClass()
-	end, "Define Classes")
+	end)
 	-- dprint("Classes Defined", 2)
 
 	-- Start the Map init
@@ -47,7 +32,7 @@ function init_Lua()
 		ai = ai_Class.new()
 		spawn = spawn_Class.new()
 
-	end, "Init Classes")
+	end)
 
 	-- dprint("Classes Initialized", 2)
 
@@ -55,7 +40,7 @@ function init_Lua()
 
 	ConditionalTriggerExecute(gg_trg_baseAndHeals)
 
-	--init_AutoZoom()
+	-- init_AutoZoom()
 	Init_HeroLevelsUp()
 	Init_UnitCastsSpell()
 	init_spawnTimers()
@@ -70,7 +55,7 @@ function init_Lua()
 	init_Moonwell_cast()
 
 	-- Abilities
-	try(function() init_Abilities() end, "Init Triggers")
+	try(function() init_Abilities() end)
 
 	-- dprint("Triggers Initialized", 2)
 
@@ -79,7 +64,7 @@ function init_Lua()
 	try(function()
 		spawnAddBases()
 		spawnAddUnits()
-	end, "Init Spawn")
+	end)
 
 	-- dprint("Spawn Setup", 2)
 
@@ -95,7 +80,7 @@ function init_Delayed_1()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventSingle(t, 1)
 	TriggerAddAction(t, function()
-		
+
 		-- dprint("AI Started", 2)
 
 		gate.main()
@@ -116,7 +101,7 @@ function init_Delayed_10()
 
 			-- Set up the Creep Event Timer
 			StartTimerBJ(udg_EventTimer, false, 350.00)
-		end, "Start Delayed Triggers")
+		end)
 	end)
 end
 
@@ -179,7 +164,6 @@ function Init_Map()
 
 end
 
-
 function init_aiLoopStates()
 	if (ai.count > 0) then
 		local t = CreateTrigger()
@@ -214,7 +198,7 @@ function init_aiLoopStates()
 					ai:STATERevived(i)
 				end
 				print(" --")
-			end, "AI STATES")
+			end)
 		end)
 	end
 end
@@ -222,10 +206,9 @@ end
 function init_spawnTimers()
 	-- Create Spawn Loop Trigger
 
-	TriggerAddAction(Trig_spawnLoop, function() try(function() spawn:loopSpawn() end, "spawn:loopSpawn") end)
+	TriggerAddAction(Trig_spawnLoop, function() try(function() spawn:loopSpawn() end) end)
 
-	TriggerAddAction(Trig_upgradeCreeps,
-	                 function() try(function() spawn:upgradeCreeps() end, "spawn:upgradeCreeps()") end)
+	TriggerAddAction(Trig_upgradeCreeps, function() try(function() spawn:upgradeCreeps() end) end)
 end
 
 --
@@ -261,7 +244,7 @@ function Init_PickingPhase()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventPeriodic(t, 1.00)
 	TriggerAddAction(t, function()
-		-- try(function()
+
 		local u, player
 		local unitHero = false
 		local g = CreateGroup()
@@ -288,31 +271,12 @@ function Init_PickingPhase()
 
 			end)
 
-			-- Reset back to normal
-			-- SetCameraBoundsToRect(bj_mapInitialCameraBounds)
-
-			ShowInterface(false, 0)
-			BlzHideOriginFrames(false)
-			BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
-
-			-- Fade back to normal
-			ShowInterface(true, 3)
-			CameraSetSmoothingFactor(1)
-
-			CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 3)
-
-			-- PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 3)
-
-			FogMaskEnableOn()
-			FogEnableOn()
-
 			DisableTrigger(GetTriggeringTrigger())
 			HeroSelector.destroy()
-			init_aiLoopStates()
 
-			PolledWait(3)
-			EnableTrigger(Trig_AutoZoom)
+			cine.finish()
+
+			init_aiLoopStates()
 		end
-		-- end, "Pick Hero")
 	end)
 end

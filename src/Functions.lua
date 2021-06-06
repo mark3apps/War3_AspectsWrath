@@ -48,13 +48,13 @@ function polarProjectionCoordinates(x, y, dist, angle)
     return newX, newY
 end
 
-function try(func, name) -- Turn on runtime logging
+function try(func) -- Turn on runtime logging
     local passed, data = pcall(function()
         func()
-        return "func " .. name .. " passed"
+        return "func " .. " passed"
     end)
     if not passed then
-        print("|cffff0000[ERROR]|r" .. name, passed, data)
+        print("|cffff0000[ERROR]|r", passed, data)
     end
 end
 

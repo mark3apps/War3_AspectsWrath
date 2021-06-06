@@ -390,6 +390,8 @@ gg_unit_u001_0097 = nil
 gg_unit_u001_0098 = nil
 gg_unit_ndh2_0359 = nil
 gg_unit_ndh2_0876 = nil
+gg_cam_intro01Start = nil
+gg_cam_intro01End = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -5265,6 +5267,54 @@ function init_gateClass()
 	end
 end
 
+function cine.Init()
+	-- Hide UI Keep Mouse
+	BlzHideOriginFrames(true)
+	BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
+	CinematicFilterGenericBJ(0.00, BLEND_MODE_BLEND, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0.00, 0.00, 0.00,
+	                         0.00, 0, 0, 0, 0)
+
+		local t = CreateTrigger()
+		TriggerRegisterTimerEventSingle(t, 5)
+
+		TriggerAddAction(t, function()
+			CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, 3.00, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0, 0, 0, 0)
+
+			-- Lock Cam
+			CameraSetupApplyForPlayer(true, gg_cam_intro01Start, Player(0), 0)
+			local camX = CameraSetupGetDestPositionX(gg_cam_intro01Start)
+			local camY = CameraSetupGetDestPositionY(gg_cam_intro01Start)
+
+			local unit = CreateUnit(Player(19), FourCC("h01Z"), camX, camY, bj_UNIT_FACING)
+			UnitApplyTimedLife(unit, FourCC("BTLF"), 20)
+
+			SetCameraTargetControllerNoZForPlayer(Player(0), unit, 0, 0, false)
+            CameraSetupApplyForPlayer(true, gg_cam_intro01End, Player(0), 15)
+		end)
+
+    function cine.finish()
+        
+			-- Reset back to normal
+            CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, 2.00, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0, 0, 0, 0)
+            PolledWait(2)
+
+			ShowInterface(false, 0)
+			BlzHideOriginFrames(false)
+			BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
+
+            FogMaskEnableOn()
+			FogEnableOn()
+            CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 0)
+            CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, 2.00, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0, 0, 0, 0)
+			
+            -- Fade back to normal
+			ShowInterface(true, 2)
+
+
+    end
+end
+
+
 --
 -- Functions
 --
@@ -5315,13 +5365,13 @@ function polarProjectionCoordinates(x, y, dist, angle)
     return newX, newY
 end
 
-function try(func, name) -- Turn on runtime logging
+function try(func) -- Turn on runtime logging
     local passed, data = pcall(function()
         func()
-        return "func " .. name .. " passed"
+        return "func " .. " passed"
     end)
     if not passed then
-        print("|cffff0000[ERROR]|r" .. name, passed, data)
+        print("|cffff0000[ERROR]|r", passed, data)
     end
 end
 
@@ -6600,27 +6650,12 @@ end
 
 function init_Lua()
 	debugprint = 2
-	try(function()
-		-- Hide UI Keep Mouse
-		BlzHideOriginFrames(true)
-		BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
-
-		-- Lock Cam
-		CameraSetupApplyForPlayer(true, gg_cam_Base_Left, Player(0), 0)
-		local camX = CameraSetupGetDestPositionX(gg_cam_Base_Left)
-		local camY = CameraSetupGetDestPositionY(gg_cam_Base_Left)
-
-		local unit = CreateUnit(Player(19), FourCC("h01Z"), camX, camY, bj_UNIT_FACING)
-		UnitApplyTimedLife(unit, FourCC("BTLF"), 20)
-
-		SetCameraTargetControllerNoZForPlayer(Player(0), unit, 0, 0, false)
-
-	end, "Init Cam")
-	-- SetCameraBounds(camX, camY, camX, camY, camX, camY, camX, camY)
+	cine = {}
 
 	-- Define Classes
 	try(function()
 		init_triggers()
+		cine.Init()
 
 		Init_luaGlobals()
 		init_locationClass()
@@ -6630,7 +6665,7 @@ function init_Lua()
 		init_aiClass()
 		init_baseClass()
 		init_gateClass()
-	end, "Define Classes")
+	end)
 	-- dprint("Classes Defined", 2)
 
 	-- Start the Map init
@@ -6647,7 +6682,7 @@ function init_Lua()
 		ai = ai_Class.new()
 		spawn = spawn_Class.new()
 
-	end, "Init Classes")
+	end)
 
 	-- dprint("Classes Initialized", 2)
 
@@ -6655,7 +6690,7 @@ function init_Lua()
 
 	ConditionalTriggerExecute(gg_trg_baseAndHeals)
 
-	--init_AutoZoom()
+	-- init_AutoZoom()
 	Init_HeroLevelsUp()
 	Init_UnitCastsSpell()
 	init_spawnTimers()
@@ -6670,7 +6705,7 @@ function init_Lua()
 	init_Moonwell_cast()
 
 	-- Abilities
-	try(function() init_Abilities() end, "Init Triggers")
+	try(function() init_Abilities() end)
 
 	-- dprint("Triggers Initialized", 2)
 
@@ -6679,7 +6714,7 @@ function init_Lua()
 	try(function()
 		spawnAddBases()
 		spawnAddUnits()
-	end, "Init Spawn")
+	end)
 
 	-- dprint("Spawn Setup", 2)
 
@@ -6695,7 +6730,7 @@ function init_Delayed_1()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventSingle(t, 1)
 	TriggerAddAction(t, function()
-		
+
 		-- dprint("AI Started", 2)
 
 		gate.main()
@@ -6716,7 +6751,7 @@ function init_Delayed_10()
 
 			-- Set up the Creep Event Timer
 			StartTimerBJ(udg_EventTimer, false, 350.00)
-		end, "Start Delayed Triggers")
+		end)
 	end)
 end
 
@@ -6779,7 +6814,6 @@ function Init_Map()
 
 end
 
-
 function init_aiLoopStates()
 	if (ai.count > 0) then
 		local t = CreateTrigger()
@@ -6814,7 +6848,7 @@ function init_aiLoopStates()
 					ai:STATERevived(i)
 				end
 				print(" --")
-			end, "AI STATES")
+			end)
 		end)
 	end
 end
@@ -6822,10 +6856,9 @@ end
 function init_spawnTimers()
 	-- Create Spawn Loop Trigger
 
-	TriggerAddAction(Trig_spawnLoop, function() try(function() spawn:loopSpawn() end, "spawn:loopSpawn") end)
+	TriggerAddAction(Trig_spawnLoop, function() try(function() spawn:loopSpawn() end) end)
 
-	TriggerAddAction(Trig_upgradeCreeps,
-	                 function() try(function() spawn:upgradeCreeps() end, "spawn:upgradeCreeps()") end)
+	TriggerAddAction(Trig_upgradeCreeps, function() try(function() spawn:upgradeCreeps() end) end)
 end
 
 --
@@ -6861,7 +6894,7 @@ function Init_PickingPhase()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventPeriodic(t, 1.00)
 	TriggerAddAction(t, function()
-		-- try(function()
+
 		local u, player
 		local unitHero = false
 		local g = CreateGroup()
@@ -6888,32 +6921,13 @@ function Init_PickingPhase()
 
 			end)
 
-			-- Reset back to normal
-			-- SetCameraBoundsToRect(bj_mapInitialCameraBounds)
-
-			ShowInterface(false, 0)
-			BlzHideOriginFrames(false)
-			BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
-
-			-- Fade back to normal
-			ShowInterface(true, 3)
-			CameraSetSmoothingFactor(1)
-
-			CameraSetupApplyForPlayer(true, gg_cam_Base_Left_Start, Player(0), 3)
-
-			-- PanCameraToTimedForPlayer(player, GetUnitX(heroUnit), GetUnitY(heroUnit), 3)
-
-			FogMaskEnableOn()
-			FogEnableOn()
-
 			DisableTrigger(GetTriggeringTrigger())
 			HeroSelector.destroy()
-			init_aiLoopStates()
 
-			PolledWait(3)
-			EnableTrigger(Trig_AutoZoom)
+			cine.finish()
+
+			init_aiLoopStates()
 		end
-		-- end, "Pick Hero")
 	end)
 end
 
@@ -7070,7 +7084,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nfv0"), -21376.0, -5408.0, 141.625, FourCC("nfv0"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22400.0, -10496.0, 270.000, FourCC("n007"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -15584.0, -5856.0, 270.000, FourCC("ncbb"))
-    gg_unit_hshy_0011 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -18464.0, -7456.0, 270.000, FourCC("hshy"))
+    gg_unit_hshy_0011 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -18592.0, -7392.0, 270.000, FourCC("hshy"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -15520.0, -6240.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("nft2"), -19968.0, -13312.0, 270.000, FourCC("nft2"))
     gg_unit_h003_0015 = BlzCreateUnitWithSkin(p, FourCC("h003"), -23488.0, -11200.0, 270.000, FourCC("h003"))
@@ -7212,7 +7226,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -23104.0, -5824.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -22720.0, -5440.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -21760.0, -6784.0, 270.000, FourCC("hgtw"))
-    gg_unit_ndh2_0359 = BlzCreateUnitWithSkin(p, FourCC("ndh2"), -17600.0, 832.0, 270.000, FourCC("ndh2"))
+    gg_unit_ndh2_0359 = BlzCreateUnitWithSkin(p, FourCC("ndh2"), -19584.0, 256.0, 270.000, FourCC("ndh2"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -21760.0, -6272.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -18144.0, -5216.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -25216.0, 896.0, 270.000, FourCC("negt"))
@@ -7247,7 +7261,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -15840.0, -3616.0, 270.000, FourCC("nnzg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -16736.0, -4192.0, 270.000, FourCC("nnzg"))
     u = BlzCreateUnitWithSkin(p, FourCC("nnzg"), -16288.0, -2656.0, 270.000, FourCC("nnzg"))
-    u = BlzCreateUnitWithSkin(p, FourCC("o004"), -16832.0, 896.0, 270.000, FourCC("o004"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -17984.0, 1088.0, 270.000, FourCC("ntt1"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -18304.0, -960.0, 270.000, FourCC("h01R"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -18304.0, -1536.0, 270.000, FourCC("h01R"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -18496.0, -1728.0, 270.000, FourCC("h01R"))
@@ -7259,12 +7273,12 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -18400.0, -4544.0, 90.000, FourCC("ncba"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -14208.0, -7744.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 260)
-    u = BlzCreateUnitWithSkin(p, FourCC("o003"), -17312.0, 2016.0, 270.000, FourCC("o003"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00D"), -16064.0, -576.0, 270.000, FourCC("n00D"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmg0"), -18080.0, 4832.0, 270.000, FourCC("nmg0"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -18464.0, -6784.0, 90.000, FourCC("ncba"))
-    u = BlzCreateUnitWithSkin(p, FourCC("o004"), -16832.0, 192.0, 270.000, FourCC("o004"))
-    u = BlzCreateUnitWithSkin(p, FourCC("o004"), -17152.0, 576.0, 270.000, FourCC("o004"))
-    u = BlzCreateUnitWithSkin(p, FourCC("ngnh"), -17632.0, -32.0, 270.000, FourCC("ngnh"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndh2"), -17344.0, 576.0, 270.000, FourCC("ndh2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndh1"), -16064.0, 448.0, 270.000, FourCC("ndh1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndh4"), -16576.0, 320.0, 270.000, FourCC("ndh4"))
     u = BlzCreateUnitWithSkin(p, FourCC("o004"), -15488.0, -8576.0, 270.000, FourCC("o004"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -15360.0, -8640.0, 270.000, FourCC("h01R"))
     u = BlzCreateUnitWithSkin(p, FourCC("obar"), -19008.0, -2176.0, 270.000, FourCC("obar"))
@@ -7343,6 +7357,8 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -19872.0, 3872.0, 270.000, FourCC("nmg1"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmg1"), -18976.0, 3808.0, 270.000, FourCC("nmg1"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmh0"), -19936.0, 4512.0, 270.000, FourCC("nmh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndh3"), -17600.0, 1216.0, 270.000, FourCC("ndh3"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -18368.0, 576.0, 270.000, FourCC("ntt1"))
     u = BlzCreateUnitWithSkin(p, FourCC("n007"), -22208.0, -11200.0, 270.000, FourCC("n007"))
     gg_unit_n00K_0802 = BlzCreateUnitWithSkin(p, FourCC("n00K"), -24256.0, -6464.0, 270.000, FourCC("n00K"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -22688.0, 1504.0, 270.000, FourCC("nef4"))
@@ -7369,6 +7385,17 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nfv0"), -21920.0, -5792.0, 64.681, FourCC("nfv0"))
     u = BlzCreateUnitWithSkin(p, FourCC("nfv0"), -22048.0, -3808.0, 309.681, FourCC("nfv0"))
     u = BlzCreateUnitWithSkin(p, FourCC("nfrt"), -18944.0, -5760.0, 270.000, FourCC("nfrt"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndh0"), -16896.0, -256.0, 270.000, FourCC("ndh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndh0"), -18304.0, 64.0, 270.000, FourCC("ndh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndch"), -17152.0, 1088.0, 270.000, FourCC("ndch"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndh1"), -17472.0, 64.0, 270.000, FourCC("ndh1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ndh0"), -17920.0, 768.0, 270.000, FourCC("ndh0"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ntx2"), -16896.0, 512.0, 270.000, FourCC("ntx2"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -16896.0, 1152.0, 270.000, FourCC("ntt1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -16384.0, 832.0, 270.000, FourCC("ntt1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -16128.0, 64.0, 270.000, FourCC("ntt1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -16704.0, -192.0, 270.000, FourCC("ntt1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("ntx2"), -17344.0, 1984.0, 270.000, FourCC("ntx2"))
 end
 
 function CreateUnitsForPlayer20()
@@ -7496,7 +7523,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -9696.0, -3936.0, 360.000, FourCC("ncba"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -8640.0, -5568.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -11392.0, -4224.0, 270.000, FourCC("h004"))
-    gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -10592.0, -1952.0, 270.000, FourCC("hshy"))
+    gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -10464.0, -1952.0, 270.000, FourCC("hshy"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -10912.0, -3936.0, 90.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("ndh3"), -11456.0, -10560.0, 270.000, FourCC("ndh3"))
     u = BlzCreateUnitWithSkin(p, FourCC("nfv0"), -8544.0, -4960.0, 90.000, FourCC("nfv0"))
@@ -7680,6 +7707,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -12352.0, -9152.0, 270.000, FourCC("ntt1"))
     u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -11072.0, -10432.0, 270.000, FourCC("ntt1"))
     u = BlzCreateUnitWithSkin(p, FourCC("ntt1"), -10688.0, -9920.0, 270.000, FourCC("ntt1"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00D"), -12992.0, -8768.0, 270.000, FourCC("n00D"))
     u = BlzCreateUnitWithSkin(p, FourCC("ngob"), -4928.0, -6912.0, 270.000, FourCC("ngob"))
     u = BlzCreateUnitWithSkin(p, FourCC("e007"), -5088.0, -8288.0, 270.000, FourCC("e007"))
     u = BlzCreateUnitWithSkin(p, FourCC("n012"), -5798.5, -8535.4, 166.081, FourCC("n012"))
@@ -8128,6 +8156,32 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_Start01_1, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
     CameraSetupSetField(gg_cam_Start01_1, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
     CameraSetupSetDestPosition(gg_cam_Start01_1, -26098.5, -1925.7, 0.0)
+    gg_cam_intro01Start = CreateCameraSetup()
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_ZOFFSET, 331.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_ROTATION, 132.2, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_ANGLE_OF_ATTACK, 5.5, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_TARGET_DISTANCE, 1363.6, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_ROLL, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_FARZ, 3243.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_NEARZ, 16.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01Start, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
+    CameraSetupSetDestPosition(gg_cam_intro01Start, -20706.6, -207.0, 0.0)
+    gg_cam_intro01End = CreateCameraSetup()
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_ZOFFSET, 331.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_ROTATION, 132.2, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_ANGLE_OF_ATTACK, 5.5, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_TARGET_DISTANCE, 1330.6, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_ROLL, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_FARZ, 3243.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_NEARZ, 16.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01End, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
+    CameraSetupSetDestPosition(gg_cam_intro01End, -20706.6, -207.0, 0.0)
 end
 
 function Trig_Level100_Func001001002001()
@@ -8190,6 +8244,7 @@ function Trig_testing_Actions()
     UnitDamageTargetBJ(GetTriggerUnit(), GetTriggerUnit(), 500, ATTACK_TYPE_MELEE, DAMAGE_TYPE_MAGIC)
     SetUnitTimeScalePercent(GetEnumUnit(), 100)
     CreateNUnitsAtLoc(1, FourCC("hfoo"), Player(PLAYER_NEUTRAL_PASSIVE), GetRectCenter(GetPlayableMapRect()), bj_UNIT_FACING)
+    CinematicFilterGenericBJ(0.00, BLEND_MODE_BLEND, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0)
 end
 
 function InitTrig_testing()
