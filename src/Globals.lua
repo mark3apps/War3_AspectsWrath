@@ -705,11 +705,11 @@ function spawnAddUnits()
     spawn:addUnit("castle", "h018", 1, {1, 2, 3}, 8, 12) -- Commander
 
     -- City Elves
-    spawn:addUnit("cityElves", "nhea", 1, {1, 3, 5}, 1, 3) -- Archer
-    spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6}, 4, 12) -- Archer
-    spawn:addUnit("cityElves", "hspt", 1, {1, 3, 4, 5, 6}, 2, 3) -- Tower Guard
-    spawn:addUnit("cityElves", "hspt", 1, {1, 2, 3, 4, 5, 6, 7}, 4, 5) -- Tower Guard
-    spawn:addUnit("cityElves", "hspt", 2, {1, 2, 3, 4, 5}, 6, 12) -- Tower Guard
+    spawn:addUnit("cityElves", "n00C", 1, {1, 3, 5}, 1, 3) -- Blood Elf Archer
+    spawn:addUnit("cityElves", "n00C", 1, {1, 2, 3, 4, 5, 6}, 4, 12) -- Blood Elf Archer
+    spawn:addUnit("cityElves", "hspt", 1, {1, 3, 4, 5, 6}, 2, 3) -- Blood Elf Breaker
+    spawn:addUnit("cityElves", "hspt", 1, {1, 2, 3, 4, 5, 6, 7}, 4, 5) -- Blood Elf Breaker
+    spawn:addUnit("cityElves", "hspt", 2, {1, 2, 3, 4, 5}, 6, 12) -- Blood Elf Breaker
     spawn:addUnit("cityElves", "nchp", 1, {1, 4}, 3, 6) -- Mystic
     spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4, 5, 7}, 7, 12) -- Mystic
 
@@ -717,9 +717,9 @@ function spawnAddUnits()
     spawn:addUnit("cityFront", "h007", 3, {1, 2, 3, 4, 5, 6}, 1, 2) -- Militia 1
     spawn:addUnit("cityFront", "h015", 2, {1, 2, 3, 4, 5, 6}, 3, 3) -- Militia 2
     spawn:addUnit("cityFront", "hfoo", 3, {1, 2, 3, 4, 5, 6}, 4, 12) -- Footman 1
-    spawn:addUnit("cityFront", "hcth", 2, {3, 4, 6}, 6, 12) -- Captian
-    spawn:addUnit("cityFront", "h00L", 1, {1, 3, 5}, 7, 12) -- Knight
-    spawn:addUnit("cityFront", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
+    spawn:addUnit("cityFront", "hcth", 2, {3, 4, 6}, 5, 12) -- Captian
+    spawn:addUnit("cityFront", "h00L", 1, {1, 3, 5}, 6, 12) -- Knight
+    spawn:addUnit("cityFront", "hmtm", 1, {1, 4}, 7, 12) -- Catapult
     spawn:addUnit("cityFront", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
     -- City Side Spawn
@@ -738,8 +738,7 @@ function spawnAddUnits()
     spawn:addUnit("kobold", "nkol", 1, {6, 8}, 5, 12) -- Kobold Taskmaster
 
     -- High Elves
-    spawn:addUnit("highElves", "earc", 1, {1, 2, 3, 4, 5}, 1, 12) -- Ranger
-    spawn:addUnit("highElves", "e000", 1, {1, 2, 3, 4, 5}, 2, 12) -- Elite Ranger
+    spawn:addUnit("highElves", "nhea", 1, {1, 3, 5}, 2, 12) -- Archer
     spawn:addUnit("highElves", "hhes", 2, {1, 2, 3, 4}, 4, 12) -- Swordsman
     spawn:addUnit("highElves", "nemi", 1, {1, 3, 5}, 5, 12) -- Emmisary
 
@@ -789,6 +788,8 @@ function spawnAddUnits()
     spawn:addUnit("nagaCreep", "nsnp", 1, {2, 3, 4, 5, 6}, 5, 12) -- Snap Dragon
 
     -- Night Elves Spawn
+    spawn:addUnit("nightElves", "earc", 1, {1, 2, 3, 4, 5}, 1, 12) -- Ranger
+    spawn:addUnit("nightElves", "e000", 1, {1, 2, 3, 4, 5}, 2, 12) -- Elite Ranger
     spawn:addUnit("nightElves", "nwat", 1, {7, 8, 9, 10}, 2, 12) -- Sentry
     spawn:addUnit("nightElves", "edry", 1, {7, 9, 10}, 3, 12) -- Dryad
     spawn:addUnit("nightElves", "edoc", 1, {6, 7, 8, 9, 10}, 4, 12) -- Druid of the Claw
