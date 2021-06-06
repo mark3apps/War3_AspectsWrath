@@ -9,6 +9,11 @@ function init_locationClass()
 		local self = {}
 		self.regions = {}
 
+		---Add a new location
+		---@param name string
+		---@param rect rect
+		---@param nextRect rect
+		---@param allied boolean
 		function self:add(name, rect, nextRect, allied)
 			nextRect = nextRect or ""
 			allied = allied or false
@@ -1810,6 +1815,14 @@ function init_spawnClass()
 		self.numOfUnits = 0
 		self.unitType = ""
 
+		---Add a new Base
+		---@param baseName string
+		---@param alliedStart rect
+		---@param alliedEnd rect
+		---@param alliedCondition unit
+		---@param fedStart rect
+		---@param fedEnd rect
+		---@param fedCondition unit
 		function self:addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition)
 			-- Add all of the info the base and add the base name to the base list
 			self[baseName] = {
@@ -1821,6 +1834,13 @@ function init_spawnClass()
 			self.baseCount = self.baseCount + 1
 		end
 
+		---comment
+		---@param baseName string
+		---@param unitType unittype
+		---@param numOfUnits integer
+		---@param waves table
+		---@param levelStart integer
+		---@param levelEnd integer
 		function self:addUnit(baseName, unitType, numOfUnits, waves, levelStart, levelEnd)
 			table.insert(self[baseName].units,
 			             {unitType = unitType, numOfUnits = numOfUnits, waves = waves, level = {levelStart, levelEnd}})
@@ -2002,6 +2022,13 @@ function init_baseClass()
 		federation = {g = CreateGroup(), unitsTotal = 0, unitsAlive = 0, advantage = 0}
 	}
 
+	---Add a base to the map
+	---@param unit unit
+	---@param importance integer
+	---@param mainBase unit
+	---@param update boolean
+	---@param teleport boolean
+	---@param healing boolean
 	function base.add(unit, importance, mainBase, update, teleport, healing)
 
 		local teamNumber, regionName, teamName, allied, federation
@@ -2092,6 +2119,9 @@ function init_baseClass()
 		}
 	end
 
+	---Update the selected Base
+	---@param unit unit
+	---@return boolean
 	function base.update(unit)
 		local u, heroLevel
 
@@ -2187,6 +2217,8 @@ function init_baseClass()
 		-- print(base[handleId].name .. " Allies:" .. base[handleId].unitsFriendly .. " Enemies: " .. base[handleId].unitsEnemy)
 	end
 
+	---Notify System that Base has died
+	---@param unit unit
 	function base.died(unit)
 		local allied, federation, u
 		local handleId = GetHandleId(unit)
@@ -2263,6 +2295,11 @@ function init_gateClass()
 	gate.gClosed = CreateGroup()
 	gate.gOpen = CreateGroup()
 
+	---Add a new Gate Type
+	---@param unitTypeClosed unittype
+	---@param unitTypeOpen unittype
+	---@param rotation real
+	---@return boolean
 	function gate.addType(unitTypeClosed, unitTypeOpen, rotation)
 
 		local data = {unitTypeClosed = FourCC(unitTypeClosed), unitTypeOpen = FourCC(unitTypeOpen), rotation = rotation}
@@ -2276,6 +2313,9 @@ function init_gateClass()
 		return true
 	end
 
+	---Add a new Gate to be monitored
+	---@param unit unit
+	---@param owningPlayer player
 	function gate.add(unit, owningPlayer)
 
 		local playerForce, facingAngle, unitTypeClosed, unitTypeOpen
@@ -2320,6 +2360,7 @@ function init_gateClass()
 
 	end
 
+	---Update all Gates
 	function gate.update()
 
 		local gGates = CreateGroup()

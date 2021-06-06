@@ -138,8 +138,8 @@ function addBases()
     base.add(gg_unit_n00B_0102, 1, false, true, true, true) -- Allied City Side
     base.add(gg_unit_n00B_0038, 1, false, true, true, true) -- Federation
 
-    base.add(gg_unit_ngt2_0525, 1, false, true, true, true) -- Allied Kobold
-    base.add(gg_unit_ngt2_0455, 1, false, true, true, true) -- Federation
+    base.add(gg_unit_ndh2_0359, 1, false, true, true, true) -- Allied Draenei
+    base.add(gg_unit_ndh2_0876, 1, false, true, true, true) -- Federation
 
     base.add(gg_unit_nheb_0109, 3, false, true, true, true) -- Allied High Elves
     base.add(gg_unit_nheb_0036, 3, false, true, true, true) -- Federation
@@ -621,9 +621,11 @@ function spawnAddBases()
     spawn:addBase("arcaneBottom", "sElementalBottomLeft", "bottomRight",
                   gg_unit_hars_0292, "sElementalBottomRight", "topLeft",
                   gg_unit_hars_0303)
+
     spawn:addBase("blacksmith", "sCityBlacksmithLeft", "everythingRight",
                   gg_unit_n00K_0802, "sCityBlacksmithRight", "everythingLeft",
                   gg_unit_n00K_0477)
+
     spawn:addBase("blacksmithCreep", "sCityBlacksmithLeft", "cDeathMidLeft",
                   gg_unit_n00K_0802, "sCityBlacksmithRight", "cDeathMidRight",
                   gg_unit_n00K_0477)
@@ -637,8 +639,8 @@ function spawnAddBases()
                   gg_unit_n00B_0399)
     spawn:addBase("citySide", "sCitySideLeft", "bottomRight", gg_unit_n00B_0102,
                   "sCitySideRight", "topLeft", gg_unit_n00B_0038)
-    spawn:addBase("draenei", "sKolboldLeft", "topRight", gg_unit_ngt2_0525,
-                  "sKolboldRight", "bottomLeft", gg_unit_ngt2_0455)
+    spawn:addBase("draenei", "sKolboldLeft", "topRight", gg_unit_ndh2_0359,
+                  "sKolboldRight", "bottomLeft", gg_unit_ndh2_0876)
     spawn:addBase("highElves", "sElfLeft", "topRight", gg_unit_nheb_0109,
                   "sElfRight", "bottomLeft", gg_unit_nheb_0036)
     spawn:addBase("highElvesCreep", "sElfLeft", "cForestMidLeft",
@@ -733,10 +735,11 @@ function spawnAddUnits()
 
     -- Draenei Spawn
     spawn:addUnit("draenei", "ndrf", 2, {5, 6, 7, 8, 9, 10}, 1, 12) -- Draenei Guardian
-    spawn:addUnit("draenei", "ndrd", 1, {7, 9, 10}, 3, 12) -- Draenei Darkslayer
+    spawn:addUnit("draenei", "ndrf", 2, {7, 8, 9, 10}, 5, 12) -- Draenei Guardian
+    spawn:addUnit("draenei", "ndrd", 1, {6, 7, 8, 9, 10}, 3, 12) -- Draenei Darkslayer
     spawn:addUnit("draenei", "ndrs", 1, {7, 10}, 4, 12) -- Draenei Seer
     spawn:addUnit("draenei", "n00I", 1, {6, 8}, 7, 12) -- Draenei Vindicator
-    spawn:addUnit("draenei", "ncat", 1, {6, 8}, 6, 12) -- Draenei Demolisher
+    spawn:addUnit("draenei", "ncat", 1, {6, 8, 10}, 6, 12) -- Draenei Demolisher
 
     -- High Elves
     spawn:addUnit("highElves", "h00T", 1, {1, 2, 3, 5}, 1, 3) -- Apprentice
@@ -744,7 +747,7 @@ function spawnAddUnits()
     spawn:addUnit("highElves", "nhea", 1, {1, 3, 5}, 2, 12) -- Archer
     spawn:addUnit("highElves", "hhes", 2, {1, 2, 3, 4}, 4, 12) -- Swordsman
     spawn:addUnit("highElves", "nemi", 1, {1, 3, 5}, 5, 12) -- Mystic
-    spawn:addUnit("highElves", "h005", 1, {1, 3}, 7, 12) -- High Elf Knight
+    spawn:addUnit("highElves", "h005", 1, {1, 3, 5}, 7, 12) -- High Elf Knight
 
     -- High Elves Creep
     spawn:addUnit("highElvesCreep", "h00T", 1, {1, 2, 3, 4}, 1, 2) -- Swordsman

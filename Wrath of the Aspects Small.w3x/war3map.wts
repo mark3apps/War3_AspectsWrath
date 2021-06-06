@@ -13651,12 +13651,6 @@ STRING 4674
 Spawn Assassins
 }
 
-STRING 4676
-// Units: h01R (Baracade), Name (Name)
-{
-Baracade
-}
-
 STRING 4681
 // Units: h01C (City Gate), EditorSuffix (Name - Editor Suffix)
 {
@@ -14038,5 +14032,11 @@ STRING 4746
 // Abilities: S001 (Fel Orc Spearthrower), Name (Name)
 {
 Fel Orc Spearthrower
+}
+
+STRING 4747
+// Units: h01R (Barracade), Name (Name)
+{
+Barracade
 }
 
