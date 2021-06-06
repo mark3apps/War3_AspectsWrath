@@ -1,3 +1,4 @@
+---@diagnostic disable: trailing-space
 -- ===========================================================================
 ---  Blizzard.j ( define Jass2 functions that need to be in every map script )
 -- ===========================================================================
