@@ -547,6 +547,17 @@ function Init_luaGlobals()
         instant3 = 851975,
         instant4 = 852019
     }
+
+    typeIdTable = {}
+    typeIdTable[FourCC("uloc")] = true
+    typeIdTable[FourCC("h000")] = true
+    typeIdTable[FourCC("h00V")] = true
+    typeIdTable[FourCC("h00N")] = true
+    typeIdTable[FourCC("h00O")] = true
+    typeIdTable[FourCC("h00M")] = true
+    typeIdTable[FourCC("o006")] = true
+    typeIdTable[FourCC("B006")] = true
+
     ordersIgnore = {
         waterelemental = oid.waterelemental,
         forkedlightning = oid.forkedlightning,
@@ -661,152 +672,153 @@ function spawnAddUnits()
     -- addUnit(baseName, unitType, numOfUnits, {waves}, levelStart, levelEnd)
 
     -- Arcane Spawn
-    spawn:addUnit("arcane", "h00C", 2, {5, 6, 7, 8, 9}, 3, 12) -- Sorcress
+    spawn:addUnit("arcane", "h00C", 1, {6, 7, 8, 9, 10}, 3, 12) -- Sorcress
 
     -- Arcane Creep Spawn
-    spawn:addUnit("arcaneCreep", "narg", 2, {1, 2, 3, 4}, 2, 12) -- Battle Golem
-    spawn:addUnit("arcaneCreep", "hwt2", 1, {1, 2, 3, 4}, 3, 12) -- Water Elemental (Level 2)
-    spawn:addUnit("arcaneCreep", "hwt3", 1, {1, 2, 3, 4}, 4, 12) -- Water Elemental (Level 3)
-    spawn:addUnit("arcaneCreep", "h00K", 1, {1, 2, 3, 4, 5, 9}, 6, 12) -- Magi Defender
+    spawn:addUnit("arcaneCreep", "narg", 1, {1, 2, 3, 4}, 2, 12) -- Battle Golem
+    spawn:addUnit("arcaneCreep", "hwt2", 1, {1, 3}, 3, 12) -- Water Elemental (Level 2)
+    spawn:addUnit("arcaneCreep", "hwt3", 1, {2, 3}, 4, 12) -- Water Elemental (Level 3)
+    spawn:addUnit("arcaneCreep", "h00K", 1, {1, 2, 3, 5}, 6, 12) -- Magi Defender
 
     -- Arcane Hero Sapwn
-    spawn:addUnit("arcaneHero", "n00A", 1, {5, 6}, 7, 12) -- Supreme Wizard
-    spawn:addUnit("arcaneHero", "nsgg", 1, {4, 6}, 9, 12) -- Seige Golem
+    spawn:addUnit("arcaneHero", "n00A", 1, {5}, 7, 12) -- Supreme Wizard
+    spawn:addUnit("arcaneHero", "nsgg", 1, {4}, 9, 12) -- Seige Golem
 
     -- Arcane Top Spawn
-    spawn:addUnit("arcaneTop", "narg", 4, {4, 5, 6}, 1, 12) -- Battle Golem
-    spawn:addUnit("arcaneTop", "hwt2", 1, {4, 5, 6}, 4, 12) -- Water Elemental (Level 2)
-    spawn:addUnit("arcaneTop", "hwt3", 1, {5, 6}, 8, 12) -- Water Elemental (Level 3)
+    spawn:addUnit("arcaneTop", "narg", 2, {4, 5, 6}, 1, 12) -- Battle Golem
+    spawn:addUnit("arcaneTop", "hwt2", 1, {4, 6}, 4, 12) -- Water Elemental (Level 2)
+    spawn:addUnit("arcaneTop", "hwt3", 1, {5}, 8, 12) -- Water Elemental (Level 3)
 
     -- Arcane Bottom Spawn
-    spawn:addUnit("arcaneBottom", "narg", 4, {1, 2, 3}, 2, 12) -- Battle Golem
-    spawn:addUnit("arcaneBottom", "hwt2", 1, {1, 2, 3}, 4, 12) -- Water Elemental (Level 2)
-    spawn:addUnit("arcaneBottom", "hwt3", 1, {2, 3}, 8, 12) -- Water Elemental (Level 3)
+    spawn:addUnit("arcaneBottom", "narg", 2, {1, 2, 3}, 2, 12) -- Battle Golem
+    spawn:addUnit("arcaneBottom", "hwt2", 1, {1, 3}, 4, 12) -- Water Elemental (Level 2)
+    spawn:addUnit("arcaneBottom", "hwt3", 1, {2}, 8, 12) -- Water Elemental (Level 3)
 
     -- Blacksmith Creep Spawn
-    spawn:addUnit("blacksmithCreep", "h007", 4, {1, 2, 3, 4}, 1, 6) -- Militia
-    spawn:addUnit("blacksmithCreep", "nhea", 1, {1, 2, 3, 4}, 3, 12) -- Archer
-    spawn:addUnit("blacksmithCreep", "hspt", 1, {1, 2, 3, 4}, 5, 12) -- Tower Guard
-    spawn:addUnit("blacksmithCreep", "h011", 2, {1, 2, 3, 4, 5}, 8, 12) -- Scarlet Commander
-    spawn:addUnit("blacksmithCreep", "hcth", 2, {1, 2, 3, 4, 5}, 11, 12) -- Captian
+    spawn:addUnit("blacksmithCreep", "h007", 2, {1, 2, 3, 4}, 1, 6) -- Militia
+    spawn:addUnit("blacksmithCreep", "nhea", 1, {1, 2}, 3, 12) -- Archer
+    spawn:addUnit("blacksmithCreep", "hspt", 1, {3, 4}, 5, 12) -- Tower Guard
+    spawn:addUnit("blacksmithCreep", "h011", 1, {1, 2, 3, 4, 5}, 8, 12) -- Scarlet Commander
+    spawn:addUnit("blacksmithCreep", "hcth", 1, {1, 2, 3, 4, 5}, 11, 12) -- Captian
 
     -- Castle Spawn
-    spawn:addUnit("castle", "h018", 1, {1, 2, 3, 4, 5, 6}, 8, 12) -- Commander
+    spawn:addUnit("castle", "h018", 1, {1, 2, 3}, 8, 12) -- Commander
 
     -- City Elves
-    spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6}, 1, 3) -- Archer
-    spawn:addUnit("cityElves", "hspt", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 2, 3) -- Tower Guard
-    spawn:addUnit("cityElves", "hspt", 2, {1, 2, 3, 4, 5, 6, 7}, 4, 5) -- Tower Guard
-    spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4}, 3, 12) -- Mystic
-    spawn:addUnit("cityElves", "hspt", 3, {1, 2, 3, 4, 5, 6}, 6, 12) -- Tower Guard
-    spawn:addUnit("cityElves", "nhea", 2, {1, 2, 3, 4, 5, 6}, 4, 12) -- Archer
-    spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4, 5, 6, 7}, 7, 12) -- Mystic
+    spawn:addUnit("cityElves", "nhea", 1, {1, 3, 5}, 1, 3) -- Archer
+    spawn:addUnit("cityElves", "nhea", 1, {1, 2, 3, 4, 5, 6}, 4, 12) -- Archer
+    spawn:addUnit("cityElves", "hspt", 1, {1, 3, 4, 5, 6}, 2, 3) -- Tower Guard
+    spawn:addUnit("cityElves", "hspt", 1, {1, 2, 3, 4, 5, 6, 7}, 4, 5) -- Tower Guard
+    spawn:addUnit("cityElves", "hspt", 2, {1, 2, 3, 4, 5}, 6, 12) -- Tower Guard
+    spawn:addUnit("cityElves", "nchp", 1, {1, 4}, 3, 6) -- Mystic
+    spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4, 5, 7}, 7, 12) -- Mystic
 
     -- City Front Spawn
-    spawn:addUnit("cityFront", "h007", 3, {2, 3, 4, 5, 6, 7}, 1, 2) -- Militia 1
-    spawn:addUnit("cityFront", "h015", 4, {2, 3, 4, 5, 6, 7}, 2, 4) -- Militia 2
-    spawn:addUnit("cityFront", "hfoo", 5, {1, 2, 3, 4, 5, 6, 7, 8}, 4, 12) -- Footman 1
-    spawn:addUnit("cityFront", "hcth", 3, {2, 3, 4, 5, 6}, 6, 12) -- Captian
-    spawn:addUnit("cityFront", "h00L", 1, {1, 2, 3, 4, 5}, 7, 12) -- Knight
+    spawn:addUnit("cityFront", "h007", 3, {1, 2, 3, 4, 5, 6}, 1, 2) -- Militia 1
+    spawn:addUnit("cityFront", "h015", 2, {1, 2, 3, 4, 5, 6}, 3, 3) -- Militia 2
+    spawn:addUnit("cityFront", "hfoo", 3, {1, 2, 3, 4, 5, 6}, 4, 12) -- Footman 1
+    spawn:addUnit("cityFront", "hcth", 2, {3, 4, 6}, 6, 12) -- Captian
+    spawn:addUnit("cityFront", "h00L", 1, {1, 3, 5}, 7, 12) -- Knight
     spawn:addUnit("cityFront", "hmtm", 1, {3, 8}, 7, 12) -- Catapult
     spawn:addUnit("cityFront", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
     -- City Side Spawn
-    spawn:addUnit("citySide", "h015", 2, {5, 6, 7, 8, 9}, 1, 2) -- Militia 1
-    spawn:addUnit("citySide", "hfoo", 3, {5, 6, 7, 8, 9}, 2, 12) -- Footman 1
-    spawn:addUnit("citySide", "hfoo", 1, {1, 2, 3, 4, 5}, 3, 12) -- Footman 1
-    spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 3, 12) -- Knight
-    spawn:addUnit("citySide", "h00L", 1, {1, 2, 3, 4}, 5, 12) -- Knight
-    spawn:addUnit("citySide", "h017", 1, {1, 2, 3}, 6, 12) -- Scarlet Commander
-    spawn:addUnit("citySide", "n00X", 2, {1, 2, 3, 4, 6, 8}, 3, 12) -- Arbalist
+    spawn:addUnit("citySide", "h015", 1, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
+    spawn:addUnit("citySide", "hfoo", 2, {5, 6, 8, 9}, 2, 2) -- Footman 1
+    spawn:addUnit("citySide", "hfoo", 3, {5, 6, 8, 9}, 3, 12) -- Footman 1
+    spawn:addUnit("citySide", "h00L", 1, {6, 8}, 3, 4) -- Knight
+    spawn:addUnit("citySide", "h00L", 1, {6, 7, 8, 9}, 5, 12) -- Knight
+    spawn:addUnit("citySide", "h017", 1, {8, 10}, 6, 12) -- Scarlet Commander
+    spawn:addUnit("citySide", "n00X", 1, {4, 5, 6, 7, 8, 9}, 3, 12) -- Arbalist
 
     -- Kobold Spawn
-    spawn:addUnit("kobold", "nkob", 2, {1, 2, 3, 4, 5, 6, 7, 8, 9}, 1, 12) -- Kobold
-    spawn:addUnit("kobold", "nkot", 1, {1, 2, 3, 5, 7, 9}, 3, 12) -- Kobold Tunneler
-    spawn:addUnit("kobold", "nkog", 1, {1, 3, 5, 7, 9}, 4, 12) -- Kobold Geomancer
-    spawn:addUnit("kobold", "nkol", 1, {4, 6, 8}, 5, 12) -- Kobold Taskmaster
+    spawn:addUnit("kobold", "nkob", 2, {5, 6, 7, 8, 9, 10}, 1, 12) -- Kobold
+    spawn:addUnit("kobold", "nkot", 1, {7, 9, 10}, 3, 12) -- Kobold Tunneler
+    spawn:addUnit("kobold", "nkog", 1, {7, 9, 10}, 4, 12) -- Kobold Geomancer
+    spawn:addUnit("kobold", "nkol", 1, {6, 8}, 5, 12) -- Kobold Taskmaster
 
     -- High Elves
-    spawn:addUnit("highElves", "earc", 2, {1, 2, 3, 4, 5}, 1, 12) -- Ranger
-    spawn:addUnit("highElves", "e000", 1, {1, 2, 3, 4, 5, 6, 7, 8}, 2, 12) -- Elite Ranger
-    spawn:addUnit("highElves", "hhes", 4, {1, 2, 3, 4}, 4, 12) -- Swordsman
-    spawn:addUnit("highElves", "nemi", 1, {1, 2, 3, 4, 5, 6}, 5, 12) -- Emmisary
+    spawn:addUnit("highElves", "earc", 1, {1, 2, 3, 4, 5}, 1, 12) -- Ranger
+    spawn:addUnit("highElves", "e000", 1, {1, 2, 3, 4, 5}, 2, 12) -- Elite Ranger
+    spawn:addUnit("highElves", "hhes", 2, {1, 2, 3, 4}, 4, 12) -- Swordsman
+    spawn:addUnit("highElves", "nemi", 1, {1, 3, 5}, 5, 12) -- Emmisary
 
     -- High Elves Creep
-    spawn:addUnit("highElvesCreep", "hhes", 2, {1, 2, 3, 4}, 1, 12) -- Swordsman
-    spawn:addUnit("highElvesCreep", "nhea", 1, {1, 2, 3, 4, 5}, 2, 12) -- Archer
-    spawn:addUnit("highElvesCreep", "nemi", 1, {1, 2, 3, 4}, 4, 12) -- Emmisary
-    spawn:addUnit("highElvesCreep", "h010", 2, {1, 2, 3, 4, 5}, 5, 12) -- Elven Guardian
+    spawn:addUnit("highElvesCreep", "hhes", 1, {1, 2, 3, 4}, 1, 12) -- Swordsman
+    spawn:addUnit("highElvesCreep", "nhea", 1, {1, 3, 5}, 2, 12) -- Archer
+    spawn:addUnit("highElvesCreep", "nemi", 1, {1, 3}, 4, 12) -- Emmisary
+    spawn:addUnit("highElvesCreep", "h010", 2, {1, 3, 5}, 5, 12) -- Elven Guardian
 
     -- Merc Spawn
-    spawn:addUnit("merc", "n00L", 4, {1, 2, 3, 4, 5, 6}, 1, 12) -- Rogue
-    spawn:addUnit("merc", "n003", 2, {2, 3, 4, 5, 6, 7, 8}, 2, 12) -- Merc Archer
-    spawn:addUnit("merc", "n002", 3, {1, 2, 3, 4, 5, 6}, 3, 12) -- Merc
-    spawn:addUnit("merc", "n008", 1, {2, 3, 4, 5}, 4, 12) -- Enforcer
-    spawn:addUnit("merc", "nass", 1, {3, 4, 5, 6, 7}, 5, 12) -- Assasin
-    spawn:addUnit("merc", "n004", 1, {2, 4, 6, 8}, 1, 12) -- Wizard Warrior
-    spawn:addUnit("merc", "n005", 1, {1, 3, 5, 7}, 6, 12) -- Bandit Lord
+    spawn:addUnit("merc", "n00L", 2, {1, 2, 3, 4, 5, 6}, 1, 12) -- Rogue
+    spawn:addUnit("merc", "n003", 1, {2, 3, 4, 5, 6, 7, 8}, 2, 12) -- Merc Archer
+    spawn:addUnit("merc", "n002", 2, {1, 2, 3, 5, 6}, 3, 12) -- Merc
+    spawn:addUnit("merc", "n008", 1, {2, 5}, 4, 12) -- Enforcer
+    spawn:addUnit("merc", "nass", 1, {3, 5, 7}, 5, 12) -- Assasin
+    spawn:addUnit("merc", "n004", 1, {2, 6}, 1, 12) -- Wizard Warrior
+    spawn:addUnit("merc", "n005", 1, {1, 5}, 6, 12) -- Bandit Lord
 
     -- Mine Spawn
-    spawn:addUnit("mine", "h01O", 3, {2, 3, 4, 5, 6}, 1, 12) -- Dwarven Soldiers
-    spawn:addUnit("mine", "h01O", 2, {3, 4, 5, 6, 7}, 2, 12) -- Dwarven Soldiers
-    spawn:addUnit("mine", "h001", 1, {2, 3, 4, 5, 6}, 2, 12) -- Morter Team
-    spawn:addUnit("mine", "h008", 2, {2, 3, 4, 5, 6}, 3, 12) -- Rifleman
-    spawn:addUnit("mine", "h01Q", 1, {1,2, 3, 4, 5, 6, 7}, 4, 12) -- Mountianeer
-    spawn:addUnit("mine", "h01P", 1, {1, 2, 3, 4, 5, 6, 7}, 5, 12) -- Dwarven Armored Captians
-    spawn:addUnit("mine", "h01E", 1, {1, 2, 3, 4, 5, 6, 7}, 6, 12) -- Magi
-    spawn:addUnit("mine", "hgry", 1, {1, 2, 3, 4, 5, 6, 8}, 8, 12) -- Gryphon Rider
-    spawn:addUnit("mine", "hmtt", 1, {2, 3, 4, 5}, 6, 12) -- Seige Engine
-    spawn:addUnit("mine", "n00F", 1, {1, 2, 3, 4, 5, 6}, 7, 12) -- Automaton
+    spawn:addUnit("mine", "h01O", 2, {2, 3, 5, 6}, 1, 1) -- Dwarven Soldiers
+    spawn:addUnit("mine", "h01O", 3, {3, 4, 5, 6, 7}, 2, 12) -- Dwarven Soldiers
+    spawn:addUnit("mine", "h001", 1, {2, 4, 6}, 2, 12) -- Morter Team
+    spawn:addUnit("mine", "h008", 1, {2, 3, 4, 5, 6}, 3, 12) -- Rifleman
+    spawn:addUnit("mine", "h01Q", 1, {2, 3, 4, 6}, 4, 12) -- Mountianeer
+    spawn:addUnit("mine", "h01P", 1, {1, 2, 3, 4}, 5, 12) -- Dwarven Armored Captians
+    spawn:addUnit("mine", "h01E", 1, {1, 2, 3, 4}, 6, 12) -- Magi
+    spawn:addUnit("mine", "hgry", 1, {1, 2, 3, 4}, 8, 12) -- Gryphon Rider
+    spawn:addUnit("mine", "hmtt", 1, {2, 5}, 6, 12) -- Seige Engine
+    spawn:addUnit("mine", "n00F", 1, {1, 3, 6}, 7, 12) -- Automaton
 
     -- Murloc Spawn
-    spawn:addUnit("murloc", "nmcf", 5, {4, 5, 6, 7, 8, 9}, 1, 12) -- Mur'gul Cliffrunner
-    spawn:addUnit("murloc", "nnmg", 1, {5, 6, 7, 7, 8}, 2, 12) -- Mur'gul Reaver
-    spawn:addUnit("murloc", "nmsn", 1, {5, 6, 7, 8, 9}, 3, 12) -- Mur'gul Snarecaster
-    spawn:addUnit("murloc", "nmtw", 1, {4, 6, 8}, 6, 12) -- Mur'gul Tidewarrior
+    spawn:addUnit("murloc", "nmcf", 3, {5, 6, 7, 9, 10}, 1, 12) -- Mur'gul Cliffrunner
+    spawn:addUnit("murloc", "nnmg", 1, {5, 7}, 2, 12) -- Mur'gul Reaver
+    spawn:addUnit("murloc", "nmsn", 1, {6, 8, 10}, 3, 12) -- Mur'gul Snarecaster
+    spawn:addUnit("murloc", "nmtw", 1, {4, 8}, 6, 12) -- Mur'gul Tidewarrior
 
     -- Naga Spawn
-    spawn:addUnit("naga", "nmyr", 2, {1, 2, 3, 4, 5, 6, 7}, 1, 12) -- Naga Myrmidon
-    spawn:addUnit("naga", "nnsw", 1, {3, 4, 5, 6, 7}, 3, 12) -- Naga Siren
-    spawn:addUnit("naga", "nnrg", 1, {2, 4, 5, 7}, 6, 12) -- Naga Royal Guard
-    spawn:addUnit("naga", "nhyc", 1, {1, 2, 4, 5, 6}, 9, 12) -- Dragon Turtle
+    spawn:addUnit("naga", "nmyr", 1, {1, 2, 3, 4}, 1, 3) -- Naga Myrmidon
+    spawn:addUnit("naga", "nmyr", 1, {1, 2, 3, 4, 5, 6, 7}, 4, 12) -- Naga Myrmidon
+    spawn:addUnit("naga", "nnsw", 1, {3, 5, 7}, 3, 12) -- Naga Siren
+    spawn:addUnit("naga", "nnrg", 1, {2, 5}, 6, 12) -- Naga Royal Guard
+    spawn:addUnit("naga", "nhyc", 1, {1, 4}, 9, 12) -- Dragon Turtle
 
     -- Naga Creep Spawn
-    spawn:addUnit("nagaCreep", "nmyr", 2, {1, 2, 3, 4}, 2, 12) -- Naga Myrmidon
-    spawn:addUnit("nagaCreep", "nnsw", 1, {2, 3, 4, 5}, 3, 12) -- Naga Siren
-    spawn:addUnit("nagaCreep", "nsnp", 2, {2, 3, 4, 5, 6}, 5, 12) -- Snap Dragon
+    spawn:addUnit("nagaCreep", "nmyr", 1, {1, 2, 3, 4}, 2, 12) -- Naga Myrmidon
+    spawn:addUnit("nagaCreep", "nnsw", 1, {2, 4}, 3, 12) -- Naga Siren
+    spawn:addUnit("nagaCreep", "nsnp", 1, {2, 3, 4, 5, 6}, 5, 12) -- Snap Dragon
 
     -- Night Elves Spawn
-    spawn:addUnit("nightElves", "nwat", 2, {6, 7, 8, 9}, 2, 12) -- Sentry
-    spawn:addUnit("nightElves", "edry", 1, {5, 6, 7, 8, 9}, 3, 12) -- Dryad
-    spawn:addUnit("nightElves", "edoc", 2, {5, 6, 7, 8, 9}, 4, 12) -- Druid of the Claw
-    spawn:addUnit("nightElves", "e005", 1, {4, 6, 8, 9}, 5, 12) -- Mountain Giant
-    spawn:addUnit("nightElves", "nwnr", 1, {5, 10}, 10, 12) -- Ent
+    spawn:addUnit("nightElves", "nwat", 1, {7, 8, 9, 10}, 2, 12) -- Sentry
+    spawn:addUnit("nightElves", "edry", 1, {7, 9, 10}, 3, 12) -- Dryad
+    spawn:addUnit("nightElves", "edoc", 1, {6, 7, 8, 9, 10}, 4, 12) -- Druid of the Claw
+    spawn:addUnit("nightElves", "e005", 1, {5, 9}, 5, 12) -- Mountain Giant
+    spawn:addUnit("nightElves", "nwnr", 1, {5}, 10, 12) -- Ent
 
     -- Orc Spawn
-    spawn:addUnit("orc", "o002", 3, {1, 3, 4, 5, 6}, 1, 12) -- Grunt
-    spawn:addUnit("orc", "o002", 2, {2, 3, 4, 6, 7}, 3, 12) -- Grunt
-    spawn:addUnit("orc", "nftr", 1, {2, 3, 4, 5, 6, 7}, 2, 12) -- Spearman
-    spawn:addUnit("orc", "nogo", 3, {2, 4, 5, 6, 7}, 4, 12) -- Ogre
-    spawn:addUnit("orc", "nw2w", 1, {1, 3, 5, 6, 7}, 3, 12) -- Warlock
-    spawn:addUnit("orc", "owad", 1, {1, 5, 7}, 6, 12) -- Orc Warchief
+    spawn:addUnit("orc", "o002", 2, {1, 3, 5, 6}, 1, 12) -- Grunt
+    spawn:addUnit("orc", "o002", 1, {2, 4, 6, 7}, 3, 12) -- Grunt
+    spawn:addUnit("orc", "nftr", 1, {2, 4, 6, 7}, 2, 12) -- Spearman
+    spawn:addUnit("orc", "nogo", 2, {2, 4, 6, 7}, 4, 12) -- Ogre
+    spawn:addUnit("orc", "nw2w", 1, {3, 5, 7}, 3, 12) -- Warlock
+    spawn:addUnit("orc", "owad", 1, {1, 7}, 6, 12) -- Orc Warchief
 
     -- Human Shipyard Spawn
-    spawn:addUnit("hshipyard", "hdes", 1, {2, 4}, 1, 2) -- Human Frigate
-    spawn:addUnit("hshipyard", "hdes", 1, {2, 4, 8}, 3, 4) -- Human Frigate
-    spawn:addUnit("hshipyard", "hdes", 1, {2, 4, 6, 8}, 5, 12) -- Human Frigate
-    spawn:addUnit("hshipyard", "hbsh", 1, {3, 8}, 6, 12) -- Human Battleship
+    spawn:addUnit("hshipyard", "hdes", 1, {2}, 1, 2) -- Human Frigate
+    spawn:addUnit("hshipyard", "hdes", 1, {2, 4}, 3, 4) -- Human Frigate
+    spawn:addUnit("hshipyard", "hdes", 1, {2, 4, 6}, 5, 12) -- Human Frigate
+    spawn:addUnit("hshipyard", "hbsh", 1, {3}, 6, 12) -- Human Battleship
 
     -- Night Elf Shipyard Spawn
-    spawn:addUnit("shipyard", "edes", 1, {1, 6}, 2, 3) -- Night Elf Frigate
-    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6}, 4, 5) -- Night Elf Frigate
-    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6, 9}, 6, 12) -- Night Elf Frigate
-    spawn:addUnit("shipyard", "ebsh", 1, {3, 7}, 7, 12) -- Night Elf Battleship
+    spawn:addUnit("shipyard", "edes", 1, {1}, 2, 3) -- Night Elf Frigate
+    spawn:addUnit("shipyard", "edes", 1, {1, 3}, 4, 5) -- Night Elf Frigate
+    spawn:addUnit("shipyard", "edes", 1, {1, 3, 6}, 6, 12) -- Night Elf Frigate
+    spawn:addUnit("shipyard", "ebsh", 1, {3}, 7, 12) -- Night Elf Battleship
 
     -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 4, {1, 2, 3, 4, 5, 6}, 1, 12) -- Ghoul
-    spawn:addUnit("undead", "uskm", 2, {1, 2, 3, 4, 5, 6, 7}, 2, 12) -- Skeleton Mage
-    spawn:addUnit("undead", "unec", 1, {1, 3, 5, 6}, 4, 12) -- Necromancer
-    spawn:addUnit("undead", "nerw", 1, {1, 6}, 6, 12) -- Warlock
-    spawn:addUnit("undead", "nfgl", 1, {2, 5, 6}, 8, 12) -- Giant Skeleton
+    spawn:addUnit("undead", "ugho", 2, {4, 5, 6, 7, 8, 9}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "uskm", 1, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
+    spawn:addUnit("undead", "unec", 1, {5, 9}, 4, 12) -- Necromancer
+    spawn:addUnit("undead", "nerw", 1, {7}, 6, 12) -- Warlock
+    spawn:addUnit("undead", "nfgl", 1, {6, 9}, 8, 12) -- Giant Skeleton
 end

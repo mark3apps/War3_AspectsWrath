@@ -172,7 +172,7 @@ function init_Abilities()
         PolledWait(0.3)
 
         -- Explode the Bomb
-        sfx = AddSpecialEffectLoc("Flamestrike Mystic I/Flamestrike Mystic I.mdx", lCast)
+        sfx = AddSpecialEffectLoc("Flamestrike Mystic I.mdx", lCast)
         DestroyEffect(sfx)
         sfx = AddSpecialEffectLoc("Units/NightElf/Wisp/WispExplode.mdl", lCast)
         DestroyEffect(sfx)
