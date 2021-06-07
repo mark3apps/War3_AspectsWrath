@@ -556,7 +556,9 @@ function Init_luaGlobals()
     typeIdTable[FourCC("h00O")] = true
     typeIdTable[FourCC("h00M")] = true
     typeIdTable[FourCC("o006")] = true
-    typeIdTable[FourCC("B006")] = true
+    typeIdTable[FourCC("h01Z")] = true
+    typeIdTable[FourCC("hhdl")] = true
+    typeIdTable[FourCC("hpea")] = true
 
     ordersIgnore = {
         waterelemental = oid.waterelemental,
@@ -700,11 +702,11 @@ function spawnAddUnits()
     spawn:addUnit("blacksmithCreep", "h007", 2, {1, 2, 3, 4}, 1, 6) -- Militia
     spawn:addUnit("blacksmithCreep", "nhea", 1, {1, 2}, 3, 12) -- Archer
     spawn:addUnit("blacksmithCreep", "hspt", 1, {3, 4}, 5, 12) -- Tower Guard
-    spawn:addUnit("blacksmithCreep", "h011", 1, {1, 2, 3, 4, 5}, 8, 12) -- Scarlet Commander
+    spawn:addUnit("blacksmithCreep", "h017", 1, {1, 2, 3, 4, 5}, 8, 12) -- Scarlet Commander
     spawn:addUnit("blacksmithCreep", "hcth", 1, {1, 2, 3, 4, 5}, 11, 12) -- Captian
 
     -- Castle Spawn
-    spawn:addUnit("castle", "h018", 1, {1, 2, 3}, 8, 12) -- Commander
+    spawn:addUnit("castle", "h00S", 1, {1, 2, 3}, 8, 12) -- Commander
 
     -- City Elves
     spawn:addUnit("cityElves", "n00C", 1, {1, 3, 5}, 1, 3) -- Blood Elf Archer
@@ -717,20 +719,20 @@ function spawnAddUnits()
 
     -- City Front Spawn
     spawn:addUnit("cityFront", "h007", 3, {1, 2, 3, 4, 5, 6}, 1, 2) -- Militia 1
-    spawn:addUnit("cityFront", "h015", 2, {1, 2, 3, 4, 5, 6}, 3, 3) -- Militia 2
-    spawn:addUnit("cityFront", "hfoo", 3, {1, 2, 3, 4, 5, 6}, 4, 12) -- Footman 1
+    spawn:addUnit("cityFront", "h015", 2, {1, 2, 3, 4, 5, 6}, 3, 4) -- Militia 2
+    spawn:addUnit("cityFront", "hfoo", 3, {1, 2, 3, 4, 5, 6}, 5, 12) -- Footman 1
     spawn:addUnit("cityFront", "hcth", 2, {3, 4, 6}, 5, 12) -- Captian
     spawn:addUnit("cityFront", "h00L", 1, {1, 3, 5}, 6, 12) -- Knight
-    spawn:addUnit("cityFront", "hmtm", 1, {1, 4}, 7, 12) -- Catapult
+    spawn:addUnit("cityFront", "hmtm", 1, {1, 4}, 8, 12) -- Catapult
     spawn:addUnit("cityFront", "h00D", 1, {2}, 10, 12) -- Commander of the Guard
 
     -- City Side Spawn
     spawn:addUnit("citySide", "h015", 1, {6, 7, 8, 9, 10}, 1, 2) -- Militia 1
-    spawn:addUnit("citySide", "hfoo", 2, {5, 6, 8, 9}, 2, 2) -- Footman 1
-    spawn:addUnit("citySide", "hfoo", 3, {5, 6, 8, 9}, 3, 12) -- Footman 1
+    spawn:addUnit("citySide", "hfoo", 2, {5, 6, 8, 9}, 2, 3) -- Footman 1
+    spawn:addUnit("citySide", "hfoo", 3, {5, 6, 8, 9}, 4, 12) -- Footman 1
     spawn:addUnit("citySide", "h00L", 1, {6, 8}, 3, 4) -- Knight
     spawn:addUnit("citySide", "h00L", 1, {6, 7, 8, 9}, 5, 12) -- Knight
-    spawn:addUnit("citySide", "h017", 1, {8, 10}, 6, 12) -- Scarlet Commander
+    spawn:addUnit("citySide", "h017", 1, {8, 10}, 6, 12) -- Hardend Footman
     spawn:addUnit("citySide", "n00X", 1, {4, 5, 6, 7, 8, 9}, 3, 12) -- Arbalist
 
     -- Draenei Spawn

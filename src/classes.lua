@@ -1750,7 +1750,9 @@ function init_indexerClass()
 			end
 
 			-- Issue Order
+			DisableTrigger(Trig_IssuedOrder)
 			IssuePointOrder(unit, order, x, y)
+			EnableTrigger(Trig_IssuedOrder)
 		end
 
 		function self:addKey(unit, key, value)
@@ -1961,7 +1963,7 @@ function init_spawnClass()
 			if self.creepLevel >= 12 then
 				DisableTrigger(self.Trig_upgradeCreeps)
 			else
-				StartTimerBJ(self.creepLevelTimer, false, (40 + (5 * self.creepLevel)))
+				StartTimerBJ(self.creepLevelTimer, false, (50 + (10 * self.creepLevel)))
 			end
 
 			DisplayTimedTextToForce(GetPlayersAll(), 10, "Creeps Upgrade.  Level: " .. self.creepLevel)

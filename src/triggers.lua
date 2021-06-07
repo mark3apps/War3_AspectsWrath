@@ -46,17 +46,9 @@ function Init_IssuedOrder()
 
 	TriggerAddAction(Trig_IssuedOrder, function()
 		local triggerUnit = GetTriggerUnit()
-		local orderId = GetIssuedOrderId()
-		local orderString = OrderId2String(orderId)
 		local unitIdType = GetUnitTypeId(triggerUnit)
 
-		if IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) == false and IsUnitType(triggerUnit, UNIT_TYPE_HERO) == false and
-						typeIdTable[unitIdType] ~= nil and UnitHasBuffBJ(triggerUnit, FourCC("B006")) == false and --[[ Attack! Buff --]]
-						GetOwningPlayer(triggerUnit) ~= Player(17) and GetOwningPlayer(triggerUnit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) then
-
-			PolledWait(4)
-			indexer:order(triggerUnit)
-		end
+		unitKeepMoving(triggerUnit)
 	end)
 
 end
@@ -92,10 +84,11 @@ function Init_UnitDies()
 
 		if IsUnitInGroup(dieingUnit, base.all.g) then base.died(dieingUnit) end
 
-		PolledWait(5)
-
 		-- Remove Index from Unit
-		if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then indexer:remove(dieingUnit) end
+		if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
+			PolledWait(10)
+			indexer:remove(dieingUnit)
+		end
 
 	end)
 end
@@ -162,7 +155,6 @@ function init_Moonwell_cast()
 
 		DestroyGroup(g)
 	end)
-
 end
 
 -- Update Base Buildings
@@ -216,16 +208,21 @@ end
 -----------------
 
 -- Add unit to index then order to move if unit is computer controlled and a correct unit
+---comment
+---@param unit unit
 function addUnitsToIndex(unit)
 
 	if not IsUnitType(unit, UNIT_TYPE_HERO) then
 		indexer:add(unit)
 
-		if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) or
-						IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation)) then indexer:order(unit) end
+		if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and GetPlayerController(GetOwningPlayer(unit)) ==
+						MAP_CONTROL_COMPUTER then indexer:order(unit) end
 	end
 end
 
+---comment
+---@param triggerUnit unit
+---@param spellCast string
 function CAST_aiHero(triggerUnit, spellCast)
 	if IsUnitInGroup(triggerUnit, ai.heroGroup) then
 		local heroName = indexer:getKey(triggerUnit, "heroName")
@@ -241,7 +238,7 @@ end
 -- Order starting units to attack
 function orderStartingUnits()
 	local g = CreateGroup()
-	local u, uId
+	local u, typeId
 
 	g = GetUnitsInRectAll(GetPlayableMapRect())
 	while true do
@@ -252,11 +249,10 @@ function orderStartingUnits()
 
 			indexer:add(u)
 
-			uId = GetUnitTypeId(u)
-			if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and uId ~= FourCC("hhdl") and uId ~=
-							FourCC("hpea") and (IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPallied) or
-							IsPlayerInForce(GetOwningPlayer(u), udg_PLAYERGRPfederation)) then indexer:order(u) end
-		end, "Index")
+			typeId = GetUnitTypeId(u)
+			if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and typeIdTable[typeId] ~= nil and
+							GetPlayerController(GetOwningPlayer(u)) == MAP_CONTROL_COMPUTER then indexer:order(u) end
+		end)
 
 		GroupRemoveUnit(g, u)
 	end
@@ -265,12 +261,14 @@ end
 
 -- Tell unit to keep Attack-Moving to it's indexed destination
 function unitKeepMoving(unit)
-	if GetOwningPlayer(unit) ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and IsUnitType(unit, UNIT_TYPE_HERO) == false and
-					UnitHasBuffBJ(unit, FourCC("B006")) == false and GetUnitTypeId(unit) ~= FourCC("h00M") and GetUnitTypeId(unit) ~=
-					FourCC("h00M") and GetUnitTypeId(unit) ~= FourCC("h000") and GetUnitTypeId(unit) ~= FourCC("h00V") and
-					GetUnitTypeId(unit) ~= FourCC("h00O") and (IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPallied) == true or
-					IsPlayerInForce(GetOwningPlayer(unit), udg_PLAYERGRPfederation) == true) then
-		PolledWait(4)
+
+	local typeId = GetUnitTypeId(unit)
+	local owningPlayer = GetOwningPlayer(unit)
+
+	if owningPlayer ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and not IsUnitType(unit, UNIT_TYPE_HERO) and
+					not UnitHasBuffBJ(unit, FourCC("B006")) and typeIdTable[typeId] ~= nil and GetPlayerController(owningPlayer) ==
+					MAP_CONTROL_COMPUTER then
+		PolledWait(3)
 		indexer:order(unit, "attack")
 	end
 end

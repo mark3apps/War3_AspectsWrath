@@ -13746,12 +13746,6 @@ STRING 4706
 Wildhammer Sign Post
 }
 
-STRING 4708
-// Units: n006 (Wildhammer Axethrower), Name (Name)
-{
-Wildhammer Axethrower
-}
-
 STRING 4709
 // Units: h01O (Armored Guard), Name (Name)
 {
@@ -13768,18 +13762,6 @@ STRING 4711
 // Units: h01Q (Mountianeer), Name (Name)
 {
 Mountianeer
-}
-
-STRING 4712
-// Units: e00E (Wildhammer Dwarf), Name (Name)
-{
-Wildhammer Dwarf
-}
-
-STRING 4713
-// Units: e00F (Wildhammer Elite), Name (Name)
-{
-Wildhammer Elite
 }
 
 STRING 4714
@@ -13963,12 +13945,6 @@ High Elf Apprentice
 }
 
 STRING 4745
-// Units: o00C (Fel Orc Spearthrower), Name (Name)
-{
-Fel Orc Spearthrower
-}
-
-STRING 4746
 // Abilities: S001 (Fel Orc Spearthrower), Name (Name)
 {
 Fel Orc Spearthrower
@@ -13990,5 +13966,23 @@ STRING 4749
 // Units: ntt1 (Draenei Tower), Name (Name)
 {
 Draenei Tower
+}
+
+STRING 4750
+// Units: n006 (Axe thrower), Name (Name)
+{
+Axe thrower
+}
+
+STRING 4751
+// Units: e00E (Clansman), Name (Name)
+{
+Clansman
+}
+
+STRING 4752
+// Units: e00F (Elite), Name (Name)
+{
+Elite
 }
 
