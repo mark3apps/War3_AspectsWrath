@@ -826,9 +826,9 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "ebsh", 1, {3}, 7, 12) -- Night Elf Battleship
 
     -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 2, {4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Ghoul
-    spawn:addUnit("undead", "uskm", 1, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
-    spawn:addUnit("undead", "unec", 1, {5, 9}, 4, 12) -- Necromancer
+    spawn:addUnit("undead", "ugho", 3, {6, 7, 8, 9, 10}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "uskm", 1, {6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
+    spawn:addUnit("undead", "unec", 1, {5, 7, 9}, 4, 12) -- Necromancer
     spawn:addUnit("undead", "nerw", 1, {7}, 6, 12) -- Warlock
     spawn:addUnit("undead", "nfgl", 1, {6, 9}, 8, 12) -- Giant Skeleton
     spawn:addUnit("undead", "ninc", 1, {5, 7}, 3, 5) -- Infernal Contraption (Level 1)

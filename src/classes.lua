@@ -1799,7 +1799,7 @@ function init_spawnClass()
 		self.timer = CreateTimer()
 		self.cycleInterval = 1.00
 		self.baseInterval = 0.9
-		self.waveInterval = 16.00
+		self.waveInterval = 10.00
 
 		self.creepLevel = 1
 		self.creepLevelTimer = CreateTimer()
@@ -1895,9 +1895,9 @@ function init_spawnClass()
 
 				if self.unitInWave and self.unitInLevel then
 
-					if self.alliedBaseAlive then
-						for n = 1, self.numOfUnits do
+					for n = 1, self.numOfUnits do
 
+						if self.alliedBaseAlive then
 							xStart, yStart = loc:getRandomXY(self[self.base].allied.startPoint)
 							xDest, yDest = loc:getRandomXY(self[self.base].allied.endPoint)
 
@@ -1906,12 +1906,9 @@ function init_spawnClass()
 							indexer:add(spawnedUnit)
 							indexer:updateEnd(spawnedUnit, xDest, yDest)
 							indexer:order(spawnedUnit)
-
 						end
-					end
 
-					if self.fedBaseAlive then
-						for n = 1, self.numOfUnits do
+						if self.fedBaseAlive then
 							xStart, yStart = loc:getRandomXY(self[self.base].fed.startPoint)
 							xDest, yDest = loc:getRandomXY(self[self.base].fed.endPoint)
 
@@ -1921,6 +1918,8 @@ function init_spawnClass()
 							indexer:updateEnd(spawnedUnit, xDest, yDest)
 							indexer:order(spawnedUnit)
 						end
+
+						PolledWait(0.1)
 					end
 				end
 			end
@@ -2320,7 +2319,7 @@ function init_gateClass()
 
 		local playerForce, facingAngle
 		local unitTypeClosed ---@type unittype
-		local unitTypeOpen   ---@type unittype
+		local unitTypeOpen ---@type unittype
 		local unitType = GetUnitTypeId(unit)
 		local x = GetUnitX(unit)
 		local y = GetUnitY(unit)

@@ -4521,9 +4521,9 @@ function init_spawnClass()
 		self.bases = {}
 		self.baseCount = 0
 		self.timer = CreateTimer()
-		self.cycleInterval = 18.00
-		self.baseInterval = 1.1
-		self.waveInterval = 4.00
+		self.cycleInterval = 1.00
+		self.baseInterval = 0.9
+		self.waveInterval = 10.00
 
 		self.creepLevel = 1
 		self.creepLevelTimer = CreateTimer()
@@ -4619,9 +4619,9 @@ function init_spawnClass()
 
 				if self.unitInWave and self.unitInLevel then
 
-					if self.alliedBaseAlive then
-						for n = 1, self.numOfUnits do
+					for n = 1, self.numOfUnits do
 
+						if self.alliedBaseAlive then
 							xStart, yStart = loc:getRandomXY(self[self.base].allied.startPoint)
 							xDest, yDest = loc:getRandomXY(self[self.base].allied.endPoint)
 
@@ -4630,12 +4630,9 @@ function init_spawnClass()
 							indexer:add(spawnedUnit)
 							indexer:updateEnd(spawnedUnit, xDest, yDest)
 							indexer:order(spawnedUnit)
-
 						end
-					end
 
-					if self.fedBaseAlive then
-						for n = 1, self.numOfUnits do
+						if self.fedBaseAlive then
 							xStart, yStart = loc:getRandomXY(self[self.base].fed.startPoint)
 							xDest, yDest = loc:getRandomXY(self[self.base].fed.endPoint)
 
@@ -4645,6 +4642,8 @@ function init_spawnClass()
 							indexer:updateEnd(spawnedUnit, xDest, yDest)
 							indexer:order(spawnedUnit)
 						end
+
+						PolledWait(0.1)
 					end
 				end
 			end
@@ -5044,7 +5043,7 @@ function init_gateClass()
 
 		local playerForce, facingAngle
 		local unitTypeClosed ---@type unittype
-		local unitTypeOpen   ---@type unittype
+		local unitTypeOpen ---@type unittype
 		local unitType = GetUnitTypeId(unit)
 		local x = GetUnitX(unit)
 		local y = GetUnitY(unit)
@@ -6284,9 +6283,8 @@ function spawnAddUnits()
     spawn:addUnit("draenei", "ndrf", 1, {7, 8, 9}, 5, 12) -- Draenei Guardian
     spawn:addUnit("draenei", "ndrd", 1, {6, 7, 8, 9, 10}, 3, 12) -- Draenei Darkslayer
     spawn:addUnit("draenei", "ndrs", 1, {7, 10}, 4, 12) -- Draenei Seer
-    spawn:addUnit("draenei", "n00I", 1, {6, 8}, 7, 12) -- Draenei Vindicator
+    spawn:addUnit("draenei", "n00I", 1, {5, 6, 8}, 7, 12) -- Draenei Vindicator
     spawn:addUnit("draenei", "ncat", 1, {6, 8, 10}, 6, 12) -- Draenei Demolisher
-    spawn:addUnit("draenei", "h00U", 1, {6}, 8, 12) -- Draenei Rider
 
     -- High Elves
     spawn:addUnit("highElves", "h00T", 1, {1, 2, 3, 5}, 1, 3) -- Apprentice
@@ -6355,7 +6353,7 @@ function spawnAddUnits()
     -- Orc Spawn
     spawn:addUnit("orc", "o002", 2, {1, 3, 5, 6}, 1, 12) -- Grunt
     spawn:addUnit("orc", "o002", 1, {2, 4, 6, 7}, 3, 12) -- Grunt
-    spawn:addUnit("orc", "ohun", 1, {2, 4, 6, 7}, 2, 12) -- Spearthrower
+    spawn:addUnit("orc", "nftr", 1, {2, 4, 6, 7}, 2, 12) -- Troll
     spawn:addUnit("orc", "nogo", 2, {2, 4, 6, 7}, 4, 12) -- Ogre
     spawn:addUnit("orc", "nw2w", 1, {3, 5, 7}, 3, 12) -- Warlock
     spawn:addUnit("orc", "owad", 1, {1, 7}, 6, 12) -- Orc Warchief
@@ -6373,9 +6371,9 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "ebsh", 1, {3}, 7, 12) -- Night Elf Battleship
 
     -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 2, {4, 5, 6, 7, 8, 9, 10}, 1, 12) -- Ghoul
-    spawn:addUnit("undead", "uskm", 1, {4, 5, 6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
-    spawn:addUnit("undead", "unec", 1, {5, 9}, 4, 12) -- Necromancer
+    spawn:addUnit("undead", "ugho", 3, {6, 7, 8, 9, 10}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "uskm", 1, {6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
+    spawn:addUnit("undead", "unec", 1, {5, 7, 9}, 4, 12) -- Necromancer
     spawn:addUnit("undead", "nerw", 1, {7}, 6, 12) -- Warlock
     spawn:addUnit("undead", "nfgl", 1, {6, 9}, 8, 12) -- Giant Skeleton
     spawn:addUnit("undead", "ninc", 1, {5, 7}, 3, 5) -- Infernal Contraption (Level 1)
@@ -7330,7 +7328,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nfv4"), -21728.0, -5344.0, 0.774, FourCC("nfv4"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -16864.0, -12192.0, 270.000, FourCC("h01N"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -15648.0, -12192.0, 270.000, FourCC("h01N"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -15200.0, -11232.0, 270.000, FourCC("h01N"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -15136.0, -11168.0, 270.000, FourCC("h01N"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgra"), -15680.0, -13824.0, 270.000, FourCC("hgra"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01W"), -13824.0, -13760.0, 106.429, FourCC("h01W"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01X"), -13824.0, -13184.0, 270.000, FourCC("h01X"))
@@ -7378,7 +7376,6 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("h024"), -20224.0, -11456.0, 270.000, FourCC("h024"))
     SetUnitState(u, UNIT_STATE_MANA, 1000)
     u = BlzCreateUnitWithSkin(p, FourCC("h020"), -22809.5, -4290.6, 360.000, FourCC("h020"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -24256.0, -4288.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("h024"), -20160.0, -9792.0, 270.000, FourCC("h024"))
     u = BlzCreateUnitWithSkin(p, FourCC("h024"), -20160.0, -12608.0, 270.000, FourCC("h024"))
     u = BlzCreateUnitWithSkin(p, FourCC("h024"), -22720.0, -11968.0, 270.000, FourCC("h024"))
@@ -7500,7 +7497,6 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("h01R"), -11968.0, -7808.0, 270.000, FourCC("h01R"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -5952.0, -3520.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -9856.0, -5248.0, 270.000, FourCC("hgtw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h004"), -4800.0, -5056.0, 270.000, FourCC("h004"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -12192.0, 2848.0, 270.000, FourCC("h01N"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -11104.0, -3296.0, 270.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -6784.0, -2560.0, 270.000, FourCC("hgtw"))
@@ -7539,7 +7535,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("nntg"), -9216.0, -10816.0, 270.000, FourCC("nntg"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -11712.0, 3328.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -10048.0, -3008.0, 270.000, FourCC("hgtw"))
-    u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -13856.0, 1888.0, 270.000, FourCC("h01N"))
+    u = BlzCreateUnitWithSkin(p, FourCC("h01N"), -13920.0, 1824.0, 270.000, FourCC("h01N"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -11840.0, 1344.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -14400.0, 1664.0, 270.000, FourCC("h01I"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -9440.0, -5280.0, 90.000, FourCC("ncba"))

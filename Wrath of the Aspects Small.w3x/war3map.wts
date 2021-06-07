@@ -10428,12 +10428,6 @@ STRING 3964
  (2)
 }
 
-STRING 3965
-// Units: h016 (Veteren Militia), EditorSuffix (Name - Editor Suffix)
-{
- (3)
-}
-
 STRING 3969
 // Doodads: D00U (Gold Mine Enterence), Name (Name)
 {
@@ -10452,22 +10446,10 @@ STRING 3974
  (2)
 }
 
-STRING 3975
-// Units: h011 (Veteren Footman), EditorSuffix (Name - Editor Suffix)
-{
- (3)
-}
-
 STRING 3976
 // Units: h00S (Hardened Captain), EditorSuffix (Name - Editor Suffix)
 {
  (2)
-}
-
-STRING 3977
-// Units: h018 (Veteren Captain), EditorSuffix (Name - Editor Suffix)
-{
- (3)
 }
 
 STRING 3978
@@ -10486,24 +10468,6 @@ STRING 3980
 // Abilities: A03K (Upgrade Captian 2), Name (Name)
 {
 Upgrade Captian 2
-}
-
-STRING 3981
-// Abilities: A03L (Upgrade Militia 3), Name (Name)
-{
-Upgrade Militia 3
-}
-
-STRING 3982
-// Abilities: A047 (Upgrade Footman 3), Name (Name)
-{
-Upgrade Footman 3
-}
-
-STRING 3983
-// Abilities: A048 (Upgrade Captian 3), Name (Name)
-{
-Upgrade Captian 3
 }
 
 STRING 3984
@@ -10554,34 +10518,16 @@ STRING 4001
 Hardened Militia
 }
 
-STRING 4002
-// Units: h016 (Veteren Militia), Name (Name)
-{
-Veteren Militia
-}
-
 STRING 4003
 // Units: h017 (Hardened Footman), Name (Name)
 {
 Hardened Footman
 }
 
-STRING 4004
-// Units: h011 (Veteren Footman), Name (Name)
-{
-Veteren Footman
-}
-
 STRING 4005
 // Units: h00S (Hardened Captain), Name (Name)
 {
 Hardened Captain
-}
-
-STRING 4006
-// Units: h018 (Veteren Captain), Name (Name)
-{
-Veteren Captain
 }
 
 STRING 4007
