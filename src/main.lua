@@ -1,6 +1,6 @@
 function init_Lua()
 	debugprint = 2
-	cine = {}
+	
 
 	-- Define Classes
 	try(function()

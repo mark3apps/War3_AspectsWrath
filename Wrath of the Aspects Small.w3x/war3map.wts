@@ -13549,12 +13549,6 @@ STRING 4652
 Human Archway
 }
 
-STRING 4653
-// Doodads: D01R (Dwarf Tower Main), Name (Name)
-{
-Dwarf Tower Main
-}
-
 STRING 4654
 // Doodads: D01S (Dwarf Tower Fat), Name (Name)
 {

@@ -980,7 +980,6 @@ do
         backUp()
         backUp = nil
     HeroSelector.initHeroes()    
-    for i = 1, 8 do HeroSelector.show(true, Player(i)) end
     --for key, value in ipairs(HeroSelector.UnitData)
     --do
 --        print(key, ('>I4'):pack(value), GetObjectName(value))
