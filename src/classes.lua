@@ -1571,6 +1571,11 @@ function init_heroClass()
 			local spells = self[heroName]
 
 			AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
+			SetPlayerTechResearchedSwap(FourCC("R005"), heroLevel - 1, heroPlayer)
+			
+			if (ModuloInteger(heroLevel, 4) == 0) then
+				SetPlayerTechResearchedSwap(FourCC("R006"), heroLevel / 5, heroPlayer)
+			end
 
 			-- Remove Ability Points
 			if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
@@ -1750,9 +1755,8 @@ function init_indexerClass()
 			end
 
 			-- Issue Order
-			DisableTrigger(Trig_IssuedOrder)
 			IssuePointOrder(unit, order, x, y)
-			EnableTrigger(Trig_IssuedOrder)
+			QueuedTriggerClearBJ()
 		end
 
 		function self:addKey(unit, key, value)
@@ -1899,15 +1903,18 @@ function init_spawnClass()
 
 					for n = 1, self.numOfUnits do
 
+						--DisableTrigger(Trig_UnitEntersMap)
+
 						if self.alliedBaseAlive then
 							xStart, yStart = loc:getRandomXY(self[self.base].allied.startPoint)
 							xDest, yDest = loc:getRandomXY(self[self.base].allied.endPoint)
 
 							spawnedUnit = CreateUnit(Player(GetRandomInt(18, 20)), FourCC(self.unitType), xStart, yStart, bj_UNIT_FACING)
-
+							--QueuedTriggerClearInactiveBJ()
+							--print(GetUnitName(spawnedUnit) .. " Created")
 							indexer:add(spawnedUnit)
 							indexer:updateEnd(spawnedUnit, xDest, yDest)
-							indexer:order(spawnedUnit)
+							--indexer:order(spawnedUnit)
 						end
 
 						if self.fedBaseAlive then
@@ -1915,11 +1922,15 @@ function init_spawnClass()
 							xDest, yDest = loc:getRandomXY(self[self.base].fed.endPoint)
 
 							spawnedUnit = CreateUnit(Player(GetRandomInt(21, 23)), FourCC(self.unitType), xStart, yStart, bj_UNIT_FACING)
-
+							--QueuedTriggerClearInactiveBJ()
+							--print(GetUnitName(spawnedUnit) .. " Created")
 							indexer:add(spawnedUnit)
 							indexer:updateEnd(spawnedUnit, xDest, yDest)
-							indexer:order(spawnedUnit)
+							--indexer:order(spawnedUnit)
 						end
+
+						--EnableTrigger(Trig_UnitEntersMap)
+						
 
 						PolledWait(0.1)
 					end
