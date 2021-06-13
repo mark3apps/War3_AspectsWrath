@@ -545,7 +545,8 @@ function Init_luaGlobals()
         instant1 = 851991,
         instant2 = 851987,
         instant3 = 851975,
-        instant4 = 852019
+        instant4 = 852019,
+        unknown = 851974
     }
 
     typeIdTable = {}
@@ -560,50 +561,31 @@ function Init_luaGlobals()
     typeIdTable[FourCC("hhdl")] = true
     typeIdTable[FourCC("hpea")] = true
 
-    ordersIgnore = {
-        waterelemental = oid.waterelemental,
-        forkedlightning = oid.forkedlightning,
-        frostarmor = oid.frostarmor,
-        stomp = oid.stomp,
-        faeriefire = oid.faeriefire,
-        purge = oid.purge,
-        rainoffire = oid.rainoffire,
-        attack = oid.attack,
-        stop = oid.stop,
-        rejuvination = oid.rejuvination,
-        bloodlust = oid.bloodlust,
-        defend = oid.defend,
-        undefend = oid.undefend,
-        lightningshield = oid.lightningshield,
-        spellsteal = oid.spellsteal,
-        roar = oid.roar,
-        slow = oid.slow,
-        dispel = oid.dispel,
-        bearform = oid.bearform,
-        unbearform = oid.unbearform,
-        polymorph = oid.polymorph,
-        breathoffrost = oid.breathoffrost,
-        curse = oid.curse,
-        parasite = oid.parasite,
-        innerfire = oid.innerfire,
-        recharge = oid.recharge,
-        carrionswarm = oid.carrionswarm,
-        thunderclap = oid.thunderclap,
-        holybolt = oid.holybolt,
-        shockwave = oid.shockwave,
-        berserk = oid.berserk,
-        locustswarm = oid.locustswarm,
-        chainlightning = oid.chainlightning,
-        coldarrows = oid.coldarrows,
-        ensnare = oid.ensnare,
-        magicdefense = oid.magicdefense,
-        magicundefense = oid.magicundefense,
-        devourmagic = oid.devourmagic,
-        summonwareagle = oid.summonwareagle,
-        whirlwind = oid.whirlwind,
-        flamingarrows = oid.flamingarrows,
-        parasiteon = oid.parasiteon
-    }
+    ordersIgnore = {}
+    ordersIgnore[oid.defend] = true
+    ordersIgnore[oid.undefend] = true
+    ordersIgnore[oid.frenzy] = true
+    ordersIgnore[oid.berserk] = true
+    ordersIgnore[oid.attack] = true
+    ordersIgnore[oid.magicdefense] = true
+    ordersIgnore[oid.magicundefense] = true
+    ordersIgnore[oid.unknown] = true
+    ordersIgnore[oid.bloodluston] = true
+    ordersIgnore[oid.bloodlustoff] = true
+    ordersIgnore[oid.parasiteon] = true
+    ordersIgnore[oid.parasiteoff] = true
+    ordersIgnore[oid.slowon] = true
+    ordersIgnore[oid.slowoff] = true
+    ordersIgnore[oid.flamingarrows] = true
+    ordersIgnore[oid.bearform] = true
+
+    -- Spells
+    ordersIgnore[FourCC("A016")] = true -- Defend Dwarf
+    ordersIgnore[FourCC("A04U")] = true -- Defend Magic
+    ordersIgnore[FourCC("A041")] = true -- Defend
+    ordersIgnore[FourCC("Afzy")] = true -- Footmen Charge
+    ordersIgnore[FourCC("A05J")] = true -- Berserk Dwarf
+    ordersIgnore[FourCC("A00J")] = true -- Charge
 end
 
 -- Spawn Set up
@@ -677,6 +659,7 @@ function spawnAddUnits()
 
     -- Arcane Spawn
     spawn:addUnit("arcane", "h00C", 1, {6, 7, 8, 9, 10}, 3, 12) -- Sorcress
+    spawn:addUnit("arcane", "nchp", 1, {7, 8, 10}, 5, 12) -- Sorcress
 
     -- Arcane Creep Spawn
     spawn:addUnit("arcaneCreep", "narg", 1, {1, 2, 3, 4}, 2, 12) -- Battle Golem
@@ -714,8 +697,8 @@ function spawnAddUnits()
     spawn:addUnit("cityElves", "hspt", 1, {1, 3, 4, 5, 6}, 2, 3) -- Blood Elf Breaker
     spawn:addUnit("cityElves", "hspt", 1, {1, 2, 3, 4, 5, 6, 7}, 4, 5) -- Blood Elf Breaker
     spawn:addUnit("cityElves", "hspt", 2, {1, 2, 3, 4, 5}, 6, 12) -- Blood Elf Breaker
-    spawn:addUnit("cityElves", "nchp", 1, {1, 4}, 3, 6) -- Mystic
-    spawn:addUnit("cityElves", "nchp", 1, {1, 2, 3, 4, 5, 7}, 7, 12) -- Mystic
+    spawn:addUnit("cityElves", "hmpr", 1, {1, 4}, 3, 6) -- Mystic
+    spawn:addUnit("cityElves", "hmpr", 1, {1, 2, 3, 4, 5, 7}, 7, 12) -- Mystic
 
     -- City Front Spawn
     spawn:addUnit("cityFront", "h007", 3, {1, 2, 3, 4, 5, 6}, 1, 2) -- Militia 1
@@ -743,15 +726,16 @@ function spawnAddUnits()
     spawn:addUnit("draenei", "n00I", 1, {5, 6, 8}, 7, 12) -- Draenei Vindicator
     spawn:addUnit("draenei", "ncat", 1, {6, 8, 10}, 6, 12) -- Draenei Demolisher
 
-    -- High Elves
+    -- -- High Elves
     spawn:addUnit("highElves", "h00T", 1, {1, 2, 3, 5}, 1, 3) -- Apprentice
     spawn:addUnit("highElves", "h00T", 1, {1, 3}, 4, 12) -- Apprentice
     spawn:addUnit("highElves", "nhea", 1, {1, 3, 5}, 2, 12) -- Archer
     spawn:addUnit("highElves", "hhes", 2, {1, 2, 3, 4}, 4, 12) -- Swordsman
     spawn:addUnit("highElves", "nemi", 1, {1, 3, 5}, 5, 12) -- Mystic
+    spawn:addUnit("highElves", "nws1", 1, {1, 2, 3, 5}, 6, 12) -- Dragon Hawk
     spawn:addUnit("highElves", "h005", 1, {1, 3, 5}, 7, 12) -- High Elf Knight
 
-    -- High Elves Creep
+    -- -- High Elves Creep
     spawn:addUnit("highElvesCreep", "h00T", 1, {1, 2, 3, 4}, 1, 2) -- Swordsman
     spawn:addUnit("highElvesCreep", "hhes", 1, {1, 2, 3, 4}, 3, 12) -- Swordsman
     spawn:addUnit("highElvesCreep", "nhea", 1, {1, 3, 5}, 2, 12) -- Archer
@@ -764,15 +748,13 @@ function spawnAddUnits()
     spawn:addUnit("merc", "n002", 2, {1, 2, 3, 5, 6}, 3, 12) -- Merc
     spawn:addUnit("merc", "n008", 1, {2, 5}, 4, 12) -- Enforcer
     spawn:addUnit("merc", "nass", 1, {3, 5, 7}, 5, 12) -- Assasin
-    spawn:addUnit("merc", "n004", 1, {2, 6}, 1, 12) -- Wizard Warrior
     spawn:addUnit("merc", "n005", 1, {1, 5}, 6, 12) -- Bandit Lord
 
     -- Mine Spawn
-    spawn:addUnit("mine", "h01O", 2, {2, 3, 5, 6}, 1, 1) -- Dwarven Soldiers
-    spawn:addUnit("mine", "h01O", 3, {3, 4, 5, 6, 7}, 2, 12) -- Dwarven Soldiers
+    spawn:addUnit("mine", "h01O", 2, {1, 2, 3, 5, 6}, 1, 1) -- Dwarven Soldiers
+    spawn:addUnit("mine", "h01O", 3, {1, 2, 3, 4, 5, 6, 7}, 2, 12) -- Dwarven Soldiers
     spawn:addUnit("mine", "h001", 1, {2, 4, 6}, 2, 12) -- Morter Team
-    spawn:addUnit("mine", "h008", 1, {2, 3, 4, 5, 6}, 3, 12) -- Rifleman
-    spawn:addUnit("mine", "h01Q", 1, {2, 3, 4, 6}, 4, 12) -- Mountianeer
+    spawn:addUnit("mine", "h008", 1, {1, 2, 3, 4, 5, 6}, 3, 12) -- Rifleman
     spawn:addUnit("mine", "h01P", 1, {1, 2, 3, 4}, 5, 12) -- Dwarven Armored Captians
     spawn:addUnit("mine", "h01E", 1, {1, 2, 3, 4}, 6, 12) -- Magi
     spawn:addUnit("mine", "hgry", 1, {1, 2, 3, 4}, 8, 12) -- Gryphon Rider
@@ -828,7 +810,7 @@ function spawnAddUnits()
     spawn:addUnit("shipyard", "ebsh", 1, {3}, 7, 12) -- Night Elf Battleship
 
     -- Undead Spawn
-    spawn:addUnit("undead", "ugho", 3, {6, 7, 8, 9, 10}, 1, 12) -- Ghoul
+    spawn:addUnit("undead", "ugho", 4, {6, 7, 8, 9, 10}, 1, 12) -- Ghoul
     spawn:addUnit("undead", "uskm", 1, {6, 7, 8, 9, 10}, 2, 12) -- Skeleton Mage
     spawn:addUnit("undead", "unec", 1, {5, 7, 9}, 4, 12) -- Necromancer
     spawn:addUnit("undead", "nerw", 1, {7}, 6, 12) -- Warlock

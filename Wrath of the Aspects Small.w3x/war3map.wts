@@ -877,30 +877,6 @@ Activate Loa Form to give the Hero bonus armor, bonus hit points, bonus damage a
 |cffffcc00Level 3|r - +<A009,DataA3> armor, +<A009,DataB3> hit points, +<A009,DataC3> damage.
 }
 
-STRING 317
-// Units: n001 (Outpost), Name (Name)
-{
-Outpost
-}
-
-STRING 318
-// Units: n002 (Merc), Name (Name)
-{
-Merc
-}
-
-STRING 319
-// Units: n003 (Merc Archer), Name (Name)
-{
-Merc Archer
-}
-
-STRING 321
-// Units: n004 (Wizard Warrior), Name (Name)
-{
-Wizard Warrior
-}
-
 STRING 324
 // Abilities: A00H (mana shield), Name (Name)
 {
@@ -2666,12 +2642,6 @@ STRING 1036
 E
 }
 
-STRING 1038
-// Units: h002 (Horseless Knight), Name (Name)
-{
-Horseless Knight
-}
-
 STRING 1340
 // Upgrades: R003 (Storm Hammers), effect1 (Effect 1)
 {
@@ -4428,11 +4398,6 @@ STRING 2442
 // Abilities: A02T (Elemental Focus), Name (Name)
 {
 Elemental Focus
-}
-
-STRING 2446
-{
-|cffff0000AN ANCIENT DESTROYER HAS APPEARED!|r
 }
 
 STRING 2447
@@ -7961,12 +7926,6 @@ STRING 3285
 Summon Assassin
 }
 
-STRING 3286
-// Units: h00D (Commander of the Guard), Name (Name)
-{
-Commander of the Guard
-}
-
 STRING 3287
 // Abilities: A03H (Resurrection), Ubertip (Tooltip - Normal - Extended)
 {
@@ -8901,12 +8860,6 @@ STRING 3590
 // Units: n00Q (Peasant), Name (Name)
 {
 Peasant
-}
-
-STRING 3601
-// Units: n00T (City Building), EditorSuffix (Name - Editor Suffix)
-{
- 5 (Ruined)
 }
 
 STRING 3603
@@ -10200,34 +10153,16 @@ STRING 3866
 Magi Defender
 }
 
-STRING 3872
-// Units: h012 (Scarlet Commander), Name (Name)
-{
-Scarlet Commander
-}
-
 STRING 3876
 // Abilities: A04W (Summon Fire Hounds), Name (Name)
 {
 Summon Fire Hounds
 }
 
-STRING 3879
-// Units: h013 (Rifleman), EditorSuffix (Name - Editor Suffix)
-{
-(Long)
-}
-
 STRING 3890
 // Units: u001 (Black Citidel), Name (Name)
 {
 Black Citidel
-}
-
-STRING 3893
-// Units: n00V (Nerubian Ziggurat), EditorSuffix (Name - Editor Suffix)
-{
-(Big)
 }
 
 STRING 3894
@@ -10267,7 +10202,7 @@ Arbalist
 }
 
 STRING 3904
-// Units: owar (Fel Orc Warchief), Name (Name)
+// Abilities: S006 (Fel Orc Warchief), Name (Name)
 {
 Fel Orc Warchief
 }
@@ -10306,12 +10241,6 @@ STRING 3921
 // Abilities: A046 (Ogre Pulverize), Name (Name)
 {
 Ogre Pulverize
-}
-
-STRING 3933
-// Abilities: S006 (Fel Orc Warchief), Name (Name)
-{
-Fel Orc Warchief
 }
 
 STRING 3944
@@ -12432,36 +12361,6 @@ STRING 4432
 Fel Form - [|cffffcc00Level 3|r]
 }
 
-STRING 4433
-// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
-Lasts <A02Y,HeroDur2> seconds.
-
-|cffff0000-7|r mana per second
-|cff00ffff+<A02Y,DataE2>|r Health
-|cff00ffff+2|r Armor
-|cff00ffff+10|r attack
-|cff00ffff+1.5x |rattack speed
-|cff00ffff+100|r move speed
-|cff00ffff+17|r health per second
-}
-
-STRING 4434
-// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
-Lasts <A03Y,HeroDur3> seconds.
-
-|cffff0000-7.5|r mana per second
-|cff00ffff+<A03Y,DataE3>|r Health
-|cff00ffff+3|r Armor
-|cff00ffff+15|r attack
-|cff00ffff+1.5x |rattack speed
-|cff00ffff+100|r move speed
-|cff00ffff+19|r health per second
-}
-
 STRING 4435
 // Abilities: A02Y (Fel Form), Researchtip (Tooltip - Learn)
 {
@@ -12472,21 +12371,6 @@ STRING 4436
 // Abilities: A02Y (Fel Form), Tip (Tooltip - Normal)
 {
 Fel Form - [|cffffcc00Level 1|r]
-}
-
-STRING 4437
-// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
-Lasts <A02Y,HeroDur1> seconds.
-
-|cffff0000-6.5|r mana per second
-|cff00ffff+<A02Y,DataE1>|r Health
-|cff00ffff+1|r Armor
-|cff00ffff+5|r attack
-|cff00ffff+1.5x |rattack speed
-|cff00ffff+100|r move speed
-|cff00ffff+15|r health per second
 }
 
 STRING 4438
@@ -12511,51 +12395,6 @@ STRING 4441
 // Abilities: A02Y (Fel Form), Tip (Tooltip - Normal)
 {
 Fel Form - [|cffffcc00Level 6|r]
-}
-
-STRING 4442
-// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
-Lasts <A04Y,HeroDur4> seconds.
-
-|cffff0000-8|r mana per second
-|cff00ffff+<A04Y,DataE4>|r Health
-|cff00ffff+4|r Armor
-|cff00ffff+20|r attack
-|cff00ffff+1.5x |rattack speed
-|cff00ffff+100|r move speed
-|cff00ffff+21|r health per second
-}
-
-STRING 4443
-// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
-Lasts <A05Y,HeroDur5> seconds.
-
-|cffff0000-8.5|r mana per second
-|cff00ffff+<A05Y,DataE5>|r Health
-|cff00ffff+5|r Armor
-|cff00ffff+25|r attack
-|cff00ffff+1.5x |rattack speed
-|cff00ffff+100|r move speed
-|cff00ffff+23|r health per second
-}
-
-STRING 4444
-// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
-Lasts <A06Y,HeroDur6> seconds.
-
-|cffff0000-9|r mana per second
-|cff00ffff+<A06Y,DataE6>|r Health
-|cff00ffff+6|r Armor
-|cff00ffff+30|r attack
-|cff00ffff+1.5x |rattack speed
-|cff00ffff+100|r move speed
-|cff00ffff+25|r health per second
 }
 
 STRING 4445
@@ -12610,66 +12449,6 @@ STRING 4456
 // Abilities: A03T (Shift), Researchhotkey (Hotkey - Learn)
 {
 V
-}
-
-STRING 4458
-// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
-
-<A059,Dur1> area damage
-<A059,HeroDur1> second slow
-<A059,Rng1> unit jump
-}
-
-STRING 4459
-// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
-
-<A059,Dur2> area damage
-<A059,HeroDur2> second slow
-<A059,Rng2> unit jump
-}
-
-STRING 4460
-// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
-
-<A059,Dur3> area damage
-<A059,HeroDur3> second slow
-<A059,Rng3> unit jump
-}
-
-STRING 4461
-// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
-
-<A059,Dur4> area damage
-<A059,HeroDur4> second slow
-<A059,Rng4> unit jump
-}
-
-STRING 4462
-// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
-
-<A059,Dur5> area damage
-<A059,HeroDur5> second slow
-<A059,Rng5> unit jump
-}
-
-STRING 4463
-// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
-{
-The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
-
-<A059,Dur6> area damage
-<A059,HeroDur6> second slow
-<A059,Rng6> unit jump
 }
 
 STRING 4464
@@ -13149,13 +12928,13 @@ STRING 4570
 
 STRING 4572
 {
-|cffff0000A DOOM WARDEN HAS APPEARRED!|r
+|cffff0000THE ASPECT OF FIRE HAS APPEARRED!|r
 It fights for the Federation!
 }
 
 STRING 4573
 {
-|cffff0000A DOOM WARDEN HAS APPEARRED!|r
+|cffff0000THE ASPECT OF FIRE HAS APPEARRED!|r
 It fights for the Alliance!
 }
 
@@ -13255,12 +13034,6 @@ STRING 4596
 Elven Mystic
 }
 
-STRING 4597
-// Units: nchp (Mage), Name (Name)
-{
-Mage
-}
-
 STRING 4598
 // Units: owad (Orc Warlord), Name (Name)
 {
@@ -13268,15 +13041,9 @@ Orc Warlord
 }
 
 STRING 4599
-// Units: o00B (Fel Orc Warlord), Name (Name)
+// Units: owar (Fel Orc Warlord), Name (Name)
 {
 Fel Orc Warlord
-}
-
-STRING 4600
-// Units: n00U (Fire Spawn), Name (Name)
-{
-Fire Spawn
 }
 
 STRING 4603
@@ -13555,12 +13322,6 @@ STRING 4667
 Hardened Armor
 }
 
-STRING 4668
-// Abilities: A016 (Defend Dwarves), Name (Name)
-{
-Defend Dwarves
-}
-
 STRING 4669
 // Abilities: A017 (Shoot Gun), Name (Name)
 {
@@ -13698,22 +13459,10 @@ STRING 4698
 Wildhammer Well
 }
 
-STRING 4699
-// Units: h01F (Wildhammer Tower), Name (Name)
-{
-Wildhammer Tower
-}
-
 STRING 4700
-// Units: h01U (Wildhammer Farm), Name (Name)
+// Units: h01F (Wildhammer Farm), Name (Name)
 {
 Wildhammer Farm
-}
-
-STRING 4701
-// Units: h01V (Wildhammer Tavern), Name (Name)
-{
-Wildhammer Tavern
 }
 
 STRING 4702
@@ -13728,12 +13477,6 @@ STRING 4703
 Wildhammer Mound
 }
 
-STRING 4704
-// Units: h01Y (Wildhammer Meeting Hall), Name (Name)
-{
-Wildhammer Meeting Hall
-}
-
 STRING 4705
 // Doodads: D00B (Gryphon Sled), Name (Name)
 {
@@ -13744,24 +13487,6 @@ STRING 4706
 // Doodads: D00L (Wildhammer Sign Post), Name (Name)
 {
 Wildhammer Sign Post
-}
-
-STRING 4709
-// Units: h01O (Armored Guard), Name (Name)
-{
-Armored Guard
-}
-
-STRING 4710
-// Units: h01P (Elite Guard), Name (Name)
-{
-Elite Guard
-}
-
-STRING 4711
-// Units: h01Q (Mountianeer), Name (Name)
-{
-Mountianeer
 }
 
 STRING 4714
@@ -13984,5 +13709,257 @@ STRING 4752
 // Units: e00F (Elite), Name (Name)
 {
 Elite
+}
+
+STRING 4753
+// Units: h01O (Iron Guard), Name (Name)
+{
+Iron Guard
+}
+
+STRING 4754
+// Units: h01P (Iron Captian), Name (Name)
+{
+Iron Captian
+}
+
+STRING 4755
+// Units: n001 (Hideout), Name (Name)
+{
+Hideout
+}
+
+STRING 4756
+// Units: hmpr (Blood Elf Mage), Name (Name)
+{
+Blood Elf Mage
+}
+
+STRING 4758
+// Abilities: A00M (Chain Lightning), EditorSuffix (Editor Suffix)
+{
+(Storm Summoner)
+}
+
+STRING 4759
+// Abilities: A00N (Critical Strike), EditorSuffix (Editor Suffix)
+{
+(High Elf Knight)
+}
+
+STRING 4760
+// Units: nchp (Storm Sorcerer), Name (Name)
+{
+Storm Sorcerer
+}
+
+STRING 4761
+// Units: o00B (Fel Orc Warlord), Name (Name)
+{
+Fel Orc Warlord
+}
+
+STRING 4762
+// Units: n003 (Merc Spearman), Name (Name)
+{
+Merc Spearman
+}
+
+STRING 4763
+// Units: h00D (Commander), Name (Name)
+{
+Commander
+}
+
+STRING 4764
+// Abilities: Adef (Defend), EditorSuffix (Editor Suffix)
+{
+(Footman)
+}
+
+STRING 4765
+// Abilities: A016 (Defend), EditorSuffix (Editor Suffix)
+{
+(Dwarves)
+}
+
+STRING 4766
+// Abilities: A01N (Defend), EditorSuffix (Editor Suffix)
+{
+(Mercs)
+}
+
+STRING 4767
+// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
+Lasts <A02Y,HeroDur1> seconds.
+
+|cff00ffff+2|r Armor
+|cff00ffff+1.5x |rattack speed
+|cff00ffff+100|r move speed
+|cff00ffff+17|r health per second
+}
+
+STRING 4768
+// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
+Lasts <A03Y,HeroDur1> seconds.
+
+|cff00ffff+3|r Armor
+|cff00ffff+1.5x |rattack speed
+|cff00ffff+100|r move speed
+|cff00ffff+19|r health per second
+}
+
+STRING 4769
+// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
+Lasts <A02Y,HeroDur1> seconds.
+
+|cff00ffff+1|r Armor
+|cff00ffff+1.5x |rattack speed
+|cff00ffff+100|r move speed
+|cff00ffff+15|r health per second
+}
+
+STRING 4770
+// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
+Lasts <A04Y,HeroDur1> seconds.
+
+|cff00ffff+4|r Armor
+|cff00ffff+1.5x |rattack speed
+|cff00ffff+100|r move speed
+|cff00ffff+21|r health per second
+}
+
+STRING 4771
+// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
+Lasts <A05Y,HeroDur1> seconds.
+
+|cff00ffff+5|r Armor
+|cff00ffff+1.5x |rattack speed
+|cff00ffff+100|r move speed
+|cff00ffff+23|r health per second
+}
+
+STRING 4772
+// Abilities: A02Y (Fel Form), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter unleashes his inner rage, greatly increasing his fighting abilities and stamina while depleting his mana.
+Lasts <A06Y,HeroDur1> seconds.
+
+|cff00ffff+6|r Armor
+|cff00ffff+1.5x |rattack speed
+|cff00ffff+100|r move speed
+|cff00ffff+25|r health per second
+}
+
+STRING 4773
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+|cff00ffff<A059,Dur1>|r Area Damage
+|cff00ffff<A059,HeroDur1>|r Second Area Slow
+|cff00ffff<A059,Rng1>|r Jump Distance
+}
+
+STRING 4774
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+|cff00ffff<A059,Dur2>|r Area Damage
+|cff00ffff<A059,HeroDur2>|r Second Area Slow
+|cff00ffff<A059,Rng2>|r Jump Distance
+}
+
+STRING 4775
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+|cff00ffff<A059,Dur3>|r Area Damage
+|cff00ffff<A059,HeroDur3>|r Second Area Slow
+|cff00ffff<A059,Rng3>|r Jump Distance
+}
+
+STRING 4776
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+|cff00ffff<A059,Dur4>|r Area Damage
+|cff00ffff<A059,HeroDur4>|r Second Area Slow
+|cff00ffff<A059,Rng4>|r Jump Distance
+}
+
+STRING 4777
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+|cff00ffff<A059,Dur5>|r Area Damage
+|cff00ffff<A059,HeroDur5>|r Second Area Slow
+|cff00ffff<A059,Rng5>|r Jump Distance
+}
+
+STRING 4778
+// Abilities: A059 (Falling Strike), Ubertip (Tooltip - Normal - Extended)
+{
+The Shifter jumps to the target dealing damage and slowing units in close proximity to the landing attack for a short time.
+
+|cff00ffff<A059,Dur6>|r Area Damage
+|cff00ffff<A059,HeroDur6>|r Second Area Slow
+|cff00ffff<A059,Rng6>|r Jump Distance
+}
+
+STRING 4779
+// Items: I006 (Shifter Blade), Name (Name)
+{
+Shifter Blade
+}
+
+STRING 4780
+// Abilities: A01R (WEAPON - Shifter), Name (Name)
+{
+WEAPON - Shifter
+}
+
+STRING 4781
+// Abilities: A01R (WEAPON - Shifter), Tip (Tooltip - Normal)
+{
+Shifter Weapon
+}
+
+STRING 4782
+// Abilities: A01R (WEAPON - Shifter), Ubertip (Tooltip - Normal - Extended)
+{
+This contains all of the talents that have been purchased for this hero.
+}
+
+STRING 4783
+// Abilities: A01R (WEAPON - Shifter), Hotkey (Hotkey - Normal)
+{
+C
+}
+
+STRING 4784
+// Units: h01F (Wildhammer Farm), EditorSuffix (Name - Editor Suffix)
+{
+(Large)
+}
+
+STRING 4785
+// Units: h01U (Wildhammer Farm), Name (Name)
+{
+Wildhammer Farm
 }
 

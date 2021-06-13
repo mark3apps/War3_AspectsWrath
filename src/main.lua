@@ -4,10 +4,11 @@ function init_Lua()
 
 	-- Define Classes
 	try(function()
-		init_triggers()
-		cine.Init()
+		
 
 		Init_luaGlobals()
+		cine.Init()
+		init_triggers()
 		init_locationClass()
 		init_indexerClass()
 		init_heroClass()
@@ -45,8 +46,7 @@ function init_Lua()
 	Init_UnitCastsSpell()
 	init_spawnTimers()
 	Init_UnitEntersMap()
-	Init_stopCasting()
-	Init_finishCasting()
+	--Init_finishCasting()
 	Init_IssuedOrder()
 	Init_UnitDies()
 	init_MoveToNext()

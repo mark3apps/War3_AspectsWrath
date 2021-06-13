@@ -30,11 +30,17 @@ end
 
 -- Unit enters the Map
 function Init_UnitEntersMap()
-
+	--DisableTrigger(Trig_UnitEntersMap)
 	TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
 	TriggerAddAction(Trig_UnitEntersMap, function()
 		local triggerUnit = GetTriggerUnit()
-		addUnitsToIndex(triggerUnit)
+
+		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) and not IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) then
+			print(GetUnitName(triggerUnit) .. " Entered MAP MOVED")
+			indexer:add(triggerUnit)
+
+			unitKeepMoving(triggerUnit, true)
+		end
 	end)
 end
 
@@ -43,36 +49,16 @@ function Init_IssuedOrder()
 
 	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
 	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_ORDER)
+	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
+	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
 
 	TriggerAddAction(Trig_IssuedOrder, function()
 		local triggerUnit = GetTriggerUnit()
 		local unitIdType = GetUnitTypeId(triggerUnit)
 
-		unitKeepMoving(triggerUnit)
+		unitKeepMoving(triggerUnit, false, GetIssuedOrderId())
 	end)
 
-end
-
--- Unit finishes casting a spell
-function Init_finishCasting()
-	local t = CreateTrigger()
-	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_FINISH)
-	TriggerAddAction(t, function()
-
-		local triggerUnit = GetTriggerUnit()
-		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then unitKeepMoving(triggerUnit) end
-	end)
-end
-
--- Unit finishes Stops a spell
-function Init_stopCasting()
-	local t = CreateTrigger()
-	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
-	TriggerAddAction(t, function()
-		local triggerUnit = GetTriggerUnit()
-
-		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then unitKeepMoving(triggerUnit) end
-	end)
 end
 
 -- Unit Dies
@@ -140,7 +126,11 @@ function init_Moonwell_cast()
 				while u2 ~= nil do
 
 					if IsUnitType(u2, UNIT_TYPE_STRUCTURE) and GetUnitTypeId(u2) ~= FourCC("h024") and GetUnitManaPercent(u2) < 40 and
-									GetUnitState(u2, UNIT_STATE_MAX_MANA) > 0 then IssueTargetOrderById(u, oid.recharge, u2) end
+									GetUnitState(u2, UNIT_STATE_MAX_MANA) > 0 then
+						DisableTrigger(Trig_IssuedOrder)
+						IssueTargetOrderById(u, oid.recharge, u2)
+						EnableTrigger(Trig_IssuedOrder)
+					end
 
 					GroupRemoveUnit(g2, u2)
 					u2 = FirstOfGroup(g2)
@@ -175,7 +165,7 @@ function init_BaseLoop()
 			GroupRemoveUnit(g, u)
 		end
 		DestroyGroup(g)
-	end)
+	end) 
 end
 
 do
@@ -207,19 +197,6 @@ end
 -- Trigger Functions
 -----------------
 
--- Add unit to index then order to move if unit is computer controlled and a correct unit
----comment
----@param unit unit
-function addUnitsToIndex(unit)
-
-	if not IsUnitType(unit, UNIT_TYPE_HERO) then
-		indexer:add(unit)
-
-		if IsUnitType(unit, UNIT_TYPE_STRUCTURE) == false and GetPlayerController(GetOwningPlayer(unit)) ==
-						MAP_CONTROL_COMPUTER then indexer:order(unit) end
-	end
-end
-
 ---comment
 ---@param triggerUnit unit
 ---@param spellCast string
@@ -248,10 +225,7 @@ function orderStartingUnits()
 		try(function()
 
 			indexer:add(u)
-
-			typeId = GetUnitTypeId(u)
-			if not (IsUnitType(u, UNIT_TYPE_STRUCTURE)) and not (IsUnitType(u, UNIT_TYPE_HERO)) and typeIdTable[typeId] ~= nil and
-							GetPlayerController(GetOwningPlayer(u)) == MAP_CONTROL_COMPUTER then indexer:order(u) end
+			unitKeepMoving(u, true)
 		end)
 
 		GroupRemoveUnit(g, u)
@@ -260,15 +234,30 @@ function orderStartingUnits()
 end
 
 -- Tell unit to keep Attack-Moving to it's indexed destination
-function unitKeepMoving(unit)
+---comment
+---@param unit unit
+---@param withoutDelay boolean
+function unitKeepMoving(unit, withoutDelay, orderId)
+	withoutDelay = withoutDelay or false
+	orderId = orderId or GetUnitCurrentOrder(unit)
 
 	local typeId = GetUnitTypeId(unit)
 	local owningPlayer = GetOwningPlayer(unit)
 
-	if owningPlayer ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and not IsUnitType(unit, UNIT_TYPE_HERO) and
-					not UnitHasBuffBJ(unit, FourCC("B006")) and typeIdTable[typeId] ~= nil and GetPlayerController(owningPlayer) ==
-					MAP_CONTROL_COMPUTER then
-		PolledWait(3)
+	if owningPlayer ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and GetUnitState(unit, UNIT_STATE_LIFE) > 0 and
+					not IsUnitType(unit, UNIT_TYPE_STRUCTURE) and not IsUnitType(unit, UNIT_TYPE_HERO) and
+					not UnitHasBuffBJ(unit, FourCC("B006")) and typeIdTable[typeId] == nil and ordersIgnore[orderId] == nil then
+
+		
+		if withoutDelay ~= true then
+			--print("Ordering " .. GetUnitName(unit) .. " - [" .. GetHandleId(unit) .. "] - " .. OrderId2String(orderId) .. ": " ..
+						      --orderId .. " - Moving With Delay")
+			PolledWait(3)
+		else
+			--print("Ordering " .. GetUnitName(unit) .. " - [" .. GetHandleId(unit) .. "] - " .. OrderId2String(orderId) .. ": " ..
+						      --orderId .. " - Moving Immediately")
+		end
+
 		indexer:order(unit, "attack")
 	end
 end
