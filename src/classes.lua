@@ -1804,7 +1804,7 @@ function init_spawnClass()
 		self.baseCount = 0
 		self.timer = CreateTimer()
 		self.cycleInterval = 1.00
-		self.baseInterval = 0.9
+		self.baseInterval = 0.5
 		self.waveInterval = 10.00
 
 		self.creepLevel = 1

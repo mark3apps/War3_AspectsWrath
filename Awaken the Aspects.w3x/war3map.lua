@@ -4302,7 +4302,7 @@ function init_heroClass()
 			SetPlayerTechResearchedSwap(FourCC("R005"), heroLevel - 1, heroPlayer)
 			
 			if (ModuloInteger(heroLevel, 4) == 0) then
-				SetPlayerTechResearchedSwap(FourCC("R005"), heroLevel / 5 - 1, heroPlayer)
+				SetPlayerTechResearchedSwap(FourCC("R006"), heroLevel / 5, heroPlayer)
 			end
 
 			-- Remove Ability Points
@@ -4532,7 +4532,7 @@ function init_spawnClass()
 		self.baseCount = 0
 		self.timer = CreateTimer()
 		self.cycleInterval = 1.00
-		self.baseInterval = 0.9
+		self.baseInterval = 0.5
 		self.waveInterval = 10.00
 
 		self.creepLevel = 1
@@ -9667,13 +9667,7 @@ function Trig_Wildhammer_Building_Dies_Func001C()
     if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01U")) then
         return true
     end
-    if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01Y")) then
-        return true
-    end
     if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01X")) then
-        return true
-    end
-    if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01V")) then
         return true
     end
     if (GetUnitTypeId(GetDyingUnit()) == FourCC("h01F")) then
