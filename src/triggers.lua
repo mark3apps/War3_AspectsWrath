@@ -36,7 +36,7 @@ function Init_UnitEntersMap()
 		local triggerUnit = GetTriggerUnit()
 
 		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) and not IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) then
-			print(GetUnitName(triggerUnit) .. " Entered MAP MOVED")
+			--print(GetUnitName(triggerUnit) .. " Entered MAP MOVED")
 			indexer:add(triggerUnit)
 
 			unitKeepMoving(triggerUnit, true)

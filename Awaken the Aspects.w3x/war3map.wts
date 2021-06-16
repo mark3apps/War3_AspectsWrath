@@ -2594,12 +2594,6 @@ STRING 985
 (Generic)
 }
 
-STRING 996
-// Units: nheb (High Elven Hall), Name (Name)
-{
-High Elven Hall
-}
-
 STRING 997
 // Units: ncg2 (Clockwerk), EditorSuffix (Name - Editor Suffix)
 {
@@ -13961,5 +13955,59 @@ STRING 4785
 // Units: h01U (Wildhammer Farm), Name (Name)
 {
 Wildhammer Farm
+}
+
+STRING 4786
+// Units: n004 (Dalaran Building), Name (Name)
+{
+Dalaran Building
+}
+
+STRING 4787
+// Units: n00T (Dalaran Building), Name (Name)
+{
+Dalaran Building
+}
+
+STRING 4788
+// Units: n00T (Dalaran Building), EditorSuffix (Name - Editor Suffix)
+{
+ 1
+}
+
+STRING 4789
+// Units: n00U (Dalaran Building), Name (Name)
+{
+Dalaran Building
+}
+
+STRING 4790
+// Units: n00U (Dalaran Building), EditorSuffix (Name - Editor Suffix)
+{
+2
+}
+
+STRING 4791
+// Units: n00V (Dalaran Building), Name (Name)
+{
+Dalaran Building
+}
+
+STRING 4792
+// Units: n00V (Dalaran Building), EditorSuffix (Name - Editor Suffix)
+{
+3
+}
+
+STRING 4793
+// Units: nheb (High Elven Citadel), Name (Name)
+{
+High Elven Citadel
+}
+
+STRING 4794
+// Units: h002 (Summoning Stone), Name (Name)
+{
+Summoning Stone
 }
 

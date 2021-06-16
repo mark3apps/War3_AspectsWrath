@@ -1574,7 +1574,7 @@ function init_heroClass()
 			SetPlayerTechResearchedSwap(FourCC("R005"), heroLevel - 1, heroPlayer)
 			
 			if (ModuloInteger(heroLevel, 4) == 0) then
-				SetPlayerTechResearchedSwap(FourCC("R006"), heroLevel / 5, heroPlayer)
+				SetPlayerTechResearchedSwap(FourCC("R006"), heroLevel / 4, heroPlayer)
 			end
 
 			-- Remove Ability Points
@@ -1855,6 +1855,8 @@ function init_spawnClass()
 		function self:unitCount() return #self[self.base].units end
 
 		function self:isUnitInWave()
+			print(self.unitType .. ": " .. self.base .. " " .. self.indexer)
+
 			local waves = self[self.base].units[self.indexer].waves
 
 			for index, value in ipairs(waves) do
@@ -1899,11 +1901,15 @@ function init_spawnClass()
 				self.indexer = i
 				self:checkSpawnUnit()
 
+				--print(self.unitType)
+
 				if self.unitInWave and self.unitInLevel then
 
 					for n = 1, self.numOfUnits do
 
 						--DisableTrigger(Trig_UnitEntersMap)
+
+						
 
 						if self.alliedBaseAlive then
 							xStart, yStart = loc:getRandomXY(self[self.base].allied.startPoint)
@@ -1929,10 +1935,11 @@ function init_spawnClass()
 							--indexer:order(spawnedUnit)
 						end
 
+						
 						--EnableTrigger(Trig_UnitEntersMap)
 						
 
-						PolledWait(0.1)
+						--PolledWait(0.1)
 					end
 				end
 			end
