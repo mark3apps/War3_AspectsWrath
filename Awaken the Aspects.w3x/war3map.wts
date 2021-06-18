@@ -13268,12 +13268,6 @@ STRING 4655
 Dwarf Tower Rimmed
 }
 
-STRING 4657
-// Units: h006 (Fortress), Name (Name)
-{
-Fortress
-}
-
 STRING 4658
 // Units: h01N (Bunker), Name (Name)
 {
@@ -14009,5 +14003,35 @@ STRING 4794
 // Units: h002 (Summoning Stone), Name (Name)
 {
 Summoning Stone
+}
+
+STRING 4795
+// Destructibles: B003 (Pathing Blocker (Wrap Baracade)), Name (Name)
+{
+Pathing Blocker (Wrap Baracade)
+}
+
+STRING 4796
+// Units: h006 (|cff0000ffStronghold|r), Name (Name)
+{
+|cff0000ffStronghold|r
+}
+
+STRING 4797
+// Doodads: D00D (Wrap Baracade (Pathing)), Name (Name)
+{
+Wrap Baracade (Pathing)
+}
+
+STRING 4798
+// Units: n018 (Summoner), Name (Name)
+{
+Summoner
+}
+
+STRING 4799
+// Abilities: A028 (Summon War Golem), Name (Name)
+{
+Summon War Golem
 }
 

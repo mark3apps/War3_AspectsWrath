@@ -1855,8 +1855,7 @@ function init_spawnClass()
 		function self:unitCount() return #self[self.base].units end
 
 		function self:isUnitInWave()
-			print(self.unitType .. ": " .. self.base .. " " .. self.indexer)
-
+		
 			local waves = self[self.base].units[self.indexer].waves
 
 			for index, value in ipairs(waves) do
@@ -1900,8 +1899,6 @@ function init_spawnClass()
 			for i = 1, self:unitCount(self.base) do
 				self.indexer = i
 				self:checkSpawnUnit()
-
-				--print(self.unitType)
 
 				if self.unitInWave and self.unitInLevel then
 
