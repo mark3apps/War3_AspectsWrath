@@ -4,7 +4,6 @@ function init_Lua()
 
 	-- Define Classes
 	try(function()
-		
 
 		Init_luaGlobals()
 		cine.Init()
@@ -46,7 +45,7 @@ function init_Lua()
 	Init_UnitCastsSpell()
 	init_spawnTimers()
 	Init_UnitEntersMap()
-	--Init_finishCasting()
+	-- Init_finishCasting()
 	Init_IssuedOrder()
 	Init_UnitDies()
 	init_MoveToNext()
@@ -69,10 +68,19 @@ function init_Lua()
 	-- dprint("Spawn Setup", 2)
 
 	-- Setup Delayed Init Triggers
+	init_Delayed_0()
 	init_Delayed_1()
 	init_Delayed_10()
 
 	-- dprint("Init Finished")
+end
+
+function init_Delayed_0()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventSingle(t, 0)
+	TriggerAddAction(t, function()
+		cine.mapStart()
+	end)
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -80,7 +88,6 @@ function init_Delayed_1()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventSingle(t, 1)
 	TriggerAddAction(t, function()
-
 		-- dprint("AI Started", 2)
 
 		gate.main()
