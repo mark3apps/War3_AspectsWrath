@@ -396,8 +396,8 @@ gg_unit_nmh1_0735 = nil
 gg_unit_u001_0097 = nil
 gg_unit_u001_0098 = nil
 gg_unit_ndh2_0359 = nil
-gg_unit_ndh2_0876 = nil
 gg_unit_h002_0699 = nil
+gg_unit_ndh2_0876 = nil
 function InitGlobals()
     local i = 0
     udg_PLAYERGRPallied = CreateForce()
@@ -7874,7 +7874,7 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("h01F"), -16000.0, 3840.0, 270.000, FourCC("h01F"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01F"), -16320.0, 2944.0, 270.000, FourCC("h01F"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01F"), -15360.0, 2112.0, 270.000, FourCC("h01F"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -4800.0, 448.0, 90.000, FourCC("n00V"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00T"), -4789.3, 511.8, 180.000, FourCC("n00T"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -11110.8, -8190.7, 30.982, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -10646.5, -7294.7, 26.577, FourCC("o002"))
     u = BlzCreateUnitWithSkin(p, FourCC("o002"), -10119.4, -8254.7, 316.207, FourCC("o002"))
@@ -7885,8 +7885,8 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -8718.5, -11271.2, 263.120, FourCC("nmyr"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -9228.7, -11985.1, 330.589, FourCC("nmyr"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmyr"), -7889.6, -10889.4, 171.656, FourCC("nmyr"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -6464.0, 3072.0, 270.000, FourCC("n00V"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -4800.0, 3264.0, 270.000, FourCC("n00V"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00T"), -6474.7, 3072.2, 0.000, FourCC("n00T"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00T"), -4810.7, 3200.2, 0.000, FourCC("n00T"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -9806.7, -13498.6, 336.868, FourCC("nmcf"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -9123.9, -13697.9, 234.834, FourCC("nmcf"))
     u = BlzCreateUnitWithSkin(p, FourCC("nmcf"), -8956.7, -13271.8, 2.906, FourCC("nmcf"))
@@ -7914,7 +7914,7 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -8768.0, 4288.0, 270.000, FourCC("n00V"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -8768.0, -576.0, 270.000, FourCC("n00V"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -5760.0, 128.0, 90.000, FourCC("n00V"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -6464.0, 640.0, 90.000, FourCC("n00V"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n00T"), -6453.3, 639.8, 180.000, FourCC("n00T"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00U"), -7161.3, 911.5, 90.000, FourCC("n00U"))
     u = BlzCreateUnitWithSkin(p, FourCC("n01A"), -4665.4, 3851.7, 90.000, FourCC("n01A"))
 end
