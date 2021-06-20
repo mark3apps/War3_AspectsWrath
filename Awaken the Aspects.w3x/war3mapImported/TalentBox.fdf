@@ -1,0 +1,149 @@
+// -- INCLUDE FILES ---------------------------------------------------------
+
+IncludeFile "UI\FrameDef\UI\EscMenuTemplates.fdf",
+
+Frame "BACKDROP" "TalentBoxBackgroundTemplate" {
+		DecorateFileNames, //Look-Up Names in some String table (for example gameinterface)
+        BackdropTileBackground,
+		BackdropBackground  "ToolTipBackground", //BackgroundFile
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R", //Which FRAMEPOINTS will have a Border. Order does not matter.
+        BackdropCornerSize  0.008, //How big is the border?
+        BackdropBackgroundInsets 0.005 0.005 0.005 0.005, //the background will start that offset from the outside.
+        BackdropEdgeFile  "ToolTipBorder", //the border File, having the border cut into pieces.
+        BackdropBlendAll,
+}
+Frame "TEXT" "TalentBoxTitle" INHERITS "EscMenuTitleTextTemplate" {
+        UseActiveContext,
+        SetPoint TOP, "ScriptDialog", TOP, 0.0, -0.03,
+}
+Frame "TEXT" "TalentBoxTextTemplate" {
+    DecorateFileNames,
+    FrameFont "EscMenuTextFont", 0.0085, "",
+        
+    //FontJustificationOffset 0.0 -0.002,
+    FontFlags "FIXEDSIZE",
+    FontColor 1.0 1.0 1.0 1.0, //Red Green Blue Alpha 0.0 to 1.0
+    FontHighlightColor 1.0 1.0 1.0 1.0,
+    FontDisabledColor 1.0 1.0 1.0 1.0, //Color used when BoxedText is SetEnable(false)
+    FontShadowColor 0.0 0.0 0.0 0.9,
+    FontShadowOffset 0.001 -0.001,	
+}
+Frame "HIGHLIGHT" "TalentHighlight" {
+    DecorateFileNames,
+    HighlightType "FILETEXTURE",
+    HighlightAlphaFile "EscMenuButtonMouseOverHighlight",
+	HighlightAlphaMode "ADD",
+}
+
+Frame "GLUETEXTBUTTON" "TalentBoxItem" INHERITS WITHCHILDREN "EscMenuButtonTemplate" {
+
+    Width  0.25,
+    Height 0.065,
+    Frame "BACKDROP" "TalentBoxItemIcon" {
+        //The Icon at the left
+        UseActiveContext,
+        Width  0.045,
+        Height 0.045,        
+        SetPoint LEFT, "TalentBoxItem", LEFT, 0.007, 0,
+    }
+	
+	Frame "TEXT" "TalentBoxItemTitle" {
+        //Name of this talent
+        UseActiveContext,
+		SetPoint TOP, "TalentBoxItem", TOP, 0.00, -0.0028,
+        Text "Talent name",
+        DecorateFileNames,
+        FrameFont "EscMenuTextFont", 0.0135, "",
+        FontJustificationH JUSTIFYCENTER,
+        FontJustificationV JUSTIFYMIDDLE,
+        FontJustificationOffset 0.0 -0.002,
+        FontFlags "FIXEDSIZE",
+        FontColor 0.99 0.827 0.0705 1.0,
+        FontShadowColor 0.0 0.0 0.0 0.9,
+        FontShadowOffset 0.001 -0.001,
+    }
+       
+    Frame "BACKDROP" "TalentBoxItemText" INHERITS "EscMenuControlBackdropTemplate" {
+
+        UseActiveContext,
+		SetPoint TOP, "TalentBoxItemTitle", BOTTOM, -0.005, 0.0,
+        SetPoint LEFT, "TalentBoxItemIcon", RIGHT, 0.00, 0.0,
+        SetPoint BOTTOMRIGHT, "TalentBoxItem", BOTTOMRIGHT, -0.00, 0.000,
+        Frame "TEXT" "TalentBoxItemTextText"  INHERITS "TalentBoxTextTemplate" {
+            UseActiveContext,
+            SetPoint BOTTOMRIGHT, "TalentBoxItemText", BOTTOMRIGHT, -0.005, 0.005,
+            SetPoint TOPLEFT, "TalentBoxItemText", TOPLEFT, 0.005, -0.005,
+            Text "Talent Info text",
+        }
+    }
+
+}
+
+Frame "GLUEBUTTON" "TalentButtonUp" {
+    Height 0.012,
+    Width 0.012,
+    ControlStyle "HIGHLIGHTONMOUSEOVER", //enable MouseOverHighlight
+
+    ControlBackdrop "EscMenuPopupMenuArrowBackdropTemplate",
+    Frame "BACKDROP" "EscMenuPopupMenuArrowBackdropTemplate" {
+        BackdropBackground  "UI\Widgets\Glues\SinglePlayerSkirmish-ScrollBarUpButton.blp",
+        BackdropBlendAll,
+    }
+    ControlMouseOverHighlight "TalentButtonUpMouseOverHighlightTemplate",
+    Frame "HIGHLIGHT" "TalentButtonUpMouseOverHighlightTemplate" INHERITS "TalentHighlight" {
+    }
+}
+
+Frame "GLUEBUTTON" "TalentButtonDown" {
+    Height 0.012,
+    Width 0.012,
+    ControlStyle "HIGHLIGHTONMOUSEOVER",
+
+    ControlBackdrop "EscMenuPopupMenuArrowBackdropTemplate",
+    Frame "BACKDROP" "EscMenuPopupMenuArrowBackdropTemplate" {
+        BackdropBackground "UI\Widgets\Glues\SinglePlayerSkirmish-ScrollBarDownButton.blp",
+        BackdropBlendAll,
+    }
+    ControlMouseOverHighlight "TalentButtonDownMouseOverHighlightTemplate",
+    Frame "HIGHLIGHT" "TalentButtonDownMouseOverHighlightTemplate" INHERITS "TalentHighlight" {
+    }
+}
+
+Frame "TEXTAREA" "TalentBoxTextArea" INHERITS WITHCHILDREN "EscMenuTextAreaTemplate" {
+	DecorateFileNames,
+    FrameFont "EscMenuTextFont", 0.011, "",
+}
+
+Frame "GLUETEXTBUTTON" "TalentBoxLevelButton" {
+	Width 0.0155, //Default Width
+	Height 0.0155, //Default Height
+    ControlStyle "HIGHLIGHTONMOUSEOVER",
+    ButtonPushedTextOffset 0.001 -0.001,
+
+	ControlBackdrop "TalentBoxLevelButtonBackDrop",
+	Frame "BACKDROP" "TalentBoxLevelButtonBackDrop" {
+		DecorateFileNames, //Look-Up Names in some String table (for example gameinterface)
+		BackdropTileBackground,
+		BackdropBackground  "ToolTipBackground", //BackgroundFile
+		BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+		BackdropCornerSize  0.008, //higher numbers make the corners rounder.
+		BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022, //makes the background smaller, from the outside.
+		BackdropEdgeFile  "ToolTipBorder", //the border File
+		BackdropBlendAll,
+    }
+	ButtonText "TalentBoxLevelButtonText",
+    Frame "TEXT" "TalentBoxLevelButtonText" {
+		DecorateFileNames,
+		FontJustificationH JUSTIFYCENTER,
+		FontJustificationV JUSTIFYMIDDLE,
+		FrameFont "MasterFont", 0.009, "",
+		FontFlags "FIXEDSIZE",
+		FontColor 0.99 0.827 0.0705 1.0, //Red Green Blue Alpha 0.0 to 1.0
+		FontShadowColor 0.0 0.0 0.0 0.9,
+		FontShadowOffset 0.001 -0.001,
+    }
+    ControlMouseOverHighlight "TalentBoxLevelButtonMouseOverHighlightTemplate",
+    Frame "HIGHLIGHT" "TalentBoxLevelButtonMouseOverHighlightTemplate" INHERITS "TalentHighlight" {
+    }
+
+}

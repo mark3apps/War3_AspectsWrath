@@ -1,0 +1,141 @@
+﻿STRING 1
+{
+Talent Lui 1.34b
+}
+
+STRING 2
+{
+mapper
+}
+
+STRING 3
+{
+Lua version of Talent Jui
+}
+
+STRING 4
+{
+Tasyen
+}
+
+STRING 5
+{
+Spieler 1
+}
+
+STRING 6
+{
+Streitmacht 1
+}
+
+STRING 7
+// Units: H003 (Paladin - Clone), Name (Name)
+{
+Paladin - Clone
+}
+
+STRING 8
+// Units: H004 (Uther - Clone), Name (Name)
+{
+Uther - Clone
+}
+
+STRING 9
+// Units: H007 (Bergkönig - Clone), Name (Name)
+{
+Bergkönig - Clone
+}
+
+STRING 10
+// Abilities: A00B (Heiltrank), Name (Name)
+{
+Heiltrank
+}
+
+STRING 11
+// Abilities: A00B (Heiltrank), Tip (Tooltip - Normal)
+{
+HeilTrank |cffffcc00D|r
+}
+
+STRING 12
+// Abilities: A00B (Heiltrank), Ubertip (Tooltip - Normal - Extended)
+{
+Heals 200 Life
+
+60 seconds cooldown
+}
+
+STRING 13
+// Abilities: A00B (Heiltrank), Hotkey (Hotkey - Normal)
+{
+D
+}
+
+STRING 14
+// Upgrades: R000 (Defend), Name (Name)
+{
+Mut
+}
+
+STRING 15
+// Upgrades: R000 (Defend), Ubertip (Tooltip - Extended)
+{
+Soldaten verfügen über zusätzliche 80 Trefferpunkte.
+}
+
+STRING 16
+// Upgrades: R000 (Defend), effect1 (Effect 1)
+{
+rhpx
+}
+
+STRING 17
+// Upgrades: R000 (Defend), Name (Name)
+{
+Helden Mut
+}
+
+STRING 18
+// Upgrades: R000 (Defend), Tip (Tooltip)
+{
+Mut
+}
+
+STRING 19
+// Upgrades: R000 (Defend), Tip (Tooltip)
+{
+Helden Mut
+}
+
+STRING 20
+// Upgrades: R000 (Defend), Ubertip (Tooltip - Extended)
+{
+Soldaten verfügen über weitere zusätzliche 300 Trefferpunkte.
+}
+
+STRING 21
+{
+Spieler 2
+}
+
+STRING 22
+{
+Spieler 3
+}
+
+STRING 23
+{
+Streitmacht 2
+}
+
+STRING 24
+{
+PreventReset Disabled
+}
+
+STRING 25
+{
+PreventReset enabled
+}
+
