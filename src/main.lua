@@ -1,6 +1,6 @@
 function init_Lua()
 	debugprint = 2
-	
+	shieldTowers = {allied = 7, fed = 7}
 
 	-- Define Classes
 	try(function()

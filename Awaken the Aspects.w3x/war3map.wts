@@ -1,6 +1,6 @@
 ﻿STRING 3
 {
-Death
+Awaken the Aspects
 }
 
 STRING 4
@@ -10,12 +10,12 @@ Any
 
 STRING 5
 {
-Nondescript
+Awaken them all!
 }
 
 STRING 6
 {
-Mark
+KickKing
 }
 
 STRING 10
@@ -881,12 +881,6 @@ STRING 324
 // Abilities: A00H (mana shield), Name (Name)
 {
 mana shield
-}
-
-STRING 325
-// Units: h024 (Mana Generator), Name (Name)
-{
-Mana Generator
 }
 
 STRING 331
@@ -7872,12 +7866,6 @@ STRING 3270
 The Shifter Moves Forward leaving a Shade of himself behind that continues to fight.
 }
 
-STRING 3276
-// Units: h003 (Arcane Institute), Name (Name)
-{
-Arcane Institute
-}
-
 STRING 3278
 // Units: n00K (Keep), Name (Name)
 {
@@ -13711,12 +13699,6 @@ STRING 4754
 Iron Captian
 }
 
-STRING 4755
-// Units: n001 (Hideout), Name (Name)
-{
-Hideout
-}
-
 STRING 4756
 // Units: hmpr (Blood Elf Mage), Name (Name)
 {
@@ -13951,44 +13933,20 @@ STRING 4785
 Wildhammer Farm
 }
 
-STRING 4786
-// Units: n004 (Dalaran Building), Name (Name)
-{
-Dalaran Building
-}
-
-STRING 4787
-// Units: n00T (Dalaran Building), Name (Name)
-{
-Dalaran Building
-}
-
 STRING 4788
-// Units: n00T (Dalaran Building), EditorSuffix (Name - Editor Suffix)
+// Units: n00T (Arcane Tower), EditorSuffix (Name - Editor Suffix)
 {
  1
 }
 
-STRING 4789
-// Units: n00U (Dalaran Building), Name (Name)
-{
-Dalaran Building
-}
-
 STRING 4790
-// Units: n00U (Dalaran Building), EditorSuffix (Name - Editor Suffix)
+// Units: n00U (Arcane Tower), EditorSuffix (Name - Editor Suffix)
 {
 2
 }
 
-STRING 4791
-// Units: n00V (Dalaran Building), Name (Name)
-{
-Dalaran Building
-}
-
 STRING 4792
-// Units: n00V (Dalaran Building), EditorSuffix (Name - Editor Suffix)
+// Units: n00V (Arcane Tower), EditorSuffix (Name - Editor Suffix)
 {
 3
 }
@@ -14033,5 +13991,83 @@ STRING 4799
 // Abilities: A028 (Summon War Golem), Name (Name)
 {
 Summon War Golem
+}
+
+STRING 4807
+// Units: h024 (Mana Repository), Name (Name)
+{
+Mana Repository
+}
+
+STRING 4808
+// Units: n004 (Arcane Tower), Name (Name)
+{
+Arcane Tower
+}
+
+STRING 4809
+// Units: n00T (Arcane Tower), Name (Name)
+{
+Arcane Tower
+}
+
+STRING 4810
+// Units: n00U (Arcane Tower), Name (Name)
+{
+Arcane Tower
+}
+
+STRING 4811
+// Units: n00V (Arcane Tower), Name (Name)
+{
+Arcane Tower
+}
+
+STRING 4812
+// Units: n019 (Arcane Shield Generator), Name (Name)
+{
+Arcane Shield Generator
+}
+
+STRING 4813
+// Abilities: A02C (Magic Shield), Name (Name)
+{
+Magic Shield
+}
+
+STRING 4814
+// Units: n01A (Arcane Tower), Name (Name)
+{
+Arcane Tower
+}
+
+STRING 4815
+// Units: n01A (Arcane Tower), EditorSuffix (Name - Editor Suffix)
+{
+2 (Large)
+}
+
+STRING 4816
+// Units: h00U (Spell Dummy), Name (Name)
+{
+Spell Dummy
+}
+
+STRING 4817
+// Units: h00U (Spell Dummy), EditorSuffix (Name - Editor Suffix)
+{
+(Generic)
+}
+
+STRING 4819
+// Units: h003 (Arcane Citadel |cff00ffff(Shielded)|r), Name (Name)
+{
+Arcane Citadel |cff00ffff(Shielded)|r
+}
+
+STRING 4820
+// Units: n001 (Bandit Hideout), Name (Name)
+{
+Bandit Hideout
 }
 

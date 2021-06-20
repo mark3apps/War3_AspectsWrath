@@ -660,7 +660,6 @@ function spawnAddUnits()
     -- Arcane Spawn
     spawn:addUnit("arcane", "h00C", 1, {6, 7, 8, 9, 10}, 3, 12) -- Sorcress
     spawn:addUnit("arcane", "nchp", 1, {6, 7, 8, 9, 10}, 5, 12) -- Storm Summonor
-    spawn:addUnit("arcane", "n018", 1, {7, 10}, 8, 12) -- Summonor
 
     -- Arcane Creep Spawn
     spawn:addUnit("arcaneCreep", "narg", 1, {1, 2, 3, 4}, 2, 12) -- Battle Golem
@@ -675,12 +674,12 @@ function spawnAddUnits()
     -- Arcane Top Spawn
     spawn:addUnit("arcaneTop", "narg", 2, {4, 5, 6}, 1, 12) -- Battle Golem
     spawn:addUnit("arcaneTop", "hwt2", 1, {4, 6}, 4, 12) -- Water Elemental (Level 2)
-    spawn:addUnit("arcaneTop", "n018", 1, {4, 6}, 8, 12) -- Summonor
+    spawn:addUnit("arcaneTop", "n018", 1, {4}, 8, 12) -- Summonor
 
     -- Arcane Bottom Spawn
     spawn:addUnit("arcaneBottom", "narg", 2, {1, 2, 3}, 2, 12) -- Battle Golem
     spawn:addUnit("arcaneBottom", "hwt2", 1, {1, 3}, 4, 12) -- Water Elemental (Level 2)
-    spawn:addUnit("arcaneBottom", "n018", 1, {1, 3}, 8, 12) -- Summonor
+    spawn:addUnit("arcaneBottom", "n018", 1, {1}, 8, 12) -- Summonor
 
     -- Blacksmith Creep Spawn
     spawn:addUnit("blacksmithCreep", "h007", 2, {1, 2, 3, 4}, 1, 6) -- Militia

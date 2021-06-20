@@ -70,6 +70,30 @@ function Init_UnitDies()
 
 		if IsUnitInGroup(dieingUnit, base.all.g) then base.died(dieingUnit) end
 
+		if GetUnitTypeId(dieingUnit) == FourCC("n019") then
+			local u
+			local player = GetOwningPlayer(dieingUnit)
+			
+			if player == Player(20) then
+				shieldTowers.allied = shieldTowers.allied - 1
+
+				if shieldTowers.allied == 0 then
+					u = gg_unit_h003_0015
+					UnitRemoveAbility(u, FourCC("A02C"))
+					BlzSetUnitName(u, "Arcane Citadel |cffff0000(Vulnerable)|r")
+				end
+			else
+				shieldTowers.fed = shieldTowers.fed - 1
+				if shieldTowers.fed == 0 then
+					u = gg_unit_h003_0007
+					UnitRemoveAbility(u, FourCC("A02C"))
+					BlzSetUnitName(u, "Arcane Citadel |cffff0000(Vulnerable)|r")
+				end
+			end
+
+
+
+		end
 		-- Remove Index from Unit
 		if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
 			PolledWait(10)
