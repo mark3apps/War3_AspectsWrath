@@ -1,3 +1,4 @@
+---@diagnostic disable: duplicate-set-field
 function TalentStatChange( )
 	ModifyHeroStat(udg_Talent__Choice.StatType, udg_Talent__Unit, bj_MODIFYMETHOD_ADD, udg_Talent__Choice.StatPower )
 end

@@ -169,7 +169,7 @@ function TalentChoiceCreateImproveWeapon( weaponIndex,  damageAdd,  cooldownAdd 
     choice.Text = Talent.Strings.ImproveWeaponFirst
     local seperator = Talent.Strings.ImproveWeaponSeperatorFirst
     if damageAdd ~= 0 then choice.Text = choice.Text.. seperator .. Talent.Strings.ImproveWeaponDamage .. damageAdd seperator = Talent.Strings.ImproveWeaponSeperator end
-    if cooldownAdd ~= 0 then thenchoice.Text = choice.Text.. seperator .. Talent.Strings.ImproveWeaponCooldown .. cooldownAdd end
+    if cooldownAdd ~= 0 then choice.Text = choice.Text.. seperator .. Talent.Strings.ImproveWeaponCooldown .. cooldownAdd end
 	return choice
 end
 

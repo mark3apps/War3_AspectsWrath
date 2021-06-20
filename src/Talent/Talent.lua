@@ -106,6 +106,8 @@ inside the action udg_Talent__Choice.Head would give the headText.
  --]]
  do
     local Settings = { UnitSheet = {}}
+    globals = {}
+    
     Talent = {
         Trigger = {},
         Strings = {}
