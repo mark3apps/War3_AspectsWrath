@@ -123,8 +123,8 @@ inside the action udg_Talent__Choice.Head would give the headText.
         Talent.Strings.ButtonResetTooltip = "Unlearn choosen Talents from this Level and higher Levels.|nCan also be used to relearn Talents from this level upwards."
         Talent.Strings.ButtonResetText = "(Un)Learn"
         Talent.Strings.TitleLevel = "Talent Level: "
-        Talent.Strings.ButtonShowText = "Show Talent"
-        Talent.Strings.NoTalentUser = "Not Talent User"
+        Talent.Strings.ButtonShowText = "Show Talents"
+        Talent.Strings.NoTalentUser = "No Talents for unit"
         TalentBox.OptionTitlePrefix[1] = "|cffffcc00"    --Prefix for first option Title
         TalentBox.OptionTitleSufix[1] = ""    --Prefix for first option
         TalentBox.OptionTitlePrefix[2] = "|cffff00cc"
@@ -197,13 +197,13 @@ inside the action udg_Talent__Choice.Head would give the headText.
         Settings.BoxBaseSizeY = 0.02
         
         --Default Position of the TalentBox
-        Settings.BoxPosX = 0.005
-        Settings.BoxPosY = 0.23
+        Settings.BoxPosX = 0.00
+        Settings.BoxPosY = 0.20
         Settings.BoxPosType = FRAMEPOINT_BOTTOMLEFT
 
         --Default Position for the ShowTalentBoxButton
-        Settings.BoxShowButtonPosX = 0.059
-        Settings.BoxShowButtonPosY = 0.193
+        Settings.BoxShowButtonPosX = 0.100
+        Settings.BoxShowButtonPosY = 0.166
         Settings.BoxShowButtonPosType = FRAMEPOINT_BOTTOMLEFT
     end
 
@@ -695,7 +695,7 @@ inside the action udg_Talent__Choice.Head would give the headText.
 		TalentBox.Frame.Close = BlzCreateFrameByType("GLUETEXTBUTTON", "TalentCloseButton",TalentBox.Frame.Box, "ScriptDialogButton", 0)
 		TalentBox.Frame.Show = BlzCreateFrameByType("GLUETEXTBUTTON", "TalentShowButton", BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), "ScriptDialogButton", 0)
     
-		BlzFrameSetSize(TalentBox.Frame.Show, 0.09, 0.035)
+		BlzFrameSetSize(TalentBox.Frame.Show, 0.103, 0.036)
 		BlzFrameSetText(TalentBox.Frame.Show, Talent.Strings.ButtonShowText)
         --BlzFrameSetTexture(TalentBox.Frame.Show, "ReplaceableTextures\\CommandButtons\\BTNDragonHawkRiderV1.blp", 0, true)
 		BlzFrameSetAbsPoint(TalentBox.Frame.Show, Settings.BoxShowButtonPosType, Settings.BoxShowButtonPosX, Settings.BoxShowButtonPosY)
@@ -705,7 +705,7 @@ inside the action udg_Talent__Choice.Head would give the headText.
 		
         
         BlzFrameSetText(TalentBox.Frame.Close, "X")
-		BlzFrameSetSize(TalentBox.Frame.Close, 0.035, 0.035)
+		BlzFrameSetSize(TalentBox.Frame.Close, 0.034, 0.035)
 
 		BlzFrameSetVisible(TalentBox.Frame.Selected, false)
 

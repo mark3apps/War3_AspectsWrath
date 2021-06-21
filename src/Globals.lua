@@ -593,22 +593,46 @@ function Init_luaGlobals()
 	}
 
 	frame = {
-		heroBar = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BAR, 0),
-		heroButton01 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 0),
-		heroButton02 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 1),
-		heroButton03 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 2),
-		heroButton04 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 3),
-		heroButton05 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 4),
-		heroButton06 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 5),
-        portrait = BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0),
-        heroHpBar01 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 0),
-        heroManaBar01 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 0)
+		hero = {
+			bar = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BAR, 0),
+			hp = {
+				BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 0), BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 1),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 2), BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 3),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 4), BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 5)
+			},
+			mana = {
+				BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 0), BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 1),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 2), BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 3),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 4), BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 5)
+			},
+			button = {
+				BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 0), BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 1),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 2), BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 3),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 4), BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 5)
+			}
+		},
 
+		portrait = BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0),
+		consoleUI = BlzGetFrameByName("ConsoleUI", 0),
+
+		upperButtonBar = {
+			frame = BlzGetFrameByName("UpperButtonBarFrame", 0),
+			questsButton = BlzGetFrameByName("UpperButtonBarQuestsButton", 0),
+			menuButton = BlzGetFrameByName("UpperButtonBarMenuButton", 0),
+			alliesButton = BlzGetFrameByName("UpperButtonBarAlliesButton", 0),
+			chatButton = BlzGetFrameByName("UpperButtonBarChatButton", 0)
+		},
+
+		resource = {
+			frame = BlzGetFrameByName("ResourceBarFrame", 0),
+			goldText = BlzGetFrameByName("ResourceBarGoldText", 0),
+			lumberText = BlzGetFrameByName("ResourceBarLumberText", 0),
+			supplyText = BlzGetFrameByName("ResourceBarSupplyText", 0),
+			upkeepText = BlzGetFrameByName("ResourceBarUpkeepText", 0)
+		}
 	}
 
-    sky = {
-        blizzardSky = "Environment\\Sky\\BlizzardSky\\BlizzardSky.mdl"
-    }
+	sky = {blizzardSky = "Environment\\Sky\\BlizzardSky\\BlizzardSky.mdl"}
 
 end
 

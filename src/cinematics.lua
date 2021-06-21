@@ -1,3 +1,19 @@
+function mapInit()
+	print("Working")
+	Init_luaGlobals()
+	print("Working")
+	cine.Init()
+	print("Working")
+
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventSingle(t, 0)
+	TriggerAddAction(t, function ()
+		print("Working")
+		cine.mapStart()
+		print("Working")
+	end)
+end
+
 cine = {}
 function cine.Init()
 
@@ -5,6 +21,9 @@ function cine.Init()
 	-- BlzFrameSetAbsPoint(frame.heroButton01, FRAMEPOINT_BOTTOMLEFT, 0.5, 0.20)
 	-- BlzFrameSetAbsPoint(frame.heroButton01, FRAMEPOINT_BOTTOMLEFT, 0.5, 0.20)
 
+	BlzEnableUIAutoPosition(false)
+	BlzFrameSetAbsPoint()
+	BlzFrameSetAbsPoint(BlzGetFrameByName("ConsoleUI", 0), FRAMEPOINT_BOTTOM, 0, 0)
 	-- Hide UI Keep Mouse
 	SetSkyModel(sky.blizzardSky)
 	-- BlzHideOriginFrames(true)
@@ -40,15 +59,39 @@ function cine.Init()
 	function cine.mapStart()
 		try(function()
 
-			BlzEnableUIAutoPosition(false)
+			
+			local x = 0.205
+			local y = -0.025
+			BlzFrameClearAllPoints(frame.hero.bar)
+			BlzFrameClearAllPoints(frame.hero.hp[1])
+			BlzFrameClearAllPoints(frame.resource.goldText)
+			BlzFrameSetAbsPoint(frame.hero.bar, FRAMEPOINT_TOPLEFT, x + 0.00, y + 0.224)
 
-			BlzFrameClearAllPoints(frame.heroBar)
-			BlzFrameSetAbsPoint(frame.heroBar, FRAMEPOINT_TOPLEFT, 0.00, 0.225)
-			BlzFrameSetScale(frame.heroButton01, 1.5)
-			BlzFrameClearAllPoints(frame.heroHpBar01)
-			BlzFrameSetAbsPoint(frame.heroHpBar01, FRAMEPOINT_BOTTOMLEFT,0.062, 0.18)
-			BlzFrameSetScale(frame.heroHpBar01, 2)
-			BlzFrameSetScale(frame.heroManaBar01, 2)
+			-- Menu Bar
+			--BlzFrameSetVisible(frame.upperButtonBar.frame, false)
+			--BlzFrameSetVisible(BlzGetFrameByName("ResorceBarFrame", 0), false)
+			--BlzFrameSetVisible(BlzGetFrameByName("UpperButtonBarFrame", 0), false)
+			
+			BlzFrameClearAllPoints(frame.upperButtonBar.alliesButton)
+			BlzFrameClearAllPoints(frame.upperButtonBar.questsButton)
+			BlzFrameClearAllPoints(frame.upperButtonBar.menuButton)
+			BlzFrameClearAllPoints(frame.upperButtonBar.chatButton)
+			BlzFrameSetAbsPoint(frame.upperButtonBar.alliesButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
+			BlzFrameSetAbsPoint(frame.upperButtonBar.questsButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
+			BlzFrameSetAbsPoint(frame.upperButtonBar.menuButton, FRAMEPOINT_TOPLEFT, 0, 0.59)
+			BlzFrameSetAbsPoint(frame.upperButtonBar.chatButton, FRAMEPOINT_TOPLEFT, 0, 0.57)
+
+			-- Resource Bar
+			BlzFrameSetAbsPoint(frame.resource.goldText, FRAMEPOINT_BOTTOMLEFT, x + 0.063, y + 0.2)
+			BlzFrameSetAbsPoint(frame.resource.lumberText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
+			BlzFrameSetAbsPoint(frame.resource.upkeepText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
+			BlzFrameSetAbsPoint(frame.resource.supplyText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
+			
+
+			BlzFrameSetScale(frame.hero.button[1], 1.5)
+			BlzFrameSetAbsPoint(frame.hero.hp[1], FRAMEPOINT_BOTTOMLEFT, x + 0.061, y + 0.18)
+			BlzFrameSetScale(frame.hero.hp[1], 2.4)
+			BlzFrameSetScale(frame.hero.mana[1], 2.4)
 		end)
 	end
 

@@ -1184,8 +1184,8 @@ inside the action udg_Talent__Choice.Head would give the headText.
         Talent.Strings.ButtonResetTooltip = "Unlearn choosen Talents from this Level and higher Levels.|nCan also be used to relearn Talents from this level upwards."
         Talent.Strings.ButtonResetText = "(Un)Learn"
         Talent.Strings.TitleLevel = "Talent Level: "
-        Talent.Strings.ButtonShowText = "Show Talent"
-        Talent.Strings.NoTalentUser = "Not Talent User"
+        Talent.Strings.ButtonShowText = "Show Talents"
+        Talent.Strings.NoTalentUser = "No Talents for unit"
         TalentBox.OptionTitlePrefix[1] = "|cffffcc00"    --Prefix for first option Title
         TalentBox.OptionTitleSufix[1] = ""    --Prefix for first option
         TalentBox.OptionTitlePrefix[2] = "|cffff00cc"
@@ -1258,13 +1258,13 @@ inside the action udg_Talent__Choice.Head would give the headText.
         Settings.BoxBaseSizeY = 0.02
         
         --Default Position of the TalentBox
-        Settings.BoxPosX = 0.005
-        Settings.BoxPosY = 0.23
+        Settings.BoxPosX = 0.00
+        Settings.BoxPosY = 0.20
         Settings.BoxPosType = FRAMEPOINT_BOTTOMLEFT
 
         --Default Position for the ShowTalentBoxButton
-        Settings.BoxShowButtonPosX = 0.059
-        Settings.BoxShowButtonPosY = 0.193
+        Settings.BoxShowButtonPosX = 0.100
+        Settings.BoxShowButtonPosY = 0.166
         Settings.BoxShowButtonPosType = FRAMEPOINT_BOTTOMLEFT
     end
 
@@ -1756,7 +1756,7 @@ inside the action udg_Talent__Choice.Head would give the headText.
 		TalentBox.Frame.Close = BlzCreateFrameByType("GLUETEXTBUTTON", "TalentCloseButton",TalentBox.Frame.Box, "ScriptDialogButton", 0)
 		TalentBox.Frame.Show = BlzCreateFrameByType("GLUETEXTBUTTON", "TalentShowButton", BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), "ScriptDialogButton", 0)
     
-		BlzFrameSetSize(TalentBox.Frame.Show, 0.09, 0.035)
+		BlzFrameSetSize(TalentBox.Frame.Show, 0.103, 0.036)
 		BlzFrameSetText(TalentBox.Frame.Show, Talent.Strings.ButtonShowText)
         --BlzFrameSetTexture(TalentBox.Frame.Show, "ReplaceableTextures\\CommandButtons\\BTNDragonHawkRiderV1.blp", 0, true)
 		BlzFrameSetAbsPoint(TalentBox.Frame.Show, Settings.BoxShowButtonPosType, Settings.BoxShowButtonPosX, Settings.BoxShowButtonPosY)
@@ -1766,7 +1766,7 @@ inside the action udg_Talent__Choice.Head would give the headText.
 		
         
         BlzFrameSetText(TalentBox.Frame.Close, "X")
-		BlzFrameSetSize(TalentBox.Frame.Close, 0.035, 0.035)
+		BlzFrameSetSize(TalentBox.Frame.Close, 0.034, 0.035)
 
 		BlzFrameSetVisible(TalentBox.Frame.Selected, false)
 
@@ -6554,6 +6554,8 @@ function cine.Init()
 	-- BlzFrameSetAbsPoint(frame.heroButton01, FRAMEPOINT_BOTTOMLEFT, 0.5, 0.20)
 	-- BlzFrameSetAbsPoint(frame.heroButton01, FRAMEPOINT_BOTTOMLEFT, 0.5, 0.20)
 
+	BlzEnableUIAutoPosition(false)
+	BlzFrameSetAbsPoint(BlzGetFrameByName("ConsoleUI", 0), FRAMEPOINT_TOP, 0.4, 0.8)
 	-- Hide UI Keep Mouse
 	SetSkyModel(sky.blizzardSky)
 	-- BlzHideOriginFrames(true)
@@ -6589,15 +6591,39 @@ function cine.Init()
 	function cine.mapStart()
 		try(function()
 
-			BlzEnableUIAutoPosition(false)
+			
+			local x = 0.205
+			local y = -0.025
+			BlzFrameClearAllPoints(frame.hero.bar)
+			BlzFrameClearAllPoints(frame.hero.hp[1])
+			BlzFrameClearAllPoints(frame.resource.goldText)
+			BlzFrameSetAbsPoint(frame.hero.bar, FRAMEPOINT_TOPLEFT, x + 0.00, y + 0.224)
 
-			BlzFrameClearAllPoints(frame.heroBar)
-			BlzFrameSetAbsPoint(frame.heroBar, FRAMEPOINT_TOPLEFT, 0.00, 0.225)
-			BlzFrameSetScale(frame.heroButton01, 1.5)
-			BlzFrameClearAllPoints(frame.heroHpBar01)
-			BlzFrameSetAbsPoint(frame.heroHpBar01, FRAMEPOINT_BOTTOMLEFT,0.062, 0.18)
-			BlzFrameSetScale(frame.heroHpBar01, 2)
-			BlzFrameSetScale(frame.heroManaBar01, 2)
+			-- Menu Bar
+			--BlzFrameSetVisible(frame.upperButtonBar.frame, false)
+			--BlzFrameSetVisible(BlzGetFrameByName("ResorceBarFrame", 0), false)
+			--BlzFrameSetVisible(BlzGetFrameByName("UpperButtonBarFrame", 0), false)
+			
+			BlzFrameClearAllPoints(frame.upperButtonBar.alliesButton)
+			BlzFrameClearAllPoints(frame.upperButtonBar.questsButton)
+			BlzFrameClearAllPoints(frame.upperButtonBar.menuButton)
+			BlzFrameClearAllPoints(frame.upperButtonBar.chatButton)
+			BlzFrameSetAbsPoint(frame.upperButtonBar.alliesButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
+			BlzFrameSetAbsPoint(frame.upperButtonBar.questsButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
+			BlzFrameSetAbsPoint(frame.upperButtonBar.menuButton, FRAMEPOINT_TOPLEFT, 0, 0.59)
+			BlzFrameSetAbsPoint(frame.upperButtonBar.chatButton, FRAMEPOINT_TOPLEFT, 0, 0.57)
+
+			-- Resource Bar
+			BlzFrameSetAbsPoint(frame.resource.goldText, FRAMEPOINT_BOTTOMLEFT, x + 0.063, y + 0.2)
+			BlzFrameSetAbsPoint(frame.resource.lumberText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
+			BlzFrameSetAbsPoint(frame.resource.upkeepText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
+			BlzFrameSetAbsPoint(frame.resource.supplyText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
+			
+
+			BlzFrameSetScale(frame.hero.button[1], 1.5)
+			BlzFrameSetAbsPoint(frame.hero.hp[1], FRAMEPOINT_BOTTOMLEFT, x + 0.061, y + 0.18)
+			BlzFrameSetScale(frame.hero.hp[1], 2.4)
+			BlzFrameSetScale(frame.hero.mana[1], 2.4)
 		end)
 	end
 
@@ -7455,22 +7481,45 @@ function Init_luaGlobals()
 	}
 
 	frame = {
-		heroBar = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BAR, 0),
-		heroButton01 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 0),
-		heroButton02 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 1),
-		heroButton03 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 2),
-		heroButton04 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 3),
-		heroButton05 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 4),
-		heroButton06 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 5),
-        portrait = BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0),
-        heroHpBar01 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 0),
-        heroManaBar01 = BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 0)
+		hero = {
+			bar = BlzGetOriginFrame(ORIGIN_FRAME_HERO_BAR, 0),
+			hp = {
+				BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 0), BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 1),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 2), BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 3),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 4), BlzGetOriginFrame(ORIGIN_FRAME_HERO_HP_BAR, 5)
+			},
+			mana = {
+				BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 0), BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 1),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 2), BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 3),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 4), BlzGetOriginFrame(ORIGIN_FRAME_HERO_MANA_BAR, 5)
+			},
+			button = {
+				BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 0), BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 1),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 2), BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 3),
+    BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 4), BlzGetOriginFrame(ORIGIN_FRAME_HERO_BUTTON, 5)
+			}
+		},
 
+		portrait = BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0),
+
+		upperButtonBar = {
+			frame = BlzGetFrameByName("UpperButtonBarFrame", 0),
+			questsButton = BlzGetFrameByName("UpperButtonBarQuestsButton", 0),
+			menuButton = BlzGetFrameByName("UpperButtonBarMenuButton", 0),
+			alliesButton = BlzGetFrameByName("UpperButtonBarAlliesButton", 0),
+			chatButton = BlzGetFrameByName("UpperButtonBarChatButton", 0)
+		},
+
+		resource = {
+			frame = BlzGetFrameByName("ResourceBarFrame", 0),
+			goldText = BlzGetFrameByName("ResourceBarGoldText", 0),
+			lumberText = BlzGetFrameByName("ResourceBarLumberText", 0),
+			supplyText = BlzGetFrameByName("ResourceBarSupplyText", 0),
+			upkeepText = BlzGetFrameByName("ResourceBarUpkeepText", 0)
+		}
 	}
 
-    sky = {
-        blizzardSky = "Environment\\Sky\\BlizzardSky\\BlizzardSky.mdl"
-    }
+	sky = {blizzardSky = "Environment\\Sky\\BlizzardSky\\BlizzardSky.mdl"}
 
 end
 
@@ -8417,11 +8466,9 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("nfv0"), -21376.0, -5408.0, 141.625, FourCC("nfv0"))
     u = BlzCreateUnitWithSkin(p, FourCC("n019"), -21504.0, -11200.0, 270.000, FourCC("n019"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -15584.0, -5856.0, 270.000, FourCC("ncbb"))
-    gg_unit_hshy_0011 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -18592.0, -7392.0, 270.000, FourCC("hshy"))
+    gg_unit_hshy_0011 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -18592.0, -7392.0, 540.000, FourCC("hshy"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb5"), -15520.0, -6240.0, 270.000, FourCC("ncb5"))
     u = BlzCreateUnitWithSkin(p, FourCC("n019"), -22912.0, -10304.0, 270.000, FourCC("n019"))
-    gg_unit_h003_0015 = BlzCreateUnitWithSkin(p, FourCC("h003"), -23488.0, -11200.0, 270.000, FourCC("h003"))
-    SetUnitColor(gg_unit_h003_0015, ConvertPlayerColor(3))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -23936.0, -5376.0, 270.000, FourCC("n000"))
     gg_unit_h014_0017 = BlzCreateUnitWithSkin(p, FourCC("h014"), -20544.0, -11200.0, 270.000, FourCC("h014"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01A"), -14976.0, -6464.0, 270.000, FourCC("h01A"))
@@ -8434,7 +8481,7 @@ function CreateBuildingsForPlayer20()
     u = BlzCreateUnitWithSkin(p, FourCC("n00M"), -13824.0, -7808.0, 270.000, FourCC("n00M"))
     SetUnitState(u, UNIT_STATE_MANA, 260)
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -22272.0, -6784.0, 270.000, FourCC("hgtw"))
-    gg_unit_h00E_0033 = BlzCreateUnitWithSkin(p, FourCC("h00E"), -23936.0, -4608.0, 270.000, FourCC("h00E"))
+    gg_unit_h00E_0033 = BlzCreateUnitWithSkin(p, FourCC("h00E"), -23936.0, -4608.0, 340.000, FourCC("h00E"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncbb"), -16992.0, -6112.0, 270.000, FourCC("ncbb"))
     u = BlzCreateUnitWithSkin(p, FourCC("o004"), -14912.0, -7744.0, 270.000, FourCC("o004"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb2"), -16608.0, -6176.0, 270.000, FourCC("ncb2"))
@@ -8726,6 +8773,8 @@ function CreateUnitsForPlayer20()
     local unitID
     local t
     local life
+    gg_unit_h003_0015 = BlzCreateUnitWithSkin(p, FourCC("h003"), -23488.0, -11200.0, 270.000, FourCC("h003"))
+    SetUnitColor(gg_unit_h003_0015, ConvertPlayerColor(3))
     u = BlzCreateUnitWithSkin(p, FourCC("n01A"), -24390.6, -9227.7, 270.000, FourCC("n01A"))
     u = BlzCreateUnitWithSkin(p, FourCC("n004"), -21792.0, -10496.0, 270.000, FourCC("n004"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00V"), -24640.0, -12096.0, 90.000, FourCC("n00V"))
@@ -8825,8 +8874,6 @@ function CreateBuildingsForPlayer23()
     local life
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -8704.0, -1984.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("h020"), -6246.5, -5053.4, 180.000, FourCC("h020"))
-    gg_unit_h003_0007 = BlzCreateUnitWithSkin(p, FourCC("h003"), -5568.0, 1856.0, 270.000, FourCC("h003"))
-    SetUnitColor(gg_unit_h003_0007, ConvertPlayerColor(3))
     u = BlzCreateUnitWithSkin(p, FourCC("n000"), -5888.0, -5376.0, 270.000, FourCC("n000"))
     gg_unit_e003_0014 = BlzCreateUnitWithSkin(p, FourCC("e003"), -4608.0, -7552.0, 270.000, FourCC("e003"))
     u = BlzCreateUnitWithSkin(p, FourCC("nfv0"), -8416.0, -4064.0, 46.916, FourCC("nfv0"))
@@ -8840,7 +8887,7 @@ function CreateBuildingsForPlayer23()
     gg_unit_h006_0055 = BlzCreateUnitWithSkin(p, FourCC("h006"), -12864.0, 2560.0, 270.000, FourCC("h006"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01I"), -13248.0, 3968.0, 270.000, FourCC("h01I"))
     gg_unit_o001_0078 = BlzCreateUnitWithSkin(p, FourCC("o001"), -9728.0, -8320.0, 270.000, FourCC("o001"))
-    gg_unit_h00E_0081 = BlzCreateUnitWithSkin(p, FourCC("h00E"), -5120.0, -4736.0, 270.000, FourCC("h00E"))
+    gg_unit_h00E_0081 = BlzCreateUnitWithSkin(p, FourCC("h00E"), -5120.0, -4736.0, 160.000, FourCC("h00E"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -7296.0, -2560.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("hgtw"), -8704.0, -2880.0, 270.000, FourCC("hgtw"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -7296.0, -5056.0, 270.000, FourCC("negt"))
@@ -8892,7 +8939,7 @@ function CreateBuildingsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("ncba"), -9696.0, -3936.0, 360.000, FourCC("ncba"))
     u = BlzCreateUnitWithSkin(p, FourCC("negt"), -8640.0, -5568.0, 270.000, FourCC("negt"))
     u = BlzCreateUnitWithSkin(p, FourCC("h004"), -11392.0, -4224.0, 270.000, FourCC("h004"))
-    gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -10464.0, -1952.0, 270.000, FourCC("hshy"))
+    gg_unit_hshy_0212 = BlzCreateUnitWithSkin(p, FourCC("hshy"), -10464.0, -1952.0, 0.000, FourCC("hshy"))
     u = BlzCreateUnitWithSkin(p, FourCC("ncb4"), -10912.0, -3936.0, 90.000, FourCC("ncb4"))
     u = BlzCreateUnitWithSkin(p, FourCC("ndh3"), -11456.0, -10560.0, 270.000, FourCC("ndh3"))
     u = BlzCreateUnitWithSkin(p, FourCC("nfv0"), -8544.0, -4960.0, 90.000, FourCC("nfv0"))
@@ -9131,6 +9178,8 @@ function CreateUnitsForPlayer23()
     local unitID
     local t
     local life
+    gg_unit_h003_0007 = BlzCreateUnitWithSkin(p, FourCC("h003"), -5568.0, 1856.0, 540.000, FourCC("h003"))
+    SetUnitColor(gg_unit_h003_0007, ConvertPlayerColor(3))
     u = BlzCreateUnitWithSkin(p, FourCC("h007"), -9869.1, -5063.9, 230.407, FourCC("h007"))
     u = BlzCreateUnitWithSkin(p, FourCC("h01O"), -13503.0, 4247.0, 40.821, FourCC("h01O"))
     u = BlzCreateUnitWithSkin(p, FourCC("hpea"), -9634.2, -1776.0, 270.071, FourCC("hpea"))
@@ -9153,7 +9202,7 @@ function CreateUnitsForPlayer23()
     u = BlzCreateUnitWithSkin(p, FourCC("n004"), -6560.0, 4320.0, 180.000, FourCC("n004"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00T"), -7701.3, 1311.8, 180.000, FourCC("n00T"))
     u = BlzCreateUnitWithSkin(p, FourCC("n00T"), -7701.3, 2367.8, 0.000, FourCC("n00T"))
-    u = BlzCreateUnitWithSkin(p, FourCC("n01A"), -4665.4, -116.3, 90.000, FourCC("n01A"))
+    u = BlzCreateUnitWithSkin(p, FourCC("n01A"), -4633.4, -148.3, 90.000, FourCC("n01A"))
     u = BlzCreateUnitWithSkin(p, FourCC("nefm"), -4192.0, -8928.0, 270.000, FourCC("nefm"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef4"), -4704.0, -10656.0, 270.000, FourCC("nef4"))
     u = BlzCreateUnitWithSkin(p, FourCC("nef0"), -4704.0, -10144.0, 270.000, FourCC("nef0"))
@@ -9608,20 +9657,20 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_TARGET_DISTANCE, 1834.2, 0.0)
     CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_ROLL, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_FIELD_OF_VIEW, 70.0, 0.0)
-    CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_FARZ, 6151.0, 0.0)
+    CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_FARZ, 3732.0, 0.0)
     CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_NEARZ, 16.0, 0.0)
     CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro06, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
     CameraSetupSetDestPosition(gg_cam_intro06, -26098.5, -1925.7, 0.0)
     gg_cam_intro01 = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_ZOFFSET, 473.0, 0.0)
-    CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_ROTATION, 132.2, 0.0)
+    CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_ZOFFSET, 443.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_ROTATION, 131.2, 0.0)
     CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_ANGLE_OF_ATTACK, 13.5, 0.0)
-    CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_TARGET_DISTANCE, 1165.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_TARGET_DISTANCE, 1108.0, 0.0)
     CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_ROLL, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_FIELD_OF_VIEW, 110.0, 0.0)
-    CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_FARZ, 3596.0, 0.0)
+    CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_FARZ, 3208.0, 0.0)
     CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_NEARZ, 16.0, 0.0)
     CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro01, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
@@ -9696,10 +9745,10 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_ZOFFSET, 154.0, 0.0)
     CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_ROTATION, 71.7, 0.0)
     CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_ANGLE_OF_ATTACK, 11.1, 0.0)
-    CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_TARGET_DISTANCE, 1403.2, 0.0)
+    CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_TARGET_DISTANCE, 1491.2, 0.0)
     CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_FIELD_OF_VIEW, 93.0, 0.0)
-    CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_FARZ, 5289.0, 0.0)
+    CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_FIELD_OF_VIEW, 72.0, 0.0)
+    CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_FARZ, 4994.0, 0.0)
     CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_NEARZ, 16.0, 0.0)
     CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro07, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
@@ -9719,14 +9768,14 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_intro08, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
     CameraSetupSetDestPosition(gg_cam_intro08, -26588.4, -131.4, 0.0)
     gg_cam_intro09 = CreateCameraSetup()
-    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_ZOFFSET, 214.0, 0.0)
+    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_ZOFFSET, 209.0, 0.0)
     CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_ROTATION, 180.0, 0.0)
-    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_ANGLE_OF_ATTACK, 6.0, 0.0)
-    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_TARGET_DISTANCE, 1198.6, 0.0)
+    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_ANGLE_OF_ATTACK, 8.0, 0.0)
+    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_TARGET_DISTANCE, 1462.6, 0.0)
     CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_FIELD_OF_VIEW, 120.0, 0.0)
-    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_FARZ, 4761.0, 0.0)
-    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_NEARZ, 16.0, 0.0)
+    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_FIELD_OF_VIEW, 90.0, 0.0)
+    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_FARZ, 4540.0, 0.0)
+    CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_NEARZ, 118.0, 0.0)
     CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro09, CAMERA_FIELD_LOCAL_ROLL, 0.0, 0.0)
@@ -9748,9 +9797,9 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_ZOFFSET, 449.0, 0.0)
     CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_ROTATION, 135.0, 0.0)
     CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_ANGLE_OF_ATTACK, 14.1, 0.0)
-    CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_TARGET_DISTANCE, 2237.5, 0.0)
+    CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_TARGET_DISTANCE, 2227.5, 0.0)
     CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_ROLL, 0.0, 0.0)
-    CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_FIELD_OF_VIEW, 75.0, 0.0)
+    CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_FIELD_OF_VIEW, 73.0, 0.0)
     CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_FARZ, 4294.4, 0.0)
     CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_NEARZ, 202.0, 0.0)
     CameraSetupSetField(gg_cam_intro11, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
@@ -9764,7 +9813,7 @@ function CreateCameras()
     CameraSetupSetField(gg_cam_intro12, CAMERA_FIELD_TARGET_DISTANCE, 35.5, 0.0)
     CameraSetupSetField(gg_cam_intro12, CAMERA_FIELD_ROLL, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro12, CAMERA_FIELD_FIELD_OF_VIEW, 112.0, 0.0)
-    CameraSetupSetField(gg_cam_intro12, CAMERA_FIELD_FARZ, 2755.0, 0.0)
+    CameraSetupSetField(gg_cam_intro12, CAMERA_FIELD_FARZ, 2310.0, 0.0)
     CameraSetupSetField(gg_cam_intro12, CAMERA_FIELD_NEARZ, 53.0, 0.0)
     CameraSetupSetField(gg_cam_intro12, CAMERA_FIELD_LOCAL_PITCH, 0.0, 0.0)
     CameraSetupSetField(gg_cam_intro12, CAMERA_FIELD_LOCAL_YAW, 0.0, 0.0)
