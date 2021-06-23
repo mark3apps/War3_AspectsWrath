@@ -67,11 +67,13 @@ function cine.Init()
 
 		-- Move Gold Bar
 		BlzFrameClearAllPoints(frame.resource.goldText)
-		BlzFrameSetAbsPoint(frame.resource.frame, FRAMEPOINT_TOPLEFT, 0.0, 1.5)
+		BlzFrameSetAbsPoint(frame.resource.goldText, FRAMEPOINT_TOPLEFT, x + 0.073, y + 0.213)
+		
 
 		-- Hide Resource Bar
 		BlzFrameClearAllPoints(frame.resource.frame)
 		BlzFrameClearAllPoints(frame.resource.lumberText)
+		BlzFrameSetAbsPoint(frame.resource.frame, FRAMEPOINT_TOPLEFT, 0.0, 1.5)
 		BlzFrameSetAbsPoint(frame.resource.lumberText, FRAMEPOINT_TOPLEFT, 0, 1.5)
 		BlzFrameSetAbsPoint(frame.resource.upkeepText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
 		BlzFrameSetAbsPoint(frame.resource.supplyText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
