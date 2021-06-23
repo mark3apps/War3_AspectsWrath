@@ -1,4 +1,3 @@
-
 cine = {}
 function cine.Init()
 	-- Hide UI Keep Mouse
@@ -65,11 +64,11 @@ function cine.Init()
 		BlzFrameClearAllPoints(frame.upperButtonBar.chatButton)
 		BlzFrameSetAbsPoint(frame.upperButtonBar.menuButton, FRAMEPOINT_TOPLEFT, 0.255, 0.60)
 		BlzFrameSetAbsPoint(frame.upperButtonBar.chatButton, FRAMEPOINT_TOPLEFT, 0.463, 0.60)
-		
+
 		-- Move Gold Bar
 		BlzFrameClearAllPoints(frame.resource.goldText)
 		BlzFrameSetAbsPoint(frame.resource.frame, FRAMEPOINT_TOPLEFT, 0.0, 1.5)
-		
+
 		-- Hide Resource Bar
 		BlzFrameClearAllPoints(frame.resource.frame)
 		BlzFrameClearAllPoints(frame.resource.lumberText)
@@ -77,9 +76,8 @@ function cine.Init()
 		BlzFrameSetAbsPoint(frame.resource.upkeepText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
 		BlzFrameSetAbsPoint(frame.resource.supplyText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
 
-
 		-- Hero Bar
-        BlzFrameClearAllPoints(frame.hero.bar)
+		BlzFrameClearAllPoints(frame.hero.bar)
 		BlzFrameSetAbsPoint(frame.hero.bar, FRAMEPOINT_TOPLEFT, x + 0.01, y + 0.214)
 		BlzFrameSetScale(frame.hero.button[1], 1.25)
 
@@ -92,7 +90,6 @@ function cine.Init()
 		BlzFrameClearAllPoints(frame.hero.mana[1])
 		BlzFrameSetAbsPoint(frame.hero.mana[1], FRAMEPOINT_BOTTOMLEFT, x + 0.065, y + 0.175)
 		BlzFrameSetScale(frame.hero.mana[1], 2.3)
-		
 
 	end
 
