@@ -26,52 +26,63 @@ end
 function cine.mapStart()
 	try(function()
 
+		-- Set Hero Bar Offsets
 		local x = 0.205
 		local y = -0.025
 
+		-- Turn off Auto Positioning
 		BlzEnableUIAutoPosition(false)
-		imageTest = BlzCreateFrameByType("BACKDROP", "image", BlzGetFrameByName("ConsoleUIBackdrop", 0),
-		                                 "ButtonBackdropTemplate", 0)
-		BlzFrameSetTexture(imageTest, "UI\\ResourceBar.tga", 0, true)
-		BlzFrameSetAbsPoint(imageTest, FRAMEPOINT_TOPLEFT, x + 0.059, y + 0.215)
-		BlzFrameSetSize(imageTest, 0.092, 0.022)
-		BlzFrameSetLevel(imageTest, 1)
 
+		-- Create Hero Bar Background UI Texture
+		heroBarUI = BlzCreateFrameByType("BACKDROP", "image", BlzGetFrameByName("ConsoleUIBackdrop", 0),
+		                                 "ButtonBackdropTemplate", 0)
+		BlzFrameSetTexture(heroBarUI, "UI\\ResourceBar_combined.dds", 0, true)
+		BlzFrameSetAbsPoint(heroBarUI, FRAMEPOINT_TOPLEFT, x + 0.046, y + 0.255)
+		BlzFrameSetAbsPoint(heroBarUI, FRAMEPOINT_BOTTOMRIGHT, x + 0.17, y + 0.126)
+		BlzFrameSetLevel(heroBarUI, 1)
+
+		-- Remove Upper Button Bar Back
 		BlzFrameSetAbsPoint(frame.consoleUI, FRAMEPOINT_TOPLEFT, 0, -0.1)
 		BlzFrameSetAbsPoint(frame.consoleUI, FRAMEPOINT_BOTTOM, 0, 0)
 
-
-
+		-- Hide Upper Button Bar Buttons
 		BlzFrameClearAllPoints(frame.upperButtonBar.alliesButton)
 		BlzFrameClearAllPoints(frame.upperButtonBar.questsButton)
-		BlzFrameClearAllPoints(frame.upperButtonBar.menuButton)
-		BlzFrameClearAllPoints(frame.upperButtonBar.chatButton)
-
-		-- Button Bar
 		BlzFrameSetAbsPoint(frame.upperButtonBar.alliesButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
 		BlzFrameSetAbsPoint(frame.upperButtonBar.questsButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
+
+		-- Move Upper Button Bar Buttons we like
+		BlzFrameClearAllPoints(frame.upperButtonBar.menuButton)
+		BlzFrameClearAllPoints(frame.upperButtonBar.chatButton)
 		BlzFrameSetAbsPoint(frame.upperButtonBar.menuButton, FRAMEPOINT_TOPLEFT, 0.255, 0.60)
 		BlzFrameSetAbsPoint(frame.upperButtonBar.chatButton, FRAMEPOINT_TOPLEFT, 0.463, 0.60)
-
-		-- Resource Bar
-		BlzFrameClearAllPoints(frame.resource.frame)
+		
+		-- Move Gold Bar
 		BlzFrameClearAllPoints(frame.resource.goldText)
-		BlzFrameClearAllPoints(frame.resource.lumberText)
 		BlzFrameSetAbsPoint(frame.resource.frame, FRAMEPOINT_TOPLEFT, 0.0, 1.5)
-		BlzFrameSetAbsPoint(frame.resource.goldText, FRAMEPOINT_TOPLEFT, x + 0.073, y + 0.213)
+		
+		-- Hide Resource Bar
+		BlzFrameClearAllPoints(frame.resource.frame)
+		BlzFrameClearAllPoints(frame.resource.lumberText)
 		BlzFrameSetAbsPoint(frame.resource.lumberText, FRAMEPOINT_TOPLEFT, 0, 1.5)
 		BlzFrameSetAbsPoint(frame.resource.upkeepText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
 		BlzFrameSetAbsPoint(frame.resource.supplyText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
 
 
+		-- Hero Bar
         BlzFrameClearAllPoints(frame.hero.bar)
-		BlzFrameClearAllPoints(frame.hero.hp[1])
-
 		BlzFrameSetAbsPoint(frame.hero.bar, FRAMEPOINT_TOPLEFT, x + 0.01, y + 0.214)
 		BlzFrameSetScale(frame.hero.button[1], 1.25)
-		BlzFrameSetAbsPoint(frame.hero.hp[1], FRAMEPOINT_BOTTOMLEFT, x + 0.061, y + 0.18)
-		BlzFrameSetScale(frame.hero.hp[1], 2.4)
-		BlzFrameSetScale(frame.hero.mana[1], 2.4)
+
+		-- HP Bar
+		BlzFrameClearAllPoints(frame.hero.hp[1])
+		BlzFrameSetAbsPoint(frame.hero.hp[1], FRAMEPOINT_BOTTOMLEFT, x + 0.065, y + 0.181)
+		BlzFrameSetScale(frame.hero.hp[1], 2.3)
+
+		-- Mana Bar
+		BlzFrameClearAllPoints(frame.hero.mana[1])
+		BlzFrameSetAbsPoint(frame.hero.mana[1], FRAMEPOINT_BOTTOMLEFT, x + 0.065, y + 0.175)
+		BlzFrameSetScale(frame.hero.mana[1], 2.3)
 	end)
 end
 
