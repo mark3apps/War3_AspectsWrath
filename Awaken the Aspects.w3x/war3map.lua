@@ -3994,6 +3994,7 @@ function init_locationClass()
 
 	loc_Class = {}
 
+
 	loc_Class.new = function()
 		local self = {}
 		self.regions = {}
