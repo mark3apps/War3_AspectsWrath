@@ -109,69 +109,6 @@ function addRegions()
 	RegionAddRect(topRegion, gg_rct_Big_Top_Right)
 end
 
-function addBases()
-
-	base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
-	base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
-
-	base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
-	base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
-
-	base.add(gg_unit_hars_0355, 1, false, true, true, false) -- Allied Arcane Top
-	base.add(gg_unit_hars_0293, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_hars_0292, 1, false, true, true, false) -- Allied Arcane Bottom
-	base.add(gg_unit_hars_0303, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_n00K_0802, 2, false, true, true, true) -- Allied Blacksmith
-	base.add(gg_unit_n00K_0477, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_h00E_0033, 8, true, true, true, true) -- Allied Castle
-	base.add(gg_unit_h00E_0081, 8, true, true, true, true) -- Federation
-
-	base.add(gg_unit_hvlt_0207, 2, false, true, true, true) -- Allied City Elves
-	base.add(gg_unit_hvlt_0406, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_n00B_0364, 1, false, true, true, true) -- Allied City Front
-	base.add(gg_unit_n00B_0399, 1, false, true, true, true) -- Federation
-
-	base.add(gg_unit_n00B_0102, 1, false, true, true, true) -- Allied City Side
-	base.add(gg_unit_n00B_0038, 1, false, true, true, true) -- Federation
-
-	base.add(gg_unit_ndh2_0359, 1, false, true, true, true) -- Allied Draenei
-	base.add(gg_unit_ndh2_0876, 1, false, true, true, true) -- Federation
-
-	base.add(gg_unit_nheb_0109, 3, false, true, true, true) -- Allied High Elves
-	base.add(gg_unit_nheb_0036, 3, false, true, true, true) -- Federation
-
-	base.add(gg_unit_n001_0048, 2, false, true, true, true) -- Allied Merc Camp
-	base.add(gg_unit_n001_0049, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_h006_0074, 2, false, true, true, true) -- Allied Mine
-	base.add(gg_unit_h006_0055, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_nmh1_0735, 1, false, true, true, false) -- Allied Murloc
-	base.add(gg_unit_nmh1_0783, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_nntt_0135, 2, false, true, true, true) -- Allied Naga
-	base.add(gg_unit_nntt_0132, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_e003_0058, 3, false, true, true, true) -- Allied Night Elves
-	base.add(gg_unit_e003_0014, 3, false, true, true, true) -- Federation
-
-	base.add(gg_unit_o001_0075, 2, false, true, true, true) -- Allied Orcs
-	base.add(gg_unit_o001_0078, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_eshy_0120, 1, false, true, true, false) -- Allied Night Elf Shipyard
-	base.add(gg_unit_eshy_0047, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
-	base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_u001_0097, 2, false, true, true, true) -- Federation Undead
-	base.add(gg_unit_u001_0098, 2, false, true, true, true) -- Federation
-end
-
 function Init_luaGlobals()
 
 	oid = {
@@ -636,9 +573,77 @@ function Init_luaGlobals()
 
 end
 
--- Spawn Set up
-function spawnAddBases()
-	-- addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
+init = {}
+
+function init.Globals()
+
+	--
+	-- Set up Bases
+	--
+
+	base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
+	base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
+
+	base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
+	base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
+
+	base.add(gg_unit_hars_0355, 1, false, true, true, false) -- Allied Arcane Top
+	base.add(gg_unit_hars_0293, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_hars_0292, 1, false, true, true, false) -- Allied Arcane Bottom
+	base.add(gg_unit_hars_0303, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_n00K_0802, 2, false, true, true, true) -- Allied Blacksmith
+	base.add(gg_unit_n00K_0477, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_h00E_0033, 8, true, true, true, true) -- Allied Castle
+	base.add(gg_unit_h00E_0081, 8, true, true, true, true) -- Federation
+
+	base.add(gg_unit_hvlt_0207, 2, false, true, true, true) -- Allied City Elves
+	base.add(gg_unit_hvlt_0406, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_n00B_0364, 1, false, true, true, true) -- Allied City Front
+	base.add(gg_unit_n00B_0399, 1, false, true, true, true) -- Federation
+
+	base.add(gg_unit_n00B_0102, 1, false, true, true, true) -- Allied City Side
+	base.add(gg_unit_n00B_0038, 1, false, true, true, true) -- Federation
+
+	base.add(gg_unit_ndh2_0359, 1, false, true, true, true) -- Allied Draenei
+	base.add(gg_unit_ndh2_0876, 1, false, true, true, true) -- Federation
+
+	base.add(gg_unit_nheb_0109, 3, false, true, true, true) -- Allied High Elves
+	base.add(gg_unit_nheb_0036, 3, false, true, true, true) -- Federation
+
+	base.add(gg_unit_n001_0048, 2, false, true, true, true) -- Allied Merc Camp
+	base.add(gg_unit_n001_0049, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_h006_0074, 2, false, true, true, true) -- Allied Mine
+	base.add(gg_unit_h006_0055, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_nmh1_0735, 1, false, true, true, false) -- Allied Murloc
+	base.add(gg_unit_nmh1_0783, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_nntt_0135, 2, false, true, true, true) -- Allied Naga
+	base.add(gg_unit_nntt_0132, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_e003_0058, 3, false, true, true, true) -- Allied Night Elves
+	base.add(gg_unit_e003_0014, 3, false, true, true, true) -- Federation
+
+	base.add(gg_unit_o001_0075, 2, false, true, true, true) -- Allied Orcs
+	base.add(gg_unit_o001_0078, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_eshy_0120, 1, false, true, true, false) -- Allied Night Elf Shipyard
+	base.add(gg_unit_eshy_0047, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
+	base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_u001_0097, 2, false, true, true, true) -- Federation Undead
+	base.add(gg_unit_u001_0098, 2, false, true, true, true) -- Federation
+
+	--
+	-- Set up Spawn
+	--
 
 	spawn:addBase("arcane", "sArcaneLeft", "bottomRight", gg_unit_h003_0015, "sArcaneRight", "topLeft", gg_unit_h003_0007)
 	spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormRight",
@@ -681,10 +686,6 @@ function spawnAddBases()
 	              "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
 	spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0097, "sUndeadRight", "middleLeft",
 	              gg_unit_u001_0098)
-end
-
-function spawnAddUnits()
-	-- addUnit(baseName, unitType, numOfUnits, {waves}, levelStart, levelEnd)
 
 	-- Arcane Spawn
 	spawn:addUnit("arcane", "h00C", 1, {6, 7, 8, 9, 10}, 3, 12) -- Sorcress
@@ -847,4 +848,332 @@ function spawnAddUnits()
 	spawn:addUnit("undead", "ninc", 1, {5, 7}, 3, 5) -- Infernal Contraption (Level 1)
 	spawn:addUnit("undead", "ninm", 1, {5, 7}, 6, 9) -- Infernal Contraption (Level 2)
 	spawn:addUnit("undead", "nina", 1, {5, 7}, 10, 12) -- Infernal Contraption (Level 3)
+
+	--
+	-- Set up Spells
+	--
+	spell.New("drain", "Drain", "A01Y", 0, oid.stomp, false, false, {6, 6, 6, 6, 6, 6})
+	spell.New()
+	
+	spell = {
+
+		bloodlust = {
+			name = "bloodlust",
+			properName = "Bloodlust",
+			four = "A007",
+			id = FourCC("A007"),
+			buff = 0,
+			order = "stomp",
+			ult = false,
+			instant = true
+		},
+
+		warstomp = {
+			name = "warstomp",
+			properName = "War Stomp",
+			four = "A002",
+			id = FourCC("A002"),
+			buff = 0,
+			order = "stomp",
+			ult = false,
+			instant = true
+		},
+
+		unleashRage = {
+			name = "unleashRage",
+			properName = "Unleassh Rage",
+			four = "A029",
+			id = FourCC("A029"),
+			buff = 0,
+			order = "stomp",
+			ult = true,
+			instant = false,
+			castTime = {6, 6, 6, 6, 6, 6}
+		},
+
+		ironDefense = {
+			name = "ironDefense",
+			properName = "Iron Defense",
+			four = "A019",
+			id = FourCC("A019"),
+			buff = 0,
+			order = "roar",
+			ult = false,
+			instant = true
+		},
+
+		raiseBanner = {
+			name = "raiseBanner",
+			properName = "Raise Banner",
+			four = "A01I",
+			id = FourCC("A01I"),
+			buff = 0,
+			order = "healingward",
+			ult = false,
+			instant = true
+		},
+
+		attack = {
+			name = "attack",
+			properName = "Attack!",
+			four = "A01B",
+			id = FourCC("A01B"),
+			buff = 0,
+			order = "fingerofdeath",
+			ult = false,
+			instant = true
+		},
+
+		bolster = {
+			name = "bolster",
+			properName = "Bolster",
+			four = "A01Z",
+			id = FourCC("A01Z"),
+			buff = 0,
+			order = "tranquility",
+			ult = false,
+			instant = true
+		},
+
+		inspire = {
+			name = "inspire",
+			properName = "Inspire",
+			four = "A042",
+			id = FourCC("A042"),
+			buff = 0,
+			order = "channel",
+			ult = true,
+			instant = true
+		},
+
+		attributeStiftMaster = {
+			name = "attributeStiftMaster",
+			properName = "Attribute Bonus",
+			four = "A031",
+			id = FourCC("A031"),
+			buff = 0,
+			order = "",
+			ult = false
+		},
+
+		shadeStrength = {
+			name = "shadeStrength",
+			properName = "Shade Strength",
+			four = "A037",
+			id = FourCC("A037"),
+			buff = 0,
+			order = "",
+			ult = false
+		},
+
+		swiftMoves = {
+			name = "swiftMoves",
+			properName = "Swift Moves",
+			four = "A056",
+			id = FourCC("A056"),
+			buff = 0,
+			order = "",
+			ult = false
+		},
+
+		swiftAttacks = {
+			name = "swiftAttacks",
+			properName = "Swift Attacks",
+			four = "A030",
+			id = FourCC("A030"),
+			buff = 0,
+			order = "",
+			ult = false
+		},
+
+		switch = {
+			name = "switch",
+			properName = "Switch",
+			four = "A03U",
+			id = FourCC("A03U"),
+			buff = 0,
+			order = "reveal",
+			ult = false,
+			instant = true
+		},
+
+		shift = {
+			name = "shift",
+			properName = "Shift",
+			four = "A03T",
+			id = FourCC("A03T"),
+			buff = 0,
+			order = "berserk",
+			ult = false,
+			instant = true
+		},
+
+		fallingStrike = {
+			name = "fallingStrike",
+			properName = "Falling Strike",
+			four = "A059",
+			id = FourCC("A059"),
+			buff = 0,
+			order = "thunderbolt",
+			ult = false,
+			instant = false,
+			castTime = {1.5, 1.5, 1.5, 1.5, 1.5, 1.5}
+		},
+
+		shiftStorm = {
+			name = "shiftStorm",
+			properName = "Shift Storm",
+			four = "A03C",
+			id = FourCC("A03C"),
+			buff = 0,
+			order = "channel",
+			ult = true,
+			instant = true
+		},
+
+		felForm = {
+			name = "felForm",
+			properName = "Fel Form",
+			four = "A02Y",
+			id = FourCC("A02Y"),
+			buff = 0,
+			order = "metamorphosis",
+			ult = true,
+			instant = true
+		},
+
+		manaShield = {
+			name = "manaShield",
+			properName = "Mana Shield",
+			four = "A001",
+			id = FourCC("A001"),
+			buff = FourCC("BNms"),
+			order = "manashieldon",
+			ult = false,
+			instant = true
+		},
+
+		manaBomb = {
+			name = "manaBomb",
+			properName = "Mana bomb",
+			four = "A03P",
+			id = FourCC("A03P"),
+			buff = 0,
+			order = "flamestrike",
+			ult = false,
+			instant = true
+		},
+
+		manaExplosion = {
+			name = "manaExplosion",
+			properName = "Mana Explosion",
+			four = "A018",
+			id = FourCC("A018"),
+			buff = 0,
+			order = "thunderclap",
+			ult = false,
+			instant = true
+		},
+
+		soulBind = {
+			name = "soulBind",
+			properName = "Soul Bind",
+			four = "A015",
+			id = FourCC("A015"),
+			buff = FourCC("B00F"),
+			order = "custerrockets",
+			ult = false,
+			instant = true
+		},
+
+		unleashMana = {
+			name = "unleashMana",
+			properName = "Unleash Mana",
+			four = "A03S",
+			id = FourCC("A03S"),
+			buff = 0,
+			order = "starfall",
+			ult = true,
+			instant = false,
+			castTime = {15, 15, 15, 15, 15, 15}
+		},
+
+		chronoAtrophy = {
+			name = "chronoAtrophy",
+			properName = "Chrono Atrophy",
+			four = "A04K",
+			id = FourCC("A04K"),
+			buff = 0,
+			order = "flamestrike",
+			ult = false,
+			instant = true
+		},
+
+		decay = {
+			name = "decay",
+			properName = "Decay",
+			four = "A032",
+			id = FourCC("A032"),
+			buff = 0,
+			order = "shadowstrike",
+			ult = false,
+			instant = true
+		},
+
+		timeTravel = {
+			name = "timeTravel",
+			properName = "Time Travel",
+			four = "A04P",
+			id = FourCC("A04P"),
+			buff = 0,
+			order = "clusterrockets",
+			ult = false,
+			instant = true
+		},
+
+		paradox = {
+			name = "paradox",
+			properName = "Paradox",
+			four = "A04N",
+			id = FourCC("A04N"),
+			buff = 0,
+			order = "tranquility",
+			ult = true,
+			instant = false,
+			castTime = {10, 10, 10}
+		}
+	}
+
+	--
+	-- Set Up Items
+	--
+	item.New("teleportation", "Teleport", "I000", "A01M", "", false, {6})
+	item.New("tank", "Tank", "I005", "", "", true, {})
+	item.New("mage", "Mage", "I006", "", "", true, {})
+
+	--
+	-- Set up Heroes
+	--
+
+	-- Brawler
+	hero.New("Brawler", "E001", "h00I", {"unleashRage", "drain", "warstomp", "bloodlust"}, {}, {},
+	              {"teleportation", "tank"})
+	hero.AddSpell("Brawler")
+	-- Tactition
+	hero.New("tactition", "H009", "h00Y", {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"},
+	              {"raiseBanner"}, {}, {"teleportation", "tank"})
+
+	-- Shift Master
+	hero.New("shiftMaster", "E002", "h00Q", {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}, {"shift"},
+	              {"felForm", "fallingStrike", "shadeStrength", "swiftMoves", "swiftAttacks", "attributeStiftMaster"},
+	              {"teleportation", "tank"})
+
+	-- Mana Addict
+	hero.New("Mana Addict", "H00R", "h00B", {"paradox", "timeTravel", "chronoAtrophy", "decay"}, {"manaShield"}, {},
+	              {"teleportation", "mage"})
+
+	-- Time Mage
+	hero.New("timeMage", "H00J", "h00Z", {"paradox", "timeTravel", "chronoAtrophy", "decay"}, {}, {},
+	              {"teleportation", "mage"})
+
 end

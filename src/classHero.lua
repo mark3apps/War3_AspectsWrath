@@ -1,557 +1,682 @@
 --
 -- Hero Skills / Abilities Class
 -----------------
-
 hero = {}
+spell = {}
+item = {}
 
-function hero.init()
-	-- Create Class Definition
+---@class itemATA
+function item.Init()
+	item.id = {}
+	item.names = {}
 
-
-
-		hero.players = {}
-		for i = 1, 12 do hero.players[i] = {picked = false} end
-
-		hero.items = {"teleportation", "tank"}
-		hero.item = {}
-
-		hero.item.teleportation = {
-			name = "teleportation",
-			properName = "Teleport",
-			four = "I000",
-			id = FourCC("I000"),
-			abilityFour = "A01M",
-			abilityId = FourCC("A01M"),
-			order = "",
-			instant = false,
-			castTime = {6}
+	-- comment
+	---@param name string
+	---@param properName string
+	---@param four string
+	---@param abilityFour string
+	---@param order integer
+	---@param instant boolean
+	---@param castTime table
+	function item.New(name, properName, four, abilityFour, order, instant, castTime)
+		item[name] = {
+			name = name,
+			properName = properName,
+			four = four,
+			id = FourCC(four),
+			abilityFour = abilityFour,
+			abilityId = FourCC(abilityFour),
+			order = order,
+			instant = instant,
+			castTime = castTime
 		}
 
-		hero.item.tank = {name = "tank", properName = "Tank", four = "I005", id = FourCC("I005"), order = "", instant = true}
+		table.insert(item.names, name)
+		item.id[four] = name
 
-		hero.item.mage = {name = "mage", properName = "Mage", four = "I006", id = FourCC("I006"), order = "", instant = true}
+		return true
+	end
 
-		hero.item[hero.item.teleportation.id] = hero.item[hero.item.teleportation.name]
-		hero.item[hero.item.tank.id] = hero.item[hero.item.tank.name]
-		hero.item[hero.item.mage.id] = hero.item[hero.item.mage.name]
+end
 
-		hero.heroes = {"brawler", "manaAddict", "shiftMaster", "tactition", "timeMage"}
-		hero.id = {}
+function _SpellInit()
 
-		hero.id.E001 = "brawler"
-		hero.brawler = {}
-		hero.brawler.four = "E001"
-		hero.brawler.fourAlter = "h00I"
-		hero.brawler.id = FourCC(hero.brawler.four)
-		hero.brawler.idAlter = FourCC(hero.brawler.fourAlter)
-		hero.brawler.spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"}
-		hero.brawler.upgrades = {}
-		hero.brawler.startingSpells = {}
-		hero.brawler.permanentSpells = {}
-		hero.brawler.startingItems = {"teleportation", "tank"}
+	_Spell = {}
+	spell.id = {}
+	spell.names = {}
 
-		hero.drain = {
-			name = "drain",
-			properName = "Drain",
-			four = "A01Y",
-			id = FourCC("A01Y"),
-			buff = 0,
-			order = "stomp",
-			ult = false,
-			instant = false,
-			castTime = {6, 6, 6, 6, 6, 6}
-		}
-		hero.bloodlust = {
-			name = "bloodlust",
-			properName = "Bloodlust",
-			four = "A007",
-			id = FourCC("A007"),
-			buff = 0,
-			order = "stomp",
-			ult = false,
-			instant = true
-		}
-		hero.warstomp = {
-			name = "warstomp",
-			properName = "War Stomp",
-			four = "A002",
-			id = FourCC("A002"),
-			buff = 0,
-			order = "stomp",
-			ult = false,
-			instant = true
-		}
-		hero.unleashRage = {
-			name = "unleashRage",
-			properName = "Unleassh Rage",
-			four = "A029",
-			id = FourCC("A029"),
-			buff = 0,
-			order = "stomp",
-			ult = true,
-			instant = false,
-			castTime = {6, 6, 6, 6, 6, 6}
-		}
+	---Add a new Spell
+	---@param name string
+	---@param properName string
+	---@param four string
+	---@param buff integer
+	---@param order string
+	---@param instant boolean
+	---@param castTime table
+	function _Spell.new(name, properName, four, buff, order, instant, castTime)
 
-		hero[hero.drain.four] = hero.drain.name
-		hero[hero.bloodlust.four] = hero.bloodlust.name
-		hero[hero.warstomp.four] = hero.warstomp.name
-		hero[hero.unleashRage.four] = hero.unleashRage.name
+		---@class spell
+		local self = {}
+		self.name = name
+		self.properName = properName
+		self.four = four
+		self.id = FourCC(four)
+		self.buff = buff
+		self.order = order
+		self.instant = instant
+		self.castTime = castTime
 
-		hero.id.H009 = "tactition"
-		hero.tactition = {}
-		hero.tactition.four = "H009"
-		hero.tactition.fourAlter = "h00Y"
-		hero.tactition.id = FourCC(hero.tactition.four)
-		hero.tactition.idAlter = FourCC(hero.tactition.fourAlter)
-		hero.tactition.spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"}
-		hero.tactition.startingSpells = {"raiseBanner"}
-		hero.brawler.upgrades = {}
-		hero.tactition.permanentSpells = {}
-		hero.tactition.startingItems = {"teleportation", "tank"}
-		hero.ironDefense = {
-			name = "ironDefense",
-			properName = "Iron Defense",
-			four = "A019",
-			id = FourCC("A019"),
-			buff = 0,
-			order = "roar",
-			ult = false,
-			instant = true
-		}
-		hero.raiseBanner = {
-			name = "raiseBanner",
-			properName = "Raise Banner",
-			four = "A01I",
-			id = FourCC("A01I"),
-			buff = 0,
-			order = "healingward",
-			ult = false,
-			instant = true
-		}
-		hero.attack = {
-			name = "attack",
-			properName = "Attack!",
-			four = "A01B",
-			id = FourCC("A01B"),
-			buff = 0,
-			order = "fingerofdeath",
-			ult = false,
-			instant = true
-		}
-		hero.bolster = {
-			name = "bolster",
-			properName = "Bolster",
-			four = "A01Z",
-			id = FourCC("A01Z"),
-			buff = 0,
-			order = "tranquility",
-			ult = false,
-			instant = true
-		}
-		hero.inspire = {
-			name = "inspire",
-			properName = "Inspire",
-			four = "A042",
-			id = FourCC("A042"),
-			buff = 0,
-			order = "channel",
-			ult = true,
-			instant = true
-		}
+		spell.id[four] = name
+		table.insert(spell.names, name)
+		spell[name] = self
 
-		hero[hero.ironDefense.four] = hero.ironDefense.name
-		hero[hero.raiseBanner.four] = hero.raiseBanner.name
-		hero[hero.attack.four] = hero.attack.name
-		hero[hero.bolster.four] = hero.bolster.name
-		hero[hero.inspire.four] = hero.inspire.name
+		return true
+	end
 
-		hero.id.E002 = "shiftMaster"
-		hero.shiftMaster = {}
-		hero.shiftMaster.four = "E002"
-		hero.shiftMaster.fourAlter = "h00Q"
-		hero.shiftMaster.id = FourCC(hero.shiftMaster.four)
-		hero.shiftMaster.idAlter = FourCC(hero.shiftMaster.fourAlter)
-		hero.shiftMaster.spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}
-		hero.shiftMaster.startingSpells = {"shift"}
-		hero.brawler.upgrades = {"shadeStrength", "swiftMoves", "swiftAttacks"}
+end
 
-		hero.shiftMaster.permanentSpells = {
-			"felForm", "fallingStrike", "shadeStrength", "swiftMoves", "swiftAttacks", "attributeStiftMaster"
-		}
-		hero.shiftMaster.startingItems = {"teleportation", "tank"}
-		hero.attributeStiftMaster = {
-			name = "attributeStiftMaster",
-			properName = "Attribute Bonus",
-			four = "A031",
-			id = FourCC("A031"),
-			buff = 0,
-			order = "",
-			ult = false
-		}
-		hero.shadeStrength = {
-			name = "shadeStrength",
-			properName = "Shade Strength",
-			four = "A037",
-			id = FourCC("A037"),
-			buff = 0,
-			order = "",
-			ult = false
-		}
-		hero.swiftMoves = {
-			name = "swiftMoves",
-			properName = "Swift Moves",
-			four = "A056",
-			id = FourCC("A056"),
-			buff = 0,
-			order = "",
-			ult = false
-		}
-		hero.swiftAttacks = {
-			name = "swiftAttacks",
-			properName = "Swift Attacks",
-			four = "A030",
-			id = FourCC("A030"),
-			buff = 0,
-			order = "",
-			ult = false
-		}
+function _UnitInit()
+	_Unit = {}
 
-		hero.switch = {
-			name = "switch",
-			properName = "Switch",
-			four = "A03U",
-			id = FourCC("A03U"),
-			buff = 0,
-			order = "reveal",
-			ult = false,
-			instant = true
-		}
+	---comment
+	---@param unit unit
+	---@return unitExtended
+	function _Unit.Get(unit)
+		if _Unit[GetHandleId(unit)] == nil then
+			return _Unit.New(unit)
+		else
+			return _Unit[GetHandleId(unit)]
+		end
+	end
 
-		hero.shift = {
-			name = "shift",
-			properName = "Shift",
-			four = "A03T",
-			id = FourCC("A03T"),
-			buff = 0,
-			order = "berserk",
-			ult = false,
-			instant = true
-		}
+	---comment
+	---@param unit unit
+	function _Unit.Remove(unit)
+		unit = _Unit.Get(unit)
+		unit:SFXRemoveAll()
+		_Unit[unit.handleId] = nil
 
-		hero.fallingStrike = {
-			name = "fallingStrike",
-			properName = "Falling Strike",
-			four = "A059",
-			id = FourCC("A059"),
-			buff = 0,
-			order = "thunderbolt",
-			ult = false,
-			instant = false,
-			castTime = {1.5, 1.5, 1.5, 1.5, 1.5, 1.5}
-		}
+		return true
+	end
 
-		hero.shiftStorm = {
-			name = "shiftStorm",
-			properName = "Shift Storm",
-			four = "A03C",
-			id = FourCC("A03C"),
-			buff = 0,
-			order = "channel",
-			ult = true,
-			instant = true
-		}
+	---comment
+	---@param unit unit
+	---@param overwrite boolean
+	---@return unitExtended
+	function _Unit.New(unit, overwrite)
+		overwrite = overwrite or false
 
-		hero.felForm = {
-			name = "felForm",
-			properName = "Fel Form",
-			four = "A02Y",
-			id = FourCC("A02Y"),
-			buff = 0,
-			order = "metamorphosis",
-			ult = true,
-			instant = true
-		}
+		-- If unit is already in the index, skip adding it if overwrite is set to false
+		if _Unit.Get(unit) ~= nil and not overwrite then return false end
 
-		hero[hero.switch.four] = hero.switch.name
-		hero[hero.shift.four] = hero.shift.name
-		hero[hero.fallingStrike.four] = hero.fallingStrike.name
-		hero[hero.shiftStorm.four] = hero.shiftStorm.name
-		hero[hero.felForm.four] = hero.felForm.name
+		---@class unitExtended
+		local self = {}
 
-		hero.id.H00R = "manaAddict"
-		hero.manaAddict = {}
-		hero.manaAddict.four = "H00R"
-		hero.manaAddict.fourAlter = "h00B"
-		hero.manaAddict.id = FourCC(hero.manaAddict.four)
-		hero.manaAddict.idAlter = FourCC(hero.manaAddict.fourAlter)
-		hero.manaAddict.spellLearnOrder = {"starfall", "manaShield", "manaExplosion", "manaBomb", "soulBind"}
-		hero.manaAddict.startingSpells = {"manaShield"}
-		hero.manaAddict.permanentSpells = {}
-		hero.manaAddict.startingItems = {"teleportation", "mage"}
-		hero.manaShield = {
-			name = "manaShield",
-			properName = "Mana Shield",
-			four = "A001",
-			id = FourCC("A001"),
-			buff = FourCC("BNms"),
-			order = "manashieldon",
-			ult = false,
-			instant = true
-		}
-		hero.manaBomb = {
-			name = "manaBomb",
-			properName = "Mana bomb",
-			four = "A03P",
-			id = FourCC("A03P"),
-			buff = 0,
-			order = "flamestrike",
-			ult = false,
-			instant = true
-		}
-		hero.manaExplosion = {
-			name = "manaExplosion",
-			properName = "Mana Explosion",
-			four = "A018",
-			id = FourCC("A018"),
-			buff = 0,
-			order = "thunderclap",
-			ult = false,
-			instant = true
-		}
-		hero.soulBind = {
-			name = "soulBind",
-			properName = "Soul Bind",
-			four = "A015",
-			id = FourCC("A015"),
-			buff = FourCC("B00F"),
-			order = "custerrockets",
-			ult = false,
-			instant = true
-		}
-		hero.unleashMana = {
-			name = "unleashMana",
-			properName = "Unleash Mana",
-			four = "A03S",
-			id = FourCC("A03S"),
-			buff = 0,
-			order = "starfall",
-			ult = true,
-			instant = false,
-			castTime = {15, 15, 15, 15, 15, 15}
-		}
+		self.data = {}
+		self.unit = unit
+		self.handleId = GetHandleId(unit)
+		self.startX = GetUnitX(unit)
+		self.startY = GetUnitY(unit)
+		self.orderX = nil ---@type real
+		self.orderY = nil ---@type real
+		self.orderTarget = nil ---@type unit
+		self.unitType = GetUnitTypeId(unit)
+		self.order = GetUnitCurrentOrder(unit)
+		self.orderType = "" ---@type string
+		self.sfx = {}
+		self.sfxAll = {}
 
-		hero[hero.manaShield.four] = hero.manaShield.name
-		hero[hero.manaBomb.four] = hero.manaBomb.name
-		hero[hero.manaExplosion.four] = hero.manaExplosion.name
-		hero[hero.soulBind.four] = hero.soulBind.name
-		hero[hero.unleashMana.four] = hero.unleashMana.name
+		---comment
+		---@param unitType unittype
+		---@return boolean
+		function self:IsType(unitType) return IsUnitType(self.unit, unitType) end
 
-		hero.id.H00J = "timeMage"
-		hero.timeMage = {}
-		hero.timeMage.four = "H00J"
-		hero.timeMage.fourAlter = "h00Z"
-		hero.timeMage.id = FourCC(hero.timeMage.four)
-		hero.timeMage.idAlter = FourCC(hero.timeMage.fourAlter)
-		hero.timeMage.spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"}
-		hero.timeMage.startingSpells = {}
-		hero.timeMage.permanentSpells = {}
-		hero.timeMage.startingItems = {"teleportation", "mage"}
-		hero.chronoAtrophy = {
-			name = "chronoAtrophy",
-			properName = "Chrono Atrophy",
-			four = "A04K",
-			id = FourCC("A04K"),
-			buff = 0,
-			order = "flamestrike",
-			ult = false,
-			instant = true
-		}
-		hero.decay = {
-			name = "decay",
-			properName = "Decay",
-			four = "A032",
-			id = FourCC("A032"),
-			buff = 0,
-			order = "shadowstrike",
-			ult = false,
-			instant = true
-		}
-		hero.timeTravel = {
-			name = "timeTravel",
-			properName = "Time Travel",
-			four = "A04P",
-			id = FourCC("A04P"),
-			buff = 0,
-			order = "clusterrockets",
-			ult = false,
-			instant = true
-		}
-		hero.paradox = {
-			name = "paradox",
-			properName = "Paradox",
-			four = "A04N",
-			id = FourCC("A04N"),
-			buff = 0,
-			order = "tranquility",
-			ult = true,
-			instant = false,
-			castTime = {10, 10, 10}
-		}
+		---comment
+		---@return integer
+		function self:OrderCurrent() return GetUnitCurrentOrder(self.unit) end
 
-		hero[hero.chronoAtrophy.four] = hero.chronoAtrophy.name
-		hero[hero.decay.four] = hero.decay.name
-		hero[hero.timeTravel.four] = hero.timeTravel.name
-		hero[hero.paradox.four] = hero.paradox.name
+		---comment
+		---@return integer
+		function self:OrderLast() return self.order end
 
-		function hero.spell(heroUnit, spellName)
-			local spellDetails = hero[spellName]
-			spellDetails.level = hero.level(heroUnit, spellName)
-			spellDetails.cooldown = hero.cooldown(heroUnit, spellName)
-			spellDetails.hasBuff = hero.hasBuff(heroUnit, spellName)
-			spellDetails.mana = hero.mana(heroUnit, spellName, spellDetails.level)
-			spellDetails.manaLeft = heroUnit.mana - spellDetails.mana
+		---comment
+		---@return string
+		function self:OrderLastType() return self.orderType end
 
-			if spellDetails.level > 0 and spellDetails.cooldown == 0 and spellDetails.manaLeft >= 0 then
-				spellDetails.castable = true
+		---comment
+		---@param orderId any
+		---@return boolean
+		function self:OrderHome(orderId) return self:OrderPoint(orderId, self.startX, self.startY) end
+
+		---Re Issue the last given order
+		---@return boolean 
+		function self:OrderAgain()
+			if self.orderTarget == "Target" then
+				return self:OrderTarget(self.order, self.orderTarget)
+			elseif self.orderTarget == "Point" then
+				return self:OrderPoint(self.order, self.orderX, self.orderY)
+			elseif self.orderType == "Immediate" then
+				return self:OrderImmediate(self.order)
 			else
-				spellDetails.castable = false
+				self:OrderPick()
+				self:OrderPoint(oid.attack, self.orderX, self.orderY)
+				return true
 			end
 
-			-- print(spellName .. " : " .. spellDetails.level)
-			-- print("Castable: " .. tostring(spellDetails.castable))
+			return false
+		end
+
+		---comment
+		---@param orderId integer
+		---@param targetUnit unit
+		---@return boolean
+		function self:OrderTarget(orderId, targetUnit)
+			self.order = orderId
+			self.orderType = "Target"
+			self.orderX = nil
+			self.orderY = nil
+			self.orderTarget = targetUnit
+			return IssueTargetOrderById(self.unit, orderId, targetUnit)
+		end
+
+		---comment
+		---@param orderId integer
+		---@param x real
+		---@param y real
+		---@return boolean
+		function self:OrderPoint(orderId, x, y)
+			self.order = orderId
+			self.orderType = "Point"
+			self.orderX = x
+			self.orderY = y
+			self.orderTarget = nil
+			return IssuePointOrderById(self.unit, orderId, x, y)
+		end
+
+		---comment
+		---@param orderId integer
+		---@return boolean
+		function self:OrderImmediate(orderId)
+			self.order = orderId
+			self.orderType = "Immediate"
+			self.orderX = nil
+			self.orderY = nil
+			self.orderTarget = nil
+			return IssueImmediateOrderById(self.unit, orderId)
+		end
+
+		---comment
+		---@return real
+		function self:X() return GetUnitX(self.unit) end
+
+		---comment
+		---@return real
+		function self:Y() return GetUnitY(self.unit) end
+
+		---comment
+		---@param timeScale real
+		---@return boolean
+		function self:SetTimeScale(timeScale) return SetUnitTimeScale(self.unit, timeScale) end
+
+		---comment
+		---@param g group
+		---@return boolean
+		function self:GroupAdd(g) return GroupAddUnit(g, self.unit) end
+
+		---comment
+		---@param g any
+		---@return boolean
+		function self:GroupRemove(g) return GroupRemoveUnit(g, self.unit) end
+
+		---comment
+		---@param g group
+		---@return boolean
+		function self:InGroup(g) return IsUnitInGroup(g, self.unit) end
+
+		---comment
+		---@param animationName string
+		---@return boolean
+		function self:SetAnimation(animationName) return SetUnitAnimation(self.unit, animationName) end
+
+		---comment
+		---@param animationName any
+		---@return nil
+		function self:QueueAnimation(animationName) return QueueUnitAnimation(self.unit, animationName) end
+
+		---comment
+		---@return string
+		function self:Name() return GetUnitName(unit) end
+
+		---comment
+		---@return integer
+		function self:LifePercentage() return math.floor(self:LifeMax() / self:Life() * 100) end
+
+		---comment
+		---@return player
+		function self:Player() return GetOwningPlayer(self.unit) end
+
+		---comment
+		---@return integer
+		function self:PlayerNumber() return GetConvertedPlayerId(GetOwningPlayer(self.unit)) end
+
+		---comment
+		---@return integer
+		function self:ManaPercentage() return math.floor(self:ManaMax() / self:Mana() * 100) end
+
+		---Get Unit Max Life
+		---@return real
+		function self:LifeMax() return GetUnitState(self.unit, UNIT_STATE_MAX_LIFE) end
+
+		---Get Hero Max Mana
+		---@return real
+		function self:ManaMax() return GetUnitState(self.unit, UNIT_STATE_MAX_MANA) end
+
+		---Get Hero Life
+		---@return real
+		function self:Life() return GetUnitState(self.unit, UNIT_STATE_LIFE) end
+
+		---Get Hero Mana
+		---@return real
+		function self:Mana() return GetUnitState(self.unit, UNIT_STATE_MANA) end
+
+		---comment
+		---@return boolean
+		function self:IsAlive() return IsUnitAliveBJ(self.unit) end
+
+		--- Check if the hero currently has a buff giving it a spell
+		---@param spellName string
+		---@return boolean
+		function self:HasSpellBuff(spellName)
+
+			if spell[spellName].buff == 0 then
+				return false
+			else
+				return UnitHasBuffBJ(self.unit, spell[spellName].buff)
+			end
+		end
+
+		---comment
+		---@param four string
+		---@return boolean
+		function self:HasBuff(four) return UnitHasBuffBJ(self.unit, FourCC(four)) end
+
+		---comment
+		---@param key string
+		---@param value any
+		---@return boolean
+		function self:SetKey(key, value)
+			self.data[key] = value
+
+			return true
+		end
+
+		---comment
+		---@param key string
+		---@return any
+		function self:GetKey(key) return self.data[key] end
+
+		---Add SFX by Name
+		---@param name string
+		---@param sfx effect
+		function self:SFXAdd(name, sfx)
+
+			if self.sfx[name] ~= nil then DestroyEffect(self.sfx[name]) end
+
+			self.sfx[name] = sfx
+			table.insert(self.sfxAll, name)
+			return true
+		end
+
+		---Remove SFX by Name
+		---@param name string
+		function self:SFXRemove(name)
+			DestroyEffect(self.sfx[name])
+			return true
+		end
+
+		---Remove All SFX
+		---@return boolean
+		function self:SFXRemoveAll()
+			local sfxName
+
+			for i = 1, #self.sfxAll, 1 do
+				sfxName = self.sfxAll[i]
+				self:SFXRemove(sfxName)
+			end
+
+			return true
+		end
+
+		---comment
+		---@param playerForce force
+		---@return boolean
+		function self:InForce(playerForce) return IsUnitInForce(self.unit, playerForce) end
+
+		function self:InRect(r) return RectContainsUnit(r, self.unit) end
+
+		-- CUSTOM FOR PROJECT
+		function self:OrderPick()
+
+			local alliedForce = self:InForce(udg_PLAYERGRPallied)
+			local x, y
+
+			if self:InRect(gg_rct_Big_Top_Left) or self:InRect(gg_rct_Big_Top_Left_Center) or
+							self:InRect(gg_rct_Big_Top_Right_Center) or self:InRect(gg_rct_Big_Top_Right) then
+
+				if alliedForce then
+					x, y = GetRandomCoordinatesInRect(gg_rct_Right_Start_Top)
+				else
+					x, y = GetRandomCoordinatesInRect(gg_rct_Left_Start_Top)
+				end
+
+			elseif self:InRect(gg_rct_Big_Middle_Left) or self:InRect(gg_rct_Big_Middle_Left_Center) or
+			self:InRect(gg_rct_Big_Middle_Right_Center) or self:InRect(gg_rct_Big_Middle_Right) then
+
+				if alliedForce then
+					x, y = GetRandomCoordinatesInRect(gg_rct_Right_Start)
+				else
+					x, y = GetRandomCoordinatesInRect(gg_rct_Left_Start)
+				end
+
+			else
+
+				if alliedForce then
+					x, y = GetRandomCoordinatesInRect(gg_rct_Right_Start_Bottom)
+				else
+					x, y = GetRandomCoordinatesInRect(gg_rct_Left_Start_Bottom)
+				end
+			end
+
+			self.orderX = x
+			self.orderY = y
+			self.order = oid.attack
+			self.orderType = "Point"
+
+			return true
+		end
+
+		---Kill the Unit
+		---@return boolean
+		function self:Kill()
+			KillUnit(self.unit)
+			return true
+		end
+
+		-- If unit Exists in Index remove it
+		if _Unit[self.handleId] ~= nil then _Unit.Remove(self.unit) end
+
+		-- Add Unit to Index
+		_Unit[self.handleId] = self
+
+		return self
+	end
+
+end
+
+function _HeroInit()
+
+	-- Create Class Definition
+	_Hero = {}
+	hero = {}
+
+	---Create new Hero Instance
+	---@param unit unit
+	---@param heroType heroType
+	---@return boolean
+	function _Hero.new(unit, heroType)
+
+		---@class hero:unitExtended
+		local self = _Unit.new(unit)
+
+		self.heroType = heroType
+
+		---Get Hero Level
+		---@return integer
+		function self:Level() return GetHeroLevel(self.unit) end
+
+		---comment
+		---@return string
+		function self:NameProper() return GetHeroProperName(self.unit) end
+
+		function self:GetSpell(spellName) return self.heroType.spells[spellName] end
+
+		---Get Level of Spell for Hero
+		---@param spellName string
+		---@return integer
+		function self:SpellLevel(spellName) return GetUnitAbilityLevel(self.unit, self:GetSpell(spellName).id) end
+
+		---Get Spell Cooldown Remaining
+		---@param spellName string
+		---@return real
+		function self:SpellCooldownRemaining(spellName)
+			return BlzGetUnitAbilityCooldownRemaining(self.unit, self:GetSpell(spellName).id)
+		end
+
+		---Get Spell Mana Cost
+		---@param spellName string
+		---@return integer
+		function self:SpellManaCost(spellName)
+			return BlzGetUnitAbilityManaCost(self.unit, self:GetSpell(spellName).id, self:SpellLevel(spellName))
+		end
+
+		---Get if spell is currently castable or not
+		---@param spellName string
+		---@return boolean
+		function self:SpellIsCastable(spellName)
+			if self:SpellLevel(spellName) > 0 and self:SpellCooldownRemaining(spellName) == 0 and self.Mana() >= 0 then
+				return true
+			else
+				return false
+			end
+		end
+
+		---Get a table of Spell Names for Hero
+		---@return table
+		function self:SpellNames() return self.heroType.spells.names end
+
+		---Get Spell Details
+		---@param spellName string
+		---@return table
+		function self:SpellDetails(spellName)
+			local spellDetails = self:GetSpell(spellName)
+			spellDetails.level = self:SpellLevel(spellName)
+			spellDetails.cooldown = self:SpellCooldownRemaining(spellName)
+			spellDetails.hasBuff = self:HasSpellBuff(spellName)
+			spellDetails.mana = self:SpellManaCost(spellName)
+			spellDetails.manaLeft = self:Mana() - spellDetails.mana
+			spellDetails.castable = self:SpellIsCastable(spellName)
 
 			return spellDetails
 		end
-		
 
-		function hero.level(heroUnit, spellName) return GetUnitAbilityLevel(heroUnit.unit, hero[spellName].id) end
+		return self
+	end
 
-		function hero.cooldown(heroUnit, spellName)
-			return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, hero[spellName].id)
+end
+
+function _HeroTypeInit()
+
+	-- Create Class Definition
+	_HeroType = {}
+
+	-- Init Globals
+	heroType = {id = {}, names = {}, players = {}}
+	for i = 1, 12 do hero.players[i] = {picked = false} end
+
+	_HeroType.new = function(name, four, fourAlter)
+
+		---@class heroType
+		local self = {}
+
+		self.name = name
+		self.four = four
+		self.id = FourCC(four)
+		self.fourAlter = fourAlter
+		self.idAlter = FourCC(fourAlter)
+		self.spellsPermanent = {}
+		self.spellsAll = {}
+		self.spellsStarting = {}
+		self.spellsUlt = {}
+		self.spells = {}
+		self.items = {}
+		self.talents = {}
+
+		---Add a spell to Hero
+		---@param spellObj spell
+		---@param ult boolean
+		---@param starting boolean
+		---@param permanent boolean
+		---@return boolean
+		function self:SpellAdd(spellObj, ult, starting, permanent)
+			ult = ult or false
+			starting = starting or false
+			permanent = permanent or false
+
+			self.spells[spellObj.name] = spellObj
+			self.spells[spellObj.name].ult = ult
+			self.spells[spellObj.name].starting = starting
+			self.spells[spellObj.name].permanent = permanent
+
+			if starting then table.insert(self.spellsStarting, spellObj.name) end
+			if permanent then table.insert(self.spellsPermanent, spellObj.name) end
+			if ult then table.insert(self.spellsUlt, spellObj.name) end
+
+			table.insert(self.spellsAll, spellObj.name)
+			return true
 		end
 
-		function hero.mana(heroUnit, spellName, level)
-			return BlzGetUnitAbilityManaCost(heroUnit.unit, hero[spellName].id, level)
+		---Add an item to Hero
+		---@param item itemATA
+		---@return boolean
+		function self:AddItem(item)
+			table.insert(self.items, item)
+
+			return true
 		end
 
-		function hero.hasBuff(heroUnit, spellName)
-			if hero[spellName].buff == 0 then
-				return false
-			else
-				return UnitHasBuffBJ(heroUnit.unit, hero[spellName].buff)
-			end
+		---Add a talent to Hero
+		---@param talent any
+		---@param level integer
+		---@return boolean
+		function self:TalentAdd(talent, level) return true end
+
+		-- Register newly created hero
+		hero.id[four] = name
+		table.insert(hero.names, name)
+		hero[name] = self
+	end
+
+	---comment
+	---@param unit unit
+	function hero.LevelUp(unit)
+		local heroFour = CC2Four(GetUnitTypeId(unit))
+		local heroName = hero.unit.id[heroFour]
+		local heroLevel = GetHeroLevel(unit)
+		local heroPlayer = GetOwningPlayer(unit)
+		local spells = hero.unit[heroName]
+
+		AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
+		SetPlayerTechResearchedSwap(FourCC("R005"), heroLevel - 1, heroPlayer)
+
+		if (ModuloInteger(heroLevel, 4) == 0) then SetPlayerTechResearchedSwap(FourCC("R006"), heroLevel / 4, heroPlayer) end
+
+		-- Remove Ability Points
+		if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
+			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+		elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
+			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+		elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
+			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
 		end
 
-		function hero.levelUp(unit)
-			local heroFour = CC2Four(GetUnitTypeId(unit))
-			local heroName = hero[heroFour]
-			local heroLevel = GetHeroLevel(unit)
-			local heroPlayer = GetOwningPlayer(unit)
-			local spells = hero[heroName]
+		print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
 
-			AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
-			SetPlayerTechResearchedSwap(FourCC("R005"), heroLevel - 1, heroPlayer)
-			
-			if (ModuloInteger(heroLevel, 4) == 0) then
-				SetPlayerTechResearchedSwap(FourCC("R006"), heroLevel / 4, heroPlayer)
-			end
+		-- Learn Skill if the Hero is owned by a Computer
+		if GetPlayerController(heroPlayer) == MAP_CONTROL_COMPUTER then
+			local unspentPoints = GetHeroSkillPoints(unit)
 
-			-- Remove Ability Points
-			if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
-				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-			elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
-				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-			elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
-				ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-			end
+			print("Unspent Abilities: " .. unspentPoints)
 
-			print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
+			if unspentPoints > 0 then
+				for i = 1, #spells.spellLearnOrder do
+					SelectHeroSkill(unit, hero[spells.spellLearnOrder[i]].id)
 
-			-- Learn Skill if the Hero is owned by a Computer
-			if GetPlayerController(heroPlayer) == MAP_CONTROL_COMPUTER then
-				local unspentPoints = GetHeroSkillPoints(unit)
-
-				print("Unspent Abilities: " .. unspentPoints)
-
-				if unspentPoints > 0 then
-					for i = 1, #spells.spellLearnOrder do
-						SelectHeroSkill(unit, hero[spells.spellLearnOrder[i]].id)
-
-						if GetHeroSkillPoints(unit) == 0 then return end
-					end
+					if GetHeroSkillPoints(unit) == 0 then return end
 				end
 			end
 		end
+	end
 
-		function hero.upgrade(unit) IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D")) end
+	function hero.Upgrade(unit) IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D")) end
 
-		function hero.setupHero(unit)
-			local heroFour = CC2Four(GetUnitTypeId(unit))
-			local heroName = hero[heroFour]
-			local player = GetOwningPlayer(unit)
-			local playerNumber = GetConvertedPlayerId(player)
-			local heroLevel = GetHeroLevel(unit)
-			local spells = hero[heroName] ---@type table
-			local picked, u, x, y, newAlter
-			local g = CreateGroup()
+	---comment
+	---@param unit unit
+	function hero.SetupHero(unit)
+		local heroFour = CC2Four(GetUnitTypeId(unit))
+		local heroName = hero.unit.id[heroFour]
+		local player = GetOwningPlayer(unit)
+		local playerNumber = GetConvertedPlayerId(player)
+		local heroLevel = GetHeroLevel(unit)
+		local spells = hero.unit[heroName]
+		local picked, u, x, y, newAlter
+		local g = CreateGroup()
 
-			hero.players[playerNumber] = {}
+		hero.players[playerNumber] = {}
 
-			-- Get home Base Location
-			if playerNumber < 7 then
-				x = GetRectCenterX(gg_rct_Left_Castle)
-				y = GetRectCenterY(gg_rct_Left_Castle)
-			else
-				x = GetRectCenterX(gg_rct_Right_Castle)
-				y = GetRectCenterY(gg_rct_Right_Castle)
-			end
-
-			-- Move hero to home base
-			SetUnitPosition(unit, x, y)
-
-			-- Give the hero the required Skill points for the spells
-			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
-			for i = 1, #spells.startingSpells do
-				picked = hero[spells.startingSpells[i]]
-
-				-- Have the hero learn the spell
-				SelectHeroSkill(unit, picked.id)
-			end
-
-			-- Add the Permanent Spells for the Hero
-			for i = 1, #spells.permanentSpells do
-				picked = hero[spells.permanentSpells[i]]
-
-				-- Make the Spell Permanent
-				UnitMakeAbilityPermanent(unit, true, picked.id)
-			end
-
-			-- Give the Hero starting Items
-			for i = 1, #spells.startingItems do
-				picked = hero.item[spells.startingItems[i]]
-
-				-- Make the Spell Permanent
-				UnitAddItemById(unit, picked.id)
-			end
-
-			-- Set up Alter
-			g = GetUnitsOfPlayerAndTypeId(player, FourCC("halt"))
-			while true do
-				u = FirstOfGroup(g)
-				if u == nil then break end
-
-				-- Replace Unit Alter
-				ReplaceUnitBJ(u, hero[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
-				newAlter = GetLastReplacedUnitBJ()
-				GroupRemoveUnit(g, u)
-			end
-			DestroyGroup(g)
-
-			hero.players[playerNumber].picked = true
-			hero.players[playerNumber].cameraLock = false
-			hero.players[playerNumber].alter = newAlter
-			hero.players[playerNumber].hero = unit
+		-- Get home Base Location
+		if playerNumber < 7 then
+			x = GetRectCenterX(gg_rct_Left_Castle)
+			y = GetRectCenterY(gg_rct_Left_Castle)
+		else
+			x = GetRectCenterX(gg_rct_Right_Castle)
+			y = GetRectCenterY(gg_rct_Right_Castle)
 		end
+
+		-- Move hero to home base
+		SetUnitPosition(unit, x, y)
+
+		-- Give the hero the required Skill points for the spells
+		ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
+		for i = 1, #spells.startingSpells do
+			picked = spell[spells.startingSpells[i]]
+
+			-- Have the hero learn the spell
+			SelectHeroSkill(unit, picked.id)
+		end
+
+		-- Add the Permanent Spells for the Hero
+		for i = 1, #spells.permanentSpells do
+			picked = spells[spells.permanentSpells[i]]
+
+			-- Make the Spell Permanent
+			UnitMakeAbilityPermanent(unit, true, picked.id)
+		end
+
+		-- Give the Hero starting Items
+		for i = 1, #spells.startingItems do
+			picked = item[spells.startingItems[i]]
+
+			-- Make the Spell Permanent
+			UnitAddItemById(unit, picked.id)
+		end
+
+		-- Set up Alter
+		g = GetUnitsOfPlayerAndTypeId(player, FourCC("halt"))
+		while true do
+			u = FirstOfGroup(g)
+			if u == nil then break end
+
+			-- Replace Unit Alter
+			ReplaceUnitBJ(u, hero.unit[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
+			newAlter = GetLastReplacedUnitBJ()
+			GroupRemoveUnit(g, u)
+		end
+		DestroyGroup(g)
+
+		hero.players[playerNumber].picked = true
+		hero.players[playerNumber].cameraLock = false
+		hero.players[playerNumber].alter = newAlter
+		hero.players[playerNumber].hero = unit
+	end
 
 end

@@ -30,14 +30,14 @@ end
 
 -- Unit enters the Map
 function Init_UnitEntersMap()
-	--DisableTrigger(Trig_UnitEntersMap)
+	-- DisableTrigger(Trig_UnitEntersMap)
 	TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
 	TriggerAddAction(Trig_UnitEntersMap, function()
 		local triggerUnit = GetTriggerUnit()
 
 		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) and not IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) then
-			--print(GetUnitName(triggerUnit) .. " Entered MAP MOVED")
-			indexer:add(triggerUnit)
+			-- print(GetUnitName(triggerUnit) .. " Entered MAP MOVED")
+			_Unit.New(unit)
 
 			unitKeepMoving(triggerUnit, true)
 		end
@@ -73,7 +73,7 @@ function Init_UnitDies()
 		if GetUnitTypeId(dieingUnit) == FourCC("n019") then
 			local u
 			local player = GetOwningPlayer(dieingUnit)
-			
+
 			if player == Player(20) then
 				shieldTowers.allied = shieldTowers.allied - 1
 
@@ -91,13 +91,11 @@ function Init_UnitDies()
 				end
 			end
 
-
-
 		end
 		-- Remove Index from Unit
 		if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
 			PolledWait(10)
-			indexer:remove(dieingUnit)
+			_Unit.Remove(dieingUnit)
 		end
 
 	end)
@@ -189,7 +187,7 @@ function init_BaseLoop()
 			GroupRemoveUnit(g, u)
 		end
 		DestroyGroup(g)
-	end) 
+	end)
 end
 
 do
@@ -259,29 +257,26 @@ end
 
 -- Tell unit to keep Attack-Moving to it's indexed destination
 ---comment
----@param unit unit
+---@param unitOrig unit
 ---@param withoutDelay boolean
-function unitKeepMoving(unit, withoutDelay, orderId)
+function unitKeepMoving(unitOrig, withoutDelay, orderId)
 	withoutDelay = withoutDelay or false
-	orderId = orderId or GetUnitCurrentOrder(unit)
+	unit = _Unit.Get(unitOrig)
 
-	local typeId = GetUnitTypeId(unit)
-	local owningPlayer = GetOwningPlayer(unit)
+	orderId = orderId or unit:OrderCurrent()
+	
+	local typeId = unit.unitType
+	local owningPlayer = unit:Player()
 
-	if owningPlayer ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and GetUnitState(unit, UNIT_STATE_LIFE) > 0 and
-					not IsUnitType(unit, UNIT_TYPE_STRUCTURE) and not IsUnitType(unit, UNIT_TYPE_HERO) and
-					not UnitHasBuffBJ(unit, FourCC("B006")) and typeIdTable[typeId] == nil and ordersIgnore[orderId] == nil then
+	if owningPlayer ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and unit:Life() > 0 and not unit:IsType(UNIT_TYPE_STRUCTURE) and
+					not unit:IsType(UNIT_TYPE_HERO) and not unit:HasBuff("B006") and typeIdTable[typeId] == nil and
+					ordersIgnore[orderId] == nil then
 
-		
-		if withoutDelay ~= true then
-			--print("Ordering " .. GetUnitName(unit) .. " - [" .. GetHandleId(unit) .. "] - " .. OrderId2String(orderId) .. ": " ..
-						      --orderId .. " - Moving With Delay")
+		if not withoutDelay then
 			PolledWait(3)
-		else
-			--print("Ordering " .. GetUnitName(unit) .. " - [" .. GetHandleId(unit) .. "] - " .. OrderId2String(orderId) .. ": " ..
-						      --orderId .. " - Moving Immediately")
 		end
 
-		indexer:order(unit, "attack")
+		unit:OrderAgain()
+
 	end
 end

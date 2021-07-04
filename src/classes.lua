@@ -489,7 +489,7 @@ function init_aiClass()
 		function self:STATEUpgrade(i)
 			local randInt = GetRandomInt(1, 40)
 
-			if randInt == 10 then hero:upgrade(i) end
+			if randInt == 10 then hero.upgrade(i) end
 		end
 
 		function self:STATEDefend(i)
@@ -895,7 +895,7 @@ function init_aiClass()
 			-- Mana Shield
 			if self[i].casting then return false end
 
-			curSpell = hero:spell(self[i], "manaShield")
+			curSpell = hero.spell(self[i], "manaShield")
 			if curSpell.castable == true and curSpell.hasBuff == false then
 				print(curSpell.name)
 				IssueImmediateOrder(self[i].unit, curSpell.order)
@@ -906,7 +906,7 @@ function init_aiClass()
 			--  Cast available all the time
 			-------
 			-- Mana Drain
-			curSpell = hero:spell(self[i], "manaExplosion")
+			curSpell = hero.spell(self[i], "manaExplosion")
 			if self[i].countUnitEnemyClose > 3 and self[i].manaPercent < 90.00 and curSpell.castable == true then
 				print(curSpell.name)
 				IssueImmediateOrder(self[i].unit, curSpell.order)
@@ -919,7 +919,7 @@ function init_aiClass()
 
 			if self[i].lowLife == false and self[i].fleeing == false then
 				-- Frost Nova
-				curSpell = hero:spell(self[i], "manaBomb")
+				curSpell = hero.spell(self[i], "manaBomb")
 				if self[i].clumpEnemyPower >= 40 and curSpell.castable == true and curSpell.manaLeft > 80 then
 					print(curSpell.name)
 					IssuePointOrder(self[i].unit, curSpell.order, GetUnitX(self[i].clumpEnemy), GetUnitY(self[i].clumpEnemy))
@@ -965,7 +965,7 @@ function init_aiClass()
 
 					-- Check if there are illusions Nearby
 					if illusionsNearby > 0 then
-						curSpell = hero:spell(self[i], "switch")
+						curSpell = hero.spell(self[i], "switch")
 						if curSpell.castable and curSpell.manaLeft > 0 and not self[i].casting then
 							print(curSpell.name)
 
@@ -988,7 +988,7 @@ function init_aiClass()
 						end
 					end
 
-					curSpell = hero:spell(self[i], "shift")
+					curSpell = hero.spell(self[i], "shift")
 					if curSpell.castable == true and curSpell.manaLeft > 0 then
 						print(curSpell.name)
 						IssueImmediateOrder(self[i].unit, curSpell.order)
@@ -1000,7 +1000,7 @@ function init_aiClass()
 				if self[i].casting == false and self[i].lowLife == false and self[i].fleeing == false then
 
 					-- Shift
-					curSpell = hero:spell(self[i], "shift")
+					curSpell = hero.spell(self[i], "shift")
 					if self[i].countUnitEnemyClose >= 2 and curSpell.castable == true and curSpell.manaLeft > 45 then
 						print(curSpell.name)
 
@@ -1009,7 +1009,7 @@ function init_aiClass()
 					end
 
 					-- Falling Strike
-					curSpell = hero:spell(self[i], "fallingStrike")
+					curSpell = hero.spell(self[i], "fallingStrike")
 					if (self[i].powerEnemy > 250.00 or self[i].clumpEnemyPower > 80.00) and curSpell.castable == true and
 									curSpell.manaLeft > 45 then
 						print(curSpell.name)
@@ -1024,7 +1024,7 @@ function init_aiClass()
 					end
 
 					-- Shift Storm
-					curSpell = hero:spell(self[i], "shiftStorm")
+					curSpell = hero.spell(self[i], "shiftStorm")
 					if self[i].countUnitEnemy >= 6 and curSpell.castable == true and curSpell.manaLeft > 30 then
 						print(curSpell.name)
 						IssueImmediateOrder(self[i].unit, curSpell.order)
@@ -1042,7 +1042,7 @@ function init_aiClass()
 			local u
 
 			-- Iron Defense
-			curSpell = hero:spell(self[i], "ironDefense")
+			curSpell = hero.spell(self[i], "ironDefense")
 			if self[i].countUnitEnemy >= 2 and curSpell.castable == true and curSpell.manaLeft > 20 and self[i].lifePercent < 80 and
 							not self[i].casting then
 				print(curSpell.name)
@@ -1052,7 +1052,7 @@ function init_aiClass()
 
 			if not self[i].fleeing and not self[i].lowLife then
 				-- Bolster
-				curSpell = hero:spell(self[i], "bolster")
+				curSpell = hero.spell(self[i], "bolster")
 				if self[i].countUnitFriendClose >= 1 and curSpell.castable == true and curSpell.manaLeft > 50 and
 								not self[i].casting then
 					print(curSpell.name)
@@ -1061,7 +1061,7 @@ function init_aiClass()
 				end
 
 				-- Attack!
-				curSpell = hero:spell(self[i], "attack")
+				curSpell = hero.spell(self[i], "attack")
 				if CountUnitsInGroup(self[i].heroesEnemy) > 0 and curSpell.castable == true and curSpell.manaLeft > 40 and
 								not self[i].casting then
 
@@ -1083,7 +1083,7 @@ function init_aiClass()
 			if not self[i].fleeing and not self[i].lowLife then
 
 				-- chrono Atrophy
-				curSpell = hero:spell(self[i], "chronoAtrophy")
+				curSpell = hero.spell(self[i], "chronoAtrophy")
 				if self[i].clumpBothNumber >= 7 and curSpell.castable and curSpell.manaLeft > 30 then
 					print(curSpell.name)
 
@@ -1095,7 +1095,7 @@ function init_aiClass()
 				end
 
 				-- Decay
-				curSpell = hero:spell(self[i], "decay")
+				curSpell = hero.spell(self[i], "decay")
 				if CountUnitsInGroup(self[i].heroesEnemies) > 0 and curSpell.castable == true and curSpell.manaLeft > 20 then
 					print(curSpell.name)
 
@@ -1106,7 +1106,7 @@ function init_aiClass()
 				end
 
 				-- Time Travel
-				curSpell = hero:spell(self[i], "timeTravel")
+				curSpell = hero.spell(self[i], "timeTravel")
 				if self[i].clumpBothNumber >= 4 and curSpell.castable and curSpell.manaLeft > 30 then
 					print(curSpell.name)
 
@@ -1596,11 +1596,10 @@ function init_baseClass()
 
 		if base[handleId].update == false then return true end
 
-		local l = Location(base[handleId].x, base[handleId].y)
 		local teamName = base[handleId].teamName
 
 		local g = CreateGroup()
-		g = GetUnitsInRangeOfLocAll(900, l)
+		GroupEnumUnitsInRange(g, base[handleId].x, base[handleId].y, 900, nil)
 		while true do
 			u = FirstOfGroup(g)
 			if u == nil then break end
@@ -1646,7 +1645,8 @@ function init_baseClass()
 		if unitsEnemy == 0 and unitsFriendly > 0 and base[handleId].mana > 50 then
 			if IsUnitInGroup(unit, base[teamName].gHealing) and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) == 0 then
 
-				g = GetUnitsInRangeOfLocAll(500, l)
+				g = CreateGroup()
+				GroupEnumUnitsInRange(g, base[handleId].x, base[handleId].y, 900, nil)
 
 				while true do
 					u = FirstOfGroup(g)
@@ -1667,7 +1667,6 @@ function init_baseClass()
 				DestroyGroup(g)
 			end
 		end
-		RemoveLocation(l)
 
 		base[handleId].lifePercent = GetUnitLifePercent(unit)
 		base[handleId].mana = GetUnitState(unit, UNIT_STATE_MANA)
@@ -1831,25 +1830,26 @@ function init_gateClass()
 		local gGates = CreateGroup()
 		GroupAddGroup(gate.g, gGates)
 
-		local pickedUnit = FirstOfGroup(gGates)
+		local pickedUnit = _Unit.Get(FirstOfGroup(gGates))
 		while pickedUnit ~= nil do
 			local u
 			local heroes = 0
 			local enemies = 0
 			local unit = pickedUnit
-			local info = gate[GetHandleId(unit)] ---@type table
+			local info = gate[GetHandleId(unit.unit)] ---@type table
 			local g = CreateGroup()
-			local l = GetUnitLoc(unit)
 
-			g = GetUnitsInRangeOfLocAll(700, l)
+
+			GroupEnumUnitsInRange(g, unit:X(), unit:Y(), 700, nil)
+
 
 			while true do
 				u = FirstOfGroup(g)
 				if u == nil then break end
 
-				if not IsUnitAlly(u, GetOwningPlayer(unit)) and IsUnitAliveBJ(u) then enemies = enemies + 1 end
+				if not IsUnitAlly(u, unit:Player()) and IsUnitAliveBJ(u) then enemies = enemies + 1 end
 
-				if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then heroes = heroes + 1 end
+				if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, unit:Player()) then heroes = heroes + 1 end
 
 				GroupRemoveUnit(g, u)
 			end
@@ -1857,46 +1857,50 @@ function init_gateClass()
 
 			-- print("Enemies:" .. enemies .. " Heroes: " .. heroes)
 
-			if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
-				GroupRemoveUnit(gate.gOpen, unit)
-				GroupRemoveUnit(gate.g, unit)
-				gate[GetHandleId(unit)] = {}
+			if enemies > 0 and heroes == 0 and IsUnitInGroup(unit.unit, gate.gOpen) then
 
-				SetUnitTimeScale(unit, -1)
+				unit:GroupRemove(gate.gOpen)
+				unit:GroupRemove(gate.g)
+
+				gate[unit.handleId] = {}
+
+				unit:SetTimeScale(-1)
+
 				PolledWait(0.667)
 
 				-- Replace Gate with Closed Gate
 				DisableTrigger(gate.Trig_gateDies)
-				ReplaceUnitBJ(unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
+				ReplaceUnitBJ(unit.unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
 				EnableTrigger(gate.Trig_gateDies)
 
-				unit = GetLastReplacedUnitBJ()
-				gate[GetHandleId(unit)] = info
-				GroupAddUnit(gate.gClosed, unit)
-				GroupAddUnit(gate.g, unit)
+				unit = _Unit.New(GetLastReplacedUnitBJ())
+				gate[unit.handleId] = info
+				unit:GroupAdd(gate.gClosed)
+				unit:GroupAdd(gate.g)
 
-			elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
-				GroupRemoveUnit(gate.gClosed, unit)
-				GroupRemoveUnit(gate.g, unit)
-				gate[GetHandleId(unit)] = {}
+			elseif (enemies == 0 or heroes > 0) and unit:InGroup(gate.gClosed) then
+				unit:GroupRemove(gate.gClosed)
+				unit:GroupRemove(gate.g)
+
+				gate[unit.handleId] = {}
 
 				-- Replace Gate with Opened Gate
 				DisableTrigger(gate.Trig_gateDies)
-				ReplaceUnitBJ(unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
+				ReplaceUnitBJ(unit.unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
 				EnableTrigger(gate.Trig_gateDies)
 
-				unit = GetLastReplacedUnitBJ()
-				gate[GetHandleId(unit)] = info
-				GroupAddUnit(gate.gOpen, unit)
-				GroupAddUnit(gate.g, unit)
+				unit = _Unit.New(GetLastReplacedUnitBJ())
+				gate[unit.handleId] = info
+				unit:GroupAdd(gate.gOpen)
+				unit:GroupAdd(gate.g)
 
 				-- Play animation
-				SetUnitAnimation(unit, "Death Alternate 1")
+				unit:SetAnimation("Death Alternate 1")
 
 			end
 
-			GroupRemoveUnit(gGates, pickedUnit)
-			pickedUnit = FirstOfGroup(gGates)
+			pickedUnit:GroupRemove(gGates)
+			pickedUnit = _Unit.Get(FirstOfGroup(gGates))
 		end
 		DestroyGroup(gGates)
 
@@ -1918,12 +1922,12 @@ function init_gateClass()
 		TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_ATTACKED)
 		TriggerAddAction(t, function()
 
-			local triggerUnit = GetAttackedUnitBJ()
-			local unitId = GetUnitTypeId(triggerUnit)
+			local triggerUnit = _Unit.Get(GetAttackedUnitBJ())
+			local unitId = triggerUnit.handleId
 
 			if gate.types[unitId] ~= nil then
 				PolledWait(0.2)
-				QueueUnitAnimation(triggerUnit, "Stand Hit")
+				triggerUnit:QueueAnimation("Stand Hit")
 			end
 
 		end)
