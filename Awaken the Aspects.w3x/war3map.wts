@@ -14071,3 +14071,69 @@ STRING 4820
 Bandit Hideout
 }
 
+STRING 4821
+// Abilities: Z001 (NewBonus - Armor), Name (Name)
+{
+NewBonus - Armor
+}
+
+STRING 4822
+// Abilities: Z002 (NewBonus - Attack Speed), Name (Name)
+{
+NewBonus - Attack Speed
+}
+
+STRING 4823
+// Abilities: Z003 (NewBonus - Critical Strike), Name (Name)
+{
+NewBonus - Critical Strike
+}
+
+STRING 4824
+// Abilities: Z004 (NewBonus - Damage), Name (Name)
+{
+NewBonus - Damage
+}
+
+STRING 4825
+// Abilities: Z005 (NewBonus - Evasion), Name (Name)
+{
+NewBonus - Evasion
+}
+
+STRING 4826
+// Abilities: Z006 (NewBonus - HealthRegen), Name (Name)
+{
+NewBonus - HealthRegen
+}
+
+STRING 4827
+// Abilities: Z007 (NewBonus - Life Steal), Name (Name)
+{
+NewBonus - Life Steal
+}
+
+STRING 4828
+// Abilities: Z010 (NewBonus - Stats), Name (Name)
+{
+NewBonus - Stats
+}
+
+STRING 4829
+// Abilities: Z009 (NewBonus - MovementSpeed), Name (Name)
+{
+NewBonus - MovementSpeed
+}
+
+STRING 4830
+// Abilities: Z008 (NewBonus - Magic Resistence), Name (Name)
+{
+NewBonus - Magic Resistence
+}
+
+STRING 4831
+// Abilities: Z011 (NewBonus - Mana Regen), Name (Name)
+{
+NewBonus - Mana Regen
+}
+
