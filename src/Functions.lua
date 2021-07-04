@@ -14,6 +14,132 @@ end
 ---@return boolean @true if successful
 function TableRemoveValue(table, value) return table.remove(table, TableFind(table, value)) end
 
+---comment
+---@param unit unit
+---@param ability spell
+---@param add boolean
+---@param aif abilityintegerfield
+---@param level integer
+---@return integer
+function GetAbilityInteger(unit, ability, add, aif, level)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
+	end
+
+	return BlzGetAbilityIntegerLevelField(BlzGetUnitAbility(unit, ability.id), aif, level)
+end
+
+---comment
+---@param unit unit
+---@param ability spell
+---@param add boolean
+---@param arf abilityrealfield
+---@param level integer
+---@return real
+function GetAbilityReal(unit, ability, add, arf, level)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
+	end
+
+	return BlzGetAbilityRealLevelField(BlzGetUnitAbility(unit, ability.id), arf, level)
+end
+
+---Add Ability to Unit and set the Integer field
+---@param unit unit
+---@param ability spell
+---@param add boolean
+---@param aif abilityintegerfield
+---@param level integer
+---@param amount integer
+---@return boolean
+function SetAbilityInteger(unit, ability, add, aif, level, amount)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
+	end
+
+	BlzSetAbilityIntegerLevelField(BlzGetUnitAbility(unit, ability.id), aif, level, amount)
+	IncUnitAbilityLevel(unit, ability.id)
+	DecUnitAbilityLevel(unit, ability.id)
+
+	return true
+end
+
+---Add Ability to Unit and set the Integer field
+---@param unit unit
+---@param ability spell
+---@param add boolean
+---@param aif abilityintegerfield
+---@param level integer
+---@param amount integer
+---@return boolean
+function IncAbilityInteger(unit, ability, add, aif, level, amount)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
+	end
+
+	amount = GetAbilityInteger(unit, ability, add, aif, level) + amount
+
+	BlzSetAbilityIntegerLevelField(BlzGetUnitAbility(unit, ability.id), aif, level, amount)
+	IncUnitAbilityLevel(unit, ability.id)
+	DecUnitAbilityLevel(unit, ability.id)
+
+	return true
+end
+
+---Add Ability to Unit and set the Real field
+---@param unit unit
+---@param ability spell
+---@param add boolean
+---@param arf abilityrealfield
+---@param level integer
+---@param amount real
+---@return boolean
+function SetAbilityReal(unit, ability, add, arf, level, amount)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
+	end
+
+	BlzSetAbilityRealLevelField(BlzGetUnitAbility(unit, ability.id), arf, level, amount)
+	IncUnitAbilityLevel(unit, ability.id)
+	DecUnitAbilityLevel(unit, ability.id)
+
+	return true
+end
+
+---Add Ability to Unit and set the Real field
+---@param unit unit
+---@param ability spell
+---@param add boolean
+---@param arf abilityrealfield
+---@param level integer
+---@param amount real
+---@return boolean
+function IncAbilityReal(unit, ability, add, arf, level, amount)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
+	end
+
+	amount = GetAbilityReal(unit, ability, add, arf, level) + amount
+
+	BlzSetAbilityRealLevelField(BlzGetUnitAbility(unit, ability.id), arf, level, amount)
+	IncUnitAbilityLevel(unit, ability.id)
+	DecUnitAbilityLevel(unit, ability.id)
+
+	return true
+end
+
 ---Find the index of a value in a table.
 ---@param tab table
 ---@param el any
