@@ -3545,6 +3545,1524 @@ function HeroSelector.buttonSelected(player, unitCode)
         BlzFrameAddText(HeroInfo.TextArea, BlzGetAbilityExtendedTooltip(unitCode,0))
     end
 end
+function HERO_INIT()
+
+	-- Create Class Definition
+	HERO = {}
+
+	---Create new Hero Instance
+	---@param unit unit
+	---@return HERO
+	function HERO.NEW(unit)
+
+		---@class HERO:UNIT
+		local self = {}
+		self = UNIT.NEW(unit)
+
+		self.heroType = HEROTYPE.GET(unit)
+
+		---Get Hero Level
+		---@return integer
+		function self:Level() return GetHeroLevel(self.unit) end
+
+		---comment
+		---@return string
+		function self:NameProper() return GetHeroProperName(self.unit) end
+
+		---Change Hero Proper Name
+		---@param name string
+		---@return boolean
+		function self:NameProperChange(name)
+			BlzSetHeroProperName(self.unit, name)
+			return true
+		end
+
+		---comment
+		---@param spellName string
+		---@return SPELL
+		function self:Spell(spellName) return self.heroType.spells[spellName] end
+
+		---Get Level of Spell for Hero
+		---@param spellName string
+		---@return integer
+		function self:SpellLevel(spellName) return GetUnitAbilityLevel(self.unit, self:Spell(spellName).id) end
+
+		---Get Spell Cooldown Remaining
+		---@param spellName string
+		---@return real
+		function self:SpellCooldownRemaining(spellName)
+			return BlzGetUnitAbilityCooldownRemaining(self.unit, self:Spell(spellName).id)
+		end
+
+		---Get Spell Mana Cost
+		---@param spellName string
+		---@return integer
+		function self:SpellManaCost(spellName)
+			return BlzGetUnitAbilityManaCost(self.unit, self:Spell(spellName).id, self:SpellLevel(spellName))
+		end
+
+		---Get if spell is currently castable or not
+		---@param spellName string
+		---@return boolean
+		function self:SpellIsCastable(spellName)
+			if self:SpellLevel(spellName) > 0 and self:SpellCooldownRemaining(spellName) == 0 and self.Mana() >= 0 then
+				return true
+			else
+				return false
+			end
+		end
+
+		---comment
+		---@param spellName string
+		---@param spellLevel integer
+		---@return integer
+		function self:SpellLevelSet(spellName, spellLevel)
+			return SetUnitAbilityLevel(self.unit, self:Spell(spellName).id, spellLevel)
+		end
+
+		---comment
+		---@param spellName string
+		---@param amount number
+		---@return integer
+		function self:SpellLevelIncrement(spellName, amount)
+			amount = amount or 1
+
+			local newLevel = self:SpellLevel(spellName) + amount
+			if newLevel < 0 then newLevel = 0 end
+
+			return SetUnitAbilityLevel(self.unit, self:Spell(spellName).id, newLevel)
+		end
+
+		---comment
+		---@return integer
+		function self:Strength() return BlzGetUnitIntegerField(self.unit, UNIT_IF_STRENGTH) end
+		---comment
+		---@return integer
+		function self:Agility() return BlzGetUnitIntegerField(self.unit, UNIT_IF_AGILITY) end
+		---comment
+		---@return integer
+		function self:Intelligence() return BlzGetUnitIntegerField(self.unit, UNIT_IF_INTELLIGENCE) end
+
+		---comment
+		---@return integer
+		function self:StrengthBonus()
+			return GetAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_STRENGTH_BONUS_ISTR, 0)
+		end
+		---comment
+		---@return integer
+		function self:AgilityBonus()
+			return GetAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_AGILITY_BONUS, 0)
+		end
+		---comment
+		---@return integer
+		function self:IntelligenceBonus()
+			return GetAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_INTELLIGENCE_BONUS, 0)
+		end
+
+		---comment
+		---@param amount integer
+		---@return boolean
+		function self:StrengthIncrement(amount)
+			return BlzSetUnitIntegerField(self.unit, UNIT_IF_STRENGTH, self:Strength() + amount)
+		end
+		---comment
+		---@param amount number
+		---@return boolean
+		function self:AgilityIncrement(amount)
+			return BlzSetUnitIntegerField(self.unit, UNIT_IF_AGILITY, self:Agility() + amount)
+		end
+		---comment
+		---@param amount number 
+		---@return boolean
+		function self:IntelligenceIncrement(amount)
+			return BlzSetUnitIntegerField(self.unit, UNIT_IF_INTELLIGENCE, self:Intelligence() + amount)
+		end
+
+		---comment
+		---@param amount integer
+		---@return boolean
+		function self:StrengthBonusIncrement(amount)
+			return SetAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_STRENGTH_BONUS_ISTR, 0, amount)
+		end
+		---comment
+		---@param amount integer
+		---@return boolean
+		function self:AgilityBonusIncrement(amount)
+			return IncAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_AGILITY_BONUS, 0, amount)
+		end
+		---comment
+		---@param amount integer
+		---@return boolean
+		function self:IntelligenceBonusIncrement(amount)
+			return SetAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_INTELLIGENCE_BONUS, 0, amount)
+		end
+
+		---comment
+		---@return boolean
+		function self:StrengthBonusReset()
+			return SetAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_STRENGTH_BONUS_ISTR, 0, 0)
+		end
+		---comment
+		---@return boolean
+		function self:AgilityBonusReset()
+			return SetAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_AGILITY_BONUS, 0, 0)
+		end
+		---comment
+		---@return boolean
+		function self:IntelligenceBonusReset()
+			return SetAbilityInteger(self.unit, spell.bonusStats, true, ABILITY_ILF_INTELLIGENCE_BONUS, 0, 0)
+		end
+
+		---comment
+		---@return integer
+		function self:SkillPoints() return GetHeroSkillPoints(self.unit) end
+
+		---Get a table of Spell Names for Hero
+		---@return table
+		function self:SpellNames() return self.heroType.spells.names end
+
+		---Get Spell Details
+		---@param spellName string
+		---@return table
+		function self:SpellDetails(spellName)
+			local spellDetails = self:Spell(spellName)
+			spellDetails.level = self:SpellLevel(spellName)
+			spellDetails.cooldown = self:SpellCooldownRemaining(spellName)
+			spellDetails.hasBuff = self:HasSpellBuff(spellName)
+			spellDetails.mana = self:SpellManaCost(spellName)
+			spellDetails.manaLeft = self:Mana() - spellDetails.mana
+			spellDetails.castable = self:SpellIsCastable(spellName)
+
+			return spellDetails
+		end
+
+		return self
+	end
+
+end
+
+function HEROTYPE_INIT()
+
+	-- Create Class Definition
+	HEROTYPE = {}
+
+	-- Init Globals
+	HEROTYPE = {id = {}, names = {}, players = {}}
+	for i = 1, 12 do hero.players[i] = {picked = false} end
+
+    ---comment
+    ---@param u unit
+    ---@return HEROTYPE
+	function HEROTYPE.GET(u)
+        local unit = UNIT.GET(u)
+
+        return heroType[HEROTYPE.id[unit.unitTypeFour]]
+    end
+
+	function HEROTYPE.NEW(name, four, fourAlter)
+
+		---@class HEROTYPE
+		local self = {}
+
+		self.name = name
+		self.four = four
+		self.id = FourCC(four)
+		self.fourAlter = fourAlter
+		self.idAlter = FourCC(fourAlter)
+		self.spellsPermanent = {}
+		self.spellsAll = {}
+		self.spellsStarting = {}
+		self.spellsUlt = {}
+		self.spells = {}
+		self.items = {}
+		self.talents = {}
+
+		---Add a spell to Hero
+		---@param spellObj SPELL
+		---@param ult boolean
+		---@param starting boolean
+		---@param permanent boolean
+		---@return boolean
+		function self:SpellAdd(spellObj, ult, starting, permanent)
+			ult = ult or false
+			starting = starting or false
+			permanent = permanent or false
+
+			self.spells[spellObj.name] = spellObj
+			self.spells[spellObj.name].ult = ult
+			self.spells[spellObj.name].starting = starting
+			self.spells[spellObj.name].permanent = permanent
+
+			if starting then table.insert(self.spellsStarting, spellObj.name) end
+			if permanent then table.insert(self.spellsPermanent, spellObj.name) end
+			if ult then table.insert(self.spellsUlt, spellObj.name) end
+
+			table.insert(self.spellsAll, spellObj.name)
+			return true
+		end
+
+		---Add an item to Hero
+		---@param item ITEM
+		---@return boolean
+		function self:ItemAdd(item)
+			table.insert(self.items, item)
+
+			return true
+		end
+
+		---Add a talent to Hero
+		---@param talent any
+		---@param level integer
+		---@return boolean
+		function self:TalentAdd(talent, level) return true end
+
+		-- Register newly created hero
+		HEROTYPE.id[four] = name
+		table.insert(HEROTYPE.names, name)
+
+		return self
+	end
+
+	---comment
+	---@param unit unit
+	function hero.LevelUp(unit)
+		local heroFour = CC2Four(GetUnitTypeId(unit))
+		local heroName = hero.unit.id[heroFour]
+		local heroLevel = GetHeroLevel(unit)
+		local heroPlayer = GetOwningPlayer(unit)
+		local spells = hero.unit[heroName]
+
+		AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
+		SetPlayerTechResearchedSwap(FourCC("R005"), heroLevel - 1, heroPlayer)
+
+		if (ModuloInteger(heroLevel, 4) == 0) then SetPlayerTechResearchedSwap(FourCC("R006"), heroLevel / 4, heroPlayer) end
+
+		-- Remove Ability Points
+		if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
+			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+		elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
+			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+		elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
+			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
+		end
+
+		print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
+
+		-- Learn Skill if the Hero is owned by a Computer
+		if GetPlayerController(heroPlayer) == MAP_CONTROL_COMPUTER then
+			local unspentPoints = GetHeroSkillPoints(unit)
+
+			print("Unspent Abilities: " .. unspentPoints)
+
+			if unspentPoints > 0 then
+				for i = 1, #spells.spellLearnOrder do
+					SelectHeroSkill(unit, hero[spells.spellLearnOrder[i]].id)
+
+					if GetHeroSkillPoints(unit) == 0 then return end
+				end
+			end
+		end
+	end
+
+	function hero.Upgrade(unit) IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D")) end
+
+	---comment
+	---@param unit unit
+	function hero.SetupHero(unit)
+		local heroFour = CC2Four(GetUnitTypeId(unit))
+		local heroName = hero.unit.id[heroFour]
+		local player = GetOwningPlayer(unit)
+		local playerNumber = GetConvertedPlayerId(player)
+		local heroLevel = GetHeroLevel(unit)
+		local spells = hero.unit[heroName]
+		local picked, u, x, y, newAlter
+		local g = CreateGroup()
+
+		hero.players[playerNumber] = {}
+
+		-- Get home Base Location
+		if playerNumber < 7 then
+			x = GetRectCenterX(gg_rct_Left_Castle)
+			y = GetRectCenterY(gg_rct_Left_Castle)
+		else
+			x = GetRectCenterX(gg_rct_Right_Castle)
+			y = GetRectCenterY(gg_rct_Right_Castle)
+		end
+
+		-- Move hero to home base
+		SetUnitPosition(unit, x, y)
+
+		-- Give the hero the required Skill points for the spells
+		ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
+		for i = 1, #spells.startingSpells do
+			picked = spell[spells.startingSpells[i]]
+
+			-- Have the hero learn the spell
+			SelectHeroSkill(unit, picked.id)
+		end
+
+		-- Add the Permanent Spells for the Hero
+		for i = 1, #spells.permanentSpells do
+			picked = spells[spells.permanentSpells[i]]
+
+			-- Make the Spell Permanent
+			UnitMakeAbilityPermanent(unit, true, picked.id)
+		end
+
+		-- Give the Hero starting Items
+		for i = 1, #spells.startingItems do
+			picked = item[spells.startingItems[i]]
+
+			-- Make the Spell Permanent
+			UnitAddItemById(unit, picked.id)
+		end
+
+		-- Set up Alter
+		g = GetUnitsOfPlayerAndTypeId(player, FourCC("halt"))
+		while true do
+			u = FirstOfGroup(g)
+			if u == nil then break end
+
+			-- Replace Unit Alter
+			ReplaceUnitBJ(u, hero.unit[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
+			newAlter = GetLastReplacedUnitBJ()
+			GroupRemoveUnit(g, u)
+		end
+		DestroyGroup(g)
+
+		hero.players[playerNumber].picked = true
+		hero.players[playerNumber].cameraLock = false
+		hero.players[playerNumber].alter = newAlter
+		hero.players[playerNumber].hero = unit
+	end
+
+end
+
+--
+-- Hero Skills / Abilities Class
+-----------------
+---@class ITEM
+function ITEM_INIT()
+	ITEM = {}
+	ITEM.KEY = {}
+
+	function ITEM.GET(id)
+
+	end
+
+	-- comment
+	---@param name string
+	---@param properName string
+	---@param four string
+	---@param abilityFour string
+	---@param order integer
+	---@param instant boolean
+	---@param castTime table
+	function ITEM.NEW(name, properName, four, abilityFour, order, instant, castTime)
+
+		---@class ITEMTYPE
+		local self = {}
+
+		self.name = name
+		self.properName = properName
+		self.four = four
+		self.id = FourCC(four)
+		self.abilityFour = abilityFour
+		self.abilityId = FourCC(abilityFour)
+		self.order = order
+		self.instant = instant
+		self.castTime = castTime
+
+		ITEM.KEY[name] = name
+		ITEM.KEY[four] = name
+
+		return self
+	end
+
+end
+
+
+function SPELL_INIT()
+
+	SPELL = {}
+	SPELL.ID = {}
+	SPELL.NAMES = {}
+	SPELL.TARGET = {
+		AOE = 1,
+		SINGLETARGET = 2,
+		CONE = 3
+	}
+	
+
+	---Add a new Spell
+	---@param name string
+	---@param four string
+	---@param buff string
+	---@param order integer
+	---@param instant boolean
+	---@param castTime table
+	function SPELL.NEW(name, four, buff, order, instant, castTime)
+		instant = instant or false
+		castTime = castTime or {}
+		order = order or 0
+		buff = buff or ""
+
+		---@class SPELL
+		local self = {}
+		self.name = name
+		self.four = four
+		self.id = FourCC(four)
+		self.properName = GetAbilityName(self.id)
+		self.buff = buff
+		self.order = order
+		self.instant = instant
+		self.castTime = castTime
+
+		if buff ~= "" then
+			self.buffId = FourCC(buff)
+		else
+			self.buffId = 0
+		end
+
+		---Get Spell Icon Path
+		---@return string
+		function self:Icon()
+			return BlzGetAbilityIcon(self.id)
+		end
+		
+		---Get Spell Activated Icon Path
+		---@return string
+		function self:IconActivated()
+			return BlzGetAbilityActivatedIcon(self.id)
+		end
+
+		SPELL.id[four] = name
+		table.insert(SPELL.names, name)
+
+		return self
+	end
+
+end
+
+function UNIT_INIT()
+	UNIT = {}
+
+	---comment
+	---@param unit unit
+	---@return UNIT
+	function UNIT.GET(unit)
+		if UNIT[GetHandleId(unit)] == nil then
+			return UNIT.NEW(unit)
+		else
+			return UNIT[GetHandleId(unit)]
+		end
+	end
+
+	---comment
+	---@param u unit
+	function UNIT.REMOVE(u)
+		local unit = UNIT.GET(u)
+		unit:SFXRemoveAll()
+		UNIT[unit.handleId] = nil
+
+		return true
+	end
+
+	---comment
+	---@param unit unit
+	---@param overwrite boolean
+	---@return UNIT
+	function UNIT.NEW(unit, overwrite)
+		overwrite = overwrite or false
+
+		-- If unit is already in the index, skip adding it if overwrite is set to false
+		if UNIT.GET(unit) ~= nil and not overwrite then return false end
+
+		---@class UNIT
+		local self = {}
+
+		self.data = {}
+		self.unit = unit
+		self.handleId = GetHandleId(unit)
+		self.startX = GetUnitX(unit)
+		self.startY = GetUnitY(unit)
+		self.orderX = nil ---@type real
+		self.orderY = nil ---@type real
+		self.orderTarget = nil ---@type unit
+		self.unitType = GetUnitTypeId(unit)
+        self.unitTypeFour = CC2Four(self.unitType)
+		self.order = GetUnitCurrentOrder(unit)
+		self.orderType = "" ---@type string
+		self.sfx = {}
+		self.sfxAll = {}
+
+		---comment
+		---@param unitType unittype
+		---@return boolean
+		function self:IsType(unitType) return IsUnitType(self.unit, unitType) end
+
+		---comment
+		---@return integer
+		function self:OrderCurrent() return GetUnitCurrentOrder(self.unit) end
+
+		---comment
+		---@return integer
+		function self:OrderLast() return self.order end
+
+		---comment
+		---@return string
+		function self:OrderLastType() return self.orderType end
+
+		---comment
+		---@param orderId any
+		---@return boolean
+		function self:OrderHome(orderId) return self:OrderPoint(orderId, self.startX, self.startY) end
+
+		---Re Issue the last given order
+		---@return boolean 
+		function self:OrderAgain()
+			if self.orderTarget == "Target" then
+				return self:OrderTarget(self.order, self.orderTarget)
+			elseif self.orderTarget == "Point" then
+				return self:OrderPoint(self.order, self.orderX, self.orderY)
+			elseif self.orderType == "Immediate" then
+				return self:OrderImmediate(self.order)
+			else
+				self:OrderPick()
+				self:OrderPoint(oid.attack, self.orderX, self.orderY)
+				return true
+			end
+
+			return false
+		end
+
+		---comment
+		---@param orderId integer
+		---@param targetUnit unit
+		---@return boolean
+		function self:OrderTarget(orderId, targetUnit)
+			self.order = orderId
+			self.orderType = "Target"
+			self.orderX = nil
+			self.orderY = nil
+			self.orderTarget = targetUnit
+			return IssueTargetOrderById(self.unit, orderId, targetUnit)
+		end
+
+		---comment
+		---@param orderId integer
+		---@param x real
+		---@param y real
+		---@return boolean
+		function self:OrderPoint(orderId, x, y)
+			self.order = orderId
+			self.orderType = "Point"
+			self.orderX = x
+			self.orderY = y
+			self.orderTarget = nil
+			return IssuePointOrderById(self.unit, orderId, x, y)
+		end
+
+		---comment
+		---@param orderId integer
+		---@return boolean
+		function self:OrderImmediate(orderId)
+			self.order = orderId
+			self.orderType = "Immediate"
+			self.orderX = nil
+			self.orderY = nil
+			self.orderTarget = nil
+			return IssueImmediateOrderById(self.unit, orderId)
+		end
+
+		---comment
+		---@return real
+		function self:X() return GetUnitX(self.unit) end
+
+		---comment
+		---@return real
+		function self:Y() return GetUnitY(self.unit) end
+
+		---comment
+		---@param timeScale real
+		---@return boolean
+		function self:SetTimeScale(timeScale) return SetUnitTimeScale(self.unit, timeScale) end
+
+		---comment
+		---@param g group
+		---@return boolean
+		function self:GroupAdd(g) return GroupAddUnit(g, self.unit) end
+
+		---comment
+		---@param g any
+		---@return boolean
+		function self:GroupRemove(g) return GroupRemoveUnit(g, self.unit) end
+
+		---comment
+		---@param g group
+		---@return boolean
+		function self:InGroup(g) return IsUnitInGroup(g, self.unit) end
+
+		---comment
+		---@param animationName string
+		---@return boolean
+		function self:SetAnimation(animationName) return SetUnitAnimation(self.unit, animationName) end
+
+		---comment
+		---@param animationName any
+		---@return nil
+		function self:QueueAnimation(animationName) return QueueUnitAnimation(self.unit, animationName) end
+
+		---comment
+		---@return string
+		function self:Name() return GetUnitName(unit) end
+
+		---Change Units Name
+		---@param name string
+		---@return boolean
+		function self:NameChange(name)
+			BlzSetUnitName(self.unit, name)
+			return true
+		end
+
+		---comment
+		---@return integer
+		function self:LifePercentage() return math.floor(self:LifeMax() / self:Life() * 100) end
+
+		---comment
+		---@return player
+		function self:Player() return GetOwningPlayer(self.unit) end
+
+		---comment
+		---@return integer
+		function self:PlayerNumber() return GetConvertedPlayerId(GetOwningPlayer(self.unit)) end
+
+		---comment
+		---@return integer
+		function self:ManaPercentage() return math.floor(self:ManaMax() / self:Mana() * 100) end
+
+		---Get Unit Max Life
+		---@return real
+		function self:LifeMax() return GetUnitState(self.unit, UNIT_STATE_MAX_LIFE) end
+
+		---Set the Units Max Life
+		---@param amount integer
+		---@return boolean
+		function self:LifeMaxIncrement(amount)
+			local percentLife = GetUnitLifePercent(self.unit)
+
+			BlzSetUnitMaxHP(self.unit, self:LifeMax() + amount)
+			SetUnitLifePercentBJ(self.unit, percentLife)
+
+			return true
+		end
+
+		---Get Hero Max Mana
+		---@return real
+		function self:ManaMax() return GetUnitState(self.unit, UNIT_STATE_MAX_MANA) end
+
+		---Increment Max Mana
+		---@param amount integer
+		---@return boolean
+		function self:ManaMaxIncrement(amount)
+			local percentMana = GetUnitManaPercent(self.unit)
+
+			BlzSetUnitMaxMana(self.unit, self:ManaMax() + amount)
+			SetUnitManaPercentBJ(self.unit, percentMana)
+
+			return true
+		end
+
+		---Get Hero Life
+		---@return real
+		function self:Life() return GetUnitState(self.unit, UNIT_STATE_LIFE) end
+
+		---Get Hero Mana
+		---@return real
+		function self:Mana() return GetUnitState(self.unit, UNIT_STATE_MANA) end
+
+		---Is Unit Alive
+		---@return boolean
+		function self:IsAlive() return IsUnitAliveBJ(self.unit) end
+
+		---Get Unit Damage Bonus
+		---@return integer
+		function self:DamageBonus() return GetAbilityInteger(self.unit, spell.bonusDamage, true, ABILITY_ILF_ATTACK_BONUS, 0) end
+
+		---Increment Damage Bonus by amount
+		---@param amount integer
+		---@return boolean
+		function self:DamageBonusIncrement(amount)
+			return IncAbilityInteger(self.unit, spell.bonusDamage, true, ABILITY_ILF_ATTACK_BONUS, 0, amount)
+		end
+
+		---Reset Damage Bonus
+		---@return boolean
+		function self:DamageBonusReset()
+			return SetAbilityInteger(self.unit, spell.bonusDamage, true, ABILITY_ILF_ATTACK_BONUS, 0, 0)
+		end
+
+		---Get Unit Armor Bonus
+		---@return integer
+		function self:ArmorBonus()
+			return GetAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0)
+		end
+
+		---Reset Unit Armor Bonus
+		---@param amount integer
+		---@return boolean
+		function self:ArmorBonusIncrement(amount)
+			return IncAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0, amount)
+		end
+
+		---Reset Unit Armor Bonus
+		---@return boolean
+		function self:ArmorBonusReset()
+			return SetAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0, 0)
+		end
+
+		---Get Life Regen Rate Bonus
+		---@return real
+		function self:LifeRegenBonus()
+			return GetAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0)
+		end
+
+		---Increment Life Regen Bonus
+		---@param amount real
+		---@return boolean
+		function self:LifeRegenBonusIncrement(amount)
+			return IncAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0,
+			                      amount)
+		end
+
+		---Reset Life Regen Bonus
+		---@return boolean
+		function self:LifeRegenBonusReset()
+			return SetAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0, 0)
+		end
+
+		---Get Mana Regen Rate Bonus
+		---@return real
+		function self:ManaRegenBonus()
+			return GetAbilityReal(self.unit, spell.bonusManaRegen, true, ABILITY_RLF_AMOUNT_REGENERATED, 0)
+		end
+
+		---Increment Mana Regen Bonus
+		---@param amount real
+		---@return boolean
+		function self:ManaRegenBonusIncrement(amount)
+			return IncAbilityReal(self.unit, spell.bonusManaRegen, true, ABILITY_RLF_AMOUNT_REGENERATED, 0, amount)
+		end
+
+		---Reset Mana Regen Bonus
+		---@return boolean
+		function self:ManaRegenBonusReset()
+			return SetAbilityReal(self.unit, spell.bonusManaRegen, true, ABILITY_RLF_AMOUNT_REGENERATED, 0, 0)
+		end
+
+		--- Check if the hero currently has a buff giving it a spell
+		---@param spellName string
+		---@return boolean
+		function self:HasSpellBuff(spellName)
+
+			if spell[spellName].buff == 0 then
+				return false
+			else
+				return UnitHasBuffBJ(self.unit, spell[spellName].buff)
+			end
+		end
+
+		---comment
+		---@param four string
+		---@return boolean
+		function self:HasBuff(four) return UnitHasBuffBJ(self.unit, FourCC(four)) end
+
+		---comment
+		---@param key string
+		---@param value any
+		---@return boolean
+		function self:SetKey(key, value)
+			self.data[key] = value
+
+			return true
+		end
+
+		---comment
+		---@param key string
+		---@return any
+		function self:GetKey(key) return self.data[key] end
+
+		---Add SFX by Name
+		---@param name string
+		---@param sfx effect
+		function self:SFXAdd(name, sfx)
+
+			if self.sfx[name] ~= nil then DestroyEffect(self.sfx[name]) end
+
+			self.sfx[name] = sfx
+			table.insert(self.sfxAll, name)
+			return true
+		end
+
+		---Remove SFX by Name
+		---@param name string
+		function self:SFXRemove(name)
+			DestroyEffect(self.sfx[name])
+			return true
+		end
+
+		---Remove All SFX
+		---@return boolean
+		function self:SFXRemoveAll()
+			local sfxName
+
+			for i = 1, #self.sfxAll, 1 do
+				sfxName = self.sfxAll[i]
+				self:SFXRemove(sfxName)
+			end
+
+			return true
+		end
+
+		---Is Unit in Force
+		---@param playerForce force
+		---@return boolean
+		function self:InForce(playerForce) return IsUnitInForce(self.unit, playerForce) end
+
+		---Is Unit in Rect
+		---@param r region
+		---@return boolean
+		function self:InRect(r) return RectContainsUnit(r, self.unit) end
+
+		---Is Unit in Region
+		---@param reg region
+		---@return boolean
+		function self:InRegion(reg) return IsUnitInRegion(reg, self.unit) end
+
+		---CUSTOM FOR PROJECT
+		---Pick a new order for unit
+		---@return boolean
+		function self:OrderPick()
+
+			local alliedForce = self:InForce(udg_PLAYERGRPallied)
+			local x, y
+
+			if self:InRect(gg_rct_Big_Top_Left) or self:InRect(gg_rct_Big_Top_Left_Center) or
+							self:InRect(gg_rct_Big_Top_Right_Center) or self:InRect(gg_rct_Big_Top_Right) then
+
+				if alliedForce then
+					x, y = GetRandomCoordinatesInRect(gg_rct_Right_Start_Top)
+				else
+					x, y = GetRandomCoordinatesInRect(gg_rct_Left_Start_Top)
+				end
+
+			elseif self:InRect(gg_rct_Big_Middle_Left) or self:InRect(gg_rct_Big_Middle_Left_Center) or
+							self:InRect(gg_rct_Big_Middle_Right_Center) or self:InRect(gg_rct_Big_Middle_Right) then
+
+				if alliedForce then
+					x, y = GetRandomCoordinatesInRect(gg_rct_Right_Start)
+				else
+					x, y = GetRandomCoordinatesInRect(gg_rct_Left_Start)
+				end
+
+			else
+
+				if alliedForce then
+					x, y = GetRandomCoordinatesInRect(gg_rct_Right_Start_Bottom)
+				else
+					x, y = GetRandomCoordinatesInRect(gg_rct_Left_Start_Bottom)
+				end
+			end
+
+			self.orderX = x
+			self.orderY = y
+			self.order = oid.attack
+			self.orderType = "Point"
+
+			return true
+		end
+
+		---Kill the Unit
+		---@return boolean
+		function self:Kill()
+			KillUnit(self.unit)
+			return true
+		end
+
+		-- If unit Exists in Index remove it
+		if UNIT[self.handleId] ~= nil then UNIT.Remove(self.unit) end
+
+		-- Add Unit to Index
+		UNIT[self.handleId] = self
+
+		return self
+	end
+
+end
+
+function init_Abilities()
+
+    -- Init Vars
+    ability = {}
+
+    --
+    --  Shifter
+    --
+
+    -- Switch
+    function ability.switch()
+
+        local u
+
+        local g = CreateGroup()
+        local p = GetSpellTargetLoc()
+        local castingUnit = GetTriggerUnit()
+        local castingPlayer = GetOwningPlayer(castingUnit)
+
+        g = GetUnitsInRangeOfLocAll(200, p)
+        RemoveLocation(p)
+
+        local xOrig = GetUnitX(castingUnit)
+        local yOrig = GetUnitY(castingUnit)
+
+        while true do
+            u = GroupPickRandomUnit(g)
+            if u == nil then
+                BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
+                local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
+                                        GetUnitAbilityLevel(castingUnit, hero.switch.id))
+                SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
+                print("added ability and mana back")
+
+                break
+            end
+
+            if IsUnitIllusion(u) and GetOwningPlayer(u) == castingPlayer then
+
+                local xIll = GetUnitX(u)
+                local yIll = GetUnitY(u)
+
+                AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xIll, yIll)
+                DestroyEffect(GetLastCreatedEffectBJ())
+                AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xOrig, yOrig)
+                DestroyEffect(GetLastCreatedEffectBJ())
+
+                PolledWait(.1)
+
+                SetUnitX(castingUnit, xIll)
+                SetUnitX(u, xOrig)
+                SetUnitY(castingUnit, yIll)
+                SetUnitY(u, yOrig)
+
+                SelectUnitForPlayerSingle(castingUnit, castingPlayer)
+
+                break
+            end
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+    end
+
+    --
+    -- Mana Addict
+    --
+
+    -- Mana Explosion
+    function ability.manaExplosion()
+
+        local u, new, distance, angle, uX, uY, uNewX, uNewY, newDistance, sfx
+        local g = CreateGroup()
+
+        local castingUnit = GetTriggerUnit()
+        local castingPlayer = GetOwningPlayer(castingUnit)
+
+        -- Get Spell Info
+        local castX = GetUnitX(castingUnit)
+        local castY = GetUnitY(castingUnit)
+        local castL = GetUnitLoc(castingUnit)
+        local spellLevel = GetUnitAbilityLevel(castingUnit, hero.manaExplosion.id)
+        local manaStart = GetUnitState(castingUnit, UNIT_STATE_MANA)
+        local manaSpell = manaStart * 0.1
+        local manaLeft = manaStart - manaSpell
+        local manaPercent = GetUnitManaPercent(castingUnit) / 100
+
+        -- Set up Spell Variables
+        local duration = (0.4 * manaPercent) + 0.2
+        local factor = 1
+        local tick = 0.04
+        local damageFull = manaSpell * (spellLevel * 0.2 + 0.8)
+        local aoe = (100 + (spellLevel * 40)) * manaPercent + 200
+
+        -- Prep Spell
+        SetUnitManaBJ(castingUnit, manaLeft)
+
+        g = GetUnitsInRangeOfLocAll(aoe, castL)
+
+        -- Filter Out all of the units that don't matter
+
+        ForGroup(g, function()
+            u = GetEnumUnit()
+
+            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
+                not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
+                IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
+                sfx = AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u, "chest")
+                DestroyEffect(sfx)
+            else
+                GroupRemoveUnit(g, u)
+            end
+
+        end)
+
+        pushbackUnits(g, castingUnit, castX, castY, aoe, damageFull, tick, duration, factor)
+        DestroyGroup(g)
+    end
+
+    -- Mana Explosion
+    function ability.manaBomb()
+
+        local xNew, yNew, l, u, sfx
+        local g = CreateGroup()
+        local distance = 0
+
+        -- Caster vars
+        local castingUnit = GetTriggerUnit()
+        local x = GetUnitX(castingUnit)
+        local y = GetUnitY(castingUnit)
+        local player = GetOwningPlayer(castingUnit)
+
+        -- Ability Vars
+        local xCast = GetSpellTargetX()
+        local yCast = GetSpellTargetY()
+        local lCast = Location(xCast, yCast)
+        local xBomb = x
+        local yBomb = y
+        local level = GetUnitAbilityLevel(castingUnit, hero.manaBomb.id)
+        local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
+        local distanceTotal = distanceBetweenCoordinates(x, y, xCast, yCast)
+        local angle = angleBetweenCoordinates(x, y, xCast, yCast)
+
+        -- Constants
+        local bombSpeed = 35 + 5 * level
+        local damage = (mana * (0.3 + 0.1 * level)) + 100 * level
+        local damageAftershock = 25 + 25 * level
+        local duration = 0.5
+        local durationExplosion = 0.3
+        local aoe = 200
+        local aoeExplosion = 100
+        local bombTick = 0.1
+        local explosionTick = 0.04
+
+        local loopTimes = durationExplosion / explosionTick
+        local damageTick = damage / loopTimes
+
+        -- Move the Bomb Forward
+        while distance + 150 <= distanceTotal do
+
+            xBomb, yBomb = polarProjectionCoordinates(xBomb, yBomb, bombSpeed, angle)
+            distance = distanceBetweenCoordinates(x, y, xBomb, yBomb)
+
+            l = Location(xBomb, yBomb)
+            sfx = AddSpecialEffectLoc("Abilities/Spells/Undead/DeathandDecay/DeathandDecayDamage.mdl", l)
+            DestroyEffect(sfx)
+            RemoveLocation(l)
+
+            PolledWait(bombTick)
+        end
+
+        PolledWait(0.3)
+
+        -- Explode the Bomb
+        sfx = AddSpecialEffectLoc("Flamestrike Mystic I.mdx", lCast)
+        DestroyEffect(sfx)
+        sfx = AddSpecialEffectLoc("Units/NightElf/Wisp/WispExplode.mdl", lCast)
+        DestroyEffect(sfx)
+
+        for i = 1, loopTimes do
+
+            g = GetUnitsInRangeOfLocAll(aoe, lCast)
+            while true do
+                u = FirstOfGroup(g)
+                if u == nil then
+                    break
+                end
+
+                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
+                    not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
+                    IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
+
+                    UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
+
+                    if i == 1 then
+                        sfx = AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u,
+                                  "chest")
+                        DestroyEffect(sfx)
+                    end
+                end
+
+                GroupRemoveUnit(g, u)
+            end
+            DestroyGroup(g)
+
+            PolledWait(explosionTick)
+        end
+
+        -- Start the Aftershock
+        g = GetUnitsInRangeOfLocAll(aoe, lCast)
+        RemoveLocation(lCast)
+
+        ForGroup(g, function()
+            u = GetEnumUnit()
+
+            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
+                not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
+                IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
+
+            else
+                GroupRemoveUnit(g, u)
+            end
+
+        end)
+
+        pushbackUnits(g, castingUnit, xCast, yCast, aoe, damageAftershock, explosionTick, duration, 0.2)
+        DestroyGroup(g)
+
+    end
+
+    function ability.unleashMana()
+        local u, uTarget, unitCount, sfx1
+        local g = CreateGroup()
+        local dummy = FourCC("h01H")
+        local dummySpell = FourCC("A005")
+
+        -- Caster vars
+        local castingUnit = GetTriggerUnit()
+        local x = GetUnitX(castingUnit)
+        local y = GetUnitY(castingUnit)
+        local l = Location(x, y)
+        local player = GetOwningPlayer(castingUnit)
+
+        -- Ability Vars
+        local level = GetUnitAbilityLevel(castingUnit, hero.unleashMana.id)
+        local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
+        local damageMissles = 60 + (60 * level - 60)
+
+        local aoeMissles = 800 + 100 * level
+
+        local duration = 15
+        local tick = 0.15
+
+        currentOrder = OrderId2String(GetUnitCurrentOrder(castingUnit))
+
+        sfx1 = AddSpecialEffectLoc("Mana Storm.mdx", l)
+        BlzSetSpecialEffectScale(sfx1, 0.75)
+
+        PolledWait(0.5)
+
+        while duration > 0 and mana > 0 and currentOrder == hero.unleashMana.order do
+
+            g = GetUnitsInRangeOfLocAll(aoeMissles, l)
+            ForGroup(g, function()
+                u = GetEnumUnit()
+
+                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
+                    not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
+                    IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
+                else
+                    GroupRemoveUnit(g, u)
+                end
+            end)
+
+            unitCount = CountUnitsInGroup(g)
+            if unitCount > 3 then
+                unitCount = 3
+            end
+
+            -- Shoot the Missles
+            for i = 1, unitCount do
+                SetUnitState(castingUnit, UNIT_STATE_MANA, mana - 2)
+                mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
+
+                uTarget = GroupPickRandomUnit(g)
+                u = CreateUnit(player, dummy, x, y, 0)
+                UnitApplyTimedLife(u, FourCC("BTLF"), 0.4)
+                BlzSetUnitBaseDamage(u, damageMissles, 0)
+                BlzSetUnitBaseDamage(castingUnit, damageMissles, 0)
+                IssueTargetOrder(u, "attack", uTarget)
+            end
+            DestroyGroup(g)
+
+            currentOrder = OrderId2String(GetUnitCurrentOrder(castingUnit))
+
+            duration = duration - tick
+            PolledWait(tick)
+        end
+
+        DestroyEffect(sfx1)
+        RemoveLocation(l)
+
+        if currentOrder == hero.unleashMana.order then
+            IssueImmediateOrder(castingUnit, "stop")
+        end
+
+    end
+
+    function ability.soulBind()
+        local u
+        local g = CreateGroup()
+
+        -- Caster vars
+        local castingUnit = GetTriggerUnit()
+        local player = GetOwningPlayer(castingUnit)
+
+        -- Ability Vars
+        local level = GetUnitAbilityLevel(castingUnit, hero.soulBind.id)
+        local xCast = GetSpellTargetX()
+        local yCast = GetSpellTargetY()
+        local lCast = Location(xCast, yCast)
+
+        local aoe = valueFactor(level, 150, 1, 20, 0)
+
+        g = GetUnitsInRangeOfLocAll(aoe, lCast)
+        RemoveLocation(lCast)
+
+        while true do
+            u = FirstOfGroup(g)
+            if u == nil then
+                break
+            end
+
+            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and IsUnitAliveBJ(u) then
+                indexer:addKey(u, "soulBind", castingUnit)
+                indexer:addKey(u, "soulBindLevel", level)
+            end
+
+            GroupRemoveUnit(g, u)
+        end
+        DestroyGroup(g)
+
+    end
+
+    function ability.DEATH_soulBind()
+
+        local u, mana, sfx
+
+        local dyingUnit = BlzGetEventDamageTarget()
+        local lDyingUnit = GetUnitLoc(dyingUnit)
+
+        local castingUnit = indexer:getKey(dyingUnit, "soulBind")
+        local level = indexer:getKey(dyingUnit, "soulBindLevel")
+        local player = GetOwningPlayer(castingUnit)
+
+        local distance = distanceBetweenUnits(dyingUnit, castingUnit)
+
+        if distance < 2000 then
+            u = CreateUnitAtLoc(player, FourCC("e00D"), lDyingUnit, 0)
+
+            while distance > 100 and IsUnitAliveBJ(castingUnit) do
+                IssueTargetOrder(u, "attack", castingUnit)
+                distance = distanceBetweenUnits(u, castingUnit)
+                PolledWait(0.1)
+            end
+
+            KillUnit(u)
+
+            mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
+            SetUnitState(castingUnit, UNIT_STATE_MANA, mana + valueFactor(level, 20, 1, 5, 0))
+
+            sfx = AddSpecialEffectTarget("Abilities/Spells/Other/Charm/CharmTarget.mdl", castingUnit, "chest")
+            DestroyEffect(sfx)
+
+        end
+        RemoveLocation(lDyingUnit)
+    end
+
+    --
+    -- Init Triggers
+    --
+
+    -- EVENT Spell Effects Starts
+    function ability.Init_SpellEffectTrig()
+
+        -- Add Abilities
+        ability.spellEffect = {}
+        ability.spellEffect[hero.switch.id] = hero.switch.name
+        ability.spellEffect[hero.manaExplosion.id] = hero.manaExplosion.name
+        ability.spellEffect[hero.manaBomb.id] = hero.manaBomb.name
+        ability.spellEffect[hero.unleashMana.id] = hero.unleashMana.name
+        ability.spellEffect[hero.soulBind.id] = hero.soulBind.name
+
+        local t = CreateTrigger()
+        TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
+        TriggerAddAction(t, function()
+            local abilityId = GetSpellAbilityId()
+            local abilityName = ability.spellEffect[abilityId]
+
+            -- If the Ability ID is a match, find the function
+            if not (abilityName == nil) then
+
+                try(function()
+                    ability[abilityName]()
+                end, "Ability Cast")
+            end
+
+        end)
+    end
+
+    -- EVENT Unit Dies with Buff
+    function ability.Init_SpellUnitDie()
+
+        -- Add Buffs
+        ability.buff = {}
+        ability.buff[1] = {
+            name = "DEATH_" .. hero.soulBind.name,
+            id = hero.soulBind.buff
+        }
+
+        local t = CreateTrigger()
+        TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_DAMAGED)
+        TriggerAddAction(t, function()
+
+            if GetUnitState(BlzGetEventDamageTarget(), UNIT_STATE_LIFE) - GetEventDamage() < 0 then
+                local dyingUnit = BlzGetEventDamageTarget()
+
+                for i = 1, #ability.buff do
+
+                    if UnitHasBuffBJ(dyingUnit, ability.buff[i].id) then
+                        ability[ability.buff[i].name]()
+                    end
+                end
+            end
+        end)
+
+    end
+
+    ability.Init_SpellEffectTrig()
+    ability.Init_SpellUnitDie()
+end
+
+cine = {}
+function cine.Init()
+	-- Hide UI Keep Mouse
+	SetSkyModel(sky.blizzardSky)
+	-- BlzHideOriginFrames(true)
+	-- BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
+	CinematicFilterGenericBJ(0.00, BLEND_MODE_BLEND, mask.black, 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0)
+
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventSingle(t, 3)
+
+	TriggerAddAction(t, function()
+		CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, 3.00, mask.black, 0, 0, 0, 0)
+
+		-- Lock Cam
+		local startCams = {
+			gg_cam_intro01, gg_cam_intro02, gg_cam_intro03, gg_cam_intro04, gg_cam_intro05, gg_cam_intro06, gg_cam_intro07,
+   gg_cam_intro08, gg_cam_intro09, gg_cam_intro10, gg_cam_intro11
+		}
+
+		for i = 0, 11, 1 do
+			local camChoice = GetRandomInt(1, #startCams)
+			CameraSetupApplyForPlayer(true, startCams[camChoice], Player(i), 0)
+			local camX = CameraSetupGetDestPositionX(startCams[camChoice])
+			local camY = CameraSetupGetDestPositionY(startCams[camChoice])
+
+			local unit = CreateUnit(Player(19), FourCC("h01Z"), camX, camY, bj_UNIT_FACING)
+			UnitApplyTimedLife(unit, FourCC("BTLF"), 20)
+
+			SetCameraTargetControllerNoZForPlayer(Player(i), unit, 0, 0, false)
+		end
+
+	end)
+
+	function cine.mapStart()
+
+		-- Set Hero Bar Offsets
+		local x = 0.205
+		local y = -0.025
+
+		-- Turn off Auto Positioning
+		BlzEnableUIAutoPosition(false)
+
+		-- Create Hero Bar Background UI Texture
+		heroBarUI = BlzCreateFrameByType("BACKDROP", "image", BlzGetFrameByName("ConsoleUIBackdrop", 0),
+		                                 "ButtonBackdropTemplate", 0)
+		BlzFrameSetTexture(heroBarUI, "UI\\ResourceBar_combined.dds", 0, true)
+		BlzFrameSetAbsPoint(heroBarUI, FRAMEPOINT_TOPLEFT, x + 0.046, y + 0.255)
+		BlzFrameSetAbsPoint(heroBarUI, FRAMEPOINT_BOTTOMRIGHT, x + 0.17, y + 0.126)
+		BlzFrameSetLevel(heroBarUI, 1)
+
+		-- Remove Upper Button Bar Back
+		BlzFrameSetAbsPoint(frame.consoleUI, FRAMEPOINT_TOPLEFT, 0, -0.1)
+		BlzFrameSetAbsPoint(frame.consoleUI, FRAMEPOINT_BOTTOM, 0, 0)
+
+		-- Hide Upper Button Bar Buttons
+		BlzFrameClearAllPoints(frame.upperButtonBar.alliesButton)
+		BlzFrameClearAllPoints(frame.upperButtonBar.questsButton)
+		BlzFrameSetAbsPoint(frame.upperButtonBar.alliesButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
+		BlzFrameSetAbsPoint(frame.upperButtonBar.questsButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
+
+		-- Move Upper Button Bar Buttons we like
+		BlzFrameClearAllPoints(frame.upperButtonBar.menuButton)
+		BlzFrameClearAllPoints(frame.upperButtonBar.chatButton)
+		BlzFrameSetAbsPoint(frame.upperButtonBar.menuButton, FRAMEPOINT_TOPLEFT, 0.255, 0.60)
+		BlzFrameSetAbsPoint(frame.upperButtonBar.chatButton, FRAMEPOINT_TOPLEFT, 0.463, 0.60)
+
+		-- Move Gold Bar
+		BlzFrameClearAllPoints(frame.resource.goldText)
+		BlzFrameSetAbsPoint(frame.resource.goldText, FRAMEPOINT_TOPLEFT, x + 0.073, y + 0.213)
+		
+
+		-- Hide Resource Bar
+		BlzFrameClearAllPoints(frame.resource.frame)
+		BlzFrameClearAllPoints(frame.resource.lumberText)
+		BlzFrameSetAbsPoint(frame.resource.frame, FRAMEPOINT_TOPLEFT, 0.0, 1.5)
+		BlzFrameSetAbsPoint(frame.resource.lumberText, FRAMEPOINT_TOPLEFT, 0, 1.5)
+		BlzFrameSetAbsPoint(frame.resource.upkeepText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
+		BlzFrameSetAbsPoint(frame.resource.supplyText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
+
+		-- Hero Bar
+		BlzFrameClearAllPoints(frame.hero.bar)
+		BlzFrameSetAbsPoint(frame.hero.bar, FRAMEPOINT_TOPLEFT, x + 0.01, y + 0.214)
+		BlzFrameSetScale(frame.hero.button[1], 1.25)
+
+		-- HP Bar
+		BlzFrameClearAllPoints(frame.hero.hp[1])
+		BlzFrameSetAbsPoint(frame.hero.hp[1], FRAMEPOINT_BOTTOMLEFT, x + 0.065, y + 0.181)
+		BlzFrameSetScale(frame.hero.hp[1], 2.3)
+
+		-- Mana Bar
+		BlzFrameClearAllPoints(frame.hero.mana[1])
+		BlzFrameSetAbsPoint(frame.hero.mana[1], FRAMEPOINT_BOTTOMLEFT, x + 0.065, y + 0.175)
+		BlzFrameSetScale(frame.hero.mana[1], 2.3)
+
+	end
+
+	function cine.finish()
+
+		-- Reset back to normal
+		CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, 1.00, mask.black, 0, 0, 0, 0)
+		-- BlzHideOriginFrames(false)
+		-- BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
+
+		PolledWait(1)
+
+		for i = 0, 15, 1 do
+			if i < 6 then
+				CameraSetupApplyForPlayer(true, gg_cam_baseLeftStart, Player(i), 0)
+			else
+				CameraSetupApplyForPlayer(true, gg_cam_baseRightStart, Player(i), 0)
+			end
+		end
+
+		CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, 1.00, mask.black, 0, 0, 0, 0)
+		FogMaskEnableOn()
+		FogEnableOn()
+	end
+end
+
+
 --
 -- Location Class
 -----------------
@@ -5143,11 +6661,10 @@ function init_baseClass()
 
 		if base[handleId].update == false then return true end
 
-		local l = Location(base[handleId].x, base[handleId].y)
 		local teamName = base[handleId].teamName
 
 		local g = CreateGroup()
-		g = GetUnitsInRangeOfLocAll(900, l)
+		GroupEnumUnitsInRange(g, base[handleId].x, base[handleId].y, 900, nil)
 		while true do
 			u = FirstOfGroup(g)
 			if u == nil then break end
@@ -5193,7 +6710,8 @@ function init_baseClass()
 		if unitsEnemy == 0 and unitsFriendly > 0 and base[handleId].mana > 50 then
 			if IsUnitInGroup(unit, base[teamName].gHealing) and BlzGetUnitAbilityCooldownRemaining(unit, FourCC("A027")) == 0 then
 
-				g = GetUnitsInRangeOfLocAll(500, l)
+				g = CreateGroup()
+				GroupEnumUnitsInRange(g, base[handleId].x, base[handleId].y, 900, nil)
 
 				while true do
 					u = FirstOfGroup(g)
@@ -5214,7 +6732,6 @@ function init_baseClass()
 				DestroyGroup(g)
 			end
 		end
-		RemoveLocation(l)
 
 		base[handleId].lifePercent = GetUnitLifePercent(unit)
 		base[handleId].mana = GetUnitState(unit, UNIT_STATE_MANA)
@@ -5378,25 +6895,26 @@ function init_gateClass()
 		local gGates = CreateGroup()
 		GroupAddGroup(gate.g, gGates)
 
-		local pickedUnit = FirstOfGroup(gGates)
+		local pickedUnit = UNIT.GET(FirstOfGroup(gGates))
 		while pickedUnit ~= nil do
 			local u
 			local heroes = 0
 			local enemies = 0
 			local unit = pickedUnit
-			local info = gate[GetHandleId(unit)] ---@type table
+			local info = gate[GetHandleId(unit.unit)] ---@type table
 			local g = CreateGroup()
-			local l = GetUnitLoc(unit)
 
-			g = GetUnitsInRangeOfLocAll(700, l)
+
+			GroupEnumUnitsInRange(g, unit:X(), unit:Y(), 700, nil)
+
 
 			while true do
 				u = FirstOfGroup(g)
 				if u == nil then break end
 
-				if not IsUnitAlly(u, GetOwningPlayer(unit)) and IsUnitAliveBJ(u) then enemies = enemies + 1 end
+				if not IsUnitAlly(u, unit:Player()) and IsUnitAliveBJ(u) then enemies = enemies + 1 end
 
-				if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, GetOwningPlayer(unit)) then heroes = heroes + 1 end
+				if IsUnitType(u, UNIT_TYPE_HERO) and IsUnitAlly(u, unit:Player()) then heroes = heroes + 1 end
 
 				GroupRemoveUnit(g, u)
 			end
@@ -5404,46 +6922,50 @@ function init_gateClass()
 
 			-- print("Enemies:" .. enemies .. " Heroes: " .. heroes)
 
-			if enemies > 0 and heroes == 0 and IsUnitInGroup(unit, gate.gOpen) then
-				GroupRemoveUnit(gate.gOpen, unit)
-				GroupRemoveUnit(gate.g, unit)
-				gate[GetHandleId(unit)] = {}
+			if enemies > 0 and heroes == 0 and IsUnitInGroup(unit.unit, gate.gOpen) then
 
-				SetUnitTimeScale(unit, -1)
+				unit:GroupRemove(gate.gOpen)
+				unit:GroupRemove(gate.g)
+
+				gate[unit.handleId] = {}
+
+				unit:SetTimeScale(-1)
+
 				PolledWait(0.667)
 
 				-- Replace Gate with Closed Gate
 				DisableTrigger(gate.Trig_gateDies)
-				ReplaceUnitBJ(unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
+				ReplaceUnitBJ(unit.unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
 				EnableTrigger(gate.Trig_gateDies)
 
-				unit = GetLastReplacedUnitBJ()
-				gate[GetHandleId(unit)] = info
-				GroupAddUnit(gate.gClosed, unit)
-				GroupAddUnit(gate.g, unit)
+				unit = UNIT.NEW(GetLastReplacedUnitBJ())
+				gate[unit.handleId] = info
+				unit:GroupAdd(gate.gClosed)
+				unit:GroupAdd(gate.g)
 
-			elseif (enemies == 0 or heroes > 0) and IsUnitInGroup(unit, gate.gClosed) then
-				GroupRemoveUnit(gate.gClosed, unit)
-				GroupRemoveUnit(gate.g, unit)
-				gate[GetHandleId(unit)] = {}
+			elseif (enemies == 0 or heroes > 0) and unit:InGroup(gate.gClosed) then
+				unit:GroupRemove(gate.gClosed)
+				unit:GroupRemove(gate.g)
+
+				gate[unit.handleId] = {}
 
 				-- Replace Gate with Opened Gate
 				DisableTrigger(gate.Trig_gateDies)
-				ReplaceUnitBJ(unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
+				ReplaceUnitBJ(unit.unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
 				EnableTrigger(gate.Trig_gateDies)
 
-				unit = GetLastReplacedUnitBJ()
-				gate[GetHandleId(unit)] = info
-				GroupAddUnit(gate.gOpen, unit)
-				GroupAddUnit(gate.g, unit)
+				unit = UNIT.NEW(GetLastReplacedUnitBJ())
+				gate[unit.handleId] = info
+				unit:GroupAdd(gate.gOpen)
+				unit:GroupAdd(gate.g)
 
 				-- Play animation
-				SetUnitAnimation(unit, "Death Alternate 1")
+				unit:SetAnimation("Death Alternate 1")
 
 			end
 
-			GroupRemoveUnit(gGates, pickedUnit)
-			pickedUnit = FirstOfGroup(gGates)
+			pickedUnit:GroupRemove(gGates)
+			pickedUnit = UNIT.GET(FirstOfGroup(gGates))
 		end
 		DestroyGroup(gGates)
 
@@ -5465,12 +6987,12 @@ function init_gateClass()
 		TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_ATTACKED)
 		TriggerAddAction(t, function()
 
-			local triggerUnit = GetAttackedUnitBJ()
-			local unitId = GetUnitTypeId(triggerUnit)
+			local triggerUnit = UNIT.GET(GetAttackedUnitBJ())
+			local unitId = triggerUnit.handleId
 
 			if gate.types[unitId] ~= nil then
 				PolledWait(0.2)
-				QueueUnitAnimation(triggerUnit, "Stand Hit")
+				triggerUnit:QueueAnimation("Stand Hit")
 			end
 
 		end)
@@ -5552,1368 +7074,277 @@ function init_gateClass()
 	end
 end
 
---
--- Hero Skills / Abilities Class
------------------
-hero = {}
+---This contains all of the generic functions that can be used.  A lot of it is to make handlefree versions of normal blizzard commands 
+---Returns true if the value is found in the table. Author: KickKing
+---@param table table
+---@param element any
+---@return boolean @true if found, false if not
+function TableContains(table, element)
+	for _, value in pairs(table) do if value == element then return true end end
+	return false
+end
 
-function hero.init()
-	-- Create Class Definition
+---Remove a value from a table
+---@param table table
+---@param value any
+---@return boolean @true if successful
+function TableRemoveValue(table, value) return table.remove(table, TableFind(table, value)) end
 
-	hero.players = {}
-	for i = 1, 12 do hero.players[i] = {picked = false} end
+---comment
+---@param unit unit
+---@param ability SPELL
+---@param add boolean
+---@param aif abilityintegerfield
+---@param level integer
+---@return integer
+function GetAbilityInteger(unit, ability, add, aif, level)
 
-	hero.id = {E001 = "brawler", H009 = "tactition", E002 = "shiftMaster", H00R = "manaAddict", H00J = "timeMage"}
-
-	hero.items = {"teleportation", "tank"}
-	hero.item = {
-		teleportation = {
-			name = "teleportation",
-			properName = "Teleport",
-			four = "I000",
-			id = FourCC("I000"),
-			abilityFour = "A01M",
-			abilityId = FourCC("A01M"),
-			order = "",
-			instant = false,
-			castTime = {6}
-		},
-
-		tank = {name = "tank", properName = "Tank", four = "I005", id = FourCC("I005"), order = "", instant = true},
-
-		mage = {name = "mage", properName = "Mage", four = "I006", id = FourCC("I006"), order = "", instant = true}
-	}
-
-	hero.item.id[hero.item.teleportation.id] = hero.item[hero.item.teleportation.name]
-	hero.item.id[hero.item.tank.id] = hero.item[hero.item.tank.name]
-	hero.item.id[hero.item.mage.id] = hero.item[hero.item.mage.name]
-
-	hero.heroes = {"brawler", "manaAddict", "shiftMaster", "tactition", "timeMage"}
-
-	hero.unit = {
-		brawler = {
-			four = "E001",
-			id = FourCC("E001"),
-			fourAlter = "h00I",
-			idAlter = FourCC("h00I"),
-			spellLearnOrder = {"unleashRage", "drain", "warstomp", "bloodlust"},
-			upgrades = {},
-			startingSpells = {},
-			permanentSpells = {},
-			startingItems = {"teleportation", "tank"}
-		},
-
-		tactition = {
-			four = "H009",
-			id = FourCC("H009"),
-			fourAlter = "h00Y",
-			idAlter = FourCC("h00Y"),
-			spellLearnOrder = {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"},
-			startingSpells = {"raiseBanner"},
-			upgrades = {},
-			permanentSpells = {},
-			startingItems = {"teleportation", "tank"}
-		},
-
-		shiftMaster = {
-			four = "E002",
-			id = FourCC("E002"),
-
-			fourAlter = "h00Q",
-			idAlter = FourCC("h00Q"),
-			spellLearnOrder = {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"},
-			startingSpells = {"shift"},
-			upgrades = {"shadeStrength", "swiftMoves", "swiftAttacks"},
-			permanentSpells = {"felForm", "fallingStrike", "shadeStrength", "swiftMoves", "swiftAttacks", "attributeStiftMaster"},
-			startingItems = {"teleportation", "tank"}
-		},
-
-		manaAddict = {
-			four = "H00R",
-			id = FourCC("H00R"),
-			fourAlter = "h00B",
-			idAlter = FourCC("h00B"),
-			startingSpells = {"manaShield"},
-			permanentSpells = {},
-			startingItems = {"teleportation", "mage"}
-		},
-
-		timeMage = {
-			four = "H00J",
-			id = FourCC("H00J"),
-			fourAlter = "h00Z",
-			idAlter = FourCC("h00Z"),
-			spellLearnOrder = {"paradox", "timeTravel", "chronoAtrophy", "decay"},
-			startingSpells = {},
-			permanentSpells = {},
-			startingItems = {"teleportation", "mage"}
-		}
-	}
-
-	hero.spell = {
-
-		drain = {
-			name = "drain",
-			properName = "Drain",
-			four = "A01Y",
-			id = FourCC("A01Y"),
-			buff = 0,
-			order = "stomp",
-			ult = false,
-			instant = false,
-			castTime = {6, 6, 6, 6, 6, 6}
-		},
-
-		bloodlust = {
-			name = "bloodlust",
-			properName = "Bloodlust",
-			four = "A007",
-			id = FourCC("A007"),
-			buff = 0,
-			order = "stomp",
-			ult = false,
-			instant = true
-		},
-
-		warstomp = {
-			name = "warstomp",
-			properName = "War Stomp",
-			four = "A002",
-			id = FourCC("A002"),
-			buff = 0,
-			order = "stomp",
-			ult = false,
-			instant = true
-		},
-
-		unleashRage = {
-			name = "unleashRage",
-			properName = "Unleassh Rage",
-			four = "A029",
-			id = FourCC("A029"),
-			buff = 0,
-			order = "stomp",
-			ult = true,
-			instant = false,
-			castTime = {6, 6, 6, 6, 6, 6}
-		},
-
-		ironDefense = {
-			name = "ironDefense",
-			properName = "Iron Defense",
-			four = "A019",
-			id = FourCC("A019"),
-			buff = 0,
-			order = "roar",
-			ult = false,
-			instant = true
-		},
-
-		raiseBanner = {
-			name = "raiseBanner",
-			properName = "Raise Banner",
-			four = "A01I",
-			id = FourCC("A01I"),
-			buff = 0,
-			order = "healingward",
-			ult = false,
-			instant = true
-		},
-
-		attack = {
-			name = "attack",
-			properName = "Attack!",
-			four = "A01B",
-			id = FourCC("A01B"),
-			buff = 0,
-			order = "fingerofdeath",
-			ult = false,
-			instant = true
-		},
-
-		bolster = {
-			name = "bolster",
-			properName = "Bolster",
-			four = "A01Z",
-			id = FourCC("A01Z"),
-			buff = 0,
-			order = "tranquility",
-			ult = false,
-			instant = true
-		},
-
-		inspire = {
-			name = "inspire",
-			properName = "Inspire",
-			four = "A042",
-			id = FourCC("A042"),
-			buff = 0,
-			order = "channel",
-			ult = true,
-			instant = true
-		},
-
-		attributeStiftMaster = {
-			name = "attributeStiftMaster",
-			properName = "Attribute Bonus",
-			four = "A031",
-			id = FourCC("A031"),
-			buff = 0,
-			order = "",
-			ult = false
-		},
-
-		shadeStrength = {
-			name = "shadeStrength",
-			properName = "Shade Strength",
-			four = "A037",
-			id = FourCC("A037"),
-			buff = 0,
-			order = "",
-			ult = false
-		},
-
-		swiftMoves = {
-			name = "swiftMoves",
-			properName = "Swift Moves",
-			four = "A056",
-			id = FourCC("A056"),
-			buff = 0,
-			order = "",
-			ult = false
-		},
-
-		swiftAttacks = {
-			name = "swiftAttacks",
-			properName = "Swift Attacks",
-			four = "A030",
-			id = FourCC("A030"),
-			buff = 0,
-			order = "",
-			ult = false
-		},
-
-		switch = {
-			name = "switch",
-			properName = "Switch",
-			four = "A03U",
-			id = FourCC("A03U"),
-			buff = 0,
-			order = "reveal",
-			ult = false,
-			instant = true
-		},
-
-		shift = {
-			name = "shift",
-			properName = "Shift",
-			four = "A03T",
-			id = FourCC("A03T"),
-			buff = 0,
-			order = "berserk",
-			ult = false,
-			instant = true
-		},
-
-		fallingStrike = {
-			name = "fallingStrike",
-			properName = "Falling Strike",
-			four = "A059",
-			id = FourCC("A059"),
-			buff = 0,
-			order = "thunderbolt",
-			ult = false,
-			instant = false,
-			castTime = {1.5, 1.5, 1.5, 1.5, 1.5, 1.5}
-		},
-
-		shiftStorm = {
-			name = "shiftStorm",
-			properName = "Shift Storm",
-			four = "A03C",
-			id = FourCC("A03C"),
-			buff = 0,
-			order = "channel",
-			ult = true,
-			instant = true
-		},
-
-		felForm = {
-			name = "felForm",
-			properName = "Fel Form",
-			four = "A02Y",
-			id = FourCC("A02Y"),
-			buff = 0,
-			order = "metamorphosis",
-			ult = true,
-			instant = true
-		},
-
-		manaShield = {
-			name = "manaShield",
-			properName = "Mana Shield",
-			four = "A001",
-			id = FourCC("A001"),
-			buff = FourCC("BNms"),
-			order = "manashieldon",
-			ult = false,
-			instant = true
-		},
-
-		manaBomb = {
-			name = "manaBomb",
-			properName = "Mana bomb",
-			four = "A03P",
-			id = FourCC("A03P"),
-			buff = 0,
-			order = "flamestrike",
-			ult = false,
-			instant = true
-		},
-
-		manaExplosion = {
-			name = "manaExplosion",
-			properName = "Mana Explosion",
-			four = "A018",
-			id = FourCC("A018"),
-			buff = 0,
-			order = "thunderclap",
-			ult = false,
-			instant = true
-		},
-
-		soulBind = {
-			name = "soulBind",
-			properName = "Soul Bind",
-			four = "A015",
-			id = FourCC("A015"),
-			buff = FourCC("B00F"),
-			order = "custerrockets",
-			ult = false,
-			instant = true
-		},
-
-		unleashMana = {
-			name = "unleashMana",
-			properName = "Unleash Mana",
-			four = "A03S",
-			id = FourCC("A03S"),
-			buff = 0,
-			order = "starfall",
-			ult = true,
-			instant = false,
-			castTime = {15, 15, 15, 15, 15, 15}
-		},
-
-		chronoAtrophy = {
-			name = "chronoAtrophy",
-			properName = "Chrono Atrophy",
-			four = "A04K",
-			id = FourCC("A04K"),
-			buff = 0,
-			order = "flamestrike",
-			ult = false,
-			instant = true
-		},
-
-		decay = {
-			name = "decay",
-			properName = "Decay",
-			four = "A032",
-			id = FourCC("A032"),
-			buff = 0,
-			order = "shadowstrike",
-			ult = false,
-			instant = true
-		},
-
-		timeTravel = {
-			name = "timeTravel",
-			properName = "Time Travel",
-			four = "A04P",
-			id = FourCC("A04P"),
-			buff = 0,
-			order = "clusterrockets",
-			ult = false,
-			instant = true
-		},
-
-		paradox = {
-			name = "paradox",
-			properName = "Paradox",
-			four = "A04N",
-			id = FourCC("A04N"),
-			buff = 0,
-			order = "tranquility",
-			ult = true,
-			instant = false,
-			castTime = {10, 10, 10}
-		}
-	}
-
-	hero.spell.id = {
-		[hero.spell.drain.four] = hero.spell.drain.name,
-		[hero.spell.bloodlust.four] = hero.spell.bloodlust.name,
-		[hero.spell.warstomp.four] = hero.spell.warstomp.name,
-		[hero.spell.unleashRage.four] = hero.spell.unleashRage.name,
-		[hero.spell.chronoAtrophy.four] = hero.spell.chronoAtrophy.name,
-		[hero.spell.decay.four] = hero.spell.decay.name,
-		[hero.spell.timeTravel.four] = hero.spell.timeTravel.name,
-		[hero.spell.paradox.four] = hero.spell.paradox.name,
-		[hero.spell.ironDefense.four] = hero.spell.ironDefense.name,
-		[hero.spell.raiseBanner.four] = hero.spell.raiseBanner.name,
-		[hero.spell.attack.four] = hero.spell.attack.name,
-		[hero.spell.bolster.four] = hero.spell.bolster.name,
-		[hero.spell.inspire.four] = hero.spell.inspire.name,
-		[hero.spell.switch.four] = hero.spell.switch.name,
-		[hero.spell.shift.four] = hero.spell.shift.name,
-		[hero.spell.fallingStrike.four] = hero.spell.fallingStrike.name,
-		[hero.spell.shiftStorm.four] = hero.spell.shiftStorm.name,
-		[hero.spell.felForm.four] = hero.spell.felForm.name,
-		[hero.spell.manaShield.four] = hero.spell.manaShield.name,
-		[hero.spell.manaBomb.four] = hero.spell.manaBomb.name,
-		[hero.spell.manaExplosion.four] = hero.spell.manaExplosion.name,
-		[hero.spell.soulBind.four] = hero.spell.soulBind.name,
-		[hero.spell.unleashMana.four] = hero.spell.unleashMana.name
-	}
-
-	---Get Spell Details
-	---@param heroUnit table
-	---@param spellName string
-	---@return table
-	function hero.spell(heroUnit, spellName)
-		local spellDetails = hero[spellName]
-		spellDetails.level = hero.level(heroUnit, spellName)
-		spellDetails.cooldown = hero.cooldown(heroUnit, spellName)
-		spellDetails.hasBuff = hero.hasBuff(heroUnit, spellName)
-		spellDetails.mana = hero.mana(heroUnit, spellName, spellDetails.level)
-		spellDetails.manaLeft = heroUnit.mana - spellDetails.mana
-
-		if spellDetails.level > 0 and spellDetails.cooldown == 0 and spellDetails.manaLeft >= 0 then
-			spellDetails.castable = true
-		else
-			spellDetails.castable = false
-		end
-
-		-- print(spellName .. " : " .. spellDetails.level)
-		-- print("Castable: " .. tostring(spellDetails.castable))
-
-		return spellDetails
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
 	end
 
-	function hero.Level(heroUnit, spellName) return GetUnitAbilityLevel(heroUnit.unit, hero[spellName].id) end
+	return BlzGetAbilityIntegerLevelField(BlzGetUnitAbility(unit, ability.id), aif, level)
+end
 
-	function hero.Cooldown(heroUnit, spellName)
-		return BlzGetUnitAbilityCooldownRemaining(heroUnit.unit, hero[spellName].id)
+---comment
+---@param unit unit
+---@param ability SPELL
+---@param add boolean
+---@param arf abilityrealfield
+---@param level integer
+---@return real
+function GetAbilityReal(unit, ability, add, arf, level)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
 	end
 
-	function hero.Mana(heroUnit, spellName, level)
-		return BlzGetUnitAbilityManaCost(heroUnit.unit, hero[spellName].id, level)
+	return BlzGetAbilityRealLevelField(BlzGetUnitAbility(unit, ability.id), arf, level)
+end
+
+---Add Ability to Unit and set the Integer field
+---@param unit unit
+---@param ability SPELL
+---@param add boolean
+---@param aif abilityintegerfield
+---@param level integer
+---@param amount integer
+---@return boolean
+function SetAbilityInteger(unit, ability, add, aif, level, amount)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
 	end
 
-	--- Check if the hero currently has a buff
-	---@param heroUnit table
-	---@param spellName string
-	---@return boolean
-	function hero.HasBuff(heroUnit, spellName)
+	BlzSetAbilityIntegerLevelField(BlzGetUnitAbility(unit, ability.id), aif, level, amount)
+	IncUnitAbilityLevel(unit, ability.id)
+	DecUnitAbilityLevel(unit, ability.id)
 
-		if hero[spellName].buff == 0 then
-			return false
-		else
-			return UnitHasBuffBJ(heroUnit.unit, hero[spellName].buff)
-		end
+	return true
+end
+
+---Add Ability to Unit and set the Integer field
+---@param unit unit
+---@param ability SPELL
+---@param add boolean
+---@param aif abilityintegerfield
+---@param level integer
+---@param amount integer
+---@return boolean
+function IncAbilityInteger(unit, ability, add, aif, level, amount)
+
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
 	end
 
-	function hero.LevelUp(unit)
-		local heroFour = CC2Four(GetUnitTypeId(unit))
-		local heroName = hero[heroFour]
-		local heroLevel = GetHeroLevel(unit)
-		local heroPlayer = GetOwningPlayer(unit)
-		local spells = hero[heroName] ---@type table
+	amount = GetAbilityInteger(unit, ability, add, aif, level) + amount
 
-		AdjustPlayerStateBJ(50, heroPlayer, PLAYER_STATE_RESOURCE_LUMBER)
-		SetPlayerTechResearchedSwap(FourCC("R005"), heroLevel - 1, heroPlayer)
+	BlzSetAbilityIntegerLevelField(BlzGetUnitAbility(unit, ability.id), aif, level, amount)
+	IncUnitAbilityLevel(unit, ability.id)
+	DecUnitAbilityLevel(unit, ability.id)
 
-		if (ModuloInteger(heroLevel, 4) == 0) then SetPlayerTechResearchedSwap(FourCC("R006"), heroLevel / 4, heroPlayer) end
+	return true
+end
 
-		-- Remove Ability Points
-		if (heroLevel < 15 and ModuloInteger(heroLevel, 2) ~= 0) then
-			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-		elseif (heroLevel < 25 and heroLevel >= 15 and ModuloInteger(heroLevel, 3) ~= 0) then
-			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-		elseif (heroLevel >= 25 and ModuloInteger(heroLevel, 4) ~= 0) then
-			ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SUB, 1)
-		end
+---Add Ability to Unit and set the Real field
+---@param unit unit
+---@param ability SPELL
+---@param add boolean
+---@param arf abilityrealfield
+---@param level integer
+---@param amount real
+---@return boolean
+function SetAbilityReal(unit, ability, add, arf, level, amount)
 
-		print("Level Up, " .. heroFour .. " Level: " .. heroLevel)
-
-		-- Learn Skill if the Hero is owned by a Computer
-		if GetPlayerController(heroPlayer) == MAP_CONTROL_COMPUTER then
-			local unspentPoints = GetHeroSkillPoints(unit)
-
-			print("Unspent Abilities: " .. unspentPoints)
-
-			if unspentPoints > 0 then
-				for i = 1, #spells.spellLearnOrder do
-					SelectHeroSkill(unit, hero[spells.spellLearnOrder[i]].id)
-
-					if GetHeroSkillPoints(unit) == 0 then return end
-				end
-			end
-		end
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
 	end
 
-	function hero.Upgrade(unit) IssueUpgradeOrderByIdBJ(udg_AI_PursueHero[0], FourCC("R00D")) end
+	BlzSetAbilityRealLevelField(BlzGetUnitAbility(unit, ability.id), arf, level, amount)
+	IncUnitAbilityLevel(unit, ability.id)
+	DecUnitAbilityLevel(unit, ability.id)
 
-	function hero.SetupHero(unit)
-		local heroFour = CC2Four(GetUnitTypeId(unit))
-		local heroName = hero[heroFour]
-		local player = GetOwningPlayer(unit)
-		local playerNumber = GetConvertedPlayerId(player)
-		local heroLevel = GetHeroLevel(unit)
-		local spells = hero[heroName] ---@type table
-		local picked, u, x, y, newAlter
-		local g = CreateGroup()
+	return true
+end
 
-		hero.players[playerNumber] = {}
+---Add Ability to Unit and set the Real field
+---@param unit unit
+---@param ability SPELL
+---@param add boolean
+---@param arf abilityrealfield
+---@param level integer
+---@param amount real
+---@return boolean
+function IncAbilityReal(unit, ability, add, arf, level, amount)
 
-		-- Get home Base Location
-		if playerNumber < 7 then
-			x = GetRectCenterX(gg_rct_Left_Castle)
-			y = GetRectCenterY(gg_rct_Left_Castle)
-		else
-			x = GetRectCenterX(gg_rct_Right_Castle)
-			y = GetRectCenterY(gg_rct_Right_Castle)
-		end
-
-		-- Move hero to home base
-		SetUnitPosition(unit, x, y)
-
-		-- Give the hero the required Skill points for the spells
-		ModifyHeroSkillPoints(unit, bj_MODIFYMETHOD_SET, #spells.startingSpells + 1)
-		for i = 1, #spells.startingSpells do
-			picked = hero[spells.startingSpells[i]]
-
-			-- Have the hero learn the spell
-			SelectHeroSkill(unit, picked.id)
-		end
-
-		-- Add the Permanent Spells for the Hero
-		for i = 1, #spells.permanentSpells do
-			picked = hero[spells.permanentSpells[i]]
-
-			-- Make the Spell Permanent
-			UnitMakeAbilityPermanent(unit, true, picked.id)
-		end
-
-		-- Give the Hero starting Items
-		for i = 1, #spells.startingItems do
-			picked = hero.item[spells.startingItems[i]]
-
-			-- Make the Spell Permanent
-			UnitAddItemById(unit, picked.id)
-		end
-
-		-- Set up Alter
-		g = GetUnitsOfPlayerAndTypeId(player, FourCC("halt"))
-		while true do
-			u = FirstOfGroup(g)
-			if u == nil then break end
-
-			-- Replace Unit Alter
-			ReplaceUnitBJ(u, hero[heroName].idAlter, bj_UNIT_STATE_METHOD_MAXIMUM)
-			newAlter = GetLastReplacedUnitBJ()
-			GroupRemoveUnit(g, u)
-		end
-		DestroyGroup(g)
-
-		hero.players[playerNumber].picked = true
-		hero.players[playerNumber].cameraLock = false
-		hero.players[playerNumber].alter = newAlter
-		hero.players[playerNumber].hero = unit
+	if GetUnitAbilityLevel(unit, ability.id) == 0 and add then
+		UnitAddAbility(unit, ability.id)
+		UnitMakeAbilityPermanent(unit, true, ability.id)
 	end
 
+	amount = GetAbilityReal(unit, ability, add, arf, level) + amount
+
+	BlzSetAbilityRealLevelField(BlzGetUnitAbility(unit, ability.id), arf, level, amount)
+	IncUnitAbilityLevel(unit, ability.id)
+	DecUnitAbilityLevel(unit, ability.id)
+
+	return true
 end
 
-function init_Abilities()
-
-    -- Init Vars
-    ability = {}
-
-    --
-    --  Shifter
-    --
-
-    -- Switch
-    function ability.switch()
-
-        local u
-
-        local g = CreateGroup()
-        local p = GetSpellTargetLoc()
-        local castingUnit = GetTriggerUnit()
-        local castingPlayer = GetOwningPlayer(castingUnit)
-
-        g = GetUnitsInRangeOfLocAll(200, p)
-        RemoveLocation(p)
-
-        local xOrig = GetUnitX(castingUnit)
-        local yOrig = GetUnitY(castingUnit)
-
-        while true do
-            u = GroupPickRandomUnit(g)
-            if u == nil then
-                BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
-                local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
-                                        GetUnitAbilityLevel(castingUnit, hero.switch.id))
-                SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
-                print("added ability and mana back")
-
-                break
-            end
-
-            if IsUnitIllusion(u) and GetOwningPlayer(u) == castingPlayer then
-
-                local xIll = GetUnitX(u)
-                local yIll = GetUnitY(u)
-
-                AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xIll, yIll)
-                DestroyEffect(GetLastCreatedEffectBJ())
-                AddSpecialEffect("Abilities/Spells/Orc/MirrorImage/MirrorImageMissile.mdl", xOrig, yOrig)
-                DestroyEffect(GetLastCreatedEffectBJ())
-
-                PolledWait(.1)
-
-                SetUnitX(castingUnit, xIll)
-                SetUnitX(u, xOrig)
-                SetUnitY(castingUnit, yIll)
-                SetUnitY(u, yOrig)
-
-                SelectUnitForPlayerSingle(castingUnit, castingPlayer)
-
-                break
-            end
-
-            GroupRemoveUnit(g, u)
-        end
-        DestroyGroup(g)
-    end
-
-    --
-    -- Mana Addict
-    --
-
-    -- Mana Explosion
-    function ability.manaExplosion()
-
-        local u, new, distance, angle, uX, uY, uNewX, uNewY, newDistance, sfx
-        local g = CreateGroup()
-
-        local castingUnit = GetTriggerUnit()
-        local castingPlayer = GetOwningPlayer(castingUnit)
-
-        -- Get Spell Info
-        local castX = GetUnitX(castingUnit)
-        local castY = GetUnitY(castingUnit)
-        local castL = GetUnitLoc(castingUnit)
-        local spellLevel = GetUnitAbilityLevel(castingUnit, hero.manaExplosion.id)
-        local manaStart = GetUnitState(castingUnit, UNIT_STATE_MANA)
-        local manaSpell = manaStart * 0.1
-        local manaLeft = manaStart - manaSpell
-        local manaPercent = GetUnitManaPercent(castingUnit) / 100
-
-        -- Set up Spell Variables
-        local duration = (0.4 * manaPercent) + 0.2
-        local factor = 1
-        local tick = 0.04
-        local damageFull = manaSpell * (spellLevel * 0.2 + 0.8)
-        local aoe = (100 + (spellLevel * 40)) * manaPercent + 200
-
-        -- Prep Spell
-        SetUnitManaBJ(castingUnit, manaLeft)
-
-        g = GetUnitsInRangeOfLocAll(aoe, castL)
-
-        -- Filter Out all of the units that don't matter
-
-        ForGroup(g, function()
-            u = GetEnumUnit()
-
-            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
-                not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
-                IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
-                sfx = AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u, "chest")
-                DestroyEffect(sfx)
-            else
-                GroupRemoveUnit(g, u)
-            end
-
-        end)
-
-        pushbackUnits(g, castingUnit, castX, castY, aoe, damageFull, tick, duration, factor)
-        DestroyGroup(g)
-    end
-
-    -- Mana Explosion
-    function ability.manaBomb()
-
-        local xNew, yNew, l, u, sfx
-        local g = CreateGroup()
-        local distance = 0
-
-        -- Caster vars
-        local castingUnit = GetTriggerUnit()
-        local x = GetUnitX(castingUnit)
-        local y = GetUnitY(castingUnit)
-        local player = GetOwningPlayer(castingUnit)
-
-        -- Ability Vars
-        local xCast = GetSpellTargetX()
-        local yCast = GetSpellTargetY()
-        local lCast = Location(xCast, yCast)
-        local xBomb = x
-        local yBomb = y
-        local level = GetUnitAbilityLevel(castingUnit, hero.manaBomb.id)
-        local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-        local distanceTotal = distanceBetweenCoordinates(x, y, xCast, yCast)
-        local angle = angleBetweenCoordinates(x, y, xCast, yCast)
-
-        -- Constants
-        local bombSpeed = 35 + 5 * level
-        local damage = (mana * (0.3 + 0.1 * level)) + 100 * level
-        local damageAftershock = 25 + 25 * level
-        local duration = 0.5
-        local durationExplosion = 0.3
-        local aoe = 200
-        local aoeExplosion = 100
-        local bombTick = 0.1
-        local explosionTick = 0.04
-
-        local loopTimes = durationExplosion / explosionTick
-        local damageTick = damage / loopTimes
-
-        -- Move the Bomb Forward
-        while distance + 150 <= distanceTotal do
-
-            xBomb, yBomb = polarProjectionCoordinates(xBomb, yBomb, bombSpeed, angle)
-            distance = distanceBetweenCoordinates(x, y, xBomb, yBomb)
-
-            l = Location(xBomb, yBomb)
-            sfx = AddSpecialEffectLoc("Abilities/Spells/Undead/DeathandDecay/DeathandDecayDamage.mdl", l)
-            DestroyEffect(sfx)
-            RemoveLocation(l)
-
-            PolledWait(bombTick)
-        end
-
-        PolledWait(0.3)
-
-        -- Explode the Bomb
-        sfx = AddSpecialEffectLoc("Flamestrike Mystic I.mdx", lCast)
-        DestroyEffect(sfx)
-        sfx = AddSpecialEffectLoc("Units/NightElf/Wisp/WispExplode.mdl", lCast)
-        DestroyEffect(sfx)
-
-        for i = 1, loopTimes do
-
-            g = GetUnitsInRangeOfLocAll(aoe, lCast)
-            while true do
-                u = FirstOfGroup(g)
-                if u == nil then
-                    break
-                end
-
-                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
-                    not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
-                    IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
-
-                    UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
-
-                    if i == 1 then
-                        sfx = AddSpecialEffectTarget("Abilities/Spells/Undead/DarkRitual/DarkRitualTarget.mdl", u,
-                                  "chest")
-                        DestroyEffect(sfx)
-                    end
-                end
-
-                GroupRemoveUnit(g, u)
-            end
-            DestroyGroup(g)
-
-            PolledWait(explosionTick)
-        end
-
-        -- Start the Aftershock
-        g = GetUnitsInRangeOfLocAll(aoe, lCast)
-        RemoveLocation(lCast)
-
-        ForGroup(g, function()
-            u = GetEnumUnit()
-
-            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
-                not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
-                IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
-
-            else
-                GroupRemoveUnit(g, u)
-            end
-
-        end)
-
-        pushbackUnits(g, castingUnit, xCast, yCast, aoe, damageAftershock, explosionTick, duration, 0.2)
-        DestroyGroup(g)
-
-    end
-
-    function ability.unleashMana()
-        local u, uTarget, unitCount, sfx1
-        local g = CreateGroup()
-        local dummy = FourCC("h01H")
-        local dummySpell = FourCC("A005")
-
-        -- Caster vars
-        local castingUnit = GetTriggerUnit()
-        local x = GetUnitX(castingUnit)
-        local y = GetUnitY(castingUnit)
-        local l = Location(x, y)
-        local player = GetOwningPlayer(castingUnit)
-
-        -- Ability Vars
-        local level = GetUnitAbilityLevel(castingUnit, hero.unleashMana.id)
-        local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-        local damageMissles = 60 + (60 * level - 60)
-
-        local aoeMissles = 800 + 100 * level
-
-        local duration = 15
-        local tick = 0.15
-
-        currentOrder = OrderId2String(GetUnitCurrentOrder(castingUnit))
-
-        sfx1 = AddSpecialEffectLoc("Mana Storm.mdx", l)
-        BlzSetSpecialEffectScale(sfx1, 0.75)
-
-        PolledWait(0.5)
-
-        while duration > 0 and mana > 0 and currentOrder == hero.unleashMana.order do
-
-            g = GetUnitsInRangeOfLocAll(aoeMissles, l)
-            ForGroup(g, function()
-                u = GetEnumUnit()
-
-                if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_FLYING) and
-                    not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and not IsUnitType(u, UNIT_TYPE_RESISTANT) and
-                    IsUnitAliveBJ(u) and not IsUnitAlly(u, GetOwningPlayer(castingUnit)) then
-                else
-                    GroupRemoveUnit(g, u)
-                end
-            end)
-
-            unitCount = CountUnitsInGroup(g)
-            if unitCount > 3 then
-                unitCount = 3
-            end
-
-            -- Shoot the Missles
-            for i = 1, unitCount do
-                SetUnitState(castingUnit, UNIT_STATE_MANA, mana - 2)
-                mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-
-                uTarget = GroupPickRandomUnit(g)
-                u = CreateUnit(player, dummy, x, y, 0)
-                UnitApplyTimedLife(u, FourCC("BTLF"), 0.4)
-                BlzSetUnitBaseDamage(u, damageMissles, 0)
-                BlzSetUnitBaseDamage(castingUnit, damageMissles, 0)
-                IssueTargetOrder(u, "attack", uTarget)
-            end
-            DestroyGroup(g)
-
-            currentOrder = OrderId2String(GetUnitCurrentOrder(castingUnit))
-
-            duration = duration - tick
-            PolledWait(tick)
-        end
-
-        DestroyEffect(sfx1)
-        RemoveLocation(l)
-
-        if currentOrder == hero.unleashMana.order then
-            IssueImmediateOrder(castingUnit, "stop")
-        end
-
-    end
-
-    function ability.soulBind()
-        local u
-        local g = CreateGroup()
-
-        -- Caster vars
-        local castingUnit = GetTriggerUnit()
-        local player = GetOwningPlayer(castingUnit)
-
-        -- Ability Vars
-        local level = GetUnitAbilityLevel(castingUnit, hero.soulBind.id)
-        local xCast = GetSpellTargetX()
-        local yCast = GetSpellTargetY()
-        local lCast = Location(xCast, yCast)
-
-        local aoe = valueFactor(level, 150, 1, 20, 0)
-
-        g = GetUnitsInRangeOfLocAll(aoe, lCast)
-        RemoveLocation(lCast)
-
-        while true do
-            u = FirstOfGroup(g)
-            if u == nil then
-                break
-            end
-
-            if not IsUnitType(u, UNIT_TYPE_STRUCTURE) and not IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE) and IsUnitAliveBJ(u) then
-                indexer:addKey(u, "soulBind", castingUnit)
-                indexer:addKey(u, "soulBindLevel", level)
-            end
-
-            GroupRemoveUnit(g, u)
-        end
-        DestroyGroup(g)
-
-    end
-
-    function ability.DEATH_soulBind()
-
-        local u, mana, sfx
-
-        local dyingUnit = BlzGetEventDamageTarget()
-        local lDyingUnit = GetUnitLoc(dyingUnit)
-
-        local castingUnit = indexer:getKey(dyingUnit, "soulBind")
-        local level = indexer:getKey(dyingUnit, "soulBindLevel")
-        local player = GetOwningPlayer(castingUnit)
-
-        local distance = distanceBetweenUnits(dyingUnit, castingUnit)
-
-        if distance < 2000 then
-            u = CreateUnitAtLoc(player, FourCC("e00D"), lDyingUnit, 0)
-
-            while distance > 100 and IsUnitAliveBJ(castingUnit) do
-                IssueTargetOrder(u, "attack", castingUnit)
-                distance = distanceBetweenUnits(u, castingUnit)
-                PolledWait(0.1)
-            end
-
-            KillUnit(u)
-
-            mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-            SetUnitState(castingUnit, UNIT_STATE_MANA, mana + valueFactor(level, 20, 1, 5, 0))
-
-            sfx = AddSpecialEffectTarget("Abilities/Spells/Other/Charm/CharmTarget.mdl", castingUnit, "chest")
-            DestroyEffect(sfx)
-
-        end
-        RemoveLocation(lDyingUnit)
-    end
-
-    --
-    -- Init Triggers
-    --
-
-    -- EVENT Spell Effects Starts
-    function ability.Init_SpellEffectTrig()
-
-        -- Add Abilities
-        ability.spellEffect = {}
-        ability.spellEffect[hero.switch.id] = hero.switch.name
-        ability.spellEffect[hero.manaExplosion.id] = hero.manaExplosion.name
-        ability.spellEffect[hero.manaBomb.id] = hero.manaBomb.name
-        ability.spellEffect[hero.unleashMana.id] = hero.unleashMana.name
-        ability.spellEffect[hero.soulBind.id] = hero.soulBind.name
-
-        local t = CreateTrigger()
-        TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
-        TriggerAddAction(t, function()
-            local abilityId = GetSpellAbilityId()
-            local abilityName = ability.spellEffect[abilityId]
-
-            -- If the Ability ID is a match, find the function
-            if not (abilityName == nil) then
-
-                try(function()
-                    ability[abilityName]()
-                end, "Ability Cast")
-            end
-
-        end)
-    end
-
-    -- EVENT Unit Dies with Buff
-    function ability.Init_SpellUnitDie()
-
-        -- Add Buffs
-        ability.buff = {}
-        ability.buff[1] = {
-            name = "DEATH_" .. hero.soulBind.name,
-            id = hero.soulBind.buff
-        }
-
-        local t = CreateTrigger()
-        TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_DAMAGED)
-        TriggerAddAction(t, function()
-
-            if GetUnitState(BlzGetEventDamageTarget(), UNIT_STATE_LIFE) - GetEventDamage() < 0 then
-                local dyingUnit = BlzGetEventDamageTarget()
-
-                for i = 1, #ability.buff do
-
-                    if UnitHasBuffBJ(dyingUnit, ability.buff[i].id) then
-                        ability[ability.buff[i].name]()
-                    end
-                end
-            end
-        end)
-
-    end
-
-    ability.Init_SpellEffectTrig()
-    ability.Init_SpellUnitDie()
+---Find the index of a value in a table.
+---@param tab table
+---@param el any
+---@return number @Returns the index
+function TableFind(tab, el) for index, value in pairs(tab) do if value == el then return index end end end
+
+---Get the distance between 2 sets of Coordinates (Not handles used)
+---@param x1 number
+---@param y1 number
+---@param x2 number
+---@param y2 number
+---@return number
+function DistanceBetweenCoordinates(x1, y1, x2, y2) return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))) end
+
+-- **Credit** KickKing
+-- get distance without locations
+---Get Distance between two units.  (Doesn't leak)
+---@param unitA any
+---@param unitB any
+---@return number
+function DistanceBetweenUnits(unitA, unitB)
+	return DistanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
-cine = {}
-function cine.Init()
-	-- Hide UI Keep Mouse
-	SetSkyModel(sky.blizzardSky)
-	-- BlzHideOriginFrames(true)
-	-- BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), false)
-	CinematicFilterGenericBJ(0.00, BLEND_MODE_BLEND, mask.black, 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0)
+--- get angle between two sets of coordinates without locations
+---@param x1 number
+---@param y1 number
+---@param x2 number
+---@param y2 number
+---@return number @angle between 0 and 360
+function AngleBetweenCoordinates(x1, y1, x2, y2) return bj_RADTODEG * Atan2(y2 - y1, x2 - x1) end
 
-	local t = CreateTrigger()
-	TriggerRegisterTimerEventSingle(t, 3)
-
-	TriggerAddAction(t, function()
-		CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, 3.00, mask.black, 0, 0, 0, 0)
-
-		-- Lock Cam
-		local startCams = {
-			gg_cam_intro01, gg_cam_intro02, gg_cam_intro03, gg_cam_intro04, gg_cam_intro05, gg_cam_intro06, gg_cam_intro07,
-   gg_cam_intro08, gg_cam_intro09, gg_cam_intro10, gg_cam_intro11
-		}
-
-		for i = 0, 11, 1 do
-			local camChoice = GetRandomInt(1, #startCams)
-			CameraSetupApplyForPlayer(true, startCams[camChoice], Player(i), 0)
-			local camX = CameraSetupGetDestPositionX(startCams[camChoice])
-			local camY = CameraSetupGetDestPositionY(startCams[camChoice])
-
-			local unit = CreateUnit(Player(19), FourCC("h01Z"), camX, camY, bj_UNIT_FACING)
-			UnitApplyTimedLife(unit, FourCC("BTLF"), 20)
-
-			SetCameraTargetControllerNoZForPlayer(Player(i), unit, 0, 0, false)
-		end
-
-	end)
-
-	function cine.mapStart()
-
-		-- Set Hero Bar Offsets
-		local x = 0.205
-		local y = -0.025
-
-		-- Turn off Auto Positioning
-		BlzEnableUIAutoPosition(false)
-
-		-- Create Hero Bar Background UI Texture
-		heroBarUI = BlzCreateFrameByType("BACKDROP", "image", BlzGetFrameByName("ConsoleUIBackdrop", 0),
-		                                 "ButtonBackdropTemplate", 0)
-		BlzFrameSetTexture(heroBarUI, "UI\\ResourceBar_combined.dds", 0, true)
-		BlzFrameSetAbsPoint(heroBarUI, FRAMEPOINT_TOPLEFT, x + 0.046, y + 0.255)
-		BlzFrameSetAbsPoint(heroBarUI, FRAMEPOINT_BOTTOMRIGHT, x + 0.17, y + 0.126)
-		BlzFrameSetLevel(heroBarUI, 1)
-
-		-- Remove Upper Button Bar Back
-		BlzFrameSetAbsPoint(frame.consoleUI, FRAMEPOINT_TOPLEFT, 0, -0.1)
-		BlzFrameSetAbsPoint(frame.consoleUI, FRAMEPOINT_BOTTOM, 0, 0)
-
-		-- Hide Upper Button Bar Buttons
-		BlzFrameClearAllPoints(frame.upperButtonBar.alliesButton)
-		BlzFrameClearAllPoints(frame.upperButtonBar.questsButton)
-		BlzFrameSetAbsPoint(frame.upperButtonBar.alliesButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
-		BlzFrameSetAbsPoint(frame.upperButtonBar.questsButton, FRAMEPOINT_BOTTOMLEFT, 0, 1.5)
-
-		-- Move Upper Button Bar Buttons we like
-		BlzFrameClearAllPoints(frame.upperButtonBar.menuButton)
-		BlzFrameClearAllPoints(frame.upperButtonBar.chatButton)
-		BlzFrameSetAbsPoint(frame.upperButtonBar.menuButton, FRAMEPOINT_TOPLEFT, 0.255, 0.60)
-		BlzFrameSetAbsPoint(frame.upperButtonBar.chatButton, FRAMEPOINT_TOPLEFT, 0.463, 0.60)
-
-		-- Move Gold Bar
-		BlzFrameClearAllPoints(frame.resource.goldText)
-		BlzFrameSetAbsPoint(frame.resource.goldText, FRAMEPOINT_TOPLEFT, x + 0.073, y + 0.213)
-		
-
-		-- Hide Resource Bar
-		BlzFrameClearAllPoints(frame.resource.frame)
-		BlzFrameClearAllPoints(frame.resource.lumberText)
-		BlzFrameSetAbsPoint(frame.resource.frame, FRAMEPOINT_TOPLEFT, 0.0, 1.5)
-		BlzFrameSetAbsPoint(frame.resource.lumberText, FRAMEPOINT_TOPLEFT, 0, 1.5)
-		BlzFrameSetAbsPoint(frame.resource.upkeepText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
-		BlzFrameSetAbsPoint(frame.resource.supplyText, FRAMEPOINT_TOPRIGHT, 0, 1.5)
-
-		-- Hero Bar
-		BlzFrameClearAllPoints(frame.hero.bar)
-		BlzFrameSetAbsPoint(frame.hero.bar, FRAMEPOINT_TOPLEFT, x + 0.01, y + 0.214)
-		BlzFrameSetScale(frame.hero.button[1], 1.25)
-
-		-- HP Bar
-		BlzFrameClearAllPoints(frame.hero.hp[1])
-		BlzFrameSetAbsPoint(frame.hero.hp[1], FRAMEPOINT_BOTTOMLEFT, x + 0.065, y + 0.181)
-		BlzFrameSetScale(frame.hero.hp[1], 2.3)
-
-		-- Mana Bar
-		BlzFrameClearAllPoints(frame.hero.mana[1])
-		BlzFrameSetAbsPoint(frame.hero.mana[1], FRAMEPOINT_BOTTOMLEFT, x + 0.065, y + 0.175)
-		BlzFrameSetScale(frame.hero.mana[1], 2.3)
-
-	end
-
-	function cine.finish()
-
-		-- Reset back to normal
-		CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, 1.00, mask.black, 0, 0, 0, 0)
-		-- BlzHideOriginFrames(false)
-		-- BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop", 0), true)
-
-		PolledWait(1)
-
-		for i = 0, 15, 1 do
-			if i < 6 then
-				CameraSetupApplyForPlayer(true, gg_cam_baseLeftStart, Player(i), 0)
-			else
-				CameraSetupApplyForPlayer(true, gg_cam_baseRightStart, Player(i), 0)
-			end
-		end
-
-		CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, 1.00, mask.black, 0, 0, 0, 0)
-		FogMaskEnableOn()
-		FogEnableOn()
-	end
+---get angle between two units without locations
+---@param unitA any @Unit 1
+---@param unitB any @Unit 2
+---@return number @angle between 0 and 360
+function AngleBetweenUnits(unitA, unitB)
+	return AngleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
 end
 
-
---
--- Functions
---
-
----Returns the type of a warcraft object as string, e.g. "location", when inputting a location.
----@param input anyWarcraftObject
----@return string
-function Wc3Type(input)
-    local typeString = type(input)
-    if typeString == 'number' then
-        return (math.type(input) =='float' and 'real') or 'integer'
-    elseif typeString == 'userdata' then
-        typeString = tostring(input) --toString returns the warcraft type plus a colon and some hashstuff.
-        return string.sub(typeString, 1, (string.find(typeString, ":", nil, true) or 0) -1) --string.find returns nil, if the argument is not found, which would break string.sub. So we need or as coalesce.
-    else
-        return typeString
-    end
+---Polar projection from point (Doesn't Leak)
+---@param x number
+---@param y number
+---@param dist number
+---@param angle number
+---@return number @x
+---@return number @y
+function PolarProjectionCoordinates(x, y, dist, angle)
+	local newX = x + dist * Cos(angle * bj_DEGTORAD)
+	local newY = y + dist * Sin(angle * bj_DEGTORAD)
+	return newX, newY
 end
 
-
-function dprint(message, level)
-    level = level or 1
-
-    if debugprint >= level then
-        print("|cff00ff00[debug " .. level .. "]|r " .. tostring(message))
-    end
-end
-
-function distanceBetweenCoordinates(x1, y1, x2, y2) -- Find Distance between points
-    return SquareRoot(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)))
-end
-
-function distanceBetweenUnits(unitA, unitB)
-    return distanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
-end
-
-function angleBetweenCoordinates(x1, y1, x2, y2)
-    return bj_RADTODEG * Atan2(y2 - y1, x2 - x1)
-end
-
-function angleBetweenUnits(unitA, unitB)
-    return angleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
-end
-
-function polarProjectionCoordinates(x, y, dist, angle)
-    local newX = x + dist * Cos(angle * bj_DEGTORAD)
-    local newY = y + dist * Sin(angle * bj_DEGTORAD)
-    return newX, newY
-end
-
+---raps your code in a "Try" loop so you can see errors printed in the log at runtime.  Author: Planetary
+---@param func function
 function try(func) -- Turn on runtime logging
-    local passed, data = pcall(function()
-        func()
-        return "func " .. " passed"
-    end)
-    if not passed then
-        print("|cffff0000[ERROR]|r", passed, data)
-    end
+	local passed, data = pcall(function()
+		func()
+		return "func " .. " passed"
+	end)
+	if not passed then print("|cffff0000[ERROR]|r", passed, data) end
 end
 
+---Converts integer formated types into the 4 digit strings (Opposite of FourCC()) Author: Taysen
+---@param num any
+---@return any
 function CC2Four(num) -- Convert from Handle ID to Four Char
-    return string.pack(">I4", num)
+	return string.pack(">I4", num)
 end
 
-do
-    local data = {}
-    function SetTimerData(whichTimer, dat)
-        data[whichTimer] = dat
-    end
-
-    -- GetData functionality doesn't even require an argument.
-    function GetTimerData(whichTimer)
-        if not whichTimer then
-            whichTimer = GetExpiredTimer()
-        end
-        return data[whichTimer]
-    end
-
-    -- NewTimer functionality includes optional parameter to pass data to timer.
-    function NewTimer(dat)
-        local t = CreateTimer()
-        if dat then
-            data[t] = dat
-        end
-        return t
-    end
-
-    -- Release functionality doesn't even need for you to pass the expired timer.
-    -- as an arg. It also returns the user data passed.
-    function ReleaseTimer(whichTimer)
-        if not whichTimer then
-            whichTimer = GetExpiredTimer()
-        end
-        local dat = data[whichTimer]
-        data[whichTimer] = nil
-        PauseTimer(whichTimer)
-        DestroyTimer(whichTimer)
-        return dat
-    end
+--- Get a random xy in the specified rect
+---@param rect any
+---@return any
+---@return any
+function GetRandomCoordinatesInRect(rect)
+	return GetRandomReal(GetRectMinX(rect), GetRectMaxX(rect)), GetRandomReal(GetRectMinY(rect), GetRectMaxY(rect))
 end
 
--- Requires https://www.hiveworkshop.com/threads/lua-timerutils.316957/
+---Get a random xy in the specified datapoints
+---@param xMin number
+---@param xMax number
+---@param yMin number
+---@param yMax number
+---@return number
+---@return number
+function GetRandomCoordinatesInPoints(xMin, xMax, yMin, yMax) return GetRandomReal(xMin, xMax),
+                                                                     GetRandomReal(yMin, yMax) end
 
-do
-    local oldWait = PolledWait
-    function PolledWait(duration)
-        local thread = coroutine.running()
-        if thread then
-            TimerStart(NewTimer(thread), duration, false, function()
-                coroutine.resume(ReleaseTimer())
-            end)
-            coroutine.yield(thread)
-        else
-            oldWait(duration)
-        end
-    end
+---Wait until Order ends or until the amount of time specified
+---@param unit any @This is the Unit to watch
+---@param time any @OPTIONAL | 2 | The max amount of time to wait
+---@param order any @OPTIONAL | oid.move | The order the continue to wait until it's no longer what the unit is doing
+---@param tick any @OPTIONAL | 0.1 | The amount of time to wait between checks
+---@return boolean
+function WaitWhileOrder(unit, time, order, tick)
 
-    local oldTSA = TriggerSleepAction
-    function TriggerSleepAction(duration)
-        PolledWait(duration)
-    end
+	-- Set Defaults
+	time = time or 2
+	order = order or oid.move
+	tick = tick or 0.1
 
-    local thread
-    local oldSync = SyncSelections
-    function SyncSelectionsHelper()
-        local t = thread
-        oldSync()
-        coroutine.resume(t)
-    end
-    function SyncSelections()
-        thread = coroutine.running()
-        if thread then
-            ExecuteFunc("SyncSelectionsHelper")
-            coroutine.yield(thread)
-        else
-            oldSync()
-        end
-    end
+	-- Set Local Variables
+	local i = 1
+	local unitOrder = GetUnitCurrentOrder(unit)
 
-    if not EnableWaits then -- Added this check to ensure compatibilitys with Lua Fast Triggers
-        local oldAction = TriggerAddAction
-        function TriggerAddAction(whichTrig, userAction)
-            oldAction(whichTrig, function()
-                coroutine.resume(coroutine.create(function()
-                    userAction()
-                end))
-            end)
-        end
-    end
+	-- Loop
+	while unitOrder == oid.move and i < time do
+		unitOrder = GetUnitCurrentOrder(unit)
+		PolledWait(tick)
+		i = i + tick
+	end
+
+	return true
 end
 
-function pushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor)
-    local u, uX, uY, distance, angle, newDistance, uNewX, uNewY
+---A system that allow you to duplicate the functionality of auto-filling in the Object Editor
+---@param level             number @How many Levels or iterations to use for this
+---@param base              number @The number to start with
+---@param previousFactor    number @Multiply the previous level by this value
+---@param levelFactor       number @This value exponential adds to itself every level
+---@param constant          number @This gets added every level
+---@return                  number @The calculated Value
+function ValueFactor(level, base, previousFactor, levelFactor, constant)
 
-    local loopTimes = duration / tick
-    local damageTick = damage / loopTimes
+	local value = base
 
-    if CountUnitsInGroup(g) > 0 then
-        for i = 1, loopTimes do
+	if level > 1 then for i = 2, level do value = (value * previousFactor) + (i * levelFactor) + (constant) end end
 
-            ForGroup(g, function()
-                u = GetEnumUnit()
-
-                if IsUnitAliveBJ(u) then
-
-                    if i == 1 then
-                        PauseUnit(u, true)
-                    end
-
-                    uX = GetUnitX(u)
-                    uY = GetUnitY(u)
-
-                    distance = distanceBetweenCoordinates(x, y, uX, uY)
-                    angle = angleBetweenCoordinates(x, y, uX, uY)
-
-                    newDistance = ((aoe + 80) - distance) * 0.13 * factor
-
-                    uNewX, uNewY = polarProjectionCoordinates(uX, uY, newDistance, angle)
-
-                    -- if IsTerrainPathable(uNewX, uNewY, PATHING_TYPE_WALKABILITY) then
-                    SetUnitX(u, uNewX)
-                    SetUnitY(u, uNewY)
-                    -- end
-
-                    if damage > 0 then
-                        UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC)
-                    end
-
-                    if i >= loopTimes - 1 then
-                        PauseUnit(u, false)
-                    end
-                else
-                    PauseUnit(u, false)
-                    GroupRemoveUnit(g, u)
-                end
-            end)
-
-            PolledWait(tick)
-        end
-    end
-    DestroyGroup(g)
-end
-
-function valueFactor(level, base, previousFactor, levelFactor, constant)
-
-    local value = base
-
-    if level > 1 then
-        for i = 2, level do
-            value = (value * previousFactor) + (i * levelFactor) + (constant)
-            print(value)
-        end
-    end
-
-    print(value)
-    return value
+	return value
 end
 
 function init_triggers()
@@ -7025,69 +7456,6 @@ function addRegions()
 	RegionAddRect(topRegion, gg_rct_Big_Top_Left_Center)
 	RegionAddRect(topRegion, gg_rct_Big_Top_Right_Center)
 	RegionAddRect(topRegion, gg_rct_Big_Top_Right)
-end
-
-function addBases()
-
-	base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
-	base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
-
-	base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
-	base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
-
-	base.add(gg_unit_hars_0355, 1, false, true, true, false) -- Allied Arcane Top
-	base.add(gg_unit_hars_0293, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_hars_0292, 1, false, true, true, false) -- Allied Arcane Bottom
-	base.add(gg_unit_hars_0303, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_n00K_0802, 2, false, true, true, true) -- Allied Blacksmith
-	base.add(gg_unit_n00K_0477, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_h00E_0033, 8, true, true, true, true) -- Allied Castle
-	base.add(gg_unit_h00E_0081, 8, true, true, true, true) -- Federation
-
-	base.add(gg_unit_hvlt_0207, 2, false, true, true, true) -- Allied City Elves
-	base.add(gg_unit_hvlt_0406, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_n00B_0364, 1, false, true, true, true) -- Allied City Front
-	base.add(gg_unit_n00B_0399, 1, false, true, true, true) -- Federation
-
-	base.add(gg_unit_n00B_0102, 1, false, true, true, true) -- Allied City Side
-	base.add(gg_unit_n00B_0038, 1, false, true, true, true) -- Federation
-
-	base.add(gg_unit_ndh2_0359, 1, false, true, true, true) -- Allied Draenei
-	base.add(gg_unit_ndh2_0876, 1, false, true, true, true) -- Federation
-
-	base.add(gg_unit_nheb_0109, 3, false, true, true, true) -- Allied High Elves
-	base.add(gg_unit_nheb_0036, 3, false, true, true, true) -- Federation
-
-	base.add(gg_unit_n001_0048, 2, false, true, true, true) -- Allied Merc Camp
-	base.add(gg_unit_n001_0049, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_h006_0074, 2, false, true, true, true) -- Allied Mine
-	base.add(gg_unit_h006_0055, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_nmh1_0735, 1, false, true, true, false) -- Allied Murloc
-	base.add(gg_unit_nmh1_0783, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_nntt_0135, 2, false, true, true, true) -- Allied Naga
-	base.add(gg_unit_nntt_0132, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_e003_0058, 3, false, true, true, true) -- Allied Night Elves
-	base.add(gg_unit_e003_0014, 3, false, true, true, true) -- Federation
-
-	base.add(gg_unit_o001_0075, 2, false, true, true, true) -- Allied Orcs
-	base.add(gg_unit_o001_0078, 2, false, true, true, true) -- Federation
-
-	base.add(gg_unit_eshy_0120, 1, false, true, true, false) -- Allied Night Elf Shipyard
-	base.add(gg_unit_eshy_0047, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
-	base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
-
-	base.add(gg_unit_u001_0097, 2, false, true, true, true) -- Federation Undead
-	base.add(gg_unit_u001_0098, 2, false, true, true, true) -- Federation
 end
 
 function Init_luaGlobals()
@@ -7554,9 +7922,77 @@ function Init_luaGlobals()
 
 end
 
--- Spawn Set up
-function spawnAddBases()
-	-- addBase(baseName, alliedStart, alliedEnd, alliedCondition, fedStart, fedEnd, fedCondition, destination)
+init = {}
+
+function init.Globals()
+
+	--
+	-- Set up Bases
+	--
+
+	base.add(gg_unit_h003_0015, 3, false, true, true, true) -- Allied Arcane Main
+	base.add(gg_unit_h003_0007, 3, false, true, true, true) -- Federation Arcane Main
+
+	base.add(gg_unit_h014_0017, 2, false, true, true, false) -- Allied Arcane Hero
+	base.add(gg_unit_h014_0158, 2, false, true, true, false) -- Federation
+
+	base.add(gg_unit_hars_0355, 1, false, true, true, false) -- Allied Arcane Top
+	base.add(gg_unit_hars_0293, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_hars_0292, 1, false, true, true, false) -- Allied Arcane Bottom
+	base.add(gg_unit_hars_0303, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_n00K_0802, 2, false, true, true, true) -- Allied Blacksmith
+	base.add(gg_unit_n00K_0477, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_h00E_0033, 8, true, true, true, true) -- Allied Castle
+	base.add(gg_unit_h00E_0081, 8, true, true, true, true) -- Federation
+
+	base.add(gg_unit_hvlt_0207, 2, false, true, true, true) -- Allied City Elves
+	base.add(gg_unit_hvlt_0406, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_n00B_0364, 1, false, true, true, true) -- Allied City Front
+	base.add(gg_unit_n00B_0399, 1, false, true, true, true) -- Federation
+
+	base.add(gg_unit_n00B_0102, 1, false, true, true, true) -- Allied City Side
+	base.add(gg_unit_n00B_0038, 1, false, true, true, true) -- Federation
+
+	base.add(gg_unit_ndh2_0359, 1, false, true, true, true) -- Allied Draenei
+	base.add(gg_unit_ndh2_0876, 1, false, true, true, true) -- Federation
+
+	base.add(gg_unit_nheb_0109, 3, false, true, true, true) -- Allied High Elves
+	base.add(gg_unit_nheb_0036, 3, false, true, true, true) -- Federation
+
+	base.add(gg_unit_n001_0048, 2, false, true, true, true) -- Allied Merc Camp
+	base.add(gg_unit_n001_0049, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_h006_0074, 2, false, true, true, true) -- Allied Mine
+	base.add(gg_unit_h006_0055, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_nmh1_0735, 1, false, true, true, false) -- Allied Murloc
+	base.add(gg_unit_nmh1_0783, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_nntt_0135, 2, false, true, true, true) -- Allied Naga
+	base.add(gg_unit_nntt_0132, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_e003_0058, 3, false, true, true, true) -- Allied Night Elves
+	base.add(gg_unit_e003_0014, 3, false, true, true, true) -- Federation
+
+	base.add(gg_unit_o001_0075, 2, false, true, true, true) -- Allied Orcs
+	base.add(gg_unit_o001_0078, 2, false, true, true, true) -- Federation
+
+	base.add(gg_unit_eshy_0120, 1, false, true, true, false) -- Allied Night Elf Shipyard
+	base.add(gg_unit_eshy_0047, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_hshy_0011, 1, false, true, true, false) -- Allied Human Shipyard
+	base.add(gg_unit_hshy_0212, 1, false, true, true, false) -- Federation
+
+	base.add(gg_unit_u001_0097, 2, false, true, true, true) -- Federation Undead
+	base.add(gg_unit_u001_0098, 2, false, true, true, true) -- Federation
+
+	--
+	-- Set up Spawn
+	--
 
 	spawn:addBase("arcane", "sArcaneLeft", "bottomRight", gg_unit_h003_0015, "sArcaneRight", "topLeft", gg_unit_h003_0007)
 	spawn:addBase("arcaneCreep", "sArcaneLeft", "cStormLeft", gg_unit_h003_0015, "sArcaneRight", "cStormRight",
@@ -7599,10 +8035,6 @@ function spawnAddBases()
 	              "sHumanShipyardLeft", gg_unit_hshy_0212, 3)
 	spawn:addBase("undead", "sUndeadLeft", "middleRight", gg_unit_u001_0097, "sUndeadRight", "middleLeft",
 	              gg_unit_u001_0098)
-end
-
-function spawnAddUnits()
-	-- addUnit(baseName, unitType, numOfUnits, {waves}, levelStart, levelEnd)
 
 	-- Arcane Spawn
 	spawn:addUnit("arcane", "h00C", 1, {6, 7, 8, 9, 10}, 3, 12) -- Sorcress
@@ -7765,294 +8197,121 @@ function spawnAddUnits()
 	spawn:addUnit("undead", "ninc", 1, {5, 7}, 3, 5) -- Infernal Contraption (Level 1)
 	spawn:addUnit("undead", "ninm", 1, {5, 7}, 6, 9) -- Infernal Contraption (Level 2)
 	spawn:addUnit("undead", "nina", 1, {5, 7}, 10, 12) -- Infernal Contraption (Level 3)
-end
 
---
--- Game Action Triggers
---
--- Hero Levels Up
-function Init_HeroLevelsUp()
-	local t = CreateTrigger()
+	----------------
+	-- Set up Spells
+	--
 
-	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
-	TriggerAddAction(t, function()
-		-- Get Locals
-		local levelingUnit = GetLevelingUnit()
+	spell = {}
 
-		try(function() hero:levelUp(levelingUnit) end, "hero:levelUp")
-	end)
-end
+	-- Bonus Spells
+	spell.bonusArmor = SPELL.NEW("bonusArmor", "Z001")
+	spell.bonusAttackSpeed = SPELL.NEW("bonusAttackSpeed", "Z002")
+	spell.bonusCriticalStrike = SPELL.NEW("bonusCriticalStrike", "Z003")
+	spell.bonusDamage = SPELL.NEW("bonusDamage", "Z004")
+	spell.bonusEvasion = SPELL.NEW("bonusEvasion", "Z005")
+	spell.bonusHealthRegen = SPELL.NEW("bonusHealthRegen", "Z006")
+	spell.bonusLifeSteal = SPELL.NEW("bonusLifeSteal", "Z007")
+	spell.bonusMagicResistance = SPELL.NEW("bonusMagicResistance", "Z008")
+	spell.bonusMovementSpeed = SPELL.NEW("bonusMovementSpeed", "Z009")
+	spell.bonusStats = SPELL.NEW("bonusStats", "Z010")
+	spell.bonusManaRegen = SPELL.NEW("bonusManaRegen", "Z011")
 
--- Unit Casts Spell
-function Init_UnitCastsSpell()
-	trig_CastSpell = CreateTrigger()
-	TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
+	-- Brawler
+	spell.drain = SPELL.NEW("drain", "A01Y", "", oid.stomp, false, {6, 6, 6, 6, 6, 6})
+	spell.bloodlust = SPELL.NEW("bloodlust", "A007", "", oid.stomp, true)
+	spell.warstomp = SPELL.NEW("warstomp", "A002", "", oid.stomp, true)
+	spell.unleashRage = SPELL.NEW("unleashRage", "A029", "", oid.stomp, false, {6, 6, 6})
 
-	TriggerAddAction(trig_CastSpell, function()
-		local triggerUnit = GetTriggerUnit()
-		local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
-		local spellCast = CC2Four(GetSpellAbilityId())
+	-- Tactition
+	spell.inspire = SPELL.NEW("inspire", "A042", 0, oid.channel, true)
+	spell.ironDefense = SPELL.NEW("ironDefense", "A019", "", oid.roar, true)
+	spell.raiseBanner = SPELL.NEW("raiseBanner", "A01I", "", oid.healingward, true)
+	spell.attack = SPELL.NEW("attack", "A01B", "", oid.fingerofdeath, true)
+	spell.bolster = SPELL.NEW("bolster", "A01Z", "", oid.tranquility, true)
 
-		try(function() CAST_aiHero(triggerUnit, spellCast) end, "CAST_aiHero")
-	end)
-end
+	-- Shift Master
+	spell.shadeStrength = SPELL.NEW("shadeStrength", "A037")
+	spell.swiftMoves = SPELL.NEW("swiftMoves", "A056")
+	spell.swiftAttacks = SPELL.NEW("swiftAttacks", "A030")
+	spell.switch = SPELL.NEW("switch", "A03U", "", oid.reveal, true)
+	spell.shift = SPELL.NEW("shift", "A03T", "", oid.berserk, true)
+	spell.fallingStrike = SPELL.NEW("fallingStrike", "A059", "", oid.thunderbolt, false, {1.5, 1.5, 1.5, 1.5, 1.5, 1.5})
+	spell.shiftStorm = SPELL.NEW("shiftStorm", "A03C", "", oid.channel, true)
+	spell.felForm = SPELL.NEW("felForm", "A02Y", "", oid.metamorphosis, true)
 
--- Unit enters the Map
-function Init_UnitEntersMap()
-	--DisableTrigger(Trig_UnitEntersMap)
-	TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
-	TriggerAddAction(Trig_UnitEntersMap, function()
-		local triggerUnit = GetTriggerUnit()
+	-- Mana Addict
+	spell.manaShield = SPELL.NEW("manaShield", "A001", "BNms", oid.manashieldon, true)
+	spell.manaBomb = SPELL.NEW("manaBomb", "A03P", "", oid.flamestrike, true)
+	spell.manaExplosion = SPELL.NEW("manaExplosion", "A018", "", oid.thunderclap, true)
+	spell.soulBind = SPELL.NEW("soulBind", "A015", "B00F", oid.custerrockets, true)
+	spell.unleashMana = SPELL.NEW("unleashMana", "A03S", "", oid.starfall, false, {15, 15, 15})
 
-		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) and not IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) then
-			--print(GetUnitName(triggerUnit) .. " Entered MAP MOVED")
-			indexer:add(triggerUnit)
+	-- Time Mage
+	spell.chronoAtrophy = SPELL.NEW("chronoAtrophy", "A04K", "", oid.flamestrike, true)
+	spell.decay = SPELL.NEW("decay", "A032", "", oid.shadowstrike, true)
+	spell.timeTravel = SPELL.NEW("timeTravel", "A04P", "", oid.clusterrockets, true)
+	spell.paradox = SPELL.NEW("paradox", "A04N", "", oid.tranquility, false, {10, 10, 10})
 
-			unitKeepMoving(triggerUnit, true)
-		end
-	end)
-end
+	----------------
+	-- Set Up Items
+	--
+	item = {}
+	item.teleport = ITEM.NEW("teleportation", "Teleport", "I000", "A01M", "", false, {6})
+	item.tank = ITEM.NEW("tank", "Tank", "I005", "", "", true, {})
+	item.mage = ITEM.NEW("mage", "Mage", "I006", "", "", true, {})
 
--- Unit Issued Target or no Target Order
-function Init_IssuedOrder()
+	----------------
+	-- Set up Heroes
+	--
+	heroType = {}
 
-	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
-	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_ORDER)
-	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
-	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
+	heroType.brawler = HEROTYPE.NEW("brawler", "E001", "h00I")
+	heroType.brawler:SpellAdd(spell.bloodlust, false, false, true)
+	heroType.brawler:SpellAdd(spell.drain, false, false, true)
+	heroType.brawler:SpellAdd(spell.warstomp, false, false, true)
+	heroType.brawler:SpellAdd(spell.unleashRage, true, false, true)
+	heroType.brawler:ItemAdd(item.teleport)
+	heroType.brawler:ItemAdd(item.tank)
 
-	TriggerAddAction(Trig_IssuedOrder, function()
-		local triggerUnit = GetTriggerUnit()
-		local unitIdType = GetUnitTypeId(triggerUnit)
+	heroType.tactition = HEROTYPE.NEW("tactition", "H009", "h00Y")
+	heroType.tactition:SpellAdd(spell.raiseBanner, false, true, true)
+	heroType.tactition:SpellAdd(spell.attack, false, false, true)
+	heroType.tactition:SpellAdd(spell.bolster, false, false, true)
+	heroType.tactition:SpellAdd(spell.ironDefense, false, false, true)
+	heroType.tactition:SpellAdd(spell.inspire, true, false, true)
+	heroType.tactition:ItemAdd(item.teleport)
+	heroType.tactition:ItemAdd(item.tank)
 
-		unitKeepMoving(triggerUnit, false, GetIssuedOrderId())
-	end)
+	heroType.shiftMaster = HEROTYPE.NEW("shiftMaster", "E002", "h00Q")
+	heroType.shiftMaster:SpellAdd(spell.shift, false, true, true)
+	heroType.shiftMaster:SpellAdd(spell.switch, false, false, true)
+	heroType.shiftMaster:SpellAdd(spell.felForm, false, false, true)
+	heroType.shiftMaster:SpellAdd(spell.fallingStrike, false, false, true)
+	heroType.shiftMaster:SpellAdd(spell.shiftStorm, true, false, true)
+	heroType.shiftMaster:SpellAdd(spell.shadeStrength, false, false, true)
+	heroType.shiftMaster:ItemAdd(item.teleport)
+	heroType.shiftMaster:ItemAdd(item.tank)
 
-end
+	heroType.manaAddict = HEROTYPE.NEW("manaAddict", "H00R", "h00B")
+	heroType.manaAddict:SpellAdd(spell.manaShield, false, true, false)
+	heroType.manaAddict:SpellAdd(spell.manaBomb, false, false , true)
+	heroType.manaAddict:SpellAdd(spell.manaExplosion, false, false, true)
+	heroType.manaAddict:SpellAdd(spell.soulBind, false, false, true)
+	heroType.manaAddict:SpellAdd(spell.unleashMana, true, false, true)
+	heroType.manaAddict:ItemAdd(item.teleport)
+	heroType.manaAddict:ItemAdd(item.mage)
+	-- hero.New("Mana Addict", "H00R", "h00B", {"paradox", "timeTravel", "chronoAtrophy", "decay"}, {"manaShield"}, {}, {"teleportation", "mage"})
 
--- Unit Dies
-function Init_UnitDies()
-	TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
-	TriggerAddAction(Trig_UnitDies, function()
+	heroType.timeMage = HEROTYPE.NEW("timeMage", "H00J", "h00Z")
+	heroType.timeMage:SpellAdd(spell.chronoAtrophy, false, false, true)
+	heroType.timeMage:SpellAdd(spell.decay, false, false, true)
+	heroType.timeMage:SpellAdd(spell.timeTravel, false, false, true)
+	heroType.timeMage:SpellAdd(spell.paradox, true, false, true)
+	heroType.timeMage:ItemAdd(item.teleport)
+	heroType.timeMage:ItemAdd(item.mage)
+	-- hero.New("timeMage", "H00J", "h00Z", {"paradox", "timeTravel", "chronoAtrophy", "decay"}, {}, {}, {"teleportation", "mage"})
 
-		local dieingUnit = GetTriggerUnit()
-
-		if IsUnitInGroup(dieingUnit, base.all.g) then base.died(dieingUnit) end
-
-		if GetUnitTypeId(dieingUnit) == FourCC("n019") then
-			local u
-			local player = GetOwningPlayer(dieingUnit)
-			
-			if player == Player(20) then
-				shieldTowers.allied = shieldTowers.allied - 1
-
-				if shieldTowers.allied == 0 then
-					u = gg_unit_h003_0015
-					UnitRemoveAbility(u, FourCC("A02C"))
-					BlzSetUnitName(u, "Arcane Citadel |cffff0000(Vulnerable)|r")
-				end
-			else
-				shieldTowers.fed = shieldTowers.fed - 1
-				if shieldTowers.fed == 0 then
-					u = gg_unit_h003_0007
-					UnitRemoveAbility(u, FourCC("A02C"))
-					BlzSetUnitName(u, "Arcane Citadel |cffff0000(Vulnerable)|r")
-				end
-			end
-
-
-
-		end
-		-- Remove Index from Unit
-		if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
-			PolledWait(10)
-			indexer:remove(dieingUnit)
-		end
-
-	end)
-end
-
--- Unit Enters region (Special)
-function init_MoveToNext()
-	TriggerAddAction(Trig_moveToNext, function()
-
-		local triggerUnit = GetTriggerUnit()
-		local player = GetOwningPlayer(triggerUnit)
-		local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
-		local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
-
-		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
-			if isAllied or isFed then
-				local region = loc:getRegion(GetTriggeringRegion())
-
-				if (isAllied and region.allied) or (isFed and region.fed) then
-					local x, y = loc:getRandomXY(region.next)
-					indexer:updateEnd(triggerUnit, x, y)
-					indexer:order(triggerUnit)
-				end
-			end
-		end
-	end)
-end
-
-function init_Moonwell_cast()
-	local t = CreateTrigger()
-	TriggerRegisterTimerEventPeriodic(t, 4)
-	TriggerAddAction(t, function()
-
-		local l, u2
-		local g = CreateGroup()
-		local g2 = CreateGroup()
-
-		g = GetUnitsOfTypeIdAll(FourCC("h024"))
-
-		local u = FirstOfGroup(g)
-		while u ~= nil do
-
-			if GetUnitManaPercent(u) > 10 and BlzGetUnitAbilityCooldownRemaining(u, oid.recharge) == 0 then
-
-				l = GetUnitLoc(u)
-				g2 = GetUnitsInRangeOfLocAll(1200, l)
-				RemoveLocation(l)
-
-				u2 = FirstOfGroup(g2)
-				while u2 ~= nil do
-
-					if IsUnitType(u2, UNIT_TYPE_STRUCTURE) and GetUnitTypeId(u2) ~= FourCC("h024") and GetUnitManaPercent(u2) < 40 and
-									GetUnitState(u2, UNIT_STATE_MAX_MANA) > 0 then
-						DisableTrigger(Trig_IssuedOrder)
-						IssueTargetOrderById(u, oid.recharge, u2)
-						EnableTrigger(Trig_IssuedOrder)
-					end
-
-					GroupRemoveUnit(g2, u2)
-					u2 = FirstOfGroup(g2)
-				end
-				DestroyGroup(g2)
-
-			end
-
-			GroupRemoveUnit(g, u)
-			u = FirstOfGroup(g)
-		end
-
-		DestroyGroup(g)
-	end)
-end
-
--- Update Base Buildings
-function init_BaseLoop()
-	TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 2.5)
-	TriggerAddAction(Trig_baseLoop, function()
-
-		local u, id
-		local g = CreateGroup()
-
-		GroupAddGroup(base.all.g, g)
-		while true do
-			u = FirstOfGroup(g)
-			if u == nil then break end
-
-			base.update(u)
-
-			GroupRemoveUnit(g, u)
-		end
-		DestroyGroup(g)
-	end) 
-end
-
-do
-	local real = MarkGameStarted
-	function MarkGameStarted()
-		real()
-		local trigger = CreateTrigger()
-		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_G, 0, true) end
-		TriggerAddAction(trigger, function()
-
-			local player = GetTriggerPlayer()
-			local playerDetails = hero.players[GetConvertedPlayerId(player)]
-			SelectUnitForPlayerSingle(playerDetails.alter, player)
-		end)
-
-		trigger = CreateTrigger()
-		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_F, 0, true) end
-
-		TriggerAddAction(trigger, function()
-
-			local player = GetTriggerPlayer()
-			local playerDetails = hero.players[GetConvertedPlayerId(player)]
-			SelectUnitForPlayerSingle(playerDetails.hero, player)
-		end)
-	end
-end
-
---
--- Trigger Functions
------------------
-
----comment
----@param triggerUnit unit
----@param spellCast string
-function CAST_aiHero(triggerUnit, spellCast)
-	if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-		local heroName = indexer:getKey(triggerUnit, "heroName")
-		local spellCastData = hero[hero[spellCast]]
-
-		if spellCastData ~= nil then
-			ai:castSpell(heroName, spellCastData)
-			print("MANUAL CAST")
-		end
-	end
-end
-
--- Order starting units to attack
-function orderStartingUnits()
-	local g = CreateGroup()
-	local u, typeId
-
-	g = GetUnitsInRectAll(GetPlayableMapRect())
-	while true do
-		u = FirstOfGroup(g)
-		if u == nil then break end
-
-		try(function()
-
-			indexer:add(u)
-			unitKeepMoving(u, true)
-		end)
-
-		GroupRemoveUnit(g, u)
-	end
-	DestroyGroup(g)
-end
-
--- Tell unit to keep Attack-Moving to it's indexed destination
----comment
----@param unit unit
----@param withoutDelay boolean
-function unitKeepMoving(unit, withoutDelay, orderId)
-	withoutDelay = withoutDelay or false
-	orderId = orderId or GetUnitCurrentOrder(unit)
-
-	local typeId = GetUnitTypeId(unit)
-	local owningPlayer = GetOwningPlayer(unit)
-
-	if owningPlayer ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and GetUnitState(unit, UNIT_STATE_LIFE) > 0 and
-					not IsUnitType(unit, UNIT_TYPE_STRUCTURE) and not IsUnitType(unit, UNIT_TYPE_HERO) and
-					not UnitHasBuffBJ(unit, FourCC("B006")) and typeIdTable[typeId] == nil and ordersIgnore[orderId] == nil then
-
-		
-		if withoutDelay ~= true then
-			--print("Ordering " .. GetUnitName(unit) .. " - [" .. GetHandleId(unit) .. "] - " .. OrderId2String(orderId) .. ": " ..
-						      --orderId .. " - Moving With Delay")
-			PolledWait(3)
-		else
-			--print("Ordering " .. GetUnitName(unit) .. " - [" .. GetHandleId(unit) .. "] - " .. OrderId2String(orderId) .. ": " ..
-						      --orderId .. " - Moving Immediately")
-		end
-
-		indexer:order(unit, "attack")
-	end
 end
 
 function init_Lua()
@@ -8064,14 +8323,21 @@ function init_Lua()
 
 		Init_luaGlobals()
 		cine.Init()
-		init_triggers()
+		
+		HEROTYPE_INIT()
+		SPELL_INIT()
+		HERO_INIT()
+		ITEM_INIT()
+		UNIT_INIT()
+
 		init_locationClass()
 		init_indexerClass()
-		hero.init()
 		init_spawnClass()
 		init_aiClass()
 		init_baseClass()
 		init_gateClass()
+
+		init_triggers()
 	end)
 	-- dprint("Classes Defined", 2)
 
@@ -8342,6 +8608,289 @@ function Init_PickingPhase()
 			init_aiLoopStates()
 		end
 	end)
+end
+
+--
+-- Game Action Triggers
+--
+-- Hero Levels Up
+function Init_HeroLevelsUp()
+	local t = CreateTrigger()
+
+	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
+	TriggerAddAction(t, function()
+		-- Get Locals
+		local levelingUnit = GetLevelingUnit()
+
+		try(function() hero:levelUp(levelingUnit) end, "hero:levelUp")
+	end)
+end
+
+-- Unit Casts Spell
+function Init_UnitCastsSpell()
+	trig_CastSpell = CreateTrigger()
+	TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
+
+	TriggerAddAction(trig_CastSpell, function()
+		local triggerUnit = GetTriggerUnit()
+		local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
+		local spellCast = CC2Four(GetSpellAbilityId())
+
+		try(function() CAST_aiHero(triggerUnit, spellCast) end, "CAST_aiHero")
+	end)
+end
+
+-- Unit enters the Map
+function Init_UnitEntersMap()
+	-- DisableTrigger(Trig_UnitEntersMap)
+	TriggerRegisterEnterRectSimple(Trig_UnitEntersMap, GetPlayableMapRect())
+	TriggerAddAction(Trig_UnitEntersMap, function()
+		local triggerUnit = GetTriggerUnit()
+
+		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) and not IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) then
+			-- print(GetUnitName(triggerUnit) .. " Entered MAP MOVED")
+			UNIT.NEW(unit)
+
+			unitKeepMoving(triggerUnit, true)
+		end
+	end)
+end
+
+-- Unit Issued Target or no Target Order
+function Init_IssuedOrder()
+
+	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_ORDER)
+	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
+	TriggerRegisterAnyUnitEventBJ(Trig_IssuedOrder, EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
+
+	TriggerAddAction(Trig_IssuedOrder, function()
+		local triggerUnit = GetTriggerUnit()
+		local unitIdType = GetUnitTypeId(triggerUnit)
+
+		unitKeepMoving(triggerUnit, false, GetIssuedOrderId())
+	end)
+
+end
+
+-- Unit Dies
+function Init_UnitDies()
+	TriggerRegisterAnyUnitEventBJ(Trig_UnitDies, EVENT_PLAYER_UNIT_DEATH)
+	TriggerAddAction(Trig_UnitDies, function()
+
+		local dieingUnit = GetTriggerUnit()
+
+		if IsUnitInGroup(dieingUnit, base.all.g) then base.died(dieingUnit) end
+
+		if GetUnitTypeId(dieingUnit) == FourCC("n019") then
+			local u
+			local player = GetOwningPlayer(dieingUnit)
+
+			if player == Player(20) then
+				shieldTowers.allied = shieldTowers.allied - 1
+
+				if shieldTowers.allied == 0 then
+					u = gg_unit_h003_0015
+					UnitRemoveAbility(u, FourCC("A02C"))
+					BlzSetUnitName(u, "Arcane Citadel |cffff0000(Vulnerable)|r")
+				end
+			else
+				shieldTowers.fed = shieldTowers.fed - 1
+				if shieldTowers.fed == 0 then
+					u = gg_unit_h003_0007
+					UnitRemoveAbility(u, FourCC("A02C"))
+					BlzSetUnitName(u, "Arcane Citadel |cffff0000(Vulnerable)|r")
+				end
+			end
+
+		end
+		-- Remove Index from Unit
+		if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
+			PolledWait(10)
+			UNIT.REMOVE(dieingUnit)
+		end
+
+	end)
+end
+
+-- Unit Enters region (Special)
+function init_MoveToNext()
+	TriggerAddAction(Trig_moveToNext, function()
+
+		local triggerUnit = GetTriggerUnit()
+		local player = GetOwningPlayer(triggerUnit)
+		local isAllied = IsPlayerInForce(player, udg_PLAYERGRPallied)
+		local isFed = IsPlayerInForce(player, udg_PLAYERGRPfederation)
+
+		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) then
+			if isAllied or isFed then
+				local region = loc:getRegion(GetTriggeringRegion())
+
+				if (isAllied and region.allied) or (isFed and region.fed) then
+					local x, y = loc:getRandomXY(region.next)
+					indexer:updateEnd(triggerUnit, x, y)
+					indexer:order(triggerUnit)
+				end
+			end
+		end
+	end)
+end
+
+function init_Moonwell_cast()
+	local t = CreateTrigger()
+	TriggerRegisterTimerEventPeriodic(t, 4)
+	TriggerAddAction(t, function()
+
+		local l, u2
+		local g = CreateGroup()
+		local g2 = CreateGroup()
+
+		g = GetUnitsOfTypeIdAll(FourCC("h024"))
+
+		local u = FirstOfGroup(g)
+		while u ~= nil do
+
+			if GetUnitManaPercent(u) > 10 and BlzGetUnitAbilityCooldownRemaining(u, oid.recharge) == 0 then
+
+				l = GetUnitLoc(u)
+				g2 = GetUnitsInRangeOfLocAll(1200, l)
+				RemoveLocation(l)
+
+				u2 = FirstOfGroup(g2)
+				while u2 ~= nil do
+
+					if IsUnitType(u2, UNIT_TYPE_STRUCTURE) and GetUnitTypeId(u2) ~= FourCC("h024") and GetUnitManaPercent(u2) < 40 and
+									GetUnitState(u2, UNIT_STATE_MAX_MANA) > 0 then
+						DisableTrigger(Trig_IssuedOrder)
+						IssueTargetOrderById(u, oid.recharge, u2)
+						EnableTrigger(Trig_IssuedOrder)
+					end
+
+					GroupRemoveUnit(g2, u2)
+					u2 = FirstOfGroup(g2)
+				end
+				DestroyGroup(g2)
+
+			end
+
+			GroupRemoveUnit(g, u)
+			u = FirstOfGroup(g)
+		end
+
+		DestroyGroup(g)
+	end)
+end
+
+-- Update Base Buildings
+function init_BaseLoop()
+	TriggerRegisterTimerEventPeriodic(Trig_baseLoop, 2.5)
+	TriggerAddAction(Trig_baseLoop, function()
+
+		local u, id
+		local g = CreateGroup()
+
+		GroupAddGroup(base.all.g, g)
+		while true do
+			u = FirstOfGroup(g)
+			if u == nil then break end
+
+			base.update(u)
+
+			GroupRemoveUnit(g, u)
+		end
+		DestroyGroup(g)
+	end)
+end
+
+do
+	local real = MarkGameStarted
+	function MarkGameStarted()
+		real()
+		local trigger = CreateTrigger()
+		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_G, 0, true) end
+		TriggerAddAction(trigger, function()
+
+			local player = GetTriggerPlayer()
+			local playerDetails = hero.players[GetConvertedPlayerId(player)]
+			SelectUnitForPlayerSingle(playerDetails.alter, player)
+		end)
+
+		trigger = CreateTrigger()
+		for i = 0, 11 do BlzTriggerRegisterPlayerKeyEvent(trigger, Player(i), OSKEY_F, 0, true) end
+
+		TriggerAddAction(trigger, function()
+
+			local player = GetTriggerPlayer()
+			local playerDetails = hero.players[GetConvertedPlayerId(player)]
+			SelectUnitForPlayerSingle(playerDetails.hero, player)
+		end)
+	end
+end
+
+--
+-- Trigger Functions
+-----------------
+
+---comment
+---@param triggerUnit unit
+---@param spellCast string
+function CAST_aiHero(triggerUnit, spellCast)
+	if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+		local heroName = indexer:getKey(triggerUnit, "heroName")
+		local spellCastData = hero[hero[spellCast]]
+
+		if spellCastData ~= nil then
+			ai:castSpell(heroName, spellCastData)
+			print("MANUAL CAST")
+		end
+	end
+end
+
+-- Order starting units to attack
+function orderStartingUnits()
+	local g = CreateGroup()
+	local u, typeId
+
+	g = GetUnitsInRectAll(GetPlayableMapRect())
+	while true do
+		u = FirstOfGroup(g)
+		if u == nil then break end
+
+		try(function()
+
+			indexer:add(u)
+			unitKeepMoving(u, true)
+		end)
+
+		GroupRemoveUnit(g, u)
+	end
+	DestroyGroup(g)
+end
+
+-- Tell unit to keep Attack-Moving to it's indexed destination
+---comment
+---@param u unit
+---@param withoutDelay boolean
+function unitKeepMoving(u, withoutDelay, orderId)
+	withoutDelay = withoutDelay or false
+	local unit = UNIT.GET(u)
+	
+	orderId = orderId or unit:OrderCurrent()
+	
+	local typeId = unit.unitType
+	local owningPlayer = unit:Player()
+
+	if owningPlayer ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and unit:Life() > 0 and not unit:IsType(UNIT_TYPE_STRUCTURE) and
+					not unit:IsType(UNIT_TYPE_HERO) and not unit:HasBuff("B006") and typeIdTable[typeId] == nil and
+					ordersIgnore[orderId] == nil then
+
+		if not withoutDelay then
+			PolledWait(3)
+		end
+
+		unit:OrderAgain()
+
+	end
 end
 
 function InitSounds()

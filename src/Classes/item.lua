@@ -1,7 +1,7 @@
 --
 -- Hero Skills / Abilities Class
 -----------------
----@class itemATA
+---@class ITEM
 function ITEM_INIT()
 	ITEM = {}
 	ITEM.KEY = {}

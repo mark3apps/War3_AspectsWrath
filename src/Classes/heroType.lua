@@ -59,7 +59,7 @@ function HEROTYPE_INIT()
 		end
 
 		---Add an item to Hero
-		---@param item itemATA
+		---@param item ITEM
 		---@return boolean
 		function self:ItemAdd(item)
 			table.insert(self.items, item)
