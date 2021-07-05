@@ -1,51 +1,61 @@
-function _SpellInit()
+function SPELL_INIT()
 
-	_Spell = {}
-	_Spell.id = {}
-	_Spell.names = {}
+	SPELL = {}
+	SPELL.ID = {}
+	SPELL.NAMES = {}
+	SPELL.TARGET = {
+		AOE = 1,
+		SINGLETARGET = 2,
+		CONE = 3
+	}
+	
 
 	---Add a new Spell
 	---@param name string
-	---@param properName string
 	---@param four string
-	---@param buff integer
+	---@param buff string
 	---@param order integer
 	---@param instant boolean
 	---@param castTime table
-	function _Spell.new(name, properName, four, buff, order, instant, castTime)
-        instant = instant or false
-        castTime = castTime or {}
-        order = order or 0
-        buff = buff or 0
+	function SPELL.NEW(name, four, buff, order, instant, castTime)
+		instant = instant or false
+		castTime = castTime or {}
+		order = order or 0
+		buff = buff or ""
 
-		---@class spell
+		---@class SPELL
 		local self = {}
 		self.name = name
-		self.properName = properName
 		self.four = four
 		self.id = FourCC(four)
+		self.properName = GetAbilityName(self.id)
 		self.buff = buff
 		self.order = order
 		self.instant = instant
 		self.castTime = castTime
 
-		_Spell.id[four] = name
-		table.insert(_Spell.names, name)
+		if buff ~= "" then
+			self.buffId = FourCC(buff)
+		else
+			self.buffId = 0
+		end
+
+		---Get Spell Icon Path
+		---@return string
+		function self:Icon()
+			return BlzGetAbilityIcon(self.id)
+		end
+		
+		---Get Spell Activated Icon Path
+		---@return string
+		function self:IconActivated()
+			return BlzGetAbilityActivatedIcon(self.id)
+		end
+
+		SPELL.id[four] = name
+		table.insert(SPELL.names, name)
 
 		return self
 	end
 
-    spell = {}
-    spell.bonusArmor = _Spell.new("bonusArmor", "Bonus Armor", "Z001")
-    spell.bonusAttackSpeed = _Spell.new("bonusAttackSpeed", "Bonus Attack Speed", "Z002")
-    spell.bonusCriticalStrike = _Spell.new("bonusCriticalStrike", "Bonus Critical Strike", "Z003")
-    spell.bonusDamage = _Spell.new("bonusDamage", "Bonus Damage", "Z004")
-    spell.bonusEvasion = _Spell.new("bonusEvasion", "Bonus Evasion", "Z005")
-    spell.bonusHealthRegen = _Spell.new("bonusHealthRegen", "Bonus Health Regeneration", "Z006")
-    spell.bonusLifeSteal = _Spell.new("bonusLifeSteal", "Bonus Life Steal", "Z007")
-    spell.bonusMagicResistance = _Spell.new("bonusMagicResistance", "Bonus Magic Resistance", "Z008")
-    spell.bonusMovementSpeed = _Spell.new("bonusMovementSpeed", "Bonus Movement Speed", "Z009")
-    spell.bonusStats = _Spell.new("bonusStats", "Bonus Stats", "Z010")
-    spell.bonusManaRegen = _Spell.new("bonusManaRegen" , "Bonus Mana Regen", "Z011")
-    
 end
