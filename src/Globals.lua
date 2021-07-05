@@ -849,331 +849,118 @@ function init.Globals()
 	spawn:addUnit("undead", "ninm", 1, {5, 7}, 6, 9) -- Infernal Contraption (Level 2)
 	spawn:addUnit("undead", "nina", 1, {5, 7}, 10, 12) -- Infernal Contraption (Level 3)
 
-	--
+	----------------
 	-- Set up Spells
 	--
-	spell.New("drain", "Drain", "A01Y", 0, oid.stomp, false, false, {6, 6, 6, 6, 6, 6})
-	spell.New()
-	
-	spell = {
 
-		bloodlust = {
-			name = "bloodlust",
-			properName = "Bloodlust",
-			four = "A007",
-			id = FourCC("A007"),
-			buff = 0,
-			order = "stomp",
-			ult = false,
-			instant = true
-		},
+	spell = {}
 
-		warstomp = {
-			name = "warstomp",
-			properName = "War Stomp",
-			four = "A002",
-			id = FourCC("A002"),
-			buff = 0,
-			order = "stomp",
-			ult = false,
-			instant = true
-		},
-
-		unleashRage = {
-			name = "unleashRage",
-			properName = "Unleassh Rage",
-			four = "A029",
-			id = FourCC("A029"),
-			buff = 0,
-			order = "stomp",
-			ult = true,
-			instant = false,
-			castTime = {6, 6, 6, 6, 6, 6}
-		},
-
-		ironDefense = {
-			name = "ironDefense",
-			properName = "Iron Defense",
-			four = "A019",
-			id = FourCC("A019"),
-			buff = 0,
-			order = "roar",
-			ult = false,
-			instant = true
-		},
-
-		raiseBanner = {
-			name = "raiseBanner",
-			properName = "Raise Banner",
-			four = "A01I",
-			id = FourCC("A01I"),
-			buff = 0,
-			order = "healingward",
-			ult = false,
-			instant = true
-		},
-
-		attack = {
-			name = "attack",
-			properName = "Attack!",
-			four = "A01B",
-			id = FourCC("A01B"),
-			buff = 0,
-			order = "fingerofdeath",
-			ult = false,
-			instant = true
-		},
-
-		bolster = {
-			name = "bolster",
-			properName = "Bolster",
-			four = "A01Z",
-			id = FourCC("A01Z"),
-			buff = 0,
-			order = "tranquility",
-			ult = false,
-			instant = true
-		},
-
-		inspire = {
-			name = "inspire",
-			properName = "Inspire",
-			four = "A042",
-			id = FourCC("A042"),
-			buff = 0,
-			order = "channel",
-			ult = true,
-			instant = true
-		},
-
-		attributeStiftMaster = {
-			name = "attributeStiftMaster",
-			properName = "Attribute Bonus",
-			four = "A031",
-			id = FourCC("A031"),
-			buff = 0,
-			order = "",
-			ult = false
-		},
-
-		shadeStrength = {
-			name = "shadeStrength",
-			properName = "Shade Strength",
-			four = "A037",
-			id = FourCC("A037"),
-			buff = 0,
-			order = "",
-			ult = false
-		},
-
-		swiftMoves = {
-			name = "swiftMoves",
-			properName = "Swift Moves",
-			four = "A056",
-			id = FourCC("A056"),
-			buff = 0,
-			order = "",
-			ult = false
-		},
-
-		swiftAttacks = {
-			name = "swiftAttacks",
-			properName = "Swift Attacks",
-			four = "A030",
-			id = FourCC("A030"),
-			buff = 0,
-			order = "",
-			ult = false
-		},
-
-		switch = {
-			name = "switch",
-			properName = "Switch",
-			four = "A03U",
-			id = FourCC("A03U"),
-			buff = 0,
-			order = "reveal",
-			ult = false,
-			instant = true
-		},
-
-		shift = {
-			name = "shift",
-			properName = "Shift",
-			four = "A03T",
-			id = FourCC("A03T"),
-			buff = 0,
-			order = "berserk",
-			ult = false,
-			instant = true
-		},
-
-		fallingStrike = {
-			name = "fallingStrike",
-			properName = "Falling Strike",
-			four = "A059",
-			id = FourCC("A059"),
-			buff = 0,
-			order = "thunderbolt",
-			ult = false,
-			instant = false,
-			castTime = {1.5, 1.5, 1.5, 1.5, 1.5, 1.5}
-		},
-
-		shiftStorm = {
-			name = "shiftStorm",
-			properName = "Shift Storm",
-			four = "A03C",
-			id = FourCC("A03C"),
-			buff = 0,
-			order = "channel",
-			ult = true,
-			instant = true
-		},
-
-		felForm = {
-			name = "felForm",
-			properName = "Fel Form",
-			four = "A02Y",
-			id = FourCC("A02Y"),
-			buff = 0,
-			order = "metamorphosis",
-			ult = true,
-			instant = true
-		},
-
-		manaShield = {
-			name = "manaShield",
-			properName = "Mana Shield",
-			four = "A001",
-			id = FourCC("A001"),
-			buff = FourCC("BNms"),
-			order = "manashieldon",
-			ult = false,
-			instant = true
-		},
-
-		manaBomb = {
-			name = "manaBomb",
-			properName = "Mana bomb",
-			four = "A03P",
-			id = FourCC("A03P"),
-			buff = 0,
-			order = "flamestrike",
-			ult = false,
-			instant = true
-		},
-
-		manaExplosion = {
-			name = "manaExplosion",
-			properName = "Mana Explosion",
-			four = "A018",
-			id = FourCC("A018"),
-			buff = 0,
-			order = "thunderclap",
-			ult = false,
-			instant = true
-		},
-
-		soulBind = {
-			name = "soulBind",
-			properName = "Soul Bind",
-			four = "A015",
-			id = FourCC("A015"),
-			buff = FourCC("B00F"),
-			order = "custerrockets",
-			ult = false,
-			instant = true
-		},
-
-		unleashMana = {
-			name = "unleashMana",
-			properName = "Unleash Mana",
-			four = "A03S",
-			id = FourCC("A03S"),
-			buff = 0,
-			order = "starfall",
-			ult = true,
-			instant = false,
-			castTime = {15, 15, 15, 15, 15, 15}
-		},
-
-		chronoAtrophy = {
-			name = "chronoAtrophy",
-			properName = "Chrono Atrophy",
-			four = "A04K",
-			id = FourCC("A04K"),
-			buff = 0,
-			order = "flamestrike",
-			ult = false,
-			instant = true
-		},
-
-		decay = {
-			name = "decay",
-			properName = "Decay",
-			four = "A032",
-			id = FourCC("A032"),
-			buff = 0,
-			order = "shadowstrike",
-			ult = false,
-			instant = true
-		},
-
-		timeTravel = {
-			name = "timeTravel",
-			properName = "Time Travel",
-			four = "A04P",
-			id = FourCC("A04P"),
-			buff = 0,
-			order = "clusterrockets",
-			ult = false,
-			instant = true
-		},
-
-		paradox = {
-			name = "paradox",
-			properName = "Paradox",
-			four = "A04N",
-			id = FourCC("A04N"),
-			buff = 0,
-			order = "tranquility",
-			ult = true,
-			instant = false,
-			castTime = {10, 10, 10}
-		}
-	}
-
-	--
-	-- Set Up Items
-	--
-	item.New("teleportation", "Teleport", "I000", "A01M", "", false, {6})
-	item.New("tank", "Tank", "I005", "", "", true, {})
-	item.New("mage", "Mage", "I006", "", "", true, {})
-
-	--
-	-- Set up Heroes
-	--
+	-- Bonus Spells
+	spell.bonusArmor = _Spell.New("bonusArmor", "Z001")
+	spell.bonusAttackSpeed = _Spell.New("bonusAttackSpeed", "Z002")
+	spell.bonusCriticalStrike = _Spell.New("bonusCriticalStrike", "Z003")
+	spell.bonusDamage = _Spell.New("bonusDamage", "Z004")
+	spell.bonusEvasion = _Spell.New("bonusEvasion", "Z005")
+	spell.bonusHealthRegen = _Spell.New("bonusHealthRegen", "Z006")
+	spell.bonusLifeSteal = _Spell.New("bonusLifeSteal", "Z007")
+	spell.bonusMagicResistance = _Spell.New("bonusMagicResistance", "Z008")
+	spell.bonusMovementSpeed = _Spell.New("bonusMovementSpeed", "Z009")
+	spell.bonusStats = _Spell.New("bonusStats", "Z010")
+	spell.bonusManaRegen = _Spell.New("bonusManaRegen", "Z011")
 
 	-- Brawler
-	hero.New("Brawler", "E001", "h00I", {"unleashRage", "drain", "warstomp", "bloodlust"}, {}, {},
-	              {"teleportation", "tank"})
-	hero.AddSpell("Brawler")
+	spell.drain = _Spell.New("drain", "A01Y", "", oid.stomp, false, {6, 6, 6, 6, 6, 6})
+	spell.bloodlust = _Spell.New("bloodlust", "A007", "", oid.stomp, true)
+	spell.warstomp = _Spell.New("warstomp", "A002", "", oid.stomp, true)
+	spell.unleashRage = _Spell.New("unleashRage", "A029", "", oid.stomp, false, {6, 6, 6})
+
 	-- Tactition
-	hero.New("tactition", "H009", "h00Y", {"inspire", "raiseBanner", "ironDefense", "bolster", "attack"},
-	              {"raiseBanner"}, {}, {"teleportation", "tank"})
+	spell.inspire = _Spell.New("inspire", "A042", 0, oid.channel, true)
+	spell.ironDefense = _Spell.New("ironDefense", "A019", "", oid.roar, true)
+	spell.raiseBanner = _Spell.New("raiseBanner", "A01I", "", oid.healingward, true)
+	spell.attack = _Spell.New("attack", "A01B", "", oid.fingerofdeath, true)
+	spell.bolster = _Spell.New("bolster", "A01Z", "", oid.tranquility, true)
 
 	-- Shift Master
-	hero.New("shiftMaster", "E002", "h00Q", {"shiftStorm", "felForm", "switch", "fallingStrike", "shift"}, {"shift"},
-	              {"felForm", "fallingStrike", "shadeStrength", "swiftMoves", "swiftAttacks", "attributeStiftMaster"},
-	              {"teleportation", "tank"})
+	spell.shadeStrength = _Spell.New("shadeStrength", "A037")
+	spell.swiftMoves = _Spell.New("swiftMoves", "A056")
+	spell.swiftAttacks = _Spell.New("swiftAttacks", "A030")
+	spell.switch = _Spell.New("switch", "A03U", "", oid.reveal, true)
+	spell.shift = _Spell.New("shift", "A03T", "", oid.berserk, true)
+	spell.fallingStrike = _Spell.New("fallingStrike", "A059", "", oid.thunderbolt, false, {1.5, 1.5, 1.5, 1.5, 1.5, 1.5})
+	spell.shiftStorm = _Spell.New("shiftStorm", "A03C", "", oid.channel, true)
+	spell.felForm = _Spell.New("felForm", "A02Y", "", oid.metamorphosis, true)
 
 	-- Mana Addict
-	hero.New("Mana Addict", "H00R", "h00B", {"paradox", "timeTravel", "chronoAtrophy", "decay"}, {"manaShield"}, {},
-	              {"teleportation", "mage"})
+	spell.manaShield = _Spell.New("manaShield", "A001", "BNms", oid.manashieldon, true)
+	spell.manaBomb = _Spell.New("manaBomb", "A03P", "", oid.flamestrike, true)
+	spell.manaExplosion = _Spell.New("manaExplosion", "A018", "", oid.thunderclap, true)
+	spell.soulBind = _Spell.New("soulBind", "A015", "B00F", oid.custerrockets, true)
+	spell.unleashMana = _Spell.New("unleashMana", "A03S", "", oid.starfall, false, {15, 15, 15})
 
 	-- Time Mage
-	hero.New("timeMage", "H00J", "h00Z", {"paradox", "timeTravel", "chronoAtrophy", "decay"}, {}, {},
-	              {"teleportation", "mage"})
+	spell.chronoAtrophy = _Spell.New("chronoAtrophy", "A04K", "", oid.flamestrike, true)
+	spell.decay = _Spell.New("decay", "A032", "", oid.shadowstrike, true)
+	spell.timeTravel = _Spell.New("timeTravel", "A04P", "", oid.clusterrockets, true)
+	spell.paradox = _Spell.New("paradox", "A04N", "", oid.tranquility, false, {10, 10, 10})
+
+	----------------
+	-- Set Up Items
+	--
+	item = {}
+	item.teleport = _Item.New("teleportation", "Teleport", "I000", "A01M", "", false, {6})
+	item.tank = _Item.New("tank", "Tank", "I005", "", "", true, {})
+	item.mage = _Item.New("mage", "Mage", "I006", "", "", true, {})
+
+	----------------
+	-- Set up Heroes
+	--
+	heroType = {}
+
+	heroType.brawler = _HeroType.New("brawler", "E001", "h00I")
+	heroType.brawler:SpellAdd(spell.bloodlust, false, false, true)
+	heroType.brawler:SpellAdd(spell.drain, false, false, true)
+	heroType.brawler:SpellAdd(spell.warstomp, false, false, true)
+	heroType.brawler:SpellAdd(spell.unleashRage, true, false, true)
+	heroType.brawler:ItemAdd(item.teleport)
+	heroType.brawler:ItemAdd(item.tank)
+
+	heroType.tactition = _HeroType.New("tactition", "H009", "h00Y")
+	heroType.tactition:SpellAdd(spell.raiseBanner, false, true, true)
+	heroType.tactition:SpellAdd(spell.attack, false, false, true)
+	heroType.tactition:SpellAdd(spell.bolster, false, false, true)
+	heroType.tactition:SpellAdd(spell.ironDefense, false, false, true)
+	heroType.tactition:SpellAdd(spell.inspire, true, false, true)
+	heroType.tactition:ItemAdd(item.teleport)
+	heroType.tactition:ItemAdd(item.tank)
+
+	heroType.shiftMaster = _HeroType.New("shiftMaster", "E002", "h00Q")
+	heroType.shiftMaster:SpellAdd(spell.shift, false, true, true)
+	heroType.shiftMaster:SpellAdd(spell.switch, false, false, true)
+	heroType.shiftMaster:SpellAdd(spell.felForm, false, false, true)
+	heroType.shiftMaster:SpellAdd(spell.fallingStrike, false, false, true)
+	heroType.shiftMaster:SpellAdd(spell.shiftStorm, true, false, true)
+	heroType.shiftMaster:SpellAdd(spell.shadeStrength, false, false, true)
+	heroType.shiftMaster:ItemAdd(item.teleport)
+	heroType.shiftMaster:ItemAdd(item.tank)
+
+	heroType.manaAddict = _HeroType.New("manaAddict", "H00R", "h00B")
+	heroType.manaAddict:SpellAdd(spell.manaShield, false, true, false)
+	heroType.manaAddict:SpellAdd(spell.manaBomb, false, false , true)
+	heroType.manaAddict:SpellAdd(spell.manaExplosion, false, false, true)
+	heroType.manaAddict:SpellAdd(spell.soulBind, false, false, true)
+	heroType.manaAddict:SpellAdd(spell.unleashMana, true, false, true)
+	heroType.manaAddict:ItemAdd(item.teleport)
+	heroType.manaAddict:ItemAdd(item.mage)
+	-- hero.New("Mana Addict", "H00R", "h00B", {"paradox", "timeTravel", "chronoAtrophy", "decay"}, {"manaShield"}, {}, {"teleportation", "mage"})
+
+	heroType.timeMage = _HeroType.New("timeMage", "H00J", "h00Z")
+	heroType.timeMage:SpellAdd(spell.chronoAtrophy, false, false, true)
+	heroType.timeMage:SpellAdd(spell.decay, false, false, true)
+	heroType.timeMage:SpellAdd(spell.timeTravel, false, false, true)
+	heroType.timeMage:SpellAdd(spell.paradox, true, false, true)
+	heroType.timeMage:ItemAdd(item.teleport)
+	heroType.timeMage:ItemAdd(item.mage)
+	-- hero.New("timeMage", "H00J", "h00Z", {"paradox", "timeTravel", "chronoAtrophy", "decay"}, {}, {}, {"teleportation", "mage"})
 
 end
