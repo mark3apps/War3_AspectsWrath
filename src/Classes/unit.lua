@@ -1,23 +1,23 @@
-function _UnitInit()
-	_Unit = {}
+function UNIT_INIT()
+	UNIT = {}
 
 	---comment
 	---@param unit unit
-	---@return unitExtended
-	function _Unit.Get(unit)
-		if _Unit[GetHandleId(unit)] == nil then
-			return _Unit.New(unit)
+	---@return UNIT
+	function UNIT.GET(unit)
+		if UNIT[GetHandleId(unit)] == nil then
+			return UNIT.NEW(unit)
 		else
-			return _Unit[GetHandleId(unit)]
+			return UNIT[GetHandleId(unit)]
 		end
 	end
 
 	---comment
-	---@param unit unit
-	function _Unit.Remove(unit)
-		unit = _Unit.Get(unit)
+	---@param u unit
+	function UNIT.REMOVE(u)
+		local unit = UNIT.GET(u)
 		unit:SFXRemoveAll()
-		_Unit[unit.handleId] = nil
+		UNIT[unit.handleId] = nil
 
 		return true
 	end
@@ -25,14 +25,14 @@ function _UnitInit()
 	---comment
 	---@param unit unit
 	---@param overwrite boolean
-	---@return unitExtended
-	function _Unit.New(unit, overwrite)
+	---@return UNIT
+	function UNIT.NEW(unit, overwrite)
 		overwrite = overwrite or false
 
 		-- If unit is already in the index, skip adding it if overwrite is set to false
-		if _Unit.Get(unit) ~= nil and not overwrite then return false end
+		if UNIT.GET(unit) ~= nil and not overwrite then return false end
 
-		---@class unitExtended
+		---@class UNIT
 		local self = {}
 
 		self.data = {}
@@ -44,6 +44,7 @@ function _UnitInit()
 		self.orderY = nil ---@type real
 		self.orderTarget = nil ---@type unit
 		self.unitType = GetUnitTypeId(unit)
+        self.unitTypeFour = CC2Four(self.unitType)
 		self.order = GetUnitCurrentOrder(unit)
 		self.orderType = "" ---@type string
 		self.sfx = {}
@@ -170,6 +171,14 @@ function _UnitInit()
 		---@return string
 		function self:Name() return GetUnitName(unit) end
 
+		---Change Units Name
+		---@param name string
+		---@return boolean
+		function self:NameChange(name)
+			BlzSetUnitName(self.unit, name)
+			return true
+		end
+
 		---comment
 		---@return integer
 		function self:LifePercentage() return math.floor(self:LifeMax() / self:Life() * 100) end
@@ -206,17 +215,17 @@ function _UnitInit()
 		---@return real
 		function self:ManaMax() return GetUnitState(self.unit, UNIT_STATE_MAX_MANA) end
 
-        ---Increment Max Mana
-        ---@param amount integer
-        ---@return boolean
-        function self:ManaMaxIncrement(amount)
+		---Increment Max Mana
+		---@param amount integer
+		---@return boolean
+		function self:ManaMaxIncrement(amount)
 			local percentMana = GetUnitManaPercent(self.unit)
 
 			BlzSetUnitMaxMana(self.unit, self:ManaMax() + amount)
 			SetUnitManaPercentBJ(self.unit, percentMana)
 
 			return true
-        end
+		end
 
 		---Get Hero Life
 		---@return real
@@ -247,41 +256,63 @@ function _UnitInit()
 			return SetAbilityInteger(self.unit, spell.bonusDamage, true, ABILITY_ILF_ATTACK_BONUS, 0, 0)
 		end
 
-        ---Get Unit Armor Bonus
-        ---@return integer
-        function self:ArmorBonus() return GetAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0) end
+		---Get Unit Armor Bonus
+		---@return integer
+		function self:ArmorBonus()
+			return GetAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0)
+		end
 
-        ---Reset Unit Armor Bonus
-        ---@param amount integer
-        ---@return boolean
-        function self:ArmorBonusIncrement(amount)
-            return IncAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0, amount)
-        end
+		---Reset Unit Armor Bonus
+		---@param amount integer
+		---@return boolean
+		function self:ArmorBonusIncrement(amount)
+			return IncAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0, amount)
+		end
 
-        ---Reset Unit Armor Bonus
-        ---@return boolean
-        function self:ArmorBonusReset()
-            return SetAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0, 0)
-        end
+		---Reset Unit Armor Bonus
+		---@return boolean
+		function self:ArmorBonusReset()
+			return SetAbilityInteger(self.unit, spell.bonusArmor, true, ABILITY_ILF_DEFENSE_BONUS_IDEF, 0, 0)
+		end
 
-        ---Get Life Regen Rate Bonus
-        ---@return real
-        function self:LifeRegenBonus()
-            return GetAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0)
-        end
+		---Get Life Regen Rate Bonus
+		---@return real
+		function self:LifeRegenBonus()
+			return GetAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0)
+		end
 
-        ---Increment Life Regen Bonus
-        ---@param amount real
-        ---@return boolean
-        function self:LifeRegenBonusIncrement(amount)
-            return IncAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0, amount)
-        end
+		---Increment Life Regen Bonus
+		---@param amount real
+		---@return boolean
+		function self:LifeRegenBonusIncrement(amount)
+			return IncAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0,
+			                      amount)
+		end
 
-        ---Reset Life Regen Bonus
-        ---@return boolean
-        function self:LifeRegenBonusReset()
-            return SetAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0, 0)
-        end
+		---Reset Life Regen Bonus
+		---@return boolean
+		function self:LifeRegenBonusReset()
+			return SetAbilityReal(self.unit, spell.bonusHealthRegen, true, ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED, 0, 0)
+		end
+
+		---Get Mana Regen Rate Bonus
+		---@return real
+		function self:ManaRegenBonus()
+			return GetAbilityReal(self.unit, spell.bonusManaRegen, true, ABILITY_RLF_AMOUNT_REGENERATED, 0)
+		end
+
+		---Increment Mana Regen Bonus
+		---@param amount real
+		---@return boolean
+		function self:ManaRegenBonusIncrement(amount)
+			return IncAbilityReal(self.unit, spell.bonusManaRegen, true, ABILITY_RLF_AMOUNT_REGENERATED, 0, amount)
+		end
+
+		---Reset Mana Regen Bonus
+		---@return boolean
+		function self:ManaRegenBonusReset()
+			return SetAbilityReal(self.unit, spell.bonusManaRegen, true, ABILITY_RLF_AMOUNT_REGENERATED, 0, 0)
+		end
 
 		--- Check if the hero currently has a buff giving it a spell
 		---@param spellName string
@@ -357,10 +388,10 @@ function _UnitInit()
 		---@return boolean
 		function self:InRect(r) return RectContainsUnit(r, self.unit) end
 
-        ---Is Unit in Region
-        ---@param reg region
-        ---@return boolean
-        function self:InRegion(reg) return IsUnitInRegion(reg, self.unit) end
+		---Is Unit in Region
+		---@param reg region
+		---@return boolean
+		function self:InRegion(reg) return IsUnitInRegion(reg, self.unit) end
 
 		---CUSTOM FOR PROJECT
 		---Pick a new order for unit
@@ -413,10 +444,10 @@ function _UnitInit()
 		end
 
 		-- If unit Exists in Index remove it
-		if _Unit[self.handleId] ~= nil then _Unit.Remove(self.unit) end
+		if UNIT[self.handleId] ~= nil then UNIT.Remove(self.unit) end
 
 		-- Add Unit to Index
-		_Unit[self.handleId] = self
+		UNIT[self.handleId] = self
 
 		return self
 	end

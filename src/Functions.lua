@@ -16,7 +16,7 @@ function TableRemoveValue(table, value) return table.remove(table, TableFind(tab
 
 ---comment
 ---@param unit unit
----@param ability spell
+---@param ability SPELL
 ---@param add boolean
 ---@param aif abilityintegerfield
 ---@param level integer
@@ -33,7 +33,7 @@ end
 
 ---comment
 ---@param unit unit
----@param ability spell
+---@param ability SPELL
 ---@param add boolean
 ---@param arf abilityrealfield
 ---@param level integer
@@ -50,7 +50,7 @@ end
 
 ---Add Ability to Unit and set the Integer field
 ---@param unit unit
----@param ability spell
+---@param ability SPELL
 ---@param add boolean
 ---@param aif abilityintegerfield
 ---@param level integer
@@ -72,7 +72,7 @@ end
 
 ---Add Ability to Unit and set the Integer field
 ---@param unit unit
----@param ability spell
+---@param ability SPELL
 ---@param add boolean
 ---@param aif abilityintegerfield
 ---@param level integer
@@ -96,7 +96,7 @@ end
 
 ---Add Ability to Unit and set the Real field
 ---@param unit unit
----@param ability spell
+---@param ability SPELL
 ---@param add boolean
 ---@param arf abilityrealfield
 ---@param level integer
@@ -118,7 +118,7 @@ end
 
 ---Add Ability to Unit and set the Real field
 ---@param unit unit
----@param ability spell
+---@param ability SPELL
 ---@param add boolean
 ---@param arf abilityrealfield
 ---@param level integer

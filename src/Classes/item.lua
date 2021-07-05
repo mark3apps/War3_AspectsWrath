@@ -1,13 +1,14 @@
 --
 -- Hero Skills / Abilities Class
 -----------------
-
-
 ---@class itemATA
-function item.Init()
-	item = {}
-	item.id = {}
-	item.names = {}
+function ITEM_INIT()
+	ITEM = {}
+	ITEM.KEY = {}
+
+	function ITEM.GET(id)
+
+	end
 
 	-- comment
 	---@param name string
@@ -17,26 +18,26 @@ function item.Init()
 	---@param order integer
 	---@param instant boolean
 	---@param castTime table
-	function item.New(name, properName, four, abilityFour, order, instant, castTime)
-		item[name] = {
-			name = name,
-			properName = properName,
-			four = four,
-			id = FourCC(four),
-			abilityFour = abilityFour,
-			abilityId = FourCC(abilityFour),
-			order = order,
-			instant = instant,
-			castTime = castTime
-		}
+	function ITEM.NEW(name, properName, four, abilityFour, order, instant, castTime)
 
-		table.insert(item.names, name)
-		item.id[four] = name
+		---@class ITEMTYPE
+		local self = {}
 
-		return true
+		self.name = name
+		self.properName = properName
+		self.four = four
+		self.id = FourCC(four)
+		self.abilityFour = abilityFour
+		self.abilityId = FourCC(abilityFour)
+		self.order = order
+		self.instant = instant
+		self.castTime = castTime
+
+		ITEM.KEY[name] = name
+		ITEM.KEY[four] = name
+
+		return self
 	end
 
 end
-
-
 

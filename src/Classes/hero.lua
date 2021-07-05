@@ -1,19 +1,18 @@
-function _HeroInit()
+function HERO_INIT()
 
 	-- Create Class Definition
-	_Hero = {}
-	hero = {}
+	HERO = {}
 
 	---Create new Hero Instance
 	---@param unit unit
-	---@param heroType heroType
-	---@return boolean
-	function _Hero.new(unit, heroType)
+	---@return HERO
+	function HERO.NEW(unit)
 
-		---@class hero:unitExtended
-		local self = _Unit.new(unit)
+		---@class HERO:UNIT
+		local self = {}
+		self = UNIT.NEW(unit)
 
-		self.heroType = heroType
+		self.heroType = HEROTYPE.GET(unit)
 
 		---Get Hero Level
 		---@return integer
@@ -23,9 +22,17 @@ function _HeroInit()
 		---@return string
 		function self:NameProper() return GetHeroProperName(self.unit) end
 
+		---Change Hero Proper Name
+		---@param name string
+		---@return boolean
+		function self:NameProperChange(name)
+			BlzSetHeroProperName(self.unit, name)
+			return true
+		end
+
 		---comment
 		---@param spellName string
-		---@return spell
+		---@return SPELL
 		function self:Spell(spellName) return self.heroType.spells[spellName] end
 
 		---Get Level of Spell for Hero

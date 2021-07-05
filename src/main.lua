@@ -7,14 +7,21 @@ function init_Lua()
 
 		Init_luaGlobals()
 		cine.Init()
-		init_triggers()
+		
+		HEROTYPE_INIT()
+		SPELL_INIT()
+		HERO_INIT()
+		ITEM_INIT()
+		UNIT_INIT()
+
 		init_locationClass()
 		init_indexerClass()
-		hero.init()
 		init_spawnClass()
 		init_aiClass()
 		init_baseClass()
 		init_gateClass()
+
+		init_triggers()
 	end)
 	-- dprint("Classes Defined", 2)
 

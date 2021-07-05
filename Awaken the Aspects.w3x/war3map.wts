@@ -14137,3 +14137,9 @@ STRING 4831
 NewBonus - Mana Regen
 }
 
+STRING 4832
+// Abilities: Z020 (UnitAlive), Name (Name)
+{
+UnitAlive
+}
+

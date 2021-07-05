@@ -37,7 +37,7 @@ function Init_UnitEntersMap()
 
 		if not IsUnitType(triggerUnit, UNIT_TYPE_HERO) and not IsUnitType(triggerUnit, UNIT_TYPE_STRUCTURE) then
 			-- print(GetUnitName(triggerUnit) .. " Entered MAP MOVED")
-			_Unit.New(unit)
+			UNIT.NEW(unit)
 
 			unitKeepMoving(triggerUnit, true)
 		end
@@ -95,7 +95,7 @@ function Init_UnitDies()
 		-- Remove Index from Unit
 		if not IsUnitType(dieingUnit, UNIT_TYPE_HERO) then
 			PolledWait(10)
-			_Unit.Remove(dieingUnit)
+			UNIT.REMOVE(dieingUnit)
 		end
 
 	end)
@@ -257,12 +257,12 @@ end
 
 -- Tell unit to keep Attack-Moving to it's indexed destination
 ---comment
----@param unitOrig unit
+---@param u unit
 ---@param withoutDelay boolean
-function unitKeepMoving(unitOrig, withoutDelay, orderId)
+function unitKeepMoving(u, withoutDelay, orderId)
 	withoutDelay = withoutDelay or false
-	unit = _Unit.Get(unitOrig)
-
+	local unit = UNIT.GET(u)
+	
 	orderId = orderId or unit:OrderCurrent()
 	
 	local typeId = unit.unitType

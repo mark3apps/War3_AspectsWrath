@@ -1,17 +1,24 @@
-
-
-function _HeroTypeInit()
+function HEROTYPE_INIT()
 
 	-- Create Class Definition
-	_HeroType = {}
+	HEROTYPE = {}
 
 	-- Init Globals
-	heroType = {id = {}, names = {}, players = {}}
+	HEROTYPE = {id = {}, names = {}, players = {}}
 	for i = 1, 12 do hero.players[i] = {picked = false} end
 
-	_HeroType.new = function(name, four, fourAlter)
+    ---comment
+    ---@param u unit
+    ---@return HEROTYPE
+	function HEROTYPE.GET(u)
+        local unit = UNIT.GET(u)
 
-		---@class heroType
+        return heroType[HEROTYPE.id[unit.unitTypeFour]]
+    end
+
+	function HEROTYPE.NEW(name, four, fourAlter)
+
+		---@class HEROTYPE
 		local self = {}
 
 		self.name = name
@@ -28,7 +35,7 @@ function _HeroTypeInit()
 		self.talents = {}
 
 		---Add a spell to Hero
-		---@param spellObj spell
+		---@param spellObj SPELL
 		---@param ult boolean
 		---@param starting boolean
 		---@param permanent boolean
@@ -54,7 +61,7 @@ function _HeroTypeInit()
 		---Add an item to Hero
 		---@param item itemATA
 		---@return boolean
-		function self:AddItem(item)
+		function self:ItemAdd(item)
 			table.insert(self.items, item)
 
 			return true
@@ -67,9 +74,10 @@ function _HeroTypeInit()
 		function self:TalentAdd(talent, level) return true end
 
 		-- Register newly created hero
-		hero.id[four] = name
-		table.insert(hero.names, name)
-		hero[name] = self
+		HEROTYPE.id[four] = name
+		table.insert(HEROTYPE.names, name)
+
+		return self
 	end
 
 	---comment

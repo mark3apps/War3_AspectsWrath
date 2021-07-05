@@ -1830,7 +1830,7 @@ function init_gateClass()
 		local gGates = CreateGroup()
 		GroupAddGroup(gate.g, gGates)
 
-		local pickedUnit = _Unit.Get(FirstOfGroup(gGates))
+		local pickedUnit = UNIT.GET(FirstOfGroup(gGates))
 		while pickedUnit ~= nil do
 			local u
 			local heroes = 0
@@ -1873,7 +1873,7 @@ function init_gateClass()
 				ReplaceUnitBJ(unit.unit, info.unitTypeClosed, bj_UNIT_STATE_METHOD_RELATIVE)
 				EnableTrigger(gate.Trig_gateDies)
 
-				unit = _Unit.New(GetLastReplacedUnitBJ())
+				unit = UNIT.NEW(GetLastReplacedUnitBJ())
 				gate[unit.handleId] = info
 				unit:GroupAdd(gate.gClosed)
 				unit:GroupAdd(gate.g)
@@ -1889,7 +1889,7 @@ function init_gateClass()
 				ReplaceUnitBJ(unit.unit, info.unitTypeOpen, bj_UNIT_STATE_METHOD_RELATIVE)
 				EnableTrigger(gate.Trig_gateDies)
 
-				unit = _Unit.New(GetLastReplacedUnitBJ())
+				unit = UNIT.NEW(GetLastReplacedUnitBJ())
 				gate[unit.handleId] = info
 				unit:GroupAdd(gate.gOpen)
 				unit:GroupAdd(gate.g)
@@ -1900,7 +1900,7 @@ function init_gateClass()
 			end
 
 			pickedUnit:GroupRemove(gGates)
-			pickedUnit = _Unit.Get(FirstOfGroup(gGates))
+			pickedUnit = UNIT.GET(FirstOfGroup(gGates))
 		end
 		DestroyGroup(gGates)
 
@@ -1922,7 +1922,7 @@ function init_gateClass()
 		TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_ATTACKED)
 		TriggerAddAction(t, function()
 
-			local triggerUnit = _Unit.Get(GetAttackedUnitBJ())
+			local triggerUnit = UNIT.GET(GetAttackedUnitBJ())
 			local unitId = triggerUnit.handleId
 
 			if gate.types[unitId] ~= nil then
