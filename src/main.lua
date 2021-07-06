@@ -37,7 +37,7 @@ function init_Lua()
 
 	-- init_AutoZoom()
 	Init_HeroLevelsUp()
-	Init_UnitCastsSpell()
+	--Init_UnitCastsSpell()
 	init_spawnTimers()
 	Init_UnitEntersMap()
 	-- Init_finishCasting()
@@ -181,7 +181,7 @@ function Init_PickingPhase()
 
 			cine.finish()
 
-			init_aiLoopStates()
+			--init_aiLoopStates()
 		end
 	end)
 end

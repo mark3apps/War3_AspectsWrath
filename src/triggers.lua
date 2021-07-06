@@ -13,19 +13,7 @@ function Init_HeroLevelsUp()
 	end)
 end
 
--- Unit Casts Spell
-function Init_UnitCastsSpell()
-	trig_CastSpell = CreateTrigger()
-	TriggerRegisterAnyUnitEventBJ(trig_CastSpell, EVENT_PLAYER_UNIT_SPELL_CAST)
 
-	TriggerAddAction(trig_CastSpell, function()
-		local triggerUnit = GetTriggerUnit()
-		local order = OrderId2String(GetUnitCurrentOrder(triggerUnit))
-		local spellCast = CC2Four(GetSpellAbilityId())
-
-		try(function() CAST_aiHero(triggerUnit, spellCast) end, "CAST_aiHero")
-	end)
-end
 
 -- Unit enters the Map
 function Init_UnitEntersMap()
