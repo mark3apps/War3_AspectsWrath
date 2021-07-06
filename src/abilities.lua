@@ -26,9 +26,9 @@ function init_Abilities()
         while true do
             u = GroupPickRandomUnit(g)
             if u == nil then
-                BlzEndUnitAbilityCooldown(castingUnit, hero.switch.id)
-                local abilitymana = BlzGetAbilityManaCost(hero.switch.id,
-                                        GetUnitAbilityLevel(castingUnit, hero.switch.id))
+                BlzEndUnitAbilityCooldown(castingUnit, spell.switch.id)
+                local abilitymana = BlzGetAbilityManaCost(spell.switch.id,
+                                        GetUnitAbilityLevel(castingUnit, spell.switch.id))
                 SetUnitManaBJ(castingUnit, GetUnitState(castingUnit, UNIT_STATE_MANA) + abilitymana)
                 print("added ability and mana back")
 
@@ -79,7 +79,7 @@ function init_Abilities()
         local castX = GetUnitX(castingUnit)
         local castY = GetUnitY(castingUnit)
         local castL = GetUnitLoc(castingUnit)
-        local spellLevel = GetUnitAbilityLevel(castingUnit, hero.manaExplosion.id)
+        local spellLevel = GetUnitAbilityLevel(castingUnit, spell.manaExplosion.id)
         local manaStart = GetUnitState(castingUnit, UNIT_STATE_MANA)
         local manaSpell = manaStart * 0.1
         local manaLeft = manaStart - manaSpell
@@ -113,7 +113,7 @@ function init_Abilities()
 
         end)
 
-        pushbackUnits(g, castingUnit, castX, castY, aoe, damageFull, tick, duration, factor)
+        PushbackUnits(g, castingUnit, castX, castY, aoe, damageFull, tick, duration, factor)
         DestroyGroup(g)
     end
 
@@ -136,10 +136,10 @@ function init_Abilities()
         local lCast = Location(xCast, yCast)
         local xBomb = x
         local yBomb = y
-        local level = GetUnitAbilityLevel(castingUnit, hero.manaBomb.id)
+        local level = GetUnitAbilityLevel(castingUnit, spell.manaBomb.id)
         local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-        local distanceTotal = distanceBetweenCoordinates(x, y, xCast, yCast)
-        local angle = angleBetweenCoordinates(x, y, xCast, yCast)
+        local distanceTotal = DistanceBetweenCoordinates(x, y, xCast, yCast)
+        local angle = AngleBetweenCoordinates(x, y, xCast, yCast)
 
         -- Constants
         local bombSpeed = 35 + 5 * level
@@ -158,8 +158,8 @@ function init_Abilities()
         -- Move the Bomb Forward
         while distance + 150 <= distanceTotal do
 
-            xBomb, yBomb = polarProjectionCoordinates(xBomb, yBomb, bombSpeed, angle)
-            distance = distanceBetweenCoordinates(x, y, xBomb, yBomb)
+            xBomb, yBomb = PolarProjectionCoordinates(xBomb, yBomb, bombSpeed, angle)
+            distance = DistanceBetweenCoordinates(x, y, xBomb, yBomb)
 
             l = Location(xBomb, yBomb)
             sfx = AddSpecialEffectLoc("Abilities/Spells/Undead/DeathandDecay/DeathandDecayDamage.mdl", l)
@@ -223,7 +223,7 @@ function init_Abilities()
 
         end)
 
-        pushbackUnits(g, castingUnit, xCast, yCast, aoe, damageAftershock, explosionTick, duration, 0.2)
+        PushbackUnits(g, castingUnit, xCast, yCast, aoe, damageAftershock, explosionTick, duration, 0.2)
         DestroyGroup(g)
 
     end
@@ -242,7 +242,7 @@ function init_Abilities()
         local player = GetOwningPlayer(castingUnit)
 
         -- Ability Vars
-        local level = GetUnitAbilityLevel(castingUnit, hero.unleashMana.id)
+        local level = GetUnitAbilityLevel(castingUnit, spell.unleashMana.id)
         local mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
         local damageMissles = 60 + (60 * level - 60)
 
@@ -258,7 +258,7 @@ function init_Abilities()
 
         PolledWait(0.5)
 
-        while duration > 0 and mana > 0 and currentOrder == hero.unleashMana.order do
+        while duration > 0 and mana > 0 and currentOrder == spell.unleashMana.order do
 
             g = GetUnitsInRangeOfLocAll(aoeMissles, l)
             ForGroup(g, function()
@@ -300,7 +300,7 @@ function init_Abilities()
         DestroyEffect(sfx1)
         RemoveLocation(l)
 
-        if currentOrder == hero.unleashMana.order then
+        if currentOrder == spell.unleashMana.order then
             IssueImmediateOrder(castingUnit, "stop")
         end
 
@@ -315,12 +315,12 @@ function init_Abilities()
         local player = GetOwningPlayer(castingUnit)
 
         -- Ability Vars
-        local level = GetUnitAbilityLevel(castingUnit, hero.soulBind.id)
+        local level = GetUnitAbilityLevel(castingUnit, spell.soulBind.id)
         local xCast = GetSpellTargetX()
         local yCast = GetSpellTargetY()
         local lCast = Location(xCast, yCast)
 
-        local aoe = valueFactor(level, 150, 1, 20, 0)
+        local aoe = ValueFactor(level, 150, 1, 20, 0)
 
         g = GetUnitsInRangeOfLocAll(aoe, lCast)
         RemoveLocation(lCast)
@@ -353,21 +353,21 @@ function init_Abilities()
         local level = indexer:getKey(dyingUnit, "soulBindLevel")
         local player = GetOwningPlayer(castingUnit)
 
-        local distance = distanceBetweenUnits(dyingUnit, castingUnit)
+        local distance = DistanceBetweenUnits(dyingUnit, castingUnit)
 
         if distance < 2000 then
             u = CreateUnitAtLoc(player, FourCC("e00D"), lDyingUnit, 0)
 
             while distance > 100 and IsUnitAliveBJ(castingUnit) do
                 IssueTargetOrder(u, "attack", castingUnit)
-                distance = distanceBetweenUnits(u, castingUnit)
+                distance = DistanceBetweenUnits(u, castingUnit)
                 PolledWait(0.1)
             end
 
             KillUnit(u)
 
             mana = GetUnitState(castingUnit, UNIT_STATE_MANA)
-            SetUnitState(castingUnit, UNIT_STATE_MANA, mana + valueFactor(level, 20, 1, 5, 0))
+            SetUnitState(castingUnit, UNIT_STATE_MANA, mana + ValueFactor(level, 20, 1, 5, 0))
 
             sfx = AddSpecialEffectTarget("Abilities/Spells/Other/Charm/CharmTarget.mdl", castingUnit, "chest")
             DestroyEffect(sfx)
@@ -385,11 +385,11 @@ function init_Abilities()
 
         -- Add Abilities
         ability.spellEffect = {}
-        ability.spellEffect[hero.switch.id] = hero.switch.name
-        ability.spellEffect[hero.manaExplosion.id] = hero.manaExplosion.name
-        ability.spellEffect[hero.manaBomb.id] = hero.manaBomb.name
-        ability.spellEffect[hero.unleashMana.id] = hero.unleashMana.name
-        ability.spellEffect[hero.soulBind.id] = hero.soulBind.name
+        ability.spellEffect[spell.switch.id] = spell.switch.name
+        ability.spellEffect[spell.manaExplosion.id] = spell.manaExplosion.name
+        ability.spellEffect[spell.manaBomb.id] = spell.manaBomb.name
+        ability.spellEffect[spell.unleashMana.id] = spell.unleashMana.name
+        ability.spellEffect[spell.soulBind.id] = spell.soulBind.name
 
         local t = CreateTrigger()
         TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_UNIT_SPELL_EFFECT)
@@ -414,8 +414,8 @@ function init_Abilities()
         -- Add Buffs
         ability.buff = {}
         ability.buff[1] = {
-            name = "DEATH_" .. hero.soulBind.name,
-            id = hero.soulBind.buff
+            name = "DEATH_" .. spell.soulBind.name,
+            id = spell.soulBind.buff
         }
 
         local t = CreateTrigger()

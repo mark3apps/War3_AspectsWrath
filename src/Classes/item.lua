@@ -1,16 +1,15 @@
 --
--- Hero Skills / Abilities Class
+-- Item Class
 -----------------
----@class ITEM
-function ITEM_INIT()
-	ITEM = {}
-	ITEM.KEY = {}
+function ITEMTYPE_INIT()
+	ITEMTYPE = {}
+	ITEMTYPE.KEY = {}
 
-	function ITEM.GET(id)
+	function ITEMTYPE.GET(id)
 
 	end
 
-	-- comment
+	-- Create a New Item
 	---@param name string
 	---@param properName string
 	---@param four string
@@ -18,7 +17,7 @@ function ITEM_INIT()
 	---@param order integer
 	---@param instant boolean
 	---@param castTime table
-	function ITEM.NEW(name, properName, four, abilityFour, order, instant, castTime)
+	function ITEMTYPE.NEW(name, properName, four, abilityFour, order, instant, castTime)
 
 		---@class ITEMTYPE
 		local self = {}
@@ -33,8 +32,8 @@ function ITEM_INIT()
 		self.instant = instant
 		self.castTime = castTime
 
-		ITEM.KEY[name] = name
-		ITEM.KEY[four] = name
+		ITEMTYPE.KEY[name] = name
+		ITEMTYPE.KEY[four] = name
 
 		return self
 	end

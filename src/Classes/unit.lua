@@ -43,8 +43,8 @@ function UNIT_INIT()
 		self.orderX = nil ---@type real
 		self.orderY = nil ---@type real
 		self.orderTarget = nil ---@type unit
-		self.unitType = GetUnitTypeId(unit)
-        self.unitTypeFour = CC2Four(self.unitType)
+		self.unitTypeId = GetUnitTypeId(unit)
+        self.unitTypeFour = CC2Four(self.unitTypeId)
 		self.order = GetUnitCurrentOrder(unit)
 		self.orderType = "" ---@type string
 		self.sfx = {}
@@ -314,22 +314,22 @@ function UNIT_INIT()
 			return SetAbilityReal(self.unit, spell.bonusManaRegen, true, ABILITY_RLF_AMOUNT_REGENERATED, 0, 0)
 		end
 
-		--- Check if the hero currently has a buff giving it a spell
-		---@param spellName string
+		--- Check if the hero currently has a buff from the specified spell
+		---@param spellObj SPELL
 		---@return boolean
-		function self:HasSpellBuff(spellName)
+		function self:HasSpellBuff(spellObj)
 
-			if spell[spellName].buff == 0 then
+			if spellObj.buff == 0 then
 				return false
 			else
-				return UnitHasBuffBJ(self.unit, spell[spellName].buff)
+				return self:HasBuff(spellObj.buffId)
 			end
 		end
 
-		---comment
-		---@param four string
+		---Check to see if unit has Buff
+		---@param id integer
 		---@return boolean
-		function self:HasBuff(four) return UnitHasBuffBJ(self.unit, FourCC(four)) end
+		function self:HasBuff(id) return UnitHasBuffBJ(self.unit, id) end
 
 		---comment
 		---@param key string

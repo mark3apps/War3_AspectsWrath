@@ -7,10 +7,9 @@ function Init_HeroLevelsUp()
 
 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
 	TriggerAddAction(t, function()
-		-- Get Locals
-		local levelingUnit = GetLevelingUnit()
 
-		try(function() hero:levelUp(levelingUnit) end, "hero:levelUp")
+		-- Run the default Level up stuff
+		HERO.GET(GetLevelingUnit()):LevelUp()
 	end)
 end
 
@@ -199,7 +198,7 @@ do
 		TriggerAddAction(trigger, function()
 
 			local player = GetTriggerPlayer()
-			local playerDetails = hero.players[GetConvertedPlayerId(player)]
+			local playerDetails = PLAYERS[GetConvertedPlayerId(player)]
 			SelectUnitForPlayerSingle(playerDetails.alter, player)
 		end)
 
@@ -209,7 +208,7 @@ do
 		TriggerAddAction(trigger, function()
 
 			local player = GetTriggerPlayer()
-			local playerDetails = hero.players[GetConvertedPlayerId(player)]
+			local playerDetails = PLAYERS[GetConvertedPlayerId(player)]
 			SelectUnitForPlayerSingle(playerDetails.hero, player)
 		end)
 	end
@@ -221,11 +220,12 @@ end
 
 ---comment
 ---@param triggerUnit unit
----@param spellCast string
-function CAST_aiHero(triggerUnit, spellCast)
+---@param four string
+function CAST_aiHero(triggerUnit, four)
 	if IsUnitInGroup(triggerUnit, ai.heroGroup) then
 		local heroName = indexer:getKey(triggerUnit, "heroName")
-		local spellCastData = hero[hero[spellCast]]
+
+		local spellCastData = spell[SPELL.NAME[four]]
 
 		if spellCastData ~= nil then
 			ai:castSpell(heroName, spellCastData)
@@ -265,7 +265,7 @@ function unitKeepMoving(u, withoutDelay, orderId)
 	
 	orderId = orderId or unit:OrderCurrent()
 	
-	local typeId = unit.unitType
+	local typeId = unit.unitTypeId
 	local owningPlayer = unit:Player()
 
 	if owningPlayer ~= Player(PLAYER_NEUTRAL_AGGRESSIVE) and unit:Life() > 0 and not unit:IsType(UNIT_TYPE_STRUCTURE) and

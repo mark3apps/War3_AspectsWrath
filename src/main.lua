@@ -1,49 +1,38 @@
 function init_Lua()
-	debugprint = 2
+
 	shieldTowers = {allied = 7, fed = 7}
 
 	-- Define Classes
-	try(function()
+	Init_luaGlobals()
+	cine.Init()
 
-		Init_luaGlobals()
-		cine.Init()
-		
-		HEROTYPE_INIT()
-		SPELL_INIT()
-		HERO_INIT()
-		ITEM_INIT()
-		UNIT_INIT()
+	HEROTYPE_INIT()
+	SPELL_INIT()
+	HERO_INIT()
+	ITEMTYPE_INIT()
+	UNIT_INIT()
 
-		init_locationClass()
-		init_indexerClass()
-		init_spawnClass()
-		init_aiClass()
-		init_baseClass()
-		init_gateClass()
+	init_locationClass()
+	init_indexerClass()
+	init_spawnClass()
+	init_aiClass()
+	init_baseClass()
+	init_gateClass()
 
-		init_triggers()
-	end)
-	-- dprint("Classes Defined", 2)
+	init_triggers()
 
 	-- Start the Map init
 	Init_Map()
 
 	-- Init Classes
-	try(function()
-		loc = loc_Class.new()
-		addRegions()
-		addBases()
+	loc = loc_Class.new()
+	addRegions()
 
-		indexer = indexer_Class.new()
-		ai = ai_Class.new()
-		spawn = spawn_Class.new()
-
-	end)
-
-	-- dprint("Classes Initialized", 2)
+	indexer = indexer_Class.new()
+	ai = ai_Class.new()
+	spawn = spawn_Class.new()
 
 	-- Init Trigger
-
 	ConditionalTriggerExecute(gg_trg_baseAndHeals)
 
 	-- init_AutoZoom()
@@ -60,18 +49,7 @@ function init_Lua()
 	init_Moonwell_cast()
 
 	-- Abilities
-	try(function() init_Abilities() end)
-
-	-- dprint("Triggers Initialized", 2)
-
-	-- Spawn Base / Unit Setup
-	-- Init Trigger
-	try(function()
-		spawnAddBases()
-		spawnAddUnits()
-	end)
-
-	-- dprint("Spawn Setup", 2)
+	init_Abilities()
 
 	-- Setup Delayed Init Triggers
 	init_Delayed_0()
@@ -84,9 +62,7 @@ end
 function init_Delayed_0()
 	local t = CreateTrigger()
 	TriggerRegisterTimerEventSingle(t, 0)
-	TriggerAddAction(t, function()
-		cine.mapStart()
-	end)
+	TriggerAddAction(t, function() cine.mapStart() end)
 end
 
 -- Init Delayed Functions 1 second after Map Init
@@ -273,12 +249,12 @@ function Init_PickingPhase()
 			ForForce(udg_playersAll, function()
 				player = GetEnumPlayer()
 
-				if not hero.players[GetConvertedPlayerId(player)].picked then
+				if not PLAYERS[GetConvertedPlayerId(player)].picked then
 					print("picking for player " .. GetConvertedPlayerId(player))
 					HeroSelector.forcePick(player)
 				end
 
-				local heroUnit = hero.players[GetConvertedPlayerId(player)].hero
+				local heroUnit = PLAYERS[GetConvertedPlayerId(player)].hero.unit
 				ShowUnitShow(heroUnit)
 				SelectUnitForPlayerSingle(heroUnit, player)
 

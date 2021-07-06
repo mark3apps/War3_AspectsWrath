@@ -1,14 +1,12 @@
 function SPELL_INIT()
 
 	SPELL = {}
-	SPELL.ID = {}
-	SPELL.NAMES = {}
+	SPELL.NAME = {}
 	SPELL.TARGET = {
 		AOE = 1,
 		SINGLETARGET = 2,
 		CONE = 3
 	}
-	
 
 	---Add a new Spell
 	---@param name string
@@ -52,8 +50,8 @@ function SPELL_INIT()
 			return BlzGetAbilityActivatedIcon(self.id)
 		end
 
-		SPELL.id[four] = name
-		table.insert(SPELL.names, name)
+		SPELL.NAME[four] = name
+		SPELL.NAME[name] = name
 
 		return self
 	end

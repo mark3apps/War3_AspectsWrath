@@ -222,17 +222,17 @@ function HeroSelector.initHeroes()
     local categoryAssassin = 8
     local categoryMage = 16
 
-    HeroSelector.addUnitCategory(hero.brawler.four, categoryTank)
-    HeroSelector.addUnitCategory(hero.tactition.four, categoryTank)
-    HeroSelector.addUnitCategory(hero.shiftMaster.four, categoryAssassin)
-    HeroSelector.addUnitCategory(hero.manaAddict.four, categoryMage)
-    HeroSelector.addUnitCategory(hero.timeMage.four, categoryMage)
+    HeroSelector.addUnitCategory(heroType.brawler.four, categoryTank)
+    HeroSelector.addUnitCategory(heroType.tactition.four, categoryTank)
+    HeroSelector.addUnitCategory(heroType.shiftMaster.four, categoryAssassin)
+    HeroSelector.addUnitCategory(heroType.manaAddict.four, categoryMage)
+    HeroSelector.addUnitCategory(heroType.timeMage.four, categoryMage)
 
-    --HeroSelector.addUnit(hero.brawler.four)
-    --HeroSelector.addUnit(hero.tactition.four)
-    HeroSelector.addUnit(hero.shiftMaster.four)
-    HeroSelector.addUnit(hero.manaAddict.four)
-    HeroSelector.addUnit(hero.timeMage.four)
+    --HeroSelector.addUnit(heroType.brawler.four)
+    --HeroSelector.addUnit(heroType.tactition.four)
+    HeroSelector.addUnit(heroType.shiftMaster.four)
+    HeroSelector.addUnit(heroType.manaAddict.four)
+    HeroSelector.addUnit(heroType.timeMage.four)
 
 
 end
@@ -259,19 +259,18 @@ end
 
 --what happens to the unit being picked, player is the one having pressed the button
 function HeroSelector.unitCreated(player, unit, isRandom)
-    bj_lastCreatedUnit = unit
     if isRandom then
         --randomed
     else
         --picked
     end
 
-    hero:setupHero(unit)
+    HERO.NEW(unit)
 
     -- Setup AI
     if (GetPlayerController(player) == MAP_CONTROL_COMPUTER) then
-        ai:initHero(unit)
-        hero:levelUp(unit)
+        --ai:initHero(unit)
+        --hero:levelUp(unit)
     end
 
     ShowUnitHide(unit)

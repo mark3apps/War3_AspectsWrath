@@ -110,6 +110,8 @@ function addRegions()
 end
 
 function Init_luaGlobals()
+	PLAYERS = {}
+
 
 	oid = {
 		OFFSET = 851970,
@@ -908,9 +910,9 @@ function init.Globals()
 	-- Set Up Items
 	--
 	item = {}
-	item.teleport = ITEM.NEW("teleportation", "Teleport", "I000", "A01M", "", false, {6})
-	item.tank = ITEM.NEW("tank", "Tank", "I005", "", "", true, {})
-	item.mage = ITEM.NEW("mage", "Mage", "I006", "", "", true, {})
+	item.teleport = ITEMTYPE.NEW("teleportation", "Teleport", "I000", "A01M", "", false, {6})
+	item.tank = ITEMTYPE.NEW("tank", "Tank", "I005", "", "", true, {})
+	item.mage = ITEMTYPE.NEW("mage", "Mage", "I006", "", "", true, {})
 
 	----------------
 	-- Set up Heroes

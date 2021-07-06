@@ -157,8 +157,8 @@ function DistanceBetweenCoordinates(x1, y1, x2, y2) return SquareRoot(((x2 - x1)
 -- **Credit** KickKing
 -- get distance without locations
 ---Get Distance between two units.  (Doesn't leak)
----@param unitA any
----@param unitB any
+---@param unitA unit
+---@param unitB unit
 ---@return number
 function DistanceBetweenUnits(unitA, unitB)
 	return DistanceBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
@@ -173,8 +173,8 @@ end
 function AngleBetweenCoordinates(x1, y1, x2, y2) return bj_RADTODEG * Atan2(y2 - y1, x2 - x1) end
 
 ---get angle between two units without locations
----@param unitA any @Unit 1
----@param unitB any @Unit 2
+---@param unitA unit @Unit 1
+---@param unitB unit @Unit 2
 ---@return number @angle between 0 and 360
 function AngleBetweenUnits(unitA, unitB)
 	return AngleBetweenCoordinates(GetUnitX(unitA), GetUnitY(unitA), GetUnitX(unitB), GetUnitY(unitB))
@@ -204,16 +204,16 @@ function try(func) -- Turn on runtime logging
 end
 
 ---Converts integer formated types into the 4 digit strings (Opposite of FourCC()) Author: Taysen
----@param num any
----@return any
+---@param num integer
+---@return string
 function CC2Four(num) -- Convert from Handle ID to Four Char
 	return string.pack(">I4", num)
 end
 
 --- Get a random xy in the specified rect
----@param rect any
----@return any
----@return any
+---@param rect rect
+---@return real @X
+---@return real @Y
 function GetRandomCoordinatesInRect(rect)
 	return GetRandomReal(GetRectMinX(rect), GetRectMaxX(rect)), GetRandomReal(GetRectMinY(rect), GetRectMaxY(rect))
 end
@@ -223,34 +223,133 @@ end
 ---@param xMax number
 ---@param yMin number
 ---@param yMax number
----@return number
----@return number
+---@return real @X
+---@return real @Y
 function GetRandomCoordinatesInPoints(xMin, xMax, yMin, yMax) return GetRandomReal(xMin, xMax),
                                                                      GetRandomReal(yMin, yMax) end
 
----Wait until Order ends or until the amount of time specified
----@param unit any @This is the Unit to watch
----@param time any @OPTIONAL | 2 | The max amount of time to wait
----@param order any @OPTIONAL | oid.move | The order the continue to wait until it's no longer what the unit is doing
----@param tick any @OPTIONAL | 0.1 | The amount of time to wait between checks
----@return boolean
-function WaitWhileOrder(unit, time, order, tick)
+do
+	local data = {}
+	function SetTimerData(whichTimer, dat) data[whichTimer] = dat end
 
-	-- Set Defaults
-	time = time or 2
-	order = order or oid.move
-	tick = tick or 0.1
-
-	-- Set Local Variables
-	local i = 1
-	local unitOrder = GetUnitCurrentOrder(unit)
-
-	-- Loop
-	while unitOrder == oid.move and i < time do
-		unitOrder = GetUnitCurrentOrder(unit)
-		PolledWait(tick)
-		i = i + tick
+	-- GetData functionality doesn't even require an argument.
+	function GetTimerData(whichTimer)
+		if not whichTimer then whichTimer = GetExpiredTimer() end
+		return data[whichTimer]
 	end
+
+	-- NewTimer functionality includes optional parameter to pass data to timer.
+	function NewTimer(dat)
+		local t = CreateTimer()
+		if dat then data[t] = dat end
+		return t
+	end
+
+	-- Release functionality doesn't even need for you to pass the expired timer.
+	-- as an arg. It also returns the user data passed.
+	function ReleaseTimer(whichTimer)
+		if not whichTimer then whichTimer = GetExpiredTimer() end
+		local dat = data[whichTimer]
+		data[whichTimer] = nil
+		PauseTimer(whichTimer)
+		DestroyTimer(whichTimer)
+		return dat
+	end
+
+	local oldWait = PolledWait
+	function PolledWait(duration)
+		local thread = coroutine.running()
+		if thread then
+			TimerStart(NewTimer(thread), duration, false, function() coroutine.resume(ReleaseTimer()) end)
+			coroutine.yield(thread)
+		else
+			oldWait(duration)
+		end
+	end
+
+	local oldTSA = TriggerSleepAction
+	function TriggerSleepAction(duration) PolledWait(duration) end
+
+	local thread
+	local oldSync = SyncSelections
+	function SyncSelectionsHelper()
+		local t = thread
+		oldSync()
+		coroutine.resume(t)
+	end
+	function SyncSelections()
+		thread = coroutine.running()
+		if thread then
+			ExecuteFunc("SyncSelectionsHelper")
+			coroutine.yield(thread)
+		else
+			oldSync()
+		end
+	end
+
+	if not EnableWaits then -- Added this check to ensure compatibilitys with Lua Fast Triggers
+		local oldAction = TriggerAddAction
+		function TriggerAddAction(whichTrig, userAction)
+			oldAction(whichTrig, function() coroutine.resume(coroutine.create(function() userAction() end)) end)
+		end
+	end
+end
+
+---Pushback and Damage Units in Group
+---@param g group
+---@param castingUnit unit
+---@param x real
+---@param y real
+---@param aoe integer
+---@param damage integer
+---@param tick real
+---@param duration real
+---@param factor real
+---@return boolean
+function PushbackUnits(g, castingUnit, x, y, aoe, damage, tick, duration, factor)
+	local u, uX, uY, distance, angle, newDistance, uNewX, uNewY
+
+	local loopTimes = duration / tick
+	local damageTick = damage / loopTimes
+
+	if CountUnitsInGroup(g) > 0 then
+		for i = 1, loopTimes do
+
+			ForGroup(g, function()
+				u = GetEnumUnit()
+
+				if IsUnitAliveBJ(u) then
+
+					if i == 1 then PauseUnit(u, true) end
+
+					uX = GetUnitX(u)
+					uY = GetUnitY(u)
+
+					distance = DistanceBetweenCoordinates(x, y, uX, uY)
+					angle = AngleBetweenCoordinates(x, y, uX, uY)
+
+					newDistance = ((aoe + 80) - distance) * 0.13 * factor
+
+					uNewX, uNewY = PolarProjectionCoordinates(uX, uY, newDistance, angle)
+
+					-- if IsTerrainPathable(uNewX, uNewY, PATHING_TYPE_WALKABILITY) then
+					SetUnitX(u, uNewX)
+					SetUnitY(u, uNewY)
+					-- end
+
+					if damage > 0 then UnitDamageTargetBJ(castingUnit, u, damageTick, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_MAGIC) end
+
+					if i >= loopTimes - 1 then PauseUnit(u, false) end
+				else
+					PauseUnit(u, false)
+					GroupRemoveUnit(g, u)
+				end
+			end)
+
+			PolledWait(tick)
+		end
+	end
+	DestroyGroup(g)
 
 	return true
 end
