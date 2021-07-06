@@ -7459,7 +7459,7 @@ function Init_HeroLevelsUp()
 	local t = CreateTrigger()
 
 	TriggerRegisterAnyUnitEventBJ(t, EVENT_PLAYER_HERO_LEVEL)
-	TriggerAddAction(t, function()
+	TriggerAddAction(t, function() 
 
 		-- Run the default Level up stuff
 		HERO.GET(GetLevelingUnit()):LevelUp()
