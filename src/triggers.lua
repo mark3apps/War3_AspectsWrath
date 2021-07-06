@@ -218,22 +218,6 @@ end
 -- Trigger Functions
 -----------------
 
----comment
----@param triggerUnit unit
----@param four string
-function CAST_aiHero(triggerUnit, four)
-	if IsUnitInGroup(triggerUnit, ai.heroGroup) then
-		local heroName = indexer:getKey(triggerUnit, "heroName")
-
-		local spellCastData = spell[SPELL.NAME[four]]
-
-		if spellCastData ~= nil then
-			ai:castSpell(heroName, spellCastData)
-			print("MANUAL CAST")
-		end
-	end
-end
-
 -- Order starting units to attack
 function orderStartingUnits()
 	local g = CreateGroup()

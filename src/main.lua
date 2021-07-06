@@ -15,7 +15,7 @@ function init_Lua()
 	init_locationClass()
 	init_indexerClass()
 	init_spawnClass()
-	init_aiClass()
+	-- init_aiClass()
 	init_baseClass()
 	init_gateClass()
 
@@ -29,7 +29,7 @@ function init_Lua()
 	addRegions()
 
 	indexer = indexer_Class.new()
-	ai = ai_Class.new()
+	-- ai = ai_Class.new()
 	spawn = spawn_Class.new()
 
 	-- Init Trigger
@@ -106,90 +106,31 @@ function Init_Map()
 	ForForce(udg_ALL_PLAYERS, function() SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, GetEnumPlayer()) end)
 
 	-- Add Computers to their group
-	udg_PLAYERcomputers[1] = Player(18)
-	udg_PLAYERcomputers[2] = Player(19)
-	udg_PLAYERcomputers[3] = Player(20)
-	udg_PLAYERcomputers[4] = Player(21)
-	udg_PLAYERcomputers[5] = Player(22)
-	udg_PLAYERcomputers[6] = Player(23)
+	for i = 1, 6 do udg_PLAYERcomputers[i] = Player(i + 17) end
 
-	-- Create the Allied Computers
-	ForceAddPlayerSimple(udg_PLAYERcomputers[1], udg_PLAYERGRPallied)
-	ForceAddPlayerSimple(udg_PLAYERcomputers[2], udg_PLAYERGRPallied)
-	ForceAddPlayerSimple(udg_PLAYERcomputers[3], udg_PLAYERGRPallied)
+	-- Create the Allied Computers and set color
+	for i = 1, 3 do
+		ForceAddPlayerSimple(udg_PLAYERcomputers[i], udg_PLAYERGRPallied)
+		SetPlayerColorBJ(udg_PLAYERcomputers[i], PLAYER_COLOR_RED, true)
+	end
 
-	-- Create the Federation Computers
-	ForceAddPlayerSimple(udg_PLAYERcomputers[4], udg_PLAYERGRPfederation)
-	ForceAddPlayerSimple(udg_PLAYERcomputers[5], udg_PLAYERGRPfederation)
-	ForceAddPlayerSimple(udg_PLAYERcomputers[6], udg_PLAYERGRPfederation)
+	-- Create the Federation Computers and set color
+	for i = 4, 6 do
+		ForceAddPlayerSimple(udg_PLAYERcomputers[i], udg_PLAYERGRPfederation)
+		SetPlayerColorBJ(udg_PLAYERcomputers[i], PLAYER_COLOR_BLUE, true)
+	end
 
 	for i = 0, 11 do
 		if GetPlayerSlotState(Player(i)) == PLAYER_SLOT_STATE_PLAYING then ForceAddPlayer(udg_playersAll, Player(i)) end
 	end
 
-	-- Create the Allied Users
-	ForceAddPlayerSimple(Player(0), udg_PLAYERGRPalliedUsers)
-	ForceAddPlayerSimple(Player(1), udg_PLAYERGRPalliedUsers)
-	ForceAddPlayerSimple(Player(2), udg_PLAYERGRPalliedUsers)
-	ForceAddPlayerSimple(Player(3), udg_PLAYERGRPalliedUsers)
-	ForceAddPlayerSimple(Player(4), udg_PLAYERGRPalliedUsers)
-	ForceAddPlayerSimple(Player(5), udg_PLAYERGRPalliedUsers)
-
-	-- Create the Federation Users
-	ForceAddPlayerSimple(Player(6), udg_PLAYERGRPfederationUsers)
-	ForceAddPlayerSimple(Player(7), udg_PLAYERGRPfederationUsers)
-	ForceAddPlayerSimple(Player(8), udg_PLAYERGRPfederationUsers)
-	ForceAddPlayerSimple(Player(9), udg_PLAYERGRPfederationUsers)
-	ForceAddPlayerSimple(Player(10), udg_PLAYERGRPfederationUsers)
-	ForceAddPlayerSimple(Player(11), udg_PLAYERGRPfederationUsers)
+	-- Create the Allied / Federation Users
+	for i = 0, 5 do ForceAddPlayerSimple(Player(i), udg_PLAYERGRPalliedUsers) end
+	for i = 6, 11 do ForceAddPlayerSimple(Player(i), udg_PLAYERGRPfederationUsers) end
 
 	-- Change the color of Player 1 and Player 2
 	SetPlayerColorBJ(Player(0), PLAYER_COLOR_COAL, true)
 	SetPlayerColorBJ(Player(1), PLAYER_COLOR_EMERALD, true)
-
-	-- Change the color of the computer players to all match
-	ForForce(udg_PLAYERGRPallied, function() SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_RED, true) end)
-	ForForce(udg_PLAYERGRPfederation, function() SetPlayerColorBJ(GetEnumPlayer(), PLAYER_COLOR_BLUE, true) end)
-
-end
-
-function init_aiLoopStates()
-	if (ai.count > 0) then
-		local t = CreateTrigger()
-		TriggerRegisterTimerEventPeriodic(t, ai.tick)
-		TriggerAddAction(t, function()
-
-			-- print(" -- ")
-			if ai.loop >= ai.count then
-				ai.loop = 1
-			else
-				ai.loop = ai.loop + 1
-			end
-
-			local i = ai.heroOptions[ai.loop]
-			print(i)
-
-			try(function()
-				ai:updateIntel(i)
-
-				if ai:isAlive(i) then
-					ai:STATEDead(i)
-					ai:STATELowHealth(i)
-					ai:STATEStopFleeing(i)
-					ai:STATEFleeing(i)
-					ai:STATEHighHealth(i)
-					ai:STATEcastingSpell(i)
-					ai:STATEDefend(i)
-					ai:STATEDefending(i)
-					ai:STATEAbilities(i)
-					ai:CleanUp(i)
-				else
-					ai:STATERevived(i)
-				end
-				print(" --")
-			end)
-		end)
-	end
 end
 
 function init_spawnTimers()
@@ -203,31 +144,6 @@ end
 --
 -- Triggers
 --
-
--- Camera Setup
-function init_AutoZoom()
-
-	-- DisableTrigger(Trig_AutoZoom)
-	-- TriggerRegisterTimerEventPeriodic(Trig_AutoZoom, 3.00)
-	-- TriggerAddAction(Trig_AutoZoom, function()
-	-- 	local l
-	-- 	local i = 1
-	-- 	local ug = CreateGroup()
-	-- 	print("working")
-	-- 	while (i <= 12) do
-	-- 		if GetLocalPlayer() == Player(i) then
-	-- 			l = GetCameraTargetPositionLoc()
-	-- 			ug = GetUnitsInRangeOfLocAll(1350, l)
-	-- 			RemoveLocation(l)
-	-- 			SetCameraFieldForPlayer(ConvertedPlayer(i), CAMERA_FIELD_TARGET_DISTANCE,
-	-- 			                        (1400.00 + (1.00 * CountUnitsInGroup(ug))), 6.00)
-	-- 			DestroyGroup(ug)
-	-- 		end
-	-- 		i = i + 1
-	-- 	end
-	-- 	print("Worked")
-	-- end)
-end
 
 function Init_PickingPhase()
 	local t = CreateTrigger()

@@ -1063,3 +1063,60 @@ function init_aiClass()
 		return self
 	end
 end
+
+
+-- Functions
+function init_aiLoopStates()
+	if (ai.count > 0) then
+		local t = CreateTrigger()
+		TriggerRegisterTimerEventPeriodic(t, ai.tick)
+		TriggerAddAction(t, function()
+
+			-- print(" -- ")
+			if ai.loop >= ai.count then
+				ai.loop = 1
+			else
+				ai.loop = ai.loop + 1
+			end
+
+			local i = ai.heroOptions[ai.loop]
+			print(i)
+
+			try(function()
+				ai:updateIntel(i)
+
+				if ai:isAlive(i) then
+					ai:STATEDead(i)
+					ai:STATELowHealth(i)
+					ai:STATEStopFleeing(i)
+					ai:STATEFleeing(i)
+					ai:STATEHighHealth(i)
+					ai:STATEcastingSpell(i)
+					ai:STATEDefend(i)
+					ai:STATEDefending(i)
+					ai:STATEAbilities(i)
+					ai:CleanUp(i)
+				else
+					ai:STATERevived(i)
+				end
+				print(" --")
+			end)
+		end)
+	end
+end
+
+---comment
+---@param triggerUnit unit
+---@param four string
+function CAST_aiHero(triggerUnit, four)
+	if IsUnitInGroup(triggerUnit, ai.heroGroup) then
+		local heroName = indexer:getKey(triggerUnit, "heroName")
+
+		local spellCastData = spell[SPELL.NAME[four]]
+
+		if spellCastData ~= nil then
+			ai:castSpell(heroName, spellCastData)
+			print("MANUAL CAST")
+		end
+	end
+end

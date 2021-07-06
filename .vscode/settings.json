@@ -1,6 +1,7 @@
 {
     "Lua.diagnostics.disable": [
-        "lowercase-global"
+        "lowercase-global",
+        "duplicate-doc-class"
     ],
     "Lua.diagnostics.globals": [
         "EnableWaits"
